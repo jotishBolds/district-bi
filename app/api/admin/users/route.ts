@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 import * as bcrypt from "bcryptjs";
 import { z } from "zod";
 import { UserRole } from "@/app/generated/prisma";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -128,47 +128,49 @@ export async function POST(req: NextRequest) {
     const passwordHash = await bcrypt.hash(password, 10);
 
     // Create user with transaction to ensure related profiles are created
-    const user = await prisma.$transaction(async (tx) => {
-      // Create the user
-      const newUser = await tx.user.create({
-        data: {
-          email: validatedData.email,
-          phone: validatedData.phone,
-          passwordHash,
-          role: validatedData.role,
-          isActive: validatedData.isActive,
-        },
-      });
+    const user = await prisma.$transaction(
+      async (tx: Prisma.TransactionClient) => {
+        // Create the user
+        const newUser = await tx.user.create({
+          data: {
+            email: validatedData.email,
+            phone: validatedData.phone,
+            passwordHash,
+            role: validatedData.role,
+            isActive: validatedData.isActive,
+          },
+        });
 
-      // Create appropriate profile based on the role
-      if (
-        isOfficerRole(validatedData.role) ||
-        validatedData.role === UserRole.ADMIN ||
-        validatedData.role === UserRole.SUPER_ADMIN
-      ) {
-        await tx.officerProfile.create({
-          data: {
-            userId: newUser.id,
-            fullName: validatedData.fullName,
-            designation: validatedData.designation || "Officer",
-            department: validatedData.department || "General",
-            officeLocation: validatedData.officeLocation,
-          },
-        });
-      } else {
-        // Create citizen profile
-        await tx.citizenProfile.create({
-          data: {
-            userId: newUser.id,
-            fullName: validatedData.fullName,
-            phone: validatedData.phone || "",
-            address: "",
-          },
-        });
+        // Create appropriate profile based on the role
+        if (
+          isOfficerRole(validatedData.role) ||
+          validatedData.role === UserRole.ADMIN ||
+          validatedData.role === UserRole.SUPER_ADMIN
+        ) {
+          await tx.officerProfile.create({
+            data: {
+              userId: newUser.id,
+              fullName: validatedData.fullName,
+              designation: validatedData.designation || "Officer",
+              department: validatedData.department || "General",
+              officeLocation: validatedData.officeLocation,
+            },
+          });
+        } else {
+          // Create citizen profile
+          await tx.citizenProfile.create({
+            data: {
+              userId: newUser.id,
+              fullName: validatedData.fullName,
+              phone: validatedData.phone || "",
+              address: "",
+            },
+          });
+        }
+
+        return newUser;
       }
-
-      return newUser;
-    });
+    );
 
     // Fetch the created user with their profile
     const createdUser = await prisma.user.findUnique({
