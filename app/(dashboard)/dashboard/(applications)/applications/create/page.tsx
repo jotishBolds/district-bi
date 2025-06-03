@@ -302,7 +302,7 @@ export default function ApplicationCreation() {
       setSubmissionStatus("success");
 
       setTimeout(() => {
-        router.push(`/dashboard/applications/${createResult.id}`);
+        router.push(`/dashboard/applications/submitted-app/${createResult.id}`);
       }, 2000);
     } catch (error) {
       console.error("Error creating/submitting application:", error);
