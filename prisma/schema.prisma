@@ -18,7 +18,7 @@ datasource db {
 
 enum UserRole {
   CITIZEN
-  FRONT_DESK // Validates applications and generates RR numbers
+  FRONT_DESK // Validates applications and generates RR numbers to Citizen
   DC // District Collector
   ADC // Additional District Collector
   RO // Revenue Officer
