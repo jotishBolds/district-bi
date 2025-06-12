@@ -148,14 +148,21 @@ export async function PATCH(
           throw new Error("Invalid status transition");
         }
         break;
-
       case ApplicationStatus.IN_PROGRESS:
         if (
-          [UserRole.DC, UserRole.ADC, UserRole.RO].includes(
+          [
+            UserRole.DC,
+            UserRole.ADC,
+            UserRole.RO,
+            UserRole.SDM,
+            UserRole.DYDIR,
+          ].includes(
             session.user.role as
               | typeof UserRole.DC
               | typeof UserRole.ADC
               | typeof UserRole.RO
+              | typeof UserRole.SDM
+              | typeof UserRole.DYDIR
           ) &&
           application.status === ApplicationStatus.VALIDATED &&
           application.currentHolderId === session.user.id
@@ -171,14 +178,21 @@ export async function PATCH(
           throw new Error("Invalid status transition");
         }
         break;
-
       case ApplicationStatus.APPROVED:
         if (
-          [UserRole.DC, UserRole.ADC, UserRole.RO].includes(
+          [
+            UserRole.DC,
+            UserRole.ADC,
+            UserRole.RO,
+            UserRole.SDM,
+            UserRole.DYDIR,
+          ].includes(
             session.user.role as
               | typeof UserRole.DC
               | typeof UserRole.ADC
               | typeof UserRole.RO
+              | typeof UserRole.SDM
+              | typeof UserRole.DYDIR
           ) &&
           application.status === ApplicationStatus.IN_PROGRESS &&
           application.currentHolderId === session.user.id
@@ -266,11 +280,21 @@ async function checkStatusChangePermission(
       )
     );
   }
-
   // Officers can process their assigned applications
   if (
-    [UserRole.DC, UserRole.ADC, UserRole.RO].includes(
-      user.role as typeof UserRole.DC | typeof UserRole.ADC | typeof UserRole.RO
+    [
+      UserRole.DC,
+      UserRole.ADC,
+      UserRole.RO,
+      UserRole.SDM,
+      UserRole.DYDIR,
+    ].includes(
+      user.role as
+        | typeof UserRole.DC
+        | typeof UserRole.ADC
+        | typeof UserRole.RO
+        | typeof UserRole.SDM
+        | typeof UserRole.DYDIR
     )
   ) {
     return (

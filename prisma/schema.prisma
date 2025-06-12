@@ -22,6 +22,8 @@ enum UserRole {
   DC // District Collector
   ADC // Additional District Collector
   RO // Revenue Officer
+  SDM // Sub-Divisional Magistrate
+  DYDIR // Deputy Director
   ADMIN
   SUPER_ADMIN
 }

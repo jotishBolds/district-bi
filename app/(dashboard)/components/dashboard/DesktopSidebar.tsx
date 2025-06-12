@@ -81,6 +81,8 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       case UserRole.DC:
       case UserRole.ADC:
       case UserRole.RO:
+      case UserRole.SDM:
+      case UserRole.DYDIR:
         return officerLinks;
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:
@@ -102,6 +104,10 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
         return { text: "ADC", color: "bg-indigo-100 text-indigo-800" };
       case UserRole.RO:
         return { text: "RO", color: "bg-amber-100 text-amber-800" };
+      case UserRole.SDM:
+        return { text: "SDM", color: "bg-cyan-100 text-cyan-800" };
+      case UserRole.DYDIR:
+        return { text: "DYDIR", color: "bg-teal-100 text-teal-800" };
       case UserRole.ADMIN:
         return { text: "Admin", color: "bg-red-100 text-red-800" };
       case UserRole.SUPER_ADMIN:

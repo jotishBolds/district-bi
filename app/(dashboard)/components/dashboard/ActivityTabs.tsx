@@ -83,6 +83,8 @@ export default function ActivityTabs({ userRole }: ActivityTabsProps) {
       case UserRole.DC:
       case UserRole.ADC:
       case UserRole.RO:
+      case UserRole.SDM:
+      case UserRole.DYDIR:
         return [
           {
             id: "1",
@@ -147,6 +149,8 @@ export default function ActivityTabs({ userRole }: ActivityTabsProps) {
       case UserRole.DC:
       case UserRole.ADC:
       case UserRole.RO:
+      case UserRole.SDM:
+      case UserRole.DYDIR:
         return [
           {
             id: "1",

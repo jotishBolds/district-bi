@@ -47,6 +47,10 @@ export default function UserNav() {
         return "bg-purple-100 text-purple-800";
       case UserRole.RO:
         return "bg-amber-100 text-amber-800";
+      case UserRole.SDM:
+        return "bg-cyan-100 text-cyan-800";
+      case UserRole.DYDIR:
+        return "bg-teal-100 text-teal-800";
       case UserRole.FRONT_DESK:
         return "bg-green-100 text-green-800";
       default:

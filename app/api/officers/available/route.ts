@@ -10,15 +10,19 @@ export async function GET() {
 
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Fetch available officers with DC, ADC, or RO roles, excluding the current user
+    } // Fetch available officers with DC, ADC, RO, SDM, or DYDIR roles, excluding the current user
     const officers = await prisma.user.findMany({
       where: {
         AND: [
           {
             role: {
-              in: [UserRole.DC, UserRole.ADC, UserRole.RO],
+              in: [
+                UserRole.DC,
+                UserRole.ADC,
+                UserRole.RO,
+                UserRole.SDM,
+                UserRole.DYDIR,
+              ],
             },
             isActive: true,
             officerProfile: {

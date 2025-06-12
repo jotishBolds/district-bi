@@ -728,7 +728,9 @@ async function handleProcessApplication(
   if (
     (session.user.role !== UserRole.DC &&
       session.user.role !== UserRole.ADC &&
-      session.user.role !== UserRole.RO) ||
+      session.user.role !== UserRole.RO &&
+      session.user.role !== UserRole.SDM &&
+      session.user.role !== UserRole.DYDIR) ||
     application.currentHolderId !== session.user.id
   ) {
     return NextResponse.json(
@@ -819,7 +821,9 @@ async function handleApproveApplication(
   if (
     (session.user.role !== UserRole.DC &&
       session.user.role !== UserRole.ADC &&
-      session.user.role !== UserRole.RO) ||
+      session.user.role !== UserRole.RO &&
+      session.user.role !== UserRole.SDM &&
+      session.user.role !== UserRole.DYDIR) ||
     application.currentHolderId !== session.user.id
   ) {
     return NextResponse.json(
@@ -910,7 +914,9 @@ async function handleRejectApplication(
   const isOfficer =
     session.user.role === UserRole.DC ||
     session.user.role === UserRole.ADC ||
-    session.user.role === UserRole.RO;
+    session.user.role === UserRole.RO ||
+    session.user.role === UserRole.SDM ||
+    session.user.role === UserRole.DYDIR;
   const canReject =
     session.user.role === UserRole.FRONT_DESK ||
     (isOfficer && application.currentHolderId === session.user.id);
@@ -996,7 +1002,9 @@ async function handleForwardApplication(
   const isOfficer =
     session.user.role === UserRole.DC ||
     session.user.role === UserRole.ADC ||
-    session.user.role === UserRole.RO;
+    session.user.role === UserRole.RO ||
+    session.user.role === UserRole.SDM ||
+    session.user.role === UserRole.DYDIR;
 
   if (!isOfficer || application.currentHolderId !== session.user.id) {
     return NextResponse.json(
@@ -1013,13 +1021,18 @@ async function handleForwardApplication(
       { status: 400 }
     );
   }
-
   // Verify target officer exists and is available
   const targetOfficer = await prisma.user.findFirst({
     where: {
       id: forwardToOfficerId,
       role: {
-        in: [UserRole.DC, UserRole.ADC, UserRole.RO],
+        in: [
+          UserRole.DC,
+          UserRole.ADC,
+          UserRole.RO,
+          UserRole.SDM,
+          UserRole.DYDIR,
+        ],
       },
       isActive: true,
       officerProfile: {

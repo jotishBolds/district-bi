@@ -371,11 +371,19 @@ export async function GET(request: NextRequest) {
     if (session.user.role === UserRole.CITIZEN) {
       whereClause.citizenId = session.user.id;
     } else if (
-      [UserRole.DC, UserRole.ADC, UserRole.RO].includes(
+      [
+        UserRole.DC,
+        UserRole.ADC,
+        UserRole.RO,
+        UserRole.SDM,
+        UserRole.DYDIR,
+      ].includes(
         session.user.role as
           | typeof UserRole.DC
           | typeof UserRole.ADC
           | typeof UserRole.RO
+          | typeof UserRole.SDM
+          | typeof UserRole.DYDIR
       )
     ) {
       whereClause.currentHolderId = session.user.id;
@@ -485,14 +493,18 @@ export async function POST(request: NextRequest) {
         { error: "Invalid service category" },
         { status: 400 }
       );
-    }
-
-    // Verify officer exists and is available
+    } // Verify officer exists and is available
     const officer = await prisma.user.findFirst({
       where: {
         id: preferredOfficerId,
         role: {
-          in: [UserRole.DC, UserRole.ADC, UserRole.RO],
+          in: [
+            UserRole.DC,
+            UserRole.ADC,
+            UserRole.RO,
+            UserRole.SDM,
+            UserRole.DYDIR,
+          ],
         },
         isActive: true,
         officerProfile: {

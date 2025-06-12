@@ -45,6 +45,8 @@ export default async function DashboardPage() {
       case UserRole.DC:
       case UserRole.ADC:
       case UserRole.RO:
+      case UserRole.SDM:
+      case UserRole.DYDIR:
         return "Review and process assigned cases";
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:

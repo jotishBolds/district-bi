@@ -128,12 +128,21 @@ const formSchema = z.object({
 
 // Function to determine if the role is an officer role
 const isOfficerRole = (role: UserRole): boolean => {
-  return [UserRole.FRONT_DESK, UserRole.DC, UserRole.ADC, UserRole.RO].includes(
+  return [
+    UserRole.FRONT_DESK,
+    UserRole.DC,
+    UserRole.ADC,
+    UserRole.RO,
+    UserRole.SDM,
+    UserRole.DYDIR,
+  ].includes(
     role as
       | typeof UserRole.FRONT_DESK
       | typeof UserRole.DC
       | typeof UserRole.ADC
       | typeof UserRole.RO
+      | typeof UserRole.SDM
+      | typeof UserRole.DYDIR
   );
 };
 
@@ -469,7 +478,7 @@ export default function UserManagement() {
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter by role" />
-            </SelectTrigger>
+            </SelectTrigger>{" "}
             <SelectContent>
               <SelectItem value="ALL">All Roles</SelectItem>
               <SelectItem value={UserRole.CITIZEN}>Citizen</SelectItem>
@@ -477,6 +486,8 @@ export default function UserManagement() {
               <SelectItem value={UserRole.DC}>DC</SelectItem>
               <SelectItem value={UserRole.ADC}>ADC</SelectItem>
               <SelectItem value={UserRole.RO}>RO</SelectItem>
+              <SelectItem value={UserRole.SDM}>SDM</SelectItem>
+              <SelectItem value={UserRole.DYDIR}>DYDIR</SelectItem>
               <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
               <SelectItem value={UserRole.SUPER_ADMIN}>Super Admin</SelectItem>
             </SelectContent>
@@ -722,6 +733,8 @@ export default function UserManagement() {
                           <SelectItem value={UserRole.DC}>DC</SelectItem>
                           <SelectItem value={UserRole.ADC}>ADC</SelectItem>
                           <SelectItem value={UserRole.RO}>RO</SelectItem>
+                          <SelectItem value={UserRole.SDM}>SDM</SelectItem>
+                          <SelectItem value={UserRole.DYDIR}>DYDIR</SelectItem>
                           <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
                           <SelectItem value={UserRole.SUPER_ADMIN}>
                             Super Admin
@@ -932,6 +945,8 @@ export default function UserManagement() {
                           <SelectItem value={UserRole.DC}>DC</SelectItem>
                           <SelectItem value={UserRole.ADC}>ADC</SelectItem>
                           <SelectItem value={UserRole.RO}>RO</SelectItem>
+                          <SelectItem value={UserRole.SDM}>SDM</SelectItem>
+                          <SelectItem value={UserRole.DYDIR}>DYDIR</SelectItem>
                           <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
                           <SelectItem value={UserRole.SUPER_ADMIN}>
                             Super Admin

@@ -30,12 +30,21 @@ const updateUserSchema = z.object({
 
 // Helper function to check officer role
 function isOfficerRole(role: UserRole): boolean {
-  return [UserRole.FRONT_DESK, UserRole.DC, UserRole.ADC, UserRole.RO].includes(
+  return [
+    UserRole.FRONT_DESK,
+    UserRole.DC,
+    UserRole.ADC,
+    UserRole.RO,
+    UserRole.SDM,
+    UserRole.DYDIR,
+  ].includes(
     role as
       | typeof UserRole.FRONT_DESK
       | typeof UserRole.DC
       | typeof UserRole.ADC
       | typeof UserRole.RO
+      | typeof UserRole.SDM
+      | typeof UserRole.DYDIR
   );
 }
 

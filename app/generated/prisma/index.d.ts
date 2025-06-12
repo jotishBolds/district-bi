@@ -99,6 +99,8 @@ export namespace $Enums {
   DC: 'DC',
   ADC: 'ADC',
   RO: 'RO',
+  SDM: 'SDM',
+  DYDIR: 'DYDIR',
   ADMIN: 'ADMIN',
   SUPER_ADMIN: 'SUPER_ADMIN'
 };

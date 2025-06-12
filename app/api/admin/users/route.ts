@@ -39,13 +39,22 @@ function generateRandomPassword(length = 12) {
 // Helper function to check if the role is an officer role
 function isOfficerRole(role: UserRole) {
   return (
-    [UserRole.FRONT_DESK, UserRole.DC, UserRole.ADC, UserRole.RO] as const
+    [
+      UserRole.FRONT_DESK,
+      UserRole.DC,
+      UserRole.ADC,
+      UserRole.RO,
+      UserRole.SDM,
+      UserRole.DYDIR,
+    ] as const
   ).includes(
     role as
       | typeof UserRole.FRONT_DESK
       | typeof UserRole.DC
       | typeof UserRole.ADC
       | typeof UserRole.RO
+      | typeof UserRole.SDM
+      | typeof UserRole.DYDIR
   );
 }
 

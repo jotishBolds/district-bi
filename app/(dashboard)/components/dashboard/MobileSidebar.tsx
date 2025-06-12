@@ -27,10 +27,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { UserRole } from "@/app/generated/prisma";
-import Link from "next/link";
 
-export default function MobileSidebar() {
+import Link from "next/link";
+import { UserRole } from "@/app/generated/prisma";
+interface MobileSidebarProps {
+  userRole?: UserRole;
+}
+export default function MobileSidebar({ userRole }: MobileSidebarProps) {
   const { data: session } = useSession();
   const pathname = usePathname();
 
@@ -65,15 +68,19 @@ export default function MobileSidebar() {
     { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
     { name: "Help & Support", href: "/help", icon: HelpCircle },
   ];
-
   const getLinks = () => {
-    switch (session?.user?.role) {
+    const userRole = session?.user?.role;
+    if (!userRole) return citizenLinks;
+
+    switch (userRole) {
       case UserRole.CITIZEN:
         return citizenLinks;
       case UserRole.FRONT_DESK:
       case UserRole.DC:
       case UserRole.ADC:
       case UserRole.RO:
+      case UserRole.SDM:
+      case UserRole.DYDIR:
         return officerLinks;
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:
@@ -82,9 +89,9 @@ export default function MobileSidebar() {
         return citizenLinks;
     }
   };
-
   const getRoleColor = () => {
-    switch (session?.user?.role) {
+    const userRole = session?.user?.role;
+    switch (userRole) {
       case UserRole.CITIZEN:
         return "bg-blue-600";
       case UserRole.FRONT_DESK:
@@ -94,6 +101,10 @@ export default function MobileSidebar() {
         return "bg-purple-600";
       case UserRole.RO:
         return "bg-amber-600";
+      case UserRole.SDM:
+        return "bg-cyan-600";
+      case UserRole.DYDIR:
+        return "bg-teal-600";
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:
         return "bg-red-600";
