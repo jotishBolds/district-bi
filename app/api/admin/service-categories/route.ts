@@ -8,7 +8,7 @@ import { UserRole } from "@/app/generated/prisma";
 const createServiceCategorySchema = z.object({
   name: z.string().min(1, "Service category name is required").max(100),
   description: z.string().optional(),
-  slaDays: z.number().min(1, "SLA days must be at least 1").max(365),
+  slaDays: z.number().min(1, "Processing days must be at least 1").max(365),
   isActive: z.boolean().default(true),
 });
 

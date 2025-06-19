@@ -527,7 +527,7 @@ async function handleValidateApplication(
       const updatedApplication = await tx.application.update({
         where: { id: application.id },
         data: {
-          status: ApplicationStatus.REJECTED,
+          status: ApplicationStatus.CLOSED_WITH_ACTION,
           updatedAt: new Date(),
         },
       });
@@ -537,9 +537,9 @@ async function handleValidateApplication(
         data: {
           applicationId: application.id,
           fromStatus: ApplicationStatus.PENDING,
-          toStatus: ApplicationStatus.REJECTED,
+          toStatus: ApplicationStatus.CLOSED_WITH_ACTION,
           changedById: session.user.id,
-          comments: rejectionReason || "Application rejected during validation",
+          comments: rejectionReason || "Application closed with action",
         },
       });
 
@@ -547,10 +547,10 @@ async function handleValidateApplication(
       await tx.applicationAuditLog.create({
         data: {
           applicationId: application.id,
-          action: "APPLICATION_REJECTED",
+          action: "APPLICATION_CLOSED_WITH_ACTION",
           performedById: session.user.id,
           oldValues: { status: ApplicationStatus.PENDING },
-          newValues: { status: ApplicationStatus.REJECTED },
+          newValues: { status: ApplicationStatus.CLOSED_WITH_ACTION },
           ipAddress:
             request.headers.get("x-forwarded-for") ||
             request.headers.get("x-real-ip") ||
@@ -564,8 +564,8 @@ async function handleValidateApplication(
           userId: application.citizenId,
           notificationType: "STATUS_CHANGED",
           applicationId: application.id,
-          title: "Application Rejected",
-          message: `Your application for ${application.serviceCategory.name} has been rejected. Reason: ${rejectionReason}`,
+          title: "Application Closed with Action",
+          message: `Your application for ${application.serviceCategory.name} has been closed with action. Reason: ${rejectionReason}`,
           isRead: false,
         },
       });
@@ -574,7 +574,7 @@ async function handleValidateApplication(
     });
 
     return NextResponse.json({
-      message: "Application rejected",
+      message: "Application closed with action",
       application: result,
     });
   }
@@ -931,11 +931,11 @@ async function handleRejectApplication(
   const { comments, rejectionReason } = requestData;
 
   const result = await prisma.$transaction(async (tx) => {
-    // Update application status to REJECTED
+    // Update application status to CLOSED_WITH_ACTION
     const updatedApplication = await tx.application.update({
       where: { id: application.id },
       data: {
-        status: ApplicationStatus.REJECTED,
+        status: ApplicationStatus.CLOSED_WITH_ACTION,
         updatedAt: new Date(),
       },
     });
@@ -945,9 +945,10 @@ async function handleRejectApplication(
       data: {
         applicationId: application.id,
         fromStatus: application.status,
-        toStatus: ApplicationStatus.REJECTED,
+        toStatus: ApplicationStatus.CLOSED_WITH_ACTION,
         changedById: session.user.id,
-        comments: rejectionReason || comments || "Application rejected",
+        comments:
+          rejectionReason || comments || "Application closed with action",
       },
     });
 
@@ -955,10 +956,10 @@ async function handleRejectApplication(
     await tx.applicationAuditLog.create({
       data: {
         applicationId: application.id,
-        action: "APPLICATION_REJECTED",
+        action: "APPLICATION_CLOSED_WITH_ACTION",
         performedById: session.user.id,
         oldValues: { status: application.status },
-        newValues: { status: ApplicationStatus.REJECTED },
+        newValues: { status: ApplicationStatus.CLOSED_WITH_ACTION },
         ipAddress:
           request.headers.get("x-forwarded-for") ||
           request.headers.get("x-real-ip") ||
@@ -972,10 +973,10 @@ async function handleRejectApplication(
         userId: application.citizenId,
         notificationType: "STATUS_CHANGED",
         applicationId: application.id,
-        title: "Application Rejected",
+        title: "Application Closed with Action",
         message: `Your application ${
           application.rrNumber || application.id
-        } has been rejected. Reason: ${
+        } has been closed with action. Reason: ${
           rejectionReason || "Please contact the office for details."
         }`,
         isRead: false,
@@ -986,7 +987,7 @@ async function handleRejectApplication(
   });
 
   return NextResponse.json({
-    message: "Application rejected",
+    message: "Application closed with action",
     application: result,
   });
 }

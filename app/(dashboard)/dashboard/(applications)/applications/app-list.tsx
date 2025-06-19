@@ -52,7 +52,7 @@ const MOCK_APPLICATIONS = [
     id: "APP-4567",
     title: "Tax Registration",
     type: "TAX",
-    status: "REJECTED",
+    status: "CLOSED_WITH_ACTION",
     createdAt: new Date(2025, 3, 20),
     updatedAt: new Date(2025, 4, 1),
   },
@@ -96,13 +96,13 @@ export default function ApplicationsList() {
             Approved
           </Badge>
         );
-      case "REJECTED":
+      case "CLOSED_WITH_ACTION":
         return (
           <Badge
             variant="outline"
             className="bg-red-50 text-red-700 border-red-200"
           >
-            Rejected
+            Closed with Action
           </Badge>
         );
       default:

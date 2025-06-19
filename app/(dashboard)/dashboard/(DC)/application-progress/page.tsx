@@ -116,7 +116,7 @@ const DCDashboard = () => {
         return "bg-purple-100 text-purple-800";
       case "APPROVED":
         return "bg-green-100 text-green-800";
-      case "REJECTED":
+      case "CLOSED_WITH_ACTION":
         return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -168,9 +168,9 @@ const DCDashboard = () => {
             <div>
               <h1 className="text-2xl font-semibold text-gray-900">
                 District Collector Dashboard
-              </h1>
+              </h1>{" "}
               <p className="text-sm text-gray-600 mt-1">
-                Monitor all application progress and SLA compliance
+                Monitor all application progress and estimated time compliance
               </p>
             </div>
             <div className="flex items-center gap-4">
@@ -233,7 +233,9 @@ const DCDashboard = () => {
                     <option value="VALIDATED">Validated</option>
                     <option value="IN_PROGRESS">In Progress</option>
                     <option value="APPROVED">Approved</option>
-                    <option value="REJECTED">Rejected</option>
+                    <option value="CLOSED_WITH_ACTION">
+                      Closed with Action
+                    </option>
                   </select>
                 </div>
                 <div className="w-full md:w-auto">
@@ -307,8 +309,9 @@ const DCDashboard = () => {
                     </div>
                     {app.validatedAt && (
                       <div className="mt-2">
+                        {" "}
                         <div className="flex justify-between text-xs text-gray-500 mb-1">
-                          <span>SLA Progress</span>
+                          <span>Time Progress</span>
                           <span>
                             {calculateSlaProgress(app)?.elapsed || 0}/
                             {app.serviceCategory.slaDays} days
@@ -377,9 +380,9 @@ const DCDashboard = () => {
                       <p className="font-medium">
                         {selectedApp.serviceCategory.name}
                       </p>
-                    </div>
+                    </div>{" "}
                     <div>
-                      <p className="text-gray-500">SLA Days</p>
+                      <p className="text-gray-500">Estimated Time</p>
                       <p className="font-medium">
                         {selectedApp.serviceCategory.slaDays} days
                       </p>
@@ -405,7 +408,6 @@ const DCDashboard = () => {
                       </p>
                     </div>
                   </div>
-
                   {/* Applicant Info */}
                   <div className="bg-gray-50 rounded-lg p-4">
                     <h4 className="text-sm font-medium text-gray-900 mb-2">
@@ -426,7 +428,6 @@ const DCDashboard = () => {
                       </div>
                     </div>
                   </div>
-
                   {/* Timeline */}
                   <div className="bg-gray-50 rounded-lg p-4">
                     <h4 className="text-sm font-medium text-gray-900 mb-2">
@@ -452,13 +453,12 @@ const DCDashboard = () => {
                         </p>
                       </div>
                     </div>
-                  </div>
-
-                  {/* SLA Progress */}
+                  </div>{" "}
+                  {/* Time Progress */}
                   {selectedApp.validatedAt && (
                     <div className="bg-gray-50 rounded-lg p-4">
                       <h4 className="text-sm font-medium text-gray-900 mb-2">
-                        SLA Progress
+                        Time Progress
                       </h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
@@ -467,9 +467,9 @@ const DCDashboard = () => {
                             {calculateSlaProgress(selectedApp)?.elapsed || 0}{" "}
                             days
                           </p>
-                        </div>
+                        </div>{" "}
                         <div className="flex justify-between">
-                          <p className="text-gray-500">Total SLA Days</p>
+                          <p className="text-gray-500">Total Estimated Days</p>
                           <p className="font-medium">
                             {selectedApp.serviceCategory.slaDays} days
                           </p>
@@ -504,7 +504,6 @@ const DCDashboard = () => {
                       </div>
                     </div>
                   )}
-
                   {/* Assignment History */}
                   <div className="bg-gray-50 rounded-lg p-4">
                     <h4 className="text-sm font-medium text-gray-900 mb-2">
@@ -537,7 +536,6 @@ const DCDashboard = () => {
                       ))}
                     </div>
                   </div>
-
                   {/* Status History */}
                   <div className="bg-gray-50 rounded-lg p-4">
                     <h4 className="text-sm font-medium text-gray-900 mb-2">

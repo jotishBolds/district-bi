@@ -72,7 +72,7 @@ export default function RecentApplications({
             id: "3",
             rrNumber: "RR-2025-0103",
             service: "Caste Certificate",
-            status: "Rejected",
+            status: "Closed with Action",
             updatedAt: "2025-05-09",
           },
         ];
@@ -131,14 +131,13 @@ export default function RecentApplications({
         return [];
     }
   };
-
   const getStatusColor = (status: string): string => {
     const statusMap: Record<string, string> = {
       Draft: "bg-gray-100 text-gray-800 border-gray-200",
       Pending: "bg-amber-100 text-amber-800 border-amber-200",
       "In Progress": "bg-blue-100 text-blue-800 border-blue-200",
       Completed: "bg-green-100 text-green-800 border-green-200",
-      Rejected: "bg-red-100 text-red-800 border-red-200",
+      "Closed with Action": "bg-red-100 text-red-800 border-red-200",
       Validated: "bg-green-100 text-green-800 border-green-200",
       "Pending Validation": "bg-amber-100 text-amber-800 border-amber-200",
       Assigned: "bg-blue-100 text-blue-800 border-blue-200",

@@ -333,7 +333,7 @@ exports.ApplicationStatus = exports.$Enums.ApplicationStatus = {
   VALIDATED: 'VALIDATED',
   IN_PROGRESS: 'IN_PROGRESS',
   APPROVED: 'APPROVED',
-  REJECTED: 'REJECTED',
+  CLOSED_WITH_ACTION: 'CLOSED_WITH_ACTION',
   COMPLETED: 'COMPLETED'
 };
 

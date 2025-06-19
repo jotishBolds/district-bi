@@ -86,12 +86,12 @@ export default function StatusCards({ userRole }: StatusCardsProps) {
             description: "Processed today",
           },
           {
-            title: "Rejected Today",
+            title: "Closed with Action Today",
             value: 2,
-            badge: "Rejected",
+            badge: "Closed with Action",
             badgeColor: "bg-red-100 text-red-800 border-red-200",
             icon: <FileX className="h-8 w-8 text-red-600" />,
-            description: "Rejected today",
+            description: "Closed with action today",
           },
           {
             title: "Total Processed",

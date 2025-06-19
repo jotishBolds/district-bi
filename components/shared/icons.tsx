@@ -108,6 +108,7 @@ export const Icons = {
   check: Check,
   approved: CircleCheck,
   rejected: CircleX,
+  closedWithAction: CircleX,
   pending: CircleDashed,
   tag: Tag,
   bookmark: Bookmark,

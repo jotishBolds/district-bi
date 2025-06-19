@@ -12,7 +12,11 @@ const updateServiceCategorySchema = z.object({
     .max(100)
     .optional(),
   description: z.string().optional(),
-  slaDays: z.number().min(1, "SLA days must be at least 1").max(365).optional(),
+  slaDays: z
+    .number()
+    .min(1, "Processing days must be at least 1")
+    .max(365)
+    .optional(),
   isActive: z.boolean().optional(),
 });
 

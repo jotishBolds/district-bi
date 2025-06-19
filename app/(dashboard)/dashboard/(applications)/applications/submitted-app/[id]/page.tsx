@@ -171,7 +171,7 @@ const getStatusColor = (status: string) => {
       return "bg-orange-100 text-orange-800 border-orange-200";
     case "APPROVED":
       return "bg-green-100 text-green-800 border-green-200";
-    case "REJECTED":
+    case "CLOSED_WITH_ACTION":
       return "bg-red-100 text-red-800 border-red-200";
     default:
       return "bg-gray-100 text-gray-800 border-gray-200";
@@ -251,7 +251,7 @@ export default function ApplicationDetailsPage({ params }: PageProps) {
     );
     const stepIndex = PROCESS_STEPS.findIndex((step) => step.key === stepKey);
 
-    if (currentStatus === "REJECTED") {
+    if (currentStatus === "CLOSED_WITH_ACTION") {
       return stepIndex <
         PROCESS_STEPS.findIndex((step) => step.key === "VALIDATED")
         ? "completed"
@@ -426,18 +426,18 @@ export default function ApplicationDetailsPage({ params }: PageProps) {
                     );
                   })}
 
-                  {/* Rejected Status for Mobile */}
-                  {application.status === "REJECTED" && (
+                  {/* Closed with Action Status for Mobile */}
+                  {application.status === "CLOSED_WITH_ACTION" && (
                     <div className="flex items-start space-x-4">
                       <div className="w-10 h-10 rounded-full flex items-center justify-center border-2 bg-red-500 border-red-500 text-white shadow-md">
                         <XCircle className="h-4 w-4" />
-                      </div>
+                      </div>{" "}
                       <div className="flex-1">
                         <div className="text-sm font-medium text-red-700">
-                          Rejected
+                          Closed with Action
                         </div>
                         <div className="text-xs text-red-600 mt-1">
-                          Application denied
+                          Application closed with action taken
                         </div>
                       </div>
                     </div>
@@ -533,19 +533,19 @@ export default function ApplicationDetailsPage({ params }: PageProps) {
                   })}
                 </div>
 
-                {/* Rejected Status */}
-                {application.status === "REJECTED" && (
+                {/* Closed with Action Status */}
+                {application.status === "CLOSED_WITH_ACTION" && (
                   <div className="mt-8 flex justify-center">
                     <div className="flex flex-col items-center">
                       <div className="w-12 h-12 rounded-full flex items-center justify-center border-2 bg-red-500 border-red-500 text-white shadow-md">
                         <XCircle className="h-5 w-5" />
-                      </div>
+                      </div>{" "}
                       <div className="mt-3 text-center">
                         <div className="text-sm font-medium text-red-700">
-                          Rejected
+                          Closed with Action
                         </div>
                         <div className="text-xs text-red-600 mt-1">
-                          Application denied
+                          Application closed with action taken
                         </div>
                       </div>
                     </div>
@@ -848,7 +848,7 @@ export default function ApplicationDetailsPage({ params }: PageProps) {
                           <div className="w-10 h-10 flex items-center justify-center rounded-full bg-green-100">
                             <CheckCircle2 className="h-5 w-5 text-green-600" />
                           </div>
-                        ) : entry.toStatus === "REJECTED" ? (
+                        ) : entry.toStatus === "CLOSED_WITH_ACTION" ? (
                           <div className="w-10 h-10 flex items-center justify-center rounded-full bg-red-100">
                             <XCircle className="h-5 w-5 text-red-600" />
                           </div>
@@ -875,7 +875,8 @@ export default function ApplicationDetailsPage({ params }: PageProps) {
                                     className={`inline-block px-2 py-1 text-xs rounded ${
                                       entry.toStatus === "APPROVED"
                                         ? "bg-green-100 text-green-800"
-                                        : entry.toStatus === "REJECTED"
+                                        : entry.toStatus ===
+                                          "CLOSED_WITH_ACTION"
                                         ? "bg-red-100 text-red-800"
                                         : "bg-blue-100 text-blue-800"
                                     }`}
@@ -888,7 +889,7 @@ export default function ApplicationDetailsPage({ params }: PageProps) {
                                   className={`inline-block px-2 py-1 text-xs rounded ${
                                     entry.toStatus === "APPROVED"
                                       ? "bg-green-100 text-green-800"
-                                      : entry.toStatus === "REJECTED"
+                                      : entry.toStatus === "CLOSED_WITH_ACTION"
                                       ? "bg-red-100 text-red-800"
                                       : "bg-blue-100 text-blue-800"
                                   }`}

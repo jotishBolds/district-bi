@@ -207,12 +207,11 @@ export async function PATCH(
           throw new Error("Invalid status transition");
         }
         break;
-
-      case ApplicationStatus.REJECTED:
+      case ApplicationStatus.CLOSED_WITH_ACTION:
         result = await handleRejectionTransition(
           application,
           session.user.id,
-          comments || "Application rejected",
+          comments || "Application closed with action",
           request
         );
         break;
@@ -273,10 +272,13 @@ async function checkStatusChangePermission(
   if (user.role === UserRole.FRONT_DESK) {
     return (
       application.status === ApplicationStatus.PENDING &&
-      [ApplicationStatus.VALIDATED, ApplicationStatus.REJECTED].includes(
+      [
+        ApplicationStatus.VALIDATED,
+        ApplicationStatus.CLOSED_WITH_ACTION,
+      ].includes(
         newStatus as
           | typeof ApplicationStatus.VALIDATED
-          | typeof ApplicationStatus.REJECTED
+          | typeof ApplicationStatus.CLOSED_WITH_ACTION
       )
     );
   }
@@ -302,10 +304,13 @@ async function checkStatusChangePermission(
       ((application.status === ApplicationStatus.VALIDATED &&
         newStatus === ApplicationStatus.IN_PROGRESS) ||
         (application.status === ApplicationStatus.IN_PROGRESS &&
-          [ApplicationStatus.APPROVED, ApplicationStatus.REJECTED].includes(
+          [
+            ApplicationStatus.APPROVED,
+            ApplicationStatus.CLOSED_WITH_ACTION,
+          ].includes(
             newStatus as
               | typeof ApplicationStatus.APPROVED
-              | typeof ApplicationStatus.REJECTED
+              | typeof ApplicationStatus.CLOSED_WITH_ACTION
           )))
     );
   }
@@ -370,7 +375,8 @@ async function handleStatusTransition(
         "Your application is now being processed.",
       [ApplicationStatus.APPROVED]:
         "Congratulations! Your application has been approved.",
-      [ApplicationStatus.REJECTED]: "Your application has been rejected.",
+      [ApplicationStatus.CLOSED_WITH_ACTION]:
+        "Your application has been closed with action taken.",
       [ApplicationStatus.COMPLETED]:
         "Your application process has been completed.",
     };
@@ -613,7 +619,7 @@ async function handleRejectionTransition(
     const updatedApplication = await tx.application.update({
       where: { id: application.id },
       data: {
-        status: ApplicationStatus.REJECTED,
+        status: ApplicationStatus.CLOSED_WITH_ACTION,
         updatedAt: new Date(),
       },
     });
@@ -623,7 +629,7 @@ async function handleRejectionTransition(
       data: {
         applicationId: application.id,
         fromStatus: application.status,
-        toStatus: ApplicationStatus.REJECTED,
+        toStatus: ApplicationStatus.CLOSED_WITH_ACTION,
         changedById: userId,
         comments: comments || "Application rejected",
       },
@@ -633,10 +639,10 @@ async function handleRejectionTransition(
     await tx.applicationAuditLog.create({
       data: {
         applicationId: application.id,
-        action: "APPLICATION_REJECTED",
+        action: "APPLICATION_CLOSED_WITH_ACTION",
         performedById: userId,
         oldValues: { status: application.status },
-        newValues: { status: ApplicationStatus.REJECTED },
+        newValues: { status: ApplicationStatus.CLOSED_WITH_ACTION },
         ipAddress:
           request.headers.get("x-forwarded-for") ||
           request.headers.get("x-real-ip") ||
@@ -650,12 +656,12 @@ async function handleRejectionTransition(
         userId: application.citizenId,
         notificationType: "STATUS_CHANGED",
         applicationId: application.id,
-        title: "Application Rejected",
+        title: "Application Closed with Action",
         message: `Your application ${
           application.rrNumber || application.id
-        } has been rejected. ${
+        } has been closed with action taken. ${
           comments
-            ? `Reason: ${comments}`
+            ? `Details: ${comments}`
             : "Please contact the office for details."
         }`,
         isRead: false,

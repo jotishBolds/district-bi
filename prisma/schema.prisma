@@ -34,7 +34,7 @@ enum ApplicationStatus {
   VALIDATED // RR number assigned
   IN_PROGRESS // With assigned officer
   APPROVED // Final approval
-  REJECTED // Application rejected
+  CLOSED_WITH_ACTION // Application closed with action taken
   COMPLETED // Process finished
 }
 

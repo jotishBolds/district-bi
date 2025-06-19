@@ -76,7 +76,7 @@ const APPLICATION_STATUSES = [
   { value: "VALIDATED", label: "Validated" },
   { value: "IN_PROGRESS", label: "In Progress" },
   { value: "APPROVED", label: "Approved" },
-  { value: "REJECTED", label: "Rejected" },
+  { value: "CLOSED_WITH_ACTION", label: "Closed with Action" },
 ];
 
 const getStatusColor = (status: string) => {
@@ -91,7 +91,7 @@ const getStatusColor = (status: string) => {
       return "bg-orange-100 text-orange-800 border-orange-200";
     case "APPROVED":
       return "bg-green-100 text-green-800 border-green-200";
-    case "REJECTED":
+    case "CLOSED_WITH_ACTION":
       return "bg-red-100 text-red-800 border-red-200";
     default:
       return "bg-gray-100 text-gray-800 border-gray-200";
@@ -110,7 +110,7 @@ const getStatusIcon = (status: string) => {
       return <Hourglass className="h-4 w-4" />;
     case "APPROVED":
       return <CheckCircle2 className="h-4 w-4" />;
-    case "REJECTED":
+    case "CLOSED_WITH_ACTION":
       return <XCircle className="h-4 w-4" />;
     default:
       return <FileText className="h-4 w-4" />;
@@ -391,7 +391,7 @@ export default function ApplicationsList() {
                         </div>
 
                         {application.status !== "COMPLETED" &&
-                          application.status !== "REJECTED" && (
+                          application.status !== "CLOSED_WITH_ACTION" && (
                             <div className="flex items-center">
                               <Clock className="h-4 w-4 mr-2" />
                               <span

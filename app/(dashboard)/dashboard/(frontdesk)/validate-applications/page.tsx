@@ -134,7 +134,7 @@ const FrontDeskDashboard = () => {
       // Show success message
       alert(
         validationForm.shouldReject
-          ? "Application rejected successfully"
+          ? "Application closed with action successfully"
           : `Application validated successfully. RR Number: ${result.rrNumber}`
       );
 
@@ -177,7 +177,7 @@ const FrontDeskDashboard = () => {
         return "bg-yellow-100 text-yellow-800";
       case "VALIDATED":
         return "bg-green-100 text-green-800";
-      case "REJECTED":
+      case "CLOSED_WITH_ACTION":
         return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -242,7 +242,7 @@ const FrontDeskDashboard = () => {
               >
                 <option value="PENDING">Pending Validation</option>
                 <option value="VALIDATED">Validated</option>
-                <option value="REJECTED">Rejected</option>
+                <option value="CLOSED_WITH_ACTION">Closed with Action</option>
               </select>
             </div>
           </div>
@@ -313,10 +313,12 @@ const FrontDeskDashboard = () => {
                         <div className="flex items-center gap-1">
                           <FileText className="w-3 h-3" />{" "}
                           {app?.documents?.length || 0} docs
-                        </div>
+                        </div>{" "}
                         <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
-                          SLA: {app?.serviceCategory?.slaDays || 0} days
+                          Estimated Time: {app?.serviceCategory?.slaDays ||
+                            0}{" "}
+                          days
                         </div>
                       </div>
                     </div>
@@ -370,9 +372,9 @@ const FrontDeskDashboard = () => {
                       <p>
                         <strong>Service:</strong>{" "}
                         {selectedApp.serviceCategory.name}
-                      </p>
+                      </p>{" "}
                       <p>
-                        <strong>SLA:</strong>{" "}
+                        <strong>Estimated Time:</strong>{" "}
                         {selectedApp.serviceCategory.slaDays} days
                       </p>
                       <p>

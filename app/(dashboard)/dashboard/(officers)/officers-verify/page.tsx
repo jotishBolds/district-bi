@@ -241,7 +241,7 @@ const OfficerDashboard = () => {
           successMessage = "Application approved successfully";
           break;
         case "reject":
-          successMessage = "Application rejected successfully";
+          successMessage = "Application closed with action successfully";
           break;
         case "forward":
           // Safely access target officer name
@@ -557,9 +557,9 @@ const OfficerDashboard = () => {
                               selectedApp.submittedAt
                             ).toLocaleDateString()}
                           </span>
-                        </div>
+                        </div>{" "}
                         <div>
-                          <span className="text-gray-500">SLA Days:</span>
+                          <span className="text-gray-500">Estimated Time:</span>
                           <span className="ml-2 text-gray-900">
                             {selectedApp.serviceCategory.slaDays} days
                           </span>
