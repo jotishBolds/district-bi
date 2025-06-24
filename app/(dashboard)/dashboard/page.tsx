@@ -58,24 +58,24 @@ export default async function DashboardPage() {
     <div className="flex flex-col min-h-screen bg-gray-50">
       <div className="container   mx-auto max-w-full">
         {/* Header Section */}
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
+        <div className="rounded-lg border shadow-sm p-6 mb-6 bg-gradient-to-r from-lime-50 via-emerald-50 to-cyan-50 border-emerald-100">
           <PageHeader className="pb-0">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full">
               <div>
-                <div className="flex items-center space-x-2 text-blue-600 text-sm font-medium mb-2">
+                <div className="flex items-center space-x-2 text-sm font-medium mb-2 text-emerald-700">
                   <CalendarDays size={16} />
                   <span>{today}</span>
                 </div>
-                <PageHeaderHeading className="text-2xl md:text-3xl">
+                <PageHeaderHeading className="text-2xl md:text-3xl text-emerald-900">
                   {renderGreeting()},{" "}
-                  {session.user?.fullName?.split(" ")[0] || "User"}
+                  {(session && session.user?.fullName?.split(" ")[0]) || "User"}
                 </PageHeaderHeading>
-                <PageHeaderDescription className="mt-2">
+                <PageHeaderDescription className="mt-2 text-emerald-800">
                   {renderRoleSpecificText()}
                 </PageHeaderDescription>
               </div>
 
-              {session.user?.role === UserRole.CITIZEN && (
+              {session && session.user?.role === UserRole.CITIZEN && (
                 <div className="mt-4 md:mt-0">
                   <ButtonLink
                     path="/dashboard/applications/create"

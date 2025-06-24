@@ -30,6 +30,57 @@ interface StatusCardsProps {
 }
 
 export default function StatusCards({ userRole }: StatusCardsProps) {
+  // Helper to get card bg/text classes based on badgeColor
+  const getCardStyle = (badgeColor: string) => {
+    if (badgeColor.includes("amber")) {
+      return {
+        bg: "bg-amber-50",
+        text: "text-amber-900",
+        badge: "ring-amber-300",
+      };
+    }
+    if (badgeColor.includes("green")) {
+      return {
+        bg: "bg-green-50",
+        text: "text-green-900",
+        badge: "ring-green-300",
+      };
+    }
+    if (badgeColor.includes("red")) {
+      return {
+        bg: "bg-red-50",
+        text: "text-red-900",
+        badge: "ring-red-300",
+      };
+    }
+    if (badgeColor.includes("blue")) {
+      return {
+        bg: "bg-blue-50",
+        text: "text-blue-900",
+        badge: "ring-blue-300",
+      };
+    }
+    if (badgeColor.includes("purple")) {
+      return {
+        bg: "bg-purple-50",
+        text: "text-purple-900",
+        badge: "ring-purple-300",
+      };
+    }
+    if (badgeColor.includes("gray")) {
+      return {
+        bg: "bg-gray-50",
+        text: "text-gray-900",
+        badge: "ring-gray-300",
+      };
+    }
+    return {
+      bg: "bg-white",
+      text: "text-gray-900",
+      badge: "ring-gray-200",
+    };
+  };
+
   const getCards = (): StatusCard[] => {
     switch (userRole) {
       case UserRole.CITIZEN:
@@ -38,8 +89,8 @@ export default function StatusCards({ userRole }: StatusCardsProps) {
             title: "Draft Applications",
             value: 2,
             badge: "Draft",
-            badgeColor: "bg-gray-100 text-gray-800 border-gray-200",
-            icon: <ClipboardList className="h-8 w-8 text-gray-600" />,
+            badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
+            icon: <ClipboardList className="h-8 w-8 text-purple-600" />,
             description: "Incomplete applications",
           },
           {
@@ -182,30 +233,41 @@ export default function StatusCards({ userRole }: StatusCardsProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {getCards().map((card, index) => (
-        <Card
-          key={index}
-          className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200"
-        >
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-gray-50 p-3 rounded-full">{card.icon}</div>
-              <Badge
-                className={`${card.badgeColor} py-1 px-3 text-xs font-medium rounded-md`}
-              >
-                {card.badge}
-              </Badge>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-gray-900">{card.value}</p>
-              <h3 className="text-sm font-medium text-gray-700 mt-1">
-                {card.title}
-              </h3>
-              <p className="text-xs text-gray-500 mt-1">{card.description}</p>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+      {getCards().map((card, index) => {
+        const style = getCardStyle(card.badgeColor);
+        return (
+          <Card
+            key={index}
+            className={`${style.bg} border-0 shadow-md hover:shadow-lg transition-shadow duration-200`}
+          >
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="bg-white/70 p-3 rounded-full shadow-sm">
+                  {card.icon}
+                </div>
+                <Badge
+                  className={`${card.badgeColor} py-1 px-3 text-xs font-medium rounded-md ring-2 ${style.badge} border-0`}
+                >
+                  {card.badge}
+                </Badge>
+              </div>
+              <div>
+                <div className="flex items-center mb-2">
+                  <span
+                    className={`inline-block px-4 py-1 rounded-full bg-white/80 shadow text-4xl font-extrabold tracking-tight ${style.text} border border-gray-100`}
+                  >
+                    {card.value}
+                  </span>
+                </div>
+                <h3 className={`text-sm font-semibold ${style.text} mt-1`}>
+                  {card.title}
+                </h3>
+                <p className="text-xs text-gray-600 mt-1">{card.description}</p>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }
