@@ -363,10 +363,10 @@ const OfficerDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 p-3 md:p-6">
+      <div className="w-full mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 md:mb-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-2xl font-semibold text-gray-900">
@@ -376,8 +376,8 @@ const OfficerDashboard = () => {
                 Manage and process applications assigned to you
               </p>
             </div>
-            <div className="flex items-center gap-4">
-              <div>
+            <div className="flex flex-col sm:flex-row w-full md:w-auto items-center gap-4">
+              <div className="w-full sm:w-auto">
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
@@ -388,7 +388,7 @@ const OfficerDashboard = () => {
                   <option value="APPROVED">Approved</option>
                 </select>
               </div>
-              <div>
+              <div className="w-full sm:w-auto">
                 <input
                   type="text"
                   placeholder="Search applications..."
@@ -401,9 +401,9 @@ const OfficerDashboard = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Applications List */}
-          <div className="lg:col-span-2">
+          <div className="md:col-span-2">
             {loading ? (
               <div className="flex items-center justify-center h-64">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -413,7 +413,7 @@ const OfficerDashboard = () => {
                 <p className="text-gray-600">No applications found</p>
               </div>
             ) : (
-              <div className="bg-white rounded-lg shadow-sm divide-y">
+              <div className="bg-white rounded-lg shadow-sm divide-y overflow-y-auto max-h-[800px]">
                 {filteredApplications.map((app) => (
                   <div
                     key={app.id}
@@ -471,16 +471,16 @@ const OfficerDashboard = () => {
           </div>
 
           {/* Application Details */}
-          <div>
+          <div className="md:col-span-1 h-full">
             {selectedApp ? (
-              <div className="bg-white rounded-lg shadow-sm">
+              <div className="bg-white rounded-lg shadow-sm sticky top-6">
                 <div className="p-4 border-b">
                   <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-900">
+                    <div className="overflow-hidden">
+                      <h3 className="text-lg font-medium text-gray-900 truncate">
                         Application Details
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 truncate">
                         {selectedApp.serviceCategory.name}
                       </p>
                     </div>
@@ -503,21 +503,21 @@ const OfficerDashboard = () => {
                   </div>
                 </div>
 
-                <div className="p-4 space-y-4 max-h-[600px] overflow-y-auto">
+                <div className="p-3 md:p-4 space-y-3 md:space-y-4 max-h-[65vh] overflow-y-auto">
                   {/* Applicant Details */}
                   <div>
                     <h4 className="text-sm font-medium text-gray-900 mb-2">
                       Applicant Details
                     </h4>
                     <div className="bg-gray-50 rounded-lg p-3">
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div>
+                      <div className="flex flex-col gap-2 text-sm">
+                        <div className="break-words">
                           <span className="text-gray-500">Name:</span>
                           <span className="ml-2 text-gray-900">
                             {selectedApp.citizen.citizenProfile.fullName}
                           </span>
                         </div>
-                        <div>
+                        <div className="break-words">
                           <span className="text-gray-500">Phone:</span>
                           <span className="ml-2 text-gray-900">
                             {selectedApp.citizen.citizenProfile.phone}
@@ -533,7 +533,7 @@ const OfficerDashboard = () => {
                       Application Status
                     </h4>
                     <div className="bg-gray-50 rounded-lg p-3">
-                      <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="flex flex-col gap-2 text-sm">
                         <div>
                           <span className="text-gray-500">Status:</span>
                           <span
@@ -546,7 +546,7 @@ const OfficerDashboard = () => {
                         </div>
                         <div>
                           <span className="text-gray-500">RR Number:</span>
-                          <span className="ml-2 text-gray-900">
+                          <span className="ml-2 text-gray-900 break-words">
                             {selectedApp.rrNumber || "Not assigned"}
                           </span>
                         </div>
@@ -557,7 +557,7 @@ const OfficerDashboard = () => {
                               selectedApp.submittedAt
                             ).toLocaleDateString()}
                           </span>
-                        </div>{" "}
+                        </div>
                         <div>
                           <span className="text-gray-500">Estimated Time:</span>
                           <span className="ml-2 text-gray-900">
@@ -614,7 +614,7 @@ const OfficerDashboard = () => {
                         Take Action
                       </h4>
 
-                      <div className="space-y-3">
+                      <div className="space-y-3 mb-4">
                         {/* Action Selection */}
                         <div>
                           <select
@@ -634,7 +634,9 @@ const OfficerDashboard = () => {
                             {selectedApp.status === "IN_PROGRESS" && (
                               <>
                                 <option value="approve">Approve</option>
-                                <option value="reject">Reject</option>
+                                <option value="reject">
+                                  Close with Action
+                                </option>
                               </>
                             )}
                             <option value="forward">
@@ -642,8 +644,7 @@ const OfficerDashboard = () => {
                             </option>
                           </select>
                         </div>
-
-                        {/* Forward Officer Selection */}
+                        {/* Forward Officer Selection */}{" "}
                         {actionForm.action === "forward" && (
                           <div>
                             <select
@@ -654,7 +655,7 @@ const OfficerDashboard = () => {
                                   forwardToOfficerId: e.target.value,
                                 })
                               }
-                              className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                              className="block w-full text-sm rounded-lg border border-gray-300 bg-white px-3 py-2 focus:border-blue-500 focus:ring-blue-500"
                             >
                               <option value="">Select Officer</option>
                               {availableOfficers.map((officer) => (
@@ -665,7 +666,6 @@ const OfficerDashboard = () => {
                             </select>
                           </div>
                         )}
-
                         {/* Priority Selection for Forward */}
                         {actionForm.action === "forward" && (
                           <div>
@@ -685,7 +685,6 @@ const OfficerDashboard = () => {
                             </select>
                           </div>
                         )}
-
                         {/* Comments/Instructions */}
                         <div>
                           <textarea
@@ -711,7 +710,6 @@ const OfficerDashboard = () => {
                             className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                           />
                         </div>
-
                         {/* Rejection Reason */}
                         {actionForm.action === "reject" && (
                           <div>
@@ -729,7 +727,6 @@ const OfficerDashboard = () => {
                             />
                           </div>
                         )}
-
                         {/* Action Button */}
                         <div className="pt-2">
                           {actionForm.action === "reject" ? (
@@ -751,7 +748,7 @@ const OfficerDashboard = () => {
                                   <span>Processing...</span>
                                 </>
                               ) : (
-                                "Reject Application"
+                                "Close with Action"
                               )}
                             </button>
                           ) : actionForm.action === "process" ? (
@@ -826,7 +823,7 @@ const OfficerDashboard = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+              <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 text-center h-full flex items-center justify-center">
                 <p className="text-gray-600">
                   Select an application to view details
                 </p>

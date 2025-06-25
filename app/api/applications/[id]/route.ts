@@ -522,7 +522,7 @@ async function handleValidateApplication(
   } = requestData;
 
   if (shouldReject) {
-    // Reject the application
+    // Close with Action the application
     const result = await prisma.$transaction(async (tx) => {
       const updatedApplication = await tx.application.update({
         where: { id: application.id },

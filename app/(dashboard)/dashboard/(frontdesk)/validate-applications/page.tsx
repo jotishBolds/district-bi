@@ -525,8 +525,8 @@ const FrontDeskDashboard = () => {
                             >
                               <X className="w-4 h-4" />
                               {processing
-                                ? "Rejecting..."
-                                : "Reject Application"}
+                                ? "Closing with action..."
+                                : "Close with Action"}
                             </button>
                           ) : (
                             <button
