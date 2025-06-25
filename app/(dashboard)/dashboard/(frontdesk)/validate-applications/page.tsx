@@ -493,7 +493,7 @@ const FrontDeskDashboard = () => {
                             className="rounded border-gray-300 text-red-600 focus:ring-red-500"
                           />
                           <span className="text-sm text-red-600">
-                            Reject this application
+                            Close with Action
                           </span>
                         </label>
 
