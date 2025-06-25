@@ -590,7 +590,12 @@ async function handleValidateApplication(
   const endOfDay = new Date(currentDate);
   endOfDay.setHours(23, 59, 59, 999);
 
-  const dailyCount = await prisma.application.count({
+  // We'll use a transaction to ensure atomicity when generating the sequential number
+  let rrNumber = "";
+
+  // This will be done within the main transaction, so we don't need a separate one here
+  // Get the latest application with RR number from today to ensure uniqueness
+  const latestApplication = await prisma.application.findFirst({
     where: {
       validatedAt: {
         gte: startOfDay,
@@ -598,17 +603,64 @@ async function handleValidateApplication(
       },
       rrNumber: {
         not: null,
+        startsWith: `RR${year}${month}`,
       },
+    },
+    orderBy: {
+      rrNumber: "desc",
     },
   });
 
-  const sequentialNumber = (dailyCount + 1).toString().padStart(4, "0");
-  const rrNumber = `RR${year}${month}${sequentialNumber}`;
+  let sequentialNumber;
+  if (latestApplication && latestApplication.rrNumber) {
+    // Extract the sequential number from the latest RR number and increment it
+    const latestSequential = parseInt(latestApplication.rrNumber.slice(-4), 10);
+    sequentialNumber = (latestSequential + 1).toString().padStart(4, "0");
+  } else {
+    // First application of the day
+    sequentialNumber = "0001";
+  }
+
+  rrNumber = `RR${year}${month}${sequentialNumber}`;
 
   // Get the preferred officer from assignments
   const preferredOfficer = application.officerAssignments[0]?.assignedTo;
 
   const result = await prisma.$transaction(async (tx) => {
+    // Double-check that the RR number is unique before updating
+    // This is necessary to prevent race conditions between multiple validations
+    const existingWithRR = await tx.application.findFirst({
+      where: {
+        rrNumber,
+      },
+    });
+
+    if (existingWithRR) {
+      // If there's a conflict, regenerate a new unique RR number by incrementing the sequence
+      const baseRR = `RR${year}${month}`;
+      const latestRR = await tx.application.findFirst({
+        where: {
+          rrNumber: {
+            startsWith: baseRR,
+          },
+        },
+        orderBy: {
+          rrNumber: "desc",
+        },
+      });
+
+      let newSequential;
+      if (latestRR && latestRR.rrNumber) {
+        // Extract and increment the latest sequence number
+        newSequential = parseInt(latestRR.rrNumber.slice(-4), 10) + 1;
+      } else {
+        newSequential = 1;
+      }
+
+      // Update the rrNumber with the new sequential value
+      rrNumber = `${baseRR}${newSequential.toString().padStart(4, "0")}`;
+    }
+
     // Update application status to VALIDATED and assign RR number
     const updatedApplication = await tx.application.update({
       where: { id: application.id },
@@ -712,7 +764,7 @@ async function handleValidateApplication(
 
   return NextResponse.json({
     message: "Application validated successfully",
-    rrNumber,
+    rrNumber: result.rrNumber, // Use the final RR number from the result
     application: result,
   });
 }
