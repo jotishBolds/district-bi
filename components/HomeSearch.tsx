@@ -7,10 +7,10 @@ export default function HomeSearch() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const popularSearches = [
-    "Birth Certificate",
-    "Land Registration",
-    "Income Certificate",
-    "Caste Certificate",
+    "Application 1",
+    "Application 2",
+    "Application 3",
+    "Application 4",
   ];
 
   return (

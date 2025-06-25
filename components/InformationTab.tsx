@@ -12,7 +12,7 @@ export default function InformationTab() {
   const serviceInfo = [
     {
       id: "item-1",
-      title: "Birth Certificate",
+      title: "Application 1",
       icon: <FileText className="w-4 h-4 text-[#1170CD]" />,
       processingTime: "7 working days",
       requirements:
@@ -23,7 +23,7 @@ export default function InformationTab() {
     },
     {
       id: "item-2",
-      title: "Land Registration",
+      title: "Application 2",
       icon: <FileText className="w-4 h-4 text-[#1170CD]" />,
       processingTime: "14-21 working days",
       requirements: "Property documents, identity proof, and payment receipt",
@@ -33,7 +33,7 @@ export default function InformationTab() {
     },
     {
       id: "item-3",
-      title: "Income Certificate",
+      title: "Application 3",
       icon: <FileText className="w-4 h-4 text-[#1170CD]" />,
       processingTime: "10 working days",
       requirements: "Salary slips, tax returns, and residential proof",
@@ -43,7 +43,7 @@ export default function InformationTab() {
     },
     {
       id: "item-4",
-      title: "Caste Certificate",
+      title: "Application 4",
       icon: <FileText className="w-4 h-4 text-[#1170CD]" />,
       processingTime: "14 working days",
       requirements: "Supporting documentation from local authorities",
