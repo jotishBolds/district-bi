@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   Home,
   FileText,
@@ -13,6 +14,7 @@ import {
   Gavel,
   ClipboardList,
   HelpCircle,
+  ListChecks,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -28,23 +30,44 @@ interface DesktopSidebarProps {
 export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const [isGeneralFrontdesk, setIsGeneralFrontdesk] = useState<boolean | null>(
+    null
+  );
 
-  const citizenLinks = [
-    { name: "Dashboard", href: "/dashboard", icon: Home },
-    {
-      name: "Applications",
-      href: "/dashboard/applications/submitted-app",
-      icon: FileText,
-    },
+  // Fetch frontdesk assignments to determine if user is general frontdesk
+  useEffect(() => {
+    const fetchFrontdeskType = async () => {
+      if (userRole !== "FRONT_DESK") return;
 
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
-  ];
+      try {
+        const response = await fetch("/api/frontdesk/assignments");
+        if (!response.ok) return;
+
+        const data = await response.json();
+        if (data && Array.isArray(data.assignments)) {
+          // Determine if this is a general frontdesk user
+          const hasSpecificAssignments = data.assignments.some(
+            (assignment: { officerId: string | null }) =>
+              assignment.officerId !== null
+          );
+          setIsGeneralFrontdesk(!hasSpecificAssignments);
+        } else {
+          setIsGeneralFrontdesk(true); // Default to general if no assignments
+        }
+      } catch (error) {
+        console.error("Error fetching frontdesk type:", error);
+        setIsGeneralFrontdesk(true); // Default to general on error
+      }
+    };
+
+    fetchFrontdeskType();
+  }, [userRole]);
 
   const officerLinks = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
 
     {
-      name: "Assigned Cases",
+      name: "Assigned Applications",
       href: "/dashboard/officers-verify",
       icon: ClipboardList,
     },
@@ -55,11 +78,40 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
   const frontDeskLinks = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
     {
-      name: "Validate Applications",
-      href: "/dashboard/validate-applications",
+      name: "Create Application",
+      href: "/dashboard/create-application",
       icon: FileText,
     },
-
+    // Conditional link based on frontdesk type
+    ...(isGeneralFrontdesk === true
+      ? [
+          {
+            name: "Queue Overview",
+            href: "/dashboard/general-queue-view",
+            icon: ListChecks,
+          },
+        ]
+      : isGeneralFrontdesk === false
+      ? [
+          {
+            name: "Validate Applications",
+            href: "/dashboard/validate-applications",
+            icon: ClipboardList,
+          },
+          {
+            name: "Queue Management",
+            href: "/dashboard/queue",
+            icon: ListChecks,
+          },
+        ]
+      : [
+          // Loading state - show basic links
+          {
+            name: "Validate Applications",
+            href: "/dashboard/validate-applications",
+            icon: ClipboardList,
+          },
+        ]),
     { name: "Help & Support", href: "/help", icon: HelpCircle },
   ];
 
@@ -67,6 +119,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
     { name: "Dashboard", href: "/admin", icon: Home },
     { name: "Applications", href: "/dashboard/applications", icon: FileText },
     { name: "User Management", href: "/admin/user-management", icon: Users },
+    {
+      name: "Frontdesk Management",
+      href: "/admin/frontdesk-management",
+      icon: Shield,
+    },
     { name: "System Settings", href: "/admin/settings", icon: Settings },
     { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
     { name: "Help & Support", href: "/help", icon: HelpCircle },
@@ -74,8 +131,6 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
 
   const getLinks = () => {
     switch (userRole) {
-      case UserRole.CITIZEN:
-        return citizenLinks;
       case UserRole.FRONT_DESK:
         return frontDeskLinks;
       case UserRole.DC:
@@ -88,14 +143,12 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       case UserRole.SUPER_ADMIN:
         return adminLinks;
       default:
-        return citizenLinks;
+        return frontDeskLinks;
     }
   };
 
   const getRoleBadge = () => {
     switch (userRole) {
-      case UserRole.CITIZEN:
-        return { text: "Citizen", color: "bg-blue-100 text-blue-800" };
       case UserRole.FRONT_DESK:
         return { text: "Front Desk", color: "bg-green-100 text-green-800" };
       case UserRole.DC:

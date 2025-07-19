@@ -1,7 +1,8 @@
 // app/api/service-categories/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { UserRole } from "@/app/generated/prisma";
 
 export async function GET() {
   try {
@@ -29,6 +30,79 @@ export async function GET() {
     return NextResponse.json(serviceCategories);
   } catch (error) {
     console.error("Error fetching service categories:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// POST - Create new service category (only for FRONT_DESK and ADMIN)
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getServerAuthSession();
+
+    if (
+      !session?.user ||
+      (session.user.role !== UserRole.ADMIN &&
+        session.user.role !== UserRole.FRONT_DESK)
+    ) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { name, description, slaDays } = await request.json();
+
+    if (!name || !slaDays) {
+      return NextResponse.json(
+        { error: "Name and SLA days are required" },
+        { status: 400 }
+      );
+    }
+
+    if (slaDays < 1 || slaDays > 365) {
+      return NextResponse.json(
+        { error: "SLA days must be between 1 and 365" },
+        { status: 400 }
+      );
+    }
+
+    // Check if service category with same name already exists
+    const existingCategory = await prisma.serviceCategory.findFirst({
+      where: {
+        name: {
+          equals: name.trim(),
+          mode: "insensitive",
+        },
+      },
+    });
+
+    if (existingCategory) {
+      return NextResponse.json(
+        { error: "Service category with this name already exists" },
+        { status: 400 }
+      );
+    }
+
+    const serviceCategory = await prisma.serviceCategory.create({
+      data: {
+        name: name.trim(),
+        description: description?.trim() || null,
+        slaDays: parseInt(slaDays),
+        isActive: true,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Service category created successfully",
+      serviceCategory: {
+        id: serviceCategory.id,
+        name: serviceCategory.name,
+        description: serviceCategory.description,
+        slaDays: serviceCategory.slaDays,
+      },
+    });
+  } catch (error) {
+    console.error("Error creating service category:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

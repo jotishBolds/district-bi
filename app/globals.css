@@ -120,3 +120,23 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom animations for form steps */
+@keyframes step-highlight {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    background-color: rgba(59, 130, 246, 0.05);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.2);
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    background-color: transparent;
+  }
+}
+
+.animate-step-highlight {
+  animation: step-highlight 2s ease-out;
+}

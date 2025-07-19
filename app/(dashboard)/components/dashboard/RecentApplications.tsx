@@ -28,30 +28,6 @@ export default function RecentApplications({
 }: RecentApplicationsProps) {
   const getApplications = (): Application[] => {
     switch (userRole) {
-      case UserRole.CITIZEN:
-        return [
-          {
-            id: "1",
-            rrNumber: "RR-2025-0001",
-            service: "Land Certificate",
-            status: "Pending",
-            updatedAt: "2025-05-10",
-          },
-          {
-            id: "2",
-            rrNumber: "RR-2025-0002",
-            service: "Income Certificate",
-            status: "In Progress",
-            updatedAt: "2025-05-09",
-          },
-          {
-            id: "3",
-            rrNumber: null,
-            service: "Residence Certificate",
-            status: "Draft",
-            updatedAt: "2025-05-08",
-          },
-        ];
       case UserRole.FRONT_DESK:
         return [
           {
@@ -151,8 +127,6 @@ export default function RecentApplications({
 
   const getTitle = () => {
     switch (userRole) {
-      case UserRole.CITIZEN:
-        return "Your Recent Applications";
       case UserRole.FRONT_DESK:
         return "Applications Pending Review";
       case UserRole.DC:

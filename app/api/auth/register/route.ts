@@ -3,16 +3,33 @@ import { hash } from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { generateOTP, isValidEmail, validatePassword } from "@/lib/utils";
 import { sendVerificationEmail } from "@/lib/mail";
+import { UserRole } from "@/app/generated/prisma";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email, password, fullName, phone, address } = body;
+    const {
+      email,
+      password,
+      fullName,
+      phone,
+      role = "FRONT_DESK",
+      designation,
+      department,
+    } = body;
 
     // Validate input fields
     if (!email || !password || !fullName || !phone) {
       return NextResponse.json(
         { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // Validate role - only allow ADMIN and FRONT_DESK
+    if (!["ADMIN", "FRONT_DESK"].includes(role)) {
+      return NextResponse.json(
+        { error: "Invalid role. Only ADMIN and FRONT_DESK are allowed" },
         { status: 400 }
       );
     }
@@ -49,7 +66,7 @@ export async function POST(req: NextRequest) {
     // Hash password
     const hashedPassword = await hash(password, 10);
 
-    // Create user and citizen profile in a transaction
+    // Create user and profile in a transaction
     const user = await prisma.$transaction(async (tx) => {
       // Create user
       const newUser = await tx.user.create({
@@ -57,20 +74,26 @@ export async function POST(req: NextRequest) {
           email,
           passwordHash: hashedPassword,
           phone,
-          role: "CITIZEN",
-          isActive: false, // Initially inactive until email verification
+          role: role as UserRole,
+          isActive: true, // Admin and frontdesk users are active by default
         },
       });
 
-      // Create citizen profile
-      await tx.citizenProfile.create({
-        data: {
-          userId: newUser.id,
-          fullName,
-          phone,
-          address: address || "",
-        },
-      });
+      // Create officer profile if needed (for admin users or frontdesk with designation)
+      if (role === "ADMIN" || (role === "FRONT_DESK" && designation)) {
+        await tx.officerProfile.create({
+          data: {
+            userId: newUser.id,
+            fullName,
+            designation:
+              designation ||
+              (role === "ADMIN" ? "Administrator" : "Front Desk Officer"),
+            department: department || "Administration",
+            officeLocation: "District Office",
+            isAvailable: true,
+          },
+        });
+      }
 
       return newUser;
     });
@@ -95,6 +118,7 @@ export async function POST(req: NextRequest) {
           "Registration successful. Please check your email for verification code.",
         userId: user.id,
         email: user.email,
+        role: user.role,
       },
       { status: 201 }
     );

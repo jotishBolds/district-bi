@@ -5,10 +5,8 @@ import prisma from "@/lib/prisma";
 import {
   UserRole,
   ApplicationStatus,
-  User,
   DocumentType,
 } from "@/app/generated/prisma";
-import type { Session } from "next-auth";
 
 type AuthenticatedSession = {
   user: {
@@ -21,28 +19,20 @@ type AuthenticatedSession = {
   requiresOtp: boolean;
 };
 
-interface ApplicationWhereClause {
+type ApplicationWithRelations = {
   id: string;
-  citizenId?: string;
-}
-
-interface SessionUser extends User {
-  id: string;
-  email: string;
-  role: UserRole;
-  isActive: boolean;
-  fullName?: string;
-  needsOtp: boolean;
-}
-
-interface PrismaApplication {
-  id: string;
-  status: ApplicationStatus;
-  citizenId: string;
-  currentHolderId: string | null;
   rrNumber: string | null;
-  validatedAt: Date | null;
+  serviceCategoryId: string;
+  citizenName: string;
+  citizenPhone: string;
+  citizenEmail: string | null;
+  citizenAddress: string;
+  citizenGender: string | null;
+  citizenAadhaar: string | null;
+  status: ApplicationStatus;
+  currentHolderId: string | null;
   submittedAt: Date | null;
+  validatedAt: Date | null;
   completedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
@@ -55,71 +45,48 @@ interface PrismaApplication {
     createdAt: Date;
     updatedAt: Date;
   };
-  citizen: User & {
-    citizenProfile: { fullName: string } | null;
-  };
-  documents: {
+  documents: Array<{
     id: string;
     applicationId: string;
     documentType: DocumentType;
     fileName: string;
     filePath: string;
     fileSize: number;
+    uploadedById: string;
     isVerified: boolean;
+    verifiedById: string | null;
     verificationNotes: string | null;
     createdAt: Date;
     updatedAt: Date;
-    uploadedById: string;
-    verifiedById: string | null;
-  }[];
-  officerAssignments: {
-    assignedTo: User & {
-      officerProfile: { fullName: string } | null;
+  }>;
+  officerAssignments: Array<{
+    id: string;
+    applicationId: string;
+    assignedById: string;
+    assignedToId: string;
+    expectedCompletionDate: Date | null;
+    priority: number;
+    instructions: string | null;
+    createdAt: Date;
+    assignedTo: {
+      id: string;
+      email: string;
+      role: UserRole;
+      isActive: boolean;
+      officerProfile: {
+        id: string;
+        userId: string;
+        fullName: string;
+        designation: string;
+        department: string;
+        officeLocation: string | null;
+        isAvailable: boolean;
+        createdAt: Date;
+        updatedAt: Date;
+      } | null;
     };
-  }[];
-}
-
-interface Profile {
-  id: string;
-  userId: string;
-  fullName: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface UserWithProfile extends User {
-  citizenProfile?: Profile | null;
-  officerProfile?: Profile | null;
-}
-
-interface ApplicationDocument {
-  id: string;
-  applicationId: string;
-  documentType: DocumentType;
-  fileName: string;
-  filePath: string;
-  fileSize: number;
-  isVerified: boolean;
-  verificationNotes: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  uploadedById: string;
-  verifiedById: string | null;
-}
-
-interface OfficerAssignment {
-  id: string;
-  applicationId: string;
-  assignedById: string;
-  assignedToId: string;
-  priority: number;
-  instructions: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  expectedCompletionDate: Date | null;
-  assignedBy: UserWithProfile;
-  assignedTo: UserWithProfile;
-}
+  }>;
+};
 
 interface ValidationData {
   isDocumentsComplete: boolean;
@@ -137,6 +104,8 @@ interface ForwardData {
   forwardToOfficerId: string;
   priority?: number;
   instructions: string;
+  forwardedBy?: string;
+  currentAssignedOfficer?: string;
 }
 
 export async function GET(
@@ -151,21 +120,12 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const applicationId = (await params).id; // Build where clause based on user role
-    const whereClause: ApplicationWhereClause =
-      session.user.role === UserRole.CITIZEN
-        ? { id: applicationId, citizenId: session.user.id }
-        : { id: applicationId };
+    const applicationId = (await params).id;
 
     const application = await prisma.application.findFirst({
-      where: whereClause,
+      where: { id: applicationId },
       include: {
         serviceCategory: true,
-        citizen: {
-          include: {
-            citizenProfile: true,
-          },
-        },
         currentHolder: {
           include: {
             officerProfile: true,
@@ -175,7 +135,6 @@ export async function GET(
           include: {
             changedBy: {
               include: {
-                citizenProfile: true,
                 officerProfile: true,
               },
             },
@@ -214,7 +173,6 @@ export async function GET(
           include: {
             uploadedBy: {
               include: {
-                citizenProfile: true,
                 officerProfile: true,
               },
             },
@@ -247,7 +205,6 @@ export async function GET(
           include: {
             performedBy: {
               include: {
-                citizenProfile: true,
                 officerProfile: true,
               },
             },
@@ -277,7 +234,6 @@ export async function GET(
   }
 }
 
-// Submit application (from DRAFT to PENDING for front desk validation)
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -298,11 +254,6 @@ export async function PATCH(
       where: { id: applicationId },
       include: {
         serviceCategory: true,
-        citizen: {
-          include: {
-            citizenProfile: true,
-          },
-        },
         documents: true,
         officerAssignments: {
           include: {
@@ -378,17 +329,14 @@ export async function PATCH(
   }
 }
 
-// Handle application submission by citizen
+// Handle application submission by front desk
 async function handleSubmitApplication(
-  application: PrismaApplication,
+  application: ApplicationWithRelations,
   session: AuthenticatedSession,
   request: NextRequest
 ) {
-  // Only citizens can submit their own applications
-  if (
-    session.user.role !== UserRole.CITIZEN ||
-    application.citizenId !== session.user.id
-  ) {
+  // Only FRONT_DESK users can submit applications
+  if (session.user.role !== UserRole.FRONT_DESK) {
     return NextResponse.json(
       { error: "Unauthorized to submit this application" },
       { status: 403 }
@@ -448,23 +396,12 @@ async function handleSubmitApplication(
       },
     });
 
-    // Create notification for citizen
-    await tx.notification.create({
-      data: {
-        userId: session.user.id,
-        notificationType: "APPLICATION_SUBMITTED",
-        applicationId: application.id,
-        title: "Application Submitted Successfully",
-        message: `Your application for ${application.serviceCategory.name} has been submitted and is now pending validation.`,
-        isRead: false,
-      },
-    });
-
-    // Notify front desk staff
+    // Notify front desk staff about new application
     const frontDeskUsers = await tx.user.findMany({
       where: {
         role: UserRole.FRONT_DESK,
         isActive: true,
+        id: { not: session.user.id }, // Don't notify the submitter
       },
     });
 
@@ -475,7 +412,7 @@ async function handleSubmitApplication(
           notificationType: "APPLICATION_SUBMITTED",
           applicationId: application.id,
           title: "New Application for Validation",
-          message: `Application for ${application.serviceCategory.name} submitted by ${application.citizen.citizenProfile?.fullName} is pending validation.`,
+          message: `Application for ${application.serviceCategory.name} submitted by ${application.citizenName} is pending validation.`,
           isRead: false,
         },
       });
@@ -492,7 +429,7 @@ async function handleSubmitApplication(
 
 // Handle application validation by front desk
 async function handleValidateApplication(
-  application: PrismaApplication,
+  application: ApplicationWithRelations,
   session: AuthenticatedSession,
   request: NextRequest,
   requestData: ValidationData
@@ -508,7 +445,7 @@ async function handleValidateApplication(
   // Can only validate PENDING applications
   if (application.status !== ApplicationStatus.PENDING) {
     return NextResponse.json(
-      { error: "Only pending applications can be validated" },
+      { error: "Application can only be validated from PENDING status" },
       { status: 400 }
     );
   }
@@ -522,12 +459,12 @@ async function handleValidateApplication(
   } = requestData;
 
   if (shouldReject) {
-    // Close with Action the application
+    // Close the application with action
     const result = await prisma.$transaction(async (tx) => {
       const updatedApplication = await tx.application.update({
         where: { id: application.id },
         data: {
-          status: ApplicationStatus.CLOSED_WITH_ACTION,
+          status: ApplicationStatus.CLOSED,
           updatedAt: new Date(),
         },
       });
@@ -537,9 +474,9 @@ async function handleValidateApplication(
         data: {
           applicationId: application.id,
           fromStatus: ApplicationStatus.PENDING,
-          toStatus: ApplicationStatus.CLOSED_WITH_ACTION,
+          toStatus: ApplicationStatus.CLOSED,
           changedById: session.user.id,
-          comments: rejectionReason || "Application closed with action",
+          comments: rejectionReason || "Application closed",
         },
       });
 
@@ -547,26 +484,14 @@ async function handleValidateApplication(
       await tx.applicationAuditLog.create({
         data: {
           applicationId: application.id,
-          action: "APPLICATION_CLOSED_WITH_ACTION",
+          action: "APPLICATION_CLOSED",
           performedById: session.user.id,
           oldValues: { status: ApplicationStatus.PENDING },
-          newValues: { status: ApplicationStatus.CLOSED_WITH_ACTION },
+          newValues: { status: ApplicationStatus.CLOSED },
           ipAddress:
             request.headers.get("x-forwarded-for") ||
             request.headers.get("x-real-ip") ||
             "unknown",
-        },
-      });
-
-      // Notify citizen
-      await tx.notification.create({
-        data: {
-          userId: application.citizenId,
-          notificationType: "STATUS_CHANGED",
-          applicationId: application.id,
-          title: "Application Closed with Action",
-          message: `Your application for ${application.serviceCategory.name} has been closed with action. Reason: ${rejectionReason}`,
-          isRead: false,
         },
       });
 
@@ -590,10 +515,6 @@ async function handleValidateApplication(
   const endOfDay = new Date(currentDate);
   endOfDay.setHours(23, 59, 59, 999);
 
-  // We'll use a transaction to ensure atomicity when generating the sequential number
-  let rrNumber = "";
-
-  // This will be done within the main transaction, so we don't need a separate one here
   // Get the latest application with RR number from today to ensure uniqueness
   const latestApplication = await prisma.application.findFirst({
     where: {
@@ -621,44 +542,16 @@ async function handleValidateApplication(
     sequentialNumber = "0001";
   }
 
-  rrNumber = `RR${year}${month}${sequentialNumber}`;
-
-  // Get the preferred officer from assignments
-  const preferredOfficer = application.officerAssignments[0]?.assignedTo;
+  const rrNumber = `RR${year}${month}${sequentialNumber}`;
 
   const result = await prisma.$transaction(async (tx) => {
     // Double-check that the RR number is unique before updating
-    // This is necessary to prevent race conditions between multiple validations
     const existingWithRR = await tx.application.findFirst({
-      where: {
-        rrNumber,
-      },
+      where: { rrNumber },
     });
 
     if (existingWithRR) {
-      // If there's a conflict, regenerate a new unique RR number by incrementing the sequence
-      const baseRR = `RR${year}${month}`;
-      const latestRR = await tx.application.findFirst({
-        where: {
-          rrNumber: {
-            startsWith: baseRR,
-          },
-        },
-        orderBy: {
-          rrNumber: "desc",
-        },
-      });
-
-      let newSequential;
-      if (latestRR && latestRR.rrNumber) {
-        // Extract and increment the latest sequence number
-        newSequential = parseInt(latestRR.rrNumber.slice(-4), 10) + 1;
-      } else {
-        newSequential = 1;
-      }
-
-      // Update the rrNumber with the new sequential value
-      rrNumber = `${baseRR}${newSequential.toString().padStart(4, "0")}`;
+      throw new Error("RR number conflict. Please try again.");
     }
 
     // Update application status to VALIDATED and assign RR number
@@ -668,7 +561,6 @@ async function handleValidateApplication(
         status: ApplicationStatus.VALIDATED,
         rrNumber,
         validatedAt: new Date(),
-        currentHolderId: preferredOfficer?.id,
         updatedAt: new Date(),
       },
     });
@@ -679,10 +571,9 @@ async function handleValidateApplication(
         applicationId: application.id,
         validatedById: session.user.id,
         rrNumber,
-        isDocumentsComplete: isDocumentsComplete || false,
-        isEligibilityVerified: isEligibilityVerified || false,
-        validationNotes:
-          validationNotes || "Application validated by front desk",
+        isDocumentsComplete,
+        isEligibilityVerified,
+        validationNotes,
       },
     });
 
@@ -693,24 +584,9 @@ async function handleValidateApplication(
         fromStatus: ApplicationStatus.PENDING,
         toStatus: ApplicationStatus.VALIDATED,
         changedById: session.user.id,
-        comments: `Application validated and assigned RR Number: ${rrNumber}`,
+        comments: `Application validated. RR Number: ${rrNumber}`,
       },
     });
-
-    // Update officer assignment with RR number
-    if (application.officerAssignments.length > 0) {
-      await tx.officerAssignment.updateMany({
-        where: {
-          applicationId: application.id,
-        },
-        data: {
-          expectedCompletionDate: new Date(
-            Date.now() +
-              application.serviceCategory.slaDays * 24 * 60 * 60 * 1000
-          ),
-        },
-      });
-    }
 
     // Create audit log
     await tx.applicationAuditLog.create({
@@ -721,8 +597,7 @@ async function handleValidateApplication(
         oldValues: { status: ApplicationStatus.PENDING },
         newValues: {
           status: ApplicationStatus.VALIDATED,
-          rrNumber,
-          currentHolderId: preferredOfficer?.id,
+          rrNumber: rrNumber,
         },
         ipAddress:
           request.headers.get("x-forwarded-for") ||
@@ -731,30 +606,42 @@ async function handleValidateApplication(
       },
     });
 
-    // Create notification for citizen
-    await tx.notification.create({
-      data: {
-        userId: application.citizenId,
-        notificationType: "STATUS_CHANGED",
-        applicationId: application.id,
-        title: "Application Validated",
-        message: `Your application has been validated and assigned RR Number: ${rrNumber}. It has been forwarded to ${
-          preferredOfficer?.officerProfile?.fullName || "the assigned officer"
-        }.`,
-        isRead: false,
-      },
-    });
-
-    // Create notification for assigned officer
-    if (preferredOfficer) {
+    // If there are officer assignments, notify the assigned officer
+    if (
+      application.officerAssignments &&
+      application.officerAssignments.length > 0
+    ) {
+      const assignedOfficer = application.officerAssignments[0].assignedTo;
       await tx.notification.create({
         data: {
-          userId: preferredOfficer.id,
-          notificationType: "APPLICATION_SUBMITTED",
+          userId: assignedOfficer.id,
+          notificationType: "STATUS_CHANGED",
           applicationId: application.id,
-          title: "Application Assigned for Processing",
-          message: `Application ${rrNumber} for ${application.serviceCategory.name} has been assigned to you for processing.`,
+          title: "Application Validated and Ready for Processing",
+          message: `Application for ${application.serviceCategory.name} (RR: ${rrNumber}) has been validated and is ready for your review.`,
           isRead: false,
+        },
+      });
+
+      // Update application current holder to the assigned officer
+      await tx.application.update({
+        where: { id: application.id },
+        data: {
+          currentHolderId: assignedOfficer.id,
+          status: ApplicationStatus.IN_PROGRESS,
+        },
+      });
+
+      // Create another workflow entry for IN_PROGRESS status
+      await tx.applicationWorkflow.create({
+        data: {
+          applicationId: application.id,
+          fromStatus: ApplicationStatus.VALIDATED,
+          toStatus: ApplicationStatus.IN_PROGRESS,
+          changedById: session.user.id,
+          comments: `Application assigned to ${
+            assignedOfficer.officerProfile?.fullName || assignedOfficer.email
+          }`,
         },
       });
     }
@@ -764,37 +651,47 @@ async function handleValidateApplication(
 
   return NextResponse.json({
     message: "Application validated successfully",
-    rrNumber: result.rrNumber, // Use the final RR number from the result
     application: result,
+    rrNumber,
   });
 }
 
 // Handle application processing by officers
 async function handleProcessApplication(
-  application: PrismaApplication,
+  application: ApplicationWithRelations,
   session: AuthenticatedSession,
   request: NextRequest,
   requestData: ProcessingData
 ) {
-  // Only assigned officers can process applications
+  // Only officers (not FRONT_DESK, ADMIN, SUPER_ADMIN) can process applications
   if (
-    (session.user.role !== UserRole.DC &&
-      session.user.role !== UserRole.ADC &&
-      session.user.role !== UserRole.RO &&
-      session.user.role !== UserRole.SDM &&
-      session.user.role !== UserRole.DYDIR) ||
-    application.currentHolderId !== session.user.id
+    [UserRole.FRONT_DESK, UserRole.ADMIN, UserRole.SUPER_ADMIN].includes(
+      session.user.role as
+        | typeof UserRole.FRONT_DESK
+        | typeof UserRole.ADMIN
+        | typeof UserRole.SUPER_ADMIN
+    )
   ) {
     return NextResponse.json(
-      { error: "Unauthorized to process this application" },
+      { error: "Only officers can process applications" },
       { status: 403 }
     );
   }
 
-  // Can only process VALIDATED applications
-  if (application.status !== ApplicationStatus.VALIDATED) {
+  // Can only process VALIDATED or IN_PROGRESS applications
+  if (
+    !(
+      [
+        ApplicationStatus.VALIDATED,
+        ApplicationStatus.IN_PROGRESS,
+      ] as ApplicationStatus[]
+    ).includes(application.status)
+  ) {
     return NextResponse.json(
-      { error: "Only validated applications can be processed" },
+      {
+        error:
+          "Application can only be processed from VALIDATED or IN_PROGRESS status",
+      },
       { status: 400 }
     );
   }
@@ -807,6 +704,7 @@ async function handleProcessApplication(
       where: { id: application.id },
       data: {
         status: ApplicationStatus.IN_PROGRESS,
+        currentHolderId: session.user.id,
         updatedAt: new Date(),
       },
     });
@@ -815,7 +713,7 @@ async function handleProcessApplication(
     await tx.applicationWorkflow.create({
       data: {
         applicationId: application.id,
-        fromStatus: ApplicationStatus.VALIDATED,
+        fromStatus: application.status,
         toStatus: ApplicationStatus.IN_PROGRESS,
         changedById: session.user.id,
         comments: comments || "Application processing started",
@@ -826,30 +724,14 @@ async function handleProcessApplication(
     await tx.applicationAuditLog.create({
       data: {
         applicationId: application.id,
-        action: "PROCESSING_STARTED",
+        action: "APPLICATION_PROCESSING_STARTED",
         performedById: session.user.id,
-        oldValues: { status: ApplicationStatus.VALIDATED },
+        oldValues: { status: application.status },
         newValues: { status: ApplicationStatus.IN_PROGRESS },
         ipAddress:
           request.headers.get("x-forwarded-for") ||
           request.headers.get("x-real-ip") ||
           "unknown",
-      },
-    });
-
-    // Create notification for citizen
-    await tx.notification.create({
-      data: {
-        userId: application.citizenId,
-        notificationType: "STATUS_CHANGED",
-        applicationId: application.id,
-        title: "Application Processing Started",
-        message: `Your application ${
-          application.rrNumber
-        } is now being processed by ${
-          session.user.fullName || "an assigned officer"
-        }.`,
-        isRead: false,
       },
     });
 
@@ -862,24 +744,24 @@ async function handleProcessApplication(
   });
 }
 
-// Handle application approval by officers
+// Handle application approval
 async function handleApproveApplication(
-  application: PrismaApplication,
+  application: ApplicationWithRelations,
   session: AuthenticatedSession,
   request: NextRequest,
-  requestData: { comments?: string }
+  requestData: ProcessingData
 ) {
-  // Only assigned officers can approve applications
+  // Only officers can approve applications
   if (
-    (session.user.role !== UserRole.DC &&
-      session.user.role !== UserRole.ADC &&
-      session.user.role !== UserRole.RO &&
-      session.user.role !== UserRole.SDM &&
-      session.user.role !== UserRole.DYDIR) ||
-    application.currentHolderId !== session.user.id
+    [UserRole.FRONT_DESK, UserRole.ADMIN, UserRole.SUPER_ADMIN].includes(
+      session.user.role as
+        | typeof UserRole.FRONT_DESK
+        | typeof UserRole.ADMIN
+        | typeof UserRole.SUPER_ADMIN
+    )
   ) {
     return NextResponse.json(
-      { error: "Unauthorized to approve this application" },
+      { error: "Only officers can approve applications" },
       { status: 403 }
     );
   }
@@ -887,7 +769,7 @@ async function handleApproveApplication(
   // Can only approve IN_PROGRESS applications
   if (application.status !== ApplicationStatus.IN_PROGRESS) {
     return NextResponse.json(
-      { error: "Only in-progress applications can be approved" },
+      { error: "Application can only be approved from IN_PROGRESS status" },
       { status: 400 }
     );
   }
@@ -895,11 +777,97 @@ async function handleApproveApplication(
   const { comments } = requestData;
 
   const result = await prisma.$transaction(async (tx) => {
-    // Update application status to APPROVED
+    // Update application status to RESOLVED
     const updatedApplication = await tx.application.update({
       where: { id: application.id },
       data: {
-        status: ApplicationStatus.APPROVED,
+        status: ApplicationStatus.RESOLVED,
+        currentHolderId: session.user.id,
+        updatedAt: new Date(),
+      },
+    });
+
+    // Create workflow entry
+    await tx.applicationWorkflow.create({
+      data: {
+        applicationId: application.id,
+        fromStatus: ApplicationStatus.IN_PROGRESS,
+        toStatus: ApplicationStatus.RESOLVED,
+        changedById: session.user.id,
+        comments: comments || "Application resolved",
+      },
+    });
+
+    // Create audit log
+    await tx.applicationAuditLog.create({
+      data: {
+        applicationId: application.id,
+        action: "APPLICATION_RESOLVED",
+        performedById: session.user.id,
+        oldValues: { status: ApplicationStatus.IN_PROGRESS },
+        newValues: { status: ApplicationStatus.RESOLVED },
+        ipAddress:
+          request.headers.get("x-forwarded-for") ||
+          request.headers.get("x-real-ip") ||
+          "unknown",
+      },
+    });
+
+    return updatedApplication;
+  });
+
+  return NextResponse.json({
+    message: "Application resolved successfully",
+    application: result,
+  });
+}
+
+// Handle application rejection
+async function handleRejectApplication(
+  application: ApplicationWithRelations,
+  session: AuthenticatedSession,
+  request: NextRequest,
+  requestData: ProcessingData
+) {
+  // Only officers can reject applications
+  if (
+    [UserRole.FRONT_DESK, UserRole.ADMIN, UserRole.SUPER_ADMIN].includes(
+      session.user.role as
+        | typeof UserRole.FRONT_DESK
+        | typeof UserRole.ADMIN
+        | typeof UserRole.SUPER_ADMIN
+    )
+  ) {
+    return NextResponse.json(
+      { error: "Only officers can reject applications" },
+      { status: 403 }
+    );
+  }
+
+  // Can only reject IN_PROGRESS applications
+  if (application.status !== ApplicationStatus.IN_PROGRESS) {
+    return NextResponse.json(
+      { error: "Application can only be rejected from IN_PROGRESS status" },
+      { status: 400 }
+    );
+  }
+
+  const { comments } = requestData;
+
+  if (!comments) {
+    return NextResponse.json(
+      { error: "Rejection reason is required" },
+      { status: 400 }
+    );
+  }
+
+  const result = await prisma.$transaction(async (tx) => {
+    // Update application status to CLOSED
+    const updatedApplication = await tx.application.update({
+      where: { id: application.id },
+      data: {
+        status: ApplicationStatus.CLOSED,
+        currentHolderId: session.user.id,
         completedAt: new Date(),
         updatedAt: new Date(),
       },
@@ -910,9 +878,9 @@ async function handleApproveApplication(
       data: {
         applicationId: application.id,
         fromStatus: ApplicationStatus.IN_PROGRESS,
-        toStatus: ApplicationStatus.APPROVED,
+        toStatus: ApplicationStatus.CLOSED,
         changedById: session.user.id,
-        comments: comments || "Application approved",
+        comments: comments,
       },
     });
 
@@ -920,13 +888,10 @@ async function handleApproveApplication(
     await tx.applicationAuditLog.create({
       data: {
         applicationId: application.id,
-        action: "APPLICATION_APPROVED",
+        action: "APPLICATION_REJECTED",
         performedById: session.user.id,
         oldValues: { status: ApplicationStatus.IN_PROGRESS },
-        newValues: {
-          status: ApplicationStatus.APPROVED,
-          completedAt: new Date(),
-        },
+        newValues: { status: ApplicationStatus.CLOSED },
         ipAddress:
           request.headers.get("x-forwarded-for") ||
           request.headers.get("x-real-ip") ||
@@ -934,150 +899,79 @@ async function handleApproveApplication(
       },
     });
 
-    // Create notification for citizen
-    await tx.notification.create({
-      data: {
-        userId: application.citizenId,
-        notificationType: "STATUS_CHANGED",
-        applicationId: application.id,
-        title: "Application Approved",
-        message: `Congratulations! Your application ${application.rrNumber} for ${application.serviceCategory.name} has been approved.`,
-        isRead: false,
-      },
-    });
-
     return updatedApplication;
   });
 
   return NextResponse.json({
-    message: "Application approved successfully",
+    message: "Application rejected",
     application: result,
   });
 }
 
-// Handle application rejection by officers
-async function handleRejectApplication(
-  application: PrismaApplication,
-  session: AuthenticatedSession,
-  request: NextRequest,
-  requestData: { comments?: string; rejectionReason?: string }
-) {
-  // Only assigned officers or front desk can reject applications
-  const isOfficer =
-    session.user.role === UserRole.DC ||
-    session.user.role === UserRole.ADC ||
-    session.user.role === UserRole.RO ||
-    session.user.role === UserRole.SDM ||
-    session.user.role === UserRole.DYDIR;
-  const canReject =
-    session.user.role === UserRole.FRONT_DESK ||
-    (isOfficer && application.currentHolderId === session.user.id);
-
-  if (!canReject) {
-    return NextResponse.json(
-      { error: "Unauthorized to reject this application" },
-      { status: 403 }
-    );
-  }
-
-  const { comments, rejectionReason } = requestData;
-
-  const result = await prisma.$transaction(async (tx) => {
-    // Update application status to CLOSED_WITH_ACTION
-    const updatedApplication = await tx.application.update({
-      where: { id: application.id },
-      data: {
-        status: ApplicationStatus.CLOSED_WITH_ACTION,
-        updatedAt: new Date(),
-      },
-    });
-
-    // Create workflow entry
-    await tx.applicationWorkflow.create({
-      data: {
-        applicationId: application.id,
-        fromStatus: application.status,
-        toStatus: ApplicationStatus.CLOSED_WITH_ACTION,
-        changedById: session.user.id,
-        comments:
-          rejectionReason || comments || "Application closed with action",
-      },
-    });
-
-    // Create audit log
-    await tx.applicationAuditLog.create({
-      data: {
-        applicationId: application.id,
-        action: "APPLICATION_CLOSED_WITH_ACTION",
-        performedById: session.user.id,
-        oldValues: { status: application.status },
-        newValues: { status: ApplicationStatus.CLOSED_WITH_ACTION },
-        ipAddress:
-          request.headers.get("x-forwarded-for") ||
-          request.headers.get("x-real-ip") ||
-          "unknown",
-      },
-    });
-
-    // Create notification for citizen
-    await tx.notification.create({
-      data: {
-        userId: application.citizenId,
-        notificationType: "STATUS_CHANGED",
-        applicationId: application.id,
-        title: "Application Closed with Action",
-        message: `Your application ${
-          application.rrNumber || application.id
-        } has been closed with action. Reason: ${
-          rejectionReason || "Please contact the office for details."
-        }`,
-        isRead: false,
-      },
-    });
-
-    return updatedApplication;
-  });
-
-  return NextResponse.json({
-    message: "Application closed with action",
-    application: result,
-  });
-}
-
-// Handle forwarding application to another officer
+// Handle application forwarding to another officer
 async function handleForwardApplication(
-  application: PrismaApplication,
+  application: ApplicationWithRelations,
   session: AuthenticatedSession,
   request: NextRequest,
   requestData: ForwardData
 ) {
-  // Only assigned officers can forward applications
-  const isOfficer =
-    session.user.role === UserRole.DC ||
-    session.user.role === UserRole.ADC ||
-    session.user.role === UserRole.RO ||
-    session.user.role === UserRole.SDM ||
-    session.user.role === UserRole.DYDIR;
-
-  if (!isOfficer || application.currentHolderId !== session.user.id) {
+  // Only officers and frontdesk can forward applications
+  if (
+    [UserRole.ADMIN, UserRole.SUPER_ADMIN].includes(
+      session.user.role as typeof UserRole.ADMIN | typeof UserRole.SUPER_ADMIN
+    )
+  ) {
     return NextResponse.json(
-      { error: "Not authorized to forward this application" },
+      { error: "Unauthorized to forward applications" },
       { status: 403 }
     );
   }
 
-  const { forwardToOfficerId, priority = 2, instructions } = requestData;
+  // Check application status based on user role
+  if (session.user.role === UserRole.FRONT_DESK) {
+    // Frontdesk can forward IN_PROGRESS and VALIDATED applications
+    if (
+      application.status !== ApplicationStatus.IN_PROGRESS &&
+      application.status !== ApplicationStatus.VALIDATED
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "Application can only be forwarded from IN_PROGRESS or VALIDATED status",
+        },
+        { status: 400 }
+      );
+    }
+  } else {
+    // Officers can only forward IN_PROGRESS applications
+    if (application.status !== ApplicationStatus.IN_PROGRESS) {
+      return NextResponse.json(
+        { error: "Application can only be forwarded from IN_PROGRESS status" },
+        { status: 400 }
+      );
+    }
+  }
 
-  if (!forwardToOfficerId || !instructions) {
+  const {
+    forwardToOfficerId,
+    priority = 2,
+    instructions,
+    forwardedBy,
+    currentAssignedOfficer,
+  } = requestData;
+
+  if (!forwardToOfficerId) {
     return NextResponse.json(
-      { error: "Missing required fields" },
+      { error: "Officer to forward to is required" },
       { status: 400 }
     );
   }
-  // Verify target officer exists and is available
+
+  // Verify the target officer exists and is active
   const targetOfficer = await prisma.user.findFirst({
     where: {
       id: forwardToOfficerId,
+      isActive: true,
       role: {
         in: [
           UserRole.DC,
@@ -1087,10 +981,6 @@ async function handleForwardApplication(
           UserRole.DYDIR,
         ],
       },
-      isActive: true,
-      officerProfile: {
-        isAvailable: true,
-      },
     },
     include: {
       officerProfile: true,
@@ -1099,58 +989,59 @@ async function handleForwardApplication(
 
   if (!targetOfficer) {
     return NextResponse.json(
-      { error: "Invalid or unavailable target officer" },
-      { status: 400 }
+      { error: "Target officer not found or inactive" },
+      { status: 404 }
     );
   }
 
   const result = await prisma.$transaction(async (tx) => {
-    // Create new officer assignment
-    const assignment = await tx.officerAssignment.create({
-      data: {
-        applicationId: application.id,
-        assignedById: session.user.id,
-        assignedToId: forwardToOfficerId,
-        priority: priority,
-        instructions: instructions,
-        expectedCompletionDate: new Date(
-          Date.now() + application.serviceCategory.slaDays * 24 * 60 * 60 * 1000
-        ),
-      },
-      include: {
-        assignedTo: {
-          include: {
-            officerProfile: true,
-          },
-        },
-      },
-    });
-
-    // Update application's current holder
+    // Update application current holder and status if needed
     const updatedApplication = await tx.application.update({
       where: { id: application.id },
       data: {
         currentHolderId: forwardToOfficerId,
+        // If frontdesk is forwarding a VALIDATED application, change status to IN_PROGRESS
+        status:
+          forwardedBy === "frontdesk" &&
+          application.status === ApplicationStatus.VALIDATED
+            ? ApplicationStatus.IN_PROGRESS
+            : application.status,
         updatedAt: new Date(),
       },
-      include: {
-        serviceCategory: true,
-        currentHolder: {
-          include: {
-            officerProfile: true,
-          },
-        },
+    });
+
+    // Create new officer assignment
+    await tx.officerAssignment.create({
+      data: {
+        applicationId: application.id,
+        assignedById: session.user.id,
+        assignedToId: forwardToOfficerId,
+        priority,
+        instructions,
       },
     });
 
     // Create workflow entry
+    const targetStatus =
+      forwardedBy === "frontdesk" &&
+      application.status === ApplicationStatus.VALIDATED
+        ? ApplicationStatus.IN_PROGRESS
+        : ApplicationStatus.IN_PROGRESS;
+
     await tx.applicationWorkflow.create({
       data: {
         applicationId: application.id,
         fromStatus: application.status,
-        toStatus: application.status, // Status remains same, only holder changes
+        toStatus: targetStatus,
         changedById: session.user.id,
-        comments: `Application forwarded to ${targetOfficer.officerProfile?.fullName} with priority ${priority}. Instructions: ${instructions}`,
+        comments:
+          forwardedBy === "frontdesk"
+            ? `Application forwarded by frontdesk to ${
+                targetOfficer.officerProfile?.fullName || targetOfficer.email
+              }. Instructions: ${instructions}`
+            : `Application forwarded to ${
+                targetOfficer.officerProfile?.fullName || targetOfficer.email
+              }. Instructions: ${instructions}`,
       },
     });
 
@@ -1158,22 +1049,69 @@ async function handleForwardApplication(
     await tx.applicationAuditLog.create({
       data: {
         applicationId: application.id,
+        action:
+          forwardedBy === "frontdesk"
+            ? "APPLICATION_FORWARDED_BY_FRONTDESK"
+            : "APPLICATION_FORWARDED",
         performedById: session.user.id,
-        action: "FORWARD",
-        oldValues: { currentHolderId: session.user.id },
-        newValues: { currentHolderId: targetOfficer.id },
+        oldValues: { currentHolderId: application.currentHolderId },
+        newValues: { currentHolderId: forwardToOfficerId },
+        ipAddress:
+          request.headers.get("x-forwarded-for") ||
+          request.headers.get("x-real-ip") ||
+          "unknown",
       },
     });
 
-    return {
-      application: updatedApplication,
-      assignment,
-    };
+    // Notify the target officer
+    await tx.notification.create({
+      data: {
+        userId: forwardToOfficerId,
+        notificationType: "STATUS_CHANGED",
+        applicationId: application.id,
+        title:
+          forwardedBy === "frontdesk"
+            ? "Application Forwarded by Front Desk"
+            : "Application Forwarded to You",
+        message:
+          forwardedBy === "frontdesk"
+            ? `Application for ${application.serviceCategory.name} (RR: ${
+                application.rrNumber || "No RR"
+              }) has been forwarded to you by the front desk. Instructions: ${instructions}`
+            : `Application for ${application.serviceCategory.name} (RR: ${
+                application.rrNumber || "No RR"
+              }) has been forwarded to you for review. Instructions: ${instructions}`,
+        isRead: false,
+      },
+    });
+
+    // If frontdesk is forwarding and there was a previously assigned officer, notify them too
+    if (
+      forwardedBy === "frontdesk" &&
+      currentAssignedOfficer &&
+      currentAssignedOfficer !== forwardToOfficerId
+    ) {
+      await tx.notification.create({
+        data: {
+          userId: currentAssignedOfficer,
+          notificationType: "STATUS_CHANGED",
+          applicationId: application.id,
+          title: "Application Forwarded by Front Desk",
+          message: `The application for ${
+            application.serviceCategory.name
+          } (RR: ${
+            application.rrNumber || "No RR"
+          }) has been forwarded by the front desk to another officer.`,
+          isRead: false,
+        },
+      });
+    }
+
+    return updatedApplication;
   });
 
   return NextResponse.json({
     message: "Application forwarded successfully",
-    application: result.application,
-    assignment: result.assignment,
+    application: result,
   });
 }

@@ -155,6 +155,13 @@ exports.Prisma.OfficerProfileScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FrontdeskOfficerScalarFieldEnum = {
+  id: 'id',
+  frontdeskUserId: 'frontdeskUserId',
+  officerId: 'officerId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ServiceCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -169,7 +176,13 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   id: 'id',
   rrNumber: 'rrNumber',
   serviceCategoryId: 'serviceCategoryId',
-  citizenId: 'citizenId',
+  subject: 'subject',
+  citizenName: 'citizenName',
+  citizenPhone: 'citizenPhone',
+  citizenEmail: 'citizenEmail',
+  citizenAddress: 'citizenAddress',
+  citizenGender: 'citizenGender',
+  citizenAadhaar: 'citizenAadhaar',
   status: 'status',
   currentHolderId: 'currentHolderId',
   submittedAt: 'submittedAt',
@@ -290,6 +303,43 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   type: 'type'
 };
 
+exports.Prisma.ApplicationTrackingOTPScalarFieldEnum = {
+  id: 'id',
+  identifier: 'identifier',
+  otp: 'otp',
+  otpType: 'otpType',
+  sentTo: 'sentTo',
+  isUsed: 'isUsed',
+  attempts: 'attempts',
+  expires: 'expires',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.FrontdeskForwardingScalarFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  fromFrontdeskId: 'fromFrontdeskId',
+  toFrontdeskId: 'toFrontdeskId',
+  fromOfficerId: 'fromOfficerId',
+  toOfficerId: 'toOfficerId',
+  instructions: 'instructions',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.OfficerForwardingHistoryScalarFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  fromOfficerId: 'fromOfficerId',
+  toOfficerId: 'toOfficerId',
+  instructions: 'instructions',
+  priority: 'priority',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  forwardedAt: 'forwardedAt',
+  completedAt: 'completedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -316,7 +366,6 @@ exports.Prisma.JsonNullValueFilter = {
   AnyNull: Prisma.AnyNull
 };
 exports.UserRole = exports.$Enums.UserRole = {
-  CITIZEN: 'CITIZEN',
   FRONT_DESK: 'FRONT_DESK',
   DC: 'DC',
   ADC: 'ADC',
@@ -331,10 +380,11 @@ exports.ApplicationStatus = exports.$Enums.ApplicationStatus = {
   DRAFT: 'DRAFT',
   PENDING: 'PENDING',
   VALIDATED: 'VALIDATED',
+  OPEN: 'OPEN',
   IN_PROGRESS: 'IN_PROGRESS',
-  APPROVED: 'APPROVED',
-  CLOSED_WITH_ACTION: 'CLOSED_WITH_ACTION',
-  COMPLETED: 'COMPLETED'
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+  REOPENED: 'REOPENED'
 };
 
 exports.DocumentType = exports.$Enums.DocumentType = {
@@ -356,6 +406,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   CitizenProfile: 'CitizenProfile',
   OfficerProfile: 'OfficerProfile',
+  FrontdeskOfficer: 'FrontdeskOfficer',
   ServiceCategory: 'ServiceCategory',
   Application: 'Application',
   ApplicationWorkflow: 'ApplicationWorkflow',
@@ -367,7 +418,10 @@ exports.Prisma.ModelName = {
   ApplicationAuditLog: 'ApplicationAuditLog',
   DailyReport: 'DailyReport',
   SystemSetting: 'SystemSetting',
-  VerificationToken: 'VerificationToken'
+  VerificationToken: 'VerificationToken',
+  ApplicationTrackingOTP: 'ApplicationTrackingOTP',
+  FrontdeskForwarding: 'FrontdeskForwarding',
+  OfficerForwardingHistory: 'OfficerForwardingHistory'
 };
 
 /**

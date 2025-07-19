@@ -83,41 +83,6 @@ export default function StatusCards({ userRole }: StatusCardsProps) {
 
   const getCards = (): StatusCard[] => {
     switch (userRole) {
-      case UserRole.CITIZEN:
-        return [
-          {
-            title: "Draft Applications",
-            value: 2,
-            badge: "Draft",
-            badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
-            icon: <ClipboardList className="h-8 w-8 text-purple-600" />,
-            description: "Incomplete applications",
-          },
-          {
-            title: "Pending Applications",
-            value: 3,
-            badge: "Pending",
-            badgeColor: "bg-amber-100 text-amber-800 border-amber-200",
-            icon: <Clock className="h-8 w-8 text-amber-600" />,
-            description: "Awaiting processing",
-          },
-          {
-            title: "In Progress",
-            value: 1,
-            badge: "In Progress",
-            badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
-            icon: <FileClock className="h-8 w-8 text-blue-600" />,
-            description: "Under review",
-          },
-          {
-            title: "Completed",
-            value: 5,
-            badge: "Completed",
-            badgeColor: "bg-green-100 text-green-800 border-green-200",
-            icon: <CheckCircle className="h-8 w-8 text-green-600" />,
-            description: "Successfully processed",
-          },
-        ];
       case UserRole.FRONT_DESK:
         return [
           {
@@ -158,7 +123,7 @@ export default function StatusCards({ userRole }: StatusCardsProps) {
       case UserRole.RO:
         return [
           {
-            title: "Assigned Cases",
+            title: "Assigned Applications",
             value: 8,
             badge: "Assigned",
             badgeColor: "bg-blue-100 text-blue-800 border-blue-200",

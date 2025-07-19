@@ -1,0 +1,272 @@
+// app/api/frontdesk/queue/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { getServerAuthSession } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+import { UserRole, ApplicationStatus } from "@/app/generated/prisma";
+
+// GET: Fetch open applications for specific frontdesk users
+export async function GET(request: NextRequest) {
+  try {
+    const session = await getServerAuthSession();
+
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (session.user.role !== UserRole.FRONT_DESK) {
+      return NextResponse.json(
+        { error: "Not a frontdesk user" },
+        { status: 403 }
+      );
+    }
+
+    // Check if this frontdesk user is assigned to specific officers
+    const frontdeskAssignments = await prisma.frontdeskOfficer.findMany({
+      where: {
+        frontdeskUserId: session.user.id,
+        officerId: { not: null }, // Only specific assignments
+      },
+      include: {
+        officer: {
+          select: {
+            id: true,
+            fullName: true,
+            designation: true,
+            department: true,
+          },
+        },
+      },
+    });
+
+    // If no specific assignments, this user cannot access the queue
+    if (frontdeskAssignments.length === 0) {
+      return NextResponse.json(
+        { error: "Only specific frontdesk users can access the queue" },
+        { status: 403 }
+      );
+    }
+
+    // Fetch all open applications
+    const queuedApplications = await prisma.application.findMany({
+      where: {
+        status: ApplicationStatus.OPEN,
+      },
+      include: {
+        serviceCategory: {
+          select: {
+            name: true,
+            slaDays: true,
+          },
+        },
+        documents: {
+          select: {
+            id: true,
+            documentType: true,
+            fileName: true,
+            isVerified: true,
+            createdAt: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "asc", // FIFO order
+      },
+    });
+
+    return NextResponse.json({
+      applications: queuedApplications,
+      assignedOfficers: frontdeskAssignments.map(
+        (assignment) => assignment.officer
+      ),
+    });
+  } catch (error) {
+    console.error("Error fetching queue:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// POST: Pull an application from queue and assign to officer
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getServerAuthSession();
+
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (session.user.role !== UserRole.FRONT_DESK) {
+      return NextResponse.json(
+        { error: "Not a frontdesk user" },
+        { status: 403 }
+      );
+    }
+
+    const {
+      applicationId,
+      officerId,
+      priority = 2,
+      instructions,
+    } = await request.json();
+
+    if (!applicationId || !officerId || !instructions) {
+      return NextResponse.json(
+        {
+          error:
+            "Missing required fields: applicationId, officerId, instructions",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check if this frontdesk user is assigned to the specified officer
+    const frontdeskAssignment = await prisma.frontdeskOfficer.findFirst({
+      where: {
+        frontdeskUserId: session.user.id,
+        officerId: officerId,
+      },
+      include: {
+        officer: true,
+      },
+    });
+
+    if (!frontdeskAssignment) {
+      return NextResponse.json(
+        { error: "You are not assigned to this officer" },
+        { status: 403 }
+      );
+    }
+
+    // Verify application is in queue
+    const application = await prisma.application.findFirst({
+      where: {
+        id: applicationId,
+        status: ApplicationStatus.OPEN,
+      },
+      include: {
+        serviceCategory: true,
+      },
+    });
+
+    if (!application) {
+      return NextResponse.json(
+        { error: "Application not found in queue" },
+        { status: 404 }
+      );
+    }
+
+    // Verify officer exists and is available
+    const officer = await prisma.user.findFirst({
+      where: {
+        role: {
+          in: [
+            UserRole.DC,
+            UserRole.ADC,
+            UserRole.RO,
+            UserRole.SDM,
+            UserRole.DYDIR,
+          ],
+        },
+        isActive: true,
+        officerProfile: {
+          id: officerId, // Search by officer profile ID
+          isAvailable: true,
+        },
+      },
+      include: {
+        officerProfile: true,
+      },
+    });
+
+    if (!officer) {
+      return NextResponse.json(
+        { error: "Officer is not available" },
+        { status: 400 }
+      );
+    }
+
+    // Start transaction to pull application from queue
+    const result = await prisma.$transaction(async (tx) => {
+      // Update application status to IN_PROGRESS and assign officer
+      const updatedApplication = await tx.application.update({
+        where: { id: applicationId },
+        data: {
+          status: ApplicationStatus.IN_PROGRESS,
+          currentHolderId: officer.id,
+          updatedAt: new Date(),
+        },
+      });
+
+      // Create workflow entry
+      await tx.applicationWorkflow.create({
+        data: {
+          applicationId,
+          fromStatus: ApplicationStatus.OPEN,
+          toStatus: ApplicationStatus.IN_PROGRESS,
+          changedById: session.user.id,
+          comments: `Application pulled from queue and assigned to ${frontdeskAssignment.officer?.fullName}: ${instructions}`,
+        },
+      });
+
+      // Create officer assignment
+      await tx.officerAssignment.create({
+        data: {
+          applicationId,
+          assignedById: session.user.id,
+          assignedToId: officer.id,
+          priority,
+          instructions,
+        },
+      });
+
+      // Create audit log
+      await tx.applicationAuditLog.create({
+        data: {
+          applicationId,
+          action: "APPLICATION_PULLED_FROM_QUEUE",
+          performedById: session.user.id,
+          oldValues: {
+            status: ApplicationStatus.OPEN,
+            currentHolderId: null,
+          },
+          newValues: {
+            status: ApplicationStatus.IN_PROGRESS,
+            currentHolderId: officer.id,
+            assignedOfficerName: frontdeskAssignment.officer?.fullName,
+          },
+          ipAddress:
+            request.headers.get("x-forwarded-for") ||
+            request.headers.get("x-real-ip") ||
+            "unknown",
+        },
+      });
+
+      // Create notification for assigned officer
+      await tx.notification.create({
+        data: {
+          userId: officer.id,
+          notificationType: "APPLICATION_SUBMITTED",
+          applicationId,
+          title: "New Application Assigned from Queue",
+          message: `An open application for ${application.serviceCategory.name} (RR: ${application.rrNumber}) has been assigned to you.`,
+          isRead: false,
+        },
+      });
+
+      return updatedApplication;
+    });
+
+    return NextResponse.json({
+      message: `Application successfully pulled from queue and assigned to ${frontdeskAssignment.officer?.fullName}`,
+      application: result,
+    });
+  } catch (error) {
+    console.error("Error pulling application from queue:", error);
+    return NextResponse.json(
+      { error: "Failed to pull application from queue" },
+      { status: 500 }
+    );
+  }
+}

@@ -44,15 +44,6 @@ export async function GET(request: NextRequest) {
                   name: true,
                 },
               },
-              citizen: {
-                include: {
-                  citizenProfile: {
-                    select: {
-                      fullName: true,
-                    },
-                  },
-                },
-              },
             },
           },
         },

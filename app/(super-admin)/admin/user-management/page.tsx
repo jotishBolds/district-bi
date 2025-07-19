@@ -88,9 +88,6 @@ type User = {
   isActive: boolean;
   lastLoginAt?: Date | null;
   createdAt: Date;
-  citizenProfile?: {
-    fullName: string;
-  } | null;
   officerProfile?: {
     fullName: string;
   } | null;
@@ -157,7 +154,7 @@ export default function UserManagement() {
       email: "",
       phone: "",
       fullName: "",
-      role: UserRole.CITIZEN,
+      role: UserRole.FRONT_DESK,
       isActive: true,
       designation: "",
       department: "",
@@ -222,11 +219,8 @@ export default function UserManagement() {
     const matchesSearch =
       searchQuery === "" ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.citizenProfile?.fullName
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) ||
       user.officerProfile?.fullName
-        .toLowerCase()
+        ?.toLowerCase()
         .includes(searchQuery.toLowerCase());
 
     const matchesRole = roleFilter === "ALL" || user.role === roleFilter;
@@ -337,8 +331,7 @@ export default function UserManagement() {
     form.reset({
       email: user.email,
       phone: user.phone || "",
-      fullName:
-        user.citizenProfile?.fullName || user.officerProfile?.fullName || "",
+      fullName: user.officerProfile?.fullName || "",
       role: user.role,
       isActive: user.isActive,
       designation: user.officerProfile ? "Officer" : "",
@@ -441,7 +434,7 @@ export default function UserManagement() {
                 email: "",
                 phone: "",
                 fullName: "",
-                role: UserRole.CITIZEN,
+                role: UserRole.FRONT_DESK,
                 isActive: true,
                 designation: "",
                 department: "",
@@ -481,7 +474,6 @@ export default function UserManagement() {
             </SelectTrigger>{" "}
             <SelectContent>
               <SelectItem value="ALL">All Roles</SelectItem>
-              <SelectItem value={UserRole.CITIZEN}>Citizen</SelectItem>
               <SelectItem value={UserRole.FRONT_DESK}>Front Desk</SelectItem>
               <SelectItem value={UserRole.DC}>DC</SelectItem>
               <SelectItem value={UserRole.ADC}>ADC</SelectItem>
@@ -548,9 +540,7 @@ export default function UserManagement() {
                       <TableCell>
                         <div className="flex flex-col">
                           <span className="font-medium">
-                            {user.citizenProfile?.fullName ||
-                              user.officerProfile?.fullName ||
-                              "Unnamed User"}
+                            {user.officerProfile?.fullName || "Unnamed User"}
                           </span>
                           <span className="text-sm text-muted-foreground">
                             {user.email}
@@ -568,7 +558,7 @@ export default function UserManagement() {
                               user.role === UserRole.ADMIN ||
                               user.role === UserRole.SUPER_ADMIN
                                 ? "border-red-200 bg-red-50 text-red-800"
-                                : user.role === UserRole.CITIZEN
+                                : user.role === UserRole.FRONT_DESK
                                 ? "border-blue-200 bg-blue-50 text-blue-800"
                                 : "border-emerald-200 bg-emerald-50 text-emerald-800"
                             }
@@ -724,9 +714,6 @@ export default function UserManagement() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value={UserRole.CITIZEN}>
-                            Citizen
-                          </SelectItem>
                           <SelectItem value={UserRole.FRONT_DESK}>
                             Front Desk
                           </SelectItem>
@@ -936,9 +923,6 @@ export default function UserManagement() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value={UserRole.CITIZEN}>
-                            Citizen
-                          </SelectItem>
                           <SelectItem value={UserRole.FRONT_DESK}>
                             Front Desk
                           </SelectItem>

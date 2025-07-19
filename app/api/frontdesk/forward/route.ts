@@ -1,0 +1,263 @@
+// app/api/frontdesk/forward/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { getServerAuthSession } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+import { UserRole } from "@/app/generated/prisma";
+
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getServerAuthSession();
+
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (session.user.role !== UserRole.FRONT_DESK) {
+      return NextResponse.json(
+        { error: "Only frontdesk users can forward applications" },
+        { status: 403 }
+      );
+    }
+
+    const { applicationId, toOfficerId, instructions } = await request.json();
+
+    if (!applicationId || !toOfficerId) {
+      return NextResponse.json(
+        { error: "Application ID and target officer are required" },
+        { status: 400 }
+      );
+    }
+
+    // Get the current frontdesk assignments
+    const currentFrontdeskAssignments = await prisma.frontdeskOfficer.findMany({
+      where: {
+        frontdeskUserId: session.user.id,
+        officerId: { not: null },
+      },
+    });
+
+    if (currentFrontdeskAssignments.length === 0) {
+      return NextResponse.json(
+        { error: "You are not assigned to any specific officers" },
+        { status: 403 }
+      );
+    }
+
+    // Find the target officer profile by User ID
+    const targetOfficerProfile = await prisma.user.findUnique({
+      where: { id: toOfficerId },
+      include: {
+        officerProfile: true,
+      },
+    });
+
+    if (!targetOfficerProfile || !targetOfficerProfile.officerProfile) {
+      return NextResponse.json(
+        { error: "Target officer not found" },
+        { status: 404 }
+      );
+    }
+
+    const targetFrontdeskAssignment = await prisma.frontdeskOfficer.findFirst({
+      where: {
+        officer: {
+          userId: toOfficerId, // Match by User ID
+        },
+      },
+      include: {
+        frontdeskUser: true,
+      },
+    });
+
+    if (!targetFrontdeskAssignment) {
+      return NextResponse.json(
+        { error: "No frontdesk user found for the target officer" },
+        { status: 404 }
+      );
+    }
+
+    // Get the User IDs for officers assigned to this frontdesk
+    const officerProfiles = await prisma.officerProfile.findMany({
+      where: {
+        id: {
+          in: currentFrontdeskAssignments.map(
+            (assignment) => assignment.officerId!
+          ),
+        },
+      },
+      select: {
+        userId: true,
+      },
+    });
+
+    const officerUserIds = officerProfiles.map((profile) => profile.userId);
+
+    // Verify the application exists and check if this frontdesk can forward it
+    const application = await prisma.application.findUnique({
+      where: {
+        id: applicationId,
+      },
+      include: {
+        serviceCategory: true,
+        currentHolder: {
+          include: {
+            officerProfile: true,
+          },
+        },
+        frontdeskForwardings: {
+          where: {
+            isActive: true,
+          },
+        },
+      },
+    });
+
+    if (!application) {
+      return NextResponse.json(
+        { error: "Application not found" },
+        { status: 404 }
+      );
+    }
+
+    // Debug logging
+    console.log("Forward API - Application details:", {
+      id: application.id,
+      rrNumber: application.rrNumber,
+      status: application.status,
+      currentHolderId: application.currentHolderId,
+      activeForwardings: application.frontdeskForwardings.length,
+    });
+
+    // Check if application can be forwarded based on status
+    // Applications can be forwarded unless they are RESOLVED or CLOSED
+    if (application.status === "RESOLVED" || application.status === "CLOSED") {
+      return NextResponse.json(
+        {
+          error:
+            "Cannot forward resolved or closed applications. Only in-progress or reopened applications can be forwarded.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Check if this frontdesk has permission to forward this application
+    // Either the application is currently held by one of their officers
+    // OR this frontdesk received the application via forwarding
+    const isAssignedToMyOfficers = application.currentHolderId
+      ? officerUserIds.includes(application.currentHolderId)
+      : false;
+
+    const receivedByMe = await prisma.frontdeskForwarding.findFirst({
+      where: {
+        applicationId,
+        toFrontdeskId: session.user.id,
+        isActive: true,
+      },
+    });
+
+    if (!isAssignedToMyOfficers && !receivedByMe) {
+      return NextResponse.json(
+        { error: "You don't have permission to forward this application" },
+        { status: 403 }
+      );
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      // Deactivate any existing active forwarding for this application
+      await tx.frontdeskForwarding.updateMany({
+        where: {
+          applicationId,
+          isActive: true,
+        },
+        data: {
+          isActive: false,
+        },
+      });
+
+      // Update application holder to target officer
+      const updatedApplication = await tx.application.update({
+        where: { id: applicationId },
+        data: {
+          currentHolderId: targetOfficerProfile.id, // Use User ID
+          updatedAt: new Date(),
+        },
+      });
+
+      // Create frontdesk forwarding record
+      await tx.frontdeskForwarding.create({
+        data: {
+          applicationId,
+          fromFrontdeskId: session.user.id,
+          toFrontdeskId: targetFrontdeskAssignment.frontdeskUserId,
+          fromOfficerId: application.currentHolderId!, // Current User ID
+          toOfficerId: targetOfficerProfile.id, // Target User ID
+          instructions: instructions || "Application forwarded",
+          isActive: true,
+        },
+      });
+
+      // Create officer assignment record
+      await tx.officerAssignment.create({
+        data: {
+          applicationId,
+          assignedById: session.user.id,
+          assignedToId: targetOfficerProfile.id, // Use User ID
+          instructions: instructions || "Application forwarded by frontdesk",
+          priority: 2,
+        },
+      });
+
+      // Create workflow entry
+      await tx.applicationWorkflow.create({
+        data: {
+          applicationId,
+          fromStatus: application.status,
+          toStatus: application.status, // Status remains same
+          changedById: session.user.id,
+          comments: `Application forwarded by frontdesk to another officer`,
+        },
+      });
+
+      // Create audit log
+      await tx.applicationAuditLog.create({
+        data: {
+          applicationId,
+          action: "APPLICATION_FORWARDED_BY_FRONTDESK",
+          performedById: session.user.id,
+          oldValues: { currentHolderId: application.currentHolderId },
+          newValues: { currentHolderId: targetOfficerProfile.id },
+        },
+      });
+
+      // Create notification for target frontdesk
+      await tx.notification.create({
+        data: {
+          userId: targetFrontdeskAssignment.frontdeskUserId,
+          notificationType: "STATUS_CHANGED",
+          applicationId,
+          title: "Application Forwarded to Your Officer",
+          message: `Application ${
+            application.rrNumber || application.id
+          } has been forwarded to another officer`,
+          isRead: false,
+        },
+      });
+
+      return updatedApplication;
+    });
+
+    return NextResponse.json({
+      message: "Application forwarded successfully",
+      application: result,
+      forwardedTo: {
+        frontdesk: targetFrontdeskAssignment.frontdeskUser.email,
+      },
+    });
+  } catch (error) {
+    console.error("Error forwarding application:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

@@ -342,9 +342,12 @@ import {
   UserRole,
   ApplicationStatus,
   DocumentType,
+  Prisma,
 } from "@/app/generated/prisma";
-import { put } from "@vercel/blob";
+// import { put } from "@vercel/blob"; // Commented out for development
 import { v4 as uuidv4 } from "uuid";
+import { writeFile, mkdir } from "fs/promises";
+import { join } from "path";
 
 export async function GET(request: NextRequest) {
   try {
@@ -358,39 +361,176 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
     const status = searchParams.get("status");
+    const assignedToMe = searchParams.get("assignedToMe") === "true";
+    const includeForwardingHistory =
+      searchParams.get("includeForwardingHistory") === "true";
 
     const skip = (page - 1) * limit;
 
     // Build where clause based on user role
-    const whereClause: {
-      citizenId?: string;
-      currentHolderId?: string;
-      status?: ApplicationStatus;
-    } = {};
+    let whereClause: Prisma.ApplicationWhereInput = {};
 
-    if (session.user.role === UserRole.CITIZEN) {
-      whereClause.citizenId = session.user.id;
+    if (session.user.role === UserRole.FRONT_DESK) {
+      // For FRONT_DESK users, show only applications assigned to officers they handle
+      // First, get the officers this frontdesk user is assigned to
+      const frontdeskAssignments = await prisma.frontdeskOfficer.findMany({
+        where: {
+          frontdeskUserId: session.user.id,
+        },
+        select: {
+          officerId: true,
+        },
+      });
+
+      const assignedOfficerIds = frontdeskAssignments
+        .map((assignment) => assignment.officerId)
+        .filter((id): id is string => id !== null); // Remove null values
+
+      if (assignedOfficerIds.length > 0) {
+        // Show applications assigned to officers they handle, or applications assigned by this frontdesk user
+        whereClause = {
+          AND: [
+            {
+              status: {
+                in: [
+                  ApplicationStatus.VALIDATED,
+                  ApplicationStatus.OPEN,
+                  ApplicationStatus.IN_PROGRESS,
+                  ApplicationStatus.RESOLVED,
+                  ApplicationStatus.CLOSED,
+                  ApplicationStatus.REOPENED,
+                ],
+              },
+            },
+            {
+              OR: [
+                {
+                  currentHolderId: {
+                    in: assignedOfficerIds,
+                  },
+                },
+                // Include applications with officer assignments to officers they handle
+                {
+                  officerAssignments: {
+                    some: {
+                      assignedToId: {
+                        in: assignedOfficerIds,
+                      },
+                    },
+                  },
+                },
+                // Include applications that this frontdesk user has assigned (assignmentsGiven)
+                {
+                  officerAssignments: {
+                    some: {
+                      assignedById: session.user.id,
+                    },
+                  },
+                },
+                // Include applications without current holder if they have general frontdesk access (null officerId)
+                ...(frontdeskAssignments.some(
+                  (assignment) => assignment.officerId === null
+                )
+                  ? [
+                      {
+                        currentHolderId: null,
+                      },
+                    ]
+                  : []),
+              ],
+            },
+          ],
+        };
+      } else {
+        // If no specific officer assignments, show applications assigned by this frontdesk user or general access
+        const hasGeneralAccess = frontdeskAssignments.some(
+          (assignment) => assignment.officerId === null
+        );
+
+        whereClause = {
+          AND: [
+            {
+              status: {
+                in: [
+                  ApplicationStatus.VALIDATED,
+                  ApplicationStatus.OPEN,
+                  ApplicationStatus.IN_PROGRESS,
+                  ApplicationStatus.RESOLVED,
+                  ApplicationStatus.CLOSED,
+                  ApplicationStatus.REOPENED,
+                ],
+              },
+            },
+            {
+              OR: [
+                // Include applications that this frontdesk user has assigned
+                {
+                  officerAssignments: {
+                    some: {
+                      assignedById: session.user.id,
+                    },
+                  },
+                },
+                // Include applications without current holder if they have general frontdesk access
+                ...(hasGeneralAccess
+                  ? [
+                      {
+                        currentHolderId: null,
+                      },
+                    ]
+                  : []),
+              ],
+            },
+          ],
+        };
+      }
     } else if (
-      [
-        UserRole.DC,
-        UserRole.ADC,
-        UserRole.RO,
-        UserRole.SDM,
-        UserRole.DYDIR,
-      ].includes(
-        session.user.role as
-          | typeof UserRole.DC
-          | typeof UserRole.ADC
-          | typeof UserRole.RO
-          | typeof UserRole.SDM
-          | typeof UserRole.DYDIR
-      )
+      (
+        [
+          UserRole.DC,
+          UserRole.ADC,
+          UserRole.RO,
+          UserRole.SDM,
+          UserRole.DYDIR,
+        ] as UserRole[]
+      ).includes(session.user.role)
     ) {
-      whereClause.currentHolderId = session.user.id;
-    }
+      // For officers
+      if (includeForwardingHistory) {
+        // Include applications currently held by user OR applications that were forwarded by user
+        whereClause = {
+          OR: [
+            {
+              currentHolderId: session.user.id,
+            },
+            {
+              officerForwardings: {
+                some: {
+                  fromOfficerId: session.user.id,
+                },
+              },
+            },
+          ],
+        };
+      } else if (assignedToMe) {
+        // Only show applications currently assigned to this user
+        whereClause.currentHolderId = session.user.id;
+      }
 
-    if (status) {
-      whereClause.status = status as ApplicationStatus;
+      // Add status filter if provided
+      if (status) {
+        if (whereClause.OR) {
+          // If we have OR conditions, wrap them in AND with status
+          whereClause = {
+            AND: [
+              { OR: whereClause.OR },
+              { status: status as ApplicationStatus },
+            ],
+          };
+        } else {
+          whereClause.status = status as ApplicationStatus;
+        }
+      }
     }
 
     const [applications, total] = await Promise.all([
@@ -398,11 +538,6 @@ export async function GET(request: NextRequest) {
         where: whereClause,
         include: {
           serviceCategory: true,
-          citizen: {
-            include: {
-              citizenProfile: true,
-            },
-          },
           currentHolder: {
             include: {
               officerProfile: true,
@@ -413,7 +548,10 @@ export async function GET(request: NextRequest) {
               id: true,
               documentType: true,
               fileName: true,
+              filePath: true,
+              fileSize: true,
               isVerified: true,
+              createdAt: true,
             },
           },
           officerAssignments: {
@@ -423,11 +561,109 @@ export async function GET(request: NextRequest) {
                   officerProfile: true,
                 },
               },
+              assignedBy: {
+                select: {
+                  id: true,
+                  role: true,
+                  officerProfile: {
+                    select: {
+                      fullName: true,
+                      designation: true,
+                    },
+                  },
+                },
+              },
             },
             orderBy: {
               createdAt: "desc",
             },
-            take: 1,
+            take: 5, // Get last 5 assignments to analyze forwarding pattern
+          },
+          frontdeskForwardings: {
+            include: {
+              fromFrontdesk: {
+                select: {
+                  id: true,
+                  officerProfile: {
+                    select: {
+                      fullName: true,
+                      designation: true,
+                    },
+                  },
+                },
+              },
+              toFrontdesk: {
+                select: {
+                  id: true,
+                  officerProfile: {
+                    select: {
+                      fullName: true,
+                      designation: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 10, // Get last 10 forwarding entries for history
+          },
+          officerForwardings: {
+            include: {
+              fromOfficer: {
+                select: {
+                  id: true,
+                  officerProfile: {
+                    select: {
+                      fullName: true,
+                      designation: true,
+                    },
+                  },
+                },
+              },
+              toOfficer: {
+                select: {
+                  id: true,
+                  officerProfile: {
+                    select: {
+                      fullName: true,
+                      designation: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 10, // Get officer forwarding history
+          },
+          workflow: {
+            include: {
+              changedBy: {
+                select: {
+                  id: true,
+                  role: true,
+                  officerProfile: {
+                    select: {
+                      fullName: true,
+                      designation: true,
+                    },
+                  },
+                  citizenProfile: {
+                    select: {
+                      fullName: true,
+                      phone: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 10, // Get workflow history
           },
         },
         orderBy: {
@@ -439,13 +675,47 @@ export async function GET(request: NextRequest) {
       prisma.application.count({ where: whereClause }),
     ]);
 
+    // For frontdesk users, filter out applications that were last forwarded by officers
+    let filteredApplications = applications;
+    if (session.user.role === UserRole.FRONT_DESK) {
+      filteredApplications = applications.filter((app) => {
+        // If no assignments, include the application
+        if (!app.officerAssignments || app.officerAssignments.length === 0) {
+          return true;
+        }
+
+        // Get the most recent assignment
+        const lastAssignment = app.officerAssignments[0];
+
+        // If the last assignment was made by this frontdesk user, include it
+        if (lastAssignment.assignedBy.id === session.user.id) {
+          return true;
+        }
+
+        // If the last assignment was made by an officer, exclude it from validation tab
+        const officerRoles: UserRole[] = [
+          UserRole.DC,
+          UserRole.ADC,
+          UserRole.RO,
+          UserRole.SDM,
+          UserRole.DYDIR,
+        ];
+        if (officerRoles.includes(lastAssignment.assignedBy.role as UserRole)) {
+          return false;
+        }
+
+        // Include all other cases
+        return true;
+      });
+    }
+
     return NextResponse.json({
-      applications,
+      applications: filteredApplications,
       pagination: {
         page,
         limit,
-        total,
-        pages: Math.ceil(total / limit),
+        total: filteredApplications.length, // Adjust total for filtered results
+        pages: Math.ceil(filteredApplications.length / limit),
       },
     });
   } catch (error) {
@@ -461,7 +731,8 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerAuthSession();
 
-    if (!session?.user || session.user.role !== UserRole.CITIZEN) {
+    // Only FRONT_DESK users can create applications for citizens
+    if (!session?.user || session.user.role !== UserRole.FRONT_DESK) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -469,13 +740,63 @@ export async function POST(request: NextRequest) {
 
     // Extract form fields
     const serviceCategoryId = formData.get("serviceCategoryId") as string;
+    const subject = formData.get("subject") as string;
     const preferredOfficerId = formData.get("preferredOfficerId") as string;
     const applicationDetails = formData.get("applicationDetails") as string;
 
-    // Validate required fields
-    if (!serviceCategoryId || !preferredOfficerId || !applicationDetails) {
+    // Citizen details (provided by frontdesk)
+    const citizenName = formData.get("citizenName") as string;
+    const citizenPhone = formData.get("citizenPhone") as string;
+    const citizenEmail = formData.get("citizenEmail") as string;
+    const citizenAddress = formData.get("citizenAddress") as string;
+    const citizenGender = formData.get("citizenGender") as string;
+    const citizenAadhaar = formData.get("citizenAadhaar") as string;
+
+    // Check if this frontdesk user is general (not assigned to any specific officer)
+    const frontdeskAssignments = await prisma.frontdeskOfficer.findMany({
+      where: {
+        frontdeskUserId: session.user.id,
+      },
+    });
+
+    const isGeneralFrontdesk =
+      frontdeskAssignments.length === 0 ||
+      frontdeskAssignments.every((assignment) => assignment.officerId === null);
+
+    // Validate required fields based on frontdesk type
+    if (
+      !serviceCategoryId ||
+      !subject ||
+      !citizenName ||
+      !citizenPhone ||
+      !citizenAddress
+    ) {
       return NextResponse.json(
         { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // For specific frontdesk, application details are required
+    if (!isGeneralFrontdesk && !applicationDetails) {
+      return NextResponse.json(
+        { error: "Application details are required for specific frontdesk" },
+        { status: 400 }
+      );
+    }
+
+    // For specific frontdesk, officer assignment is required
+    if (!isGeneralFrontdesk && !preferredOfficerId) {
+      return NextResponse.json(
+        { error: "Officer assignment is required for specific frontdesk" },
+        { status: 400 }
+      );
+    }
+
+    // For general frontdesk, officer assignment should not be provided
+    if (isGeneralFrontdesk && preferredOfficerId) {
+      return NextResponse.json(
+        { error: "General frontdesk cannot assign officers directly" },
         { status: 400 }
       );
     }
@@ -493,31 +814,36 @@ export async function POST(request: NextRequest) {
         { error: "Invalid service category" },
         { status: 400 }
       );
-    } // Verify officer exists and is available
-    const officer = await prisma.user.findFirst({
-      where: {
-        id: preferredOfficerId,
-        role: {
-          in: [
-            UserRole.DC,
-            UserRole.ADC,
-            UserRole.RO,
-            UserRole.SDM,
-            UserRole.DYDIR,
-          ],
-        },
-        isActive: true,
-        officerProfile: {
-          isAvailable: true,
-        },
-      },
-    });
+    }
 
-    if (!officer) {
-      return NextResponse.json(
-        { error: "Invalid or unavailable officer" },
-        { status: 400 }
-      );
+    // For specific frontdesk, verify officer exists and is available
+    let officer = null;
+    if (!isGeneralFrontdesk) {
+      officer = await prisma.user.findFirst({
+        where: {
+          id: preferredOfficerId,
+          role: {
+            in: [
+              UserRole.DC,
+              UserRole.ADC,
+              UserRole.RO,
+              UserRole.SDM,
+              UserRole.DYDIR,
+            ],
+          },
+          isActive: true,
+          officerProfile: {
+            isAvailable: true,
+          },
+        },
+      });
+
+      if (!officer) {
+        return NextResponse.json(
+          { error: "Invalid or unavailable officer" },
+          { status: 400 }
+        );
+      }
     }
 
     // Process uploaded documents
@@ -585,19 +911,38 @@ export async function POST(request: NextRequest) {
 
     // Start database transaction
     const result = await prisma.$transaction(async (tx) => {
-      // Create the application in DRAFT status
+      // Generate RR number
+      const year = new Date().getFullYear();
+      const random = Math.floor(1000 + Math.random() * 9000);
+      const rrNumber = `RR-${year}-${random}`;
+
+      // Determine application status and assignment based on frontdesk type
+      const applicationStatus = isGeneralFrontdesk
+        ? ApplicationStatus.OPEN
+        : ApplicationStatus.IN_PROGRESS;
+      const currentHolderId = isGeneralFrontdesk ? null : preferredOfficerId;
+
+      // Create the application
       const application = await tx.application.create({
         data: {
           serviceCategoryId,
-          citizenId: session.user.id,
-          status: ApplicationStatus.DRAFT,
+          subject,
+          citizenName,
+          citizenPhone,
+          citizenEmail,
+          citizenAddress,
+          citizenGender,
+          citizenAadhaar,
+          status: applicationStatus,
+          currentHolderId,
+          rrNumber,
           submittedAt: new Date(),
           createdAt: new Date(),
           updatedAt: new Date(),
         },
       });
 
-      // Upload documents to Vercel Blob and save records
+      // Upload documents and save records (unchanged)
       const documentPromises = uploadedDocuments.map(
         async ({ file, documentType }) => {
           try {
@@ -607,11 +952,23 @@ export async function POST(request: NextRequest) {
               application.id
             }/${uuidv4()}.${fileExtension}`;
 
-            // Upload to Vercel Blob
-            const blob = await put(`applications/${uniqueFileName}`, file, {
-              access: "public",
-              addRandomSuffix: false,
-            });
+            // // Upload to Vercel Blob (commented out for development)
+            // const blob = await put(`applications/${uniqueFileName}`, file, {
+            //   access: "public",
+            //   addRandomSuffix: false,
+            // });
+
+            // Local file storage for development
+            const uploadsDir = join(process.cwd(), "uploads", "applications");
+            const applicationDir = join(uploadsDir, application.id);
+            await mkdir(applicationDir, { recursive: true });
+
+            const filePath = join(uploadsDir, uniqueFileName);
+            const buffer = Buffer.from(await file.arrayBuffer());
+            await writeFile(filePath, buffer);
+
+            // For development, we'll store the relative path
+            const relativePath = `/uploads/applications/${uniqueFileName}`;
 
             // Save document record to database
             return tx.document.create({
@@ -619,7 +976,7 @@ export async function POST(request: NextRequest) {
                 applicationId: application.id,
                 documentType,
                 fileName: file.name,
-                filePath: blob.url, // Store the blob URL
+                filePath: relativePath, // Store the relative path for development
                 fileSize: file.size,
                 uploadedById: session.user.id,
                 isVerified: false,
@@ -639,33 +996,58 @@ export async function POST(request: NextRequest) {
         data: {
           applicationId: application.id,
           fromStatus: null,
-          toStatus: ApplicationStatus.DRAFT,
+          toStatus: applicationStatus,
           changedById: session.user.id,
-          comments: applicationDetails,
+          comments: isGeneralFrontdesk
+            ? `Application created by general frontdesk and placed in queue for officer assignment${
+                applicationDetails ? `: ${applicationDetails}` : ""
+              }`
+            : applicationDetails ||
+              "Application created with officer assignment",
         },
       });
 
-      // Create officer assignment
-      await tx.officerAssignment.create({
-        data: {
-          applicationId: application.id,
-          assignedById: session.user.id,
-          assignedToId: preferredOfficerId,
-          priority: 2, // Medium priority
-          instructions: applicationDetails,
-        },
-      });
+      // Create officer assignment only for specific frontdesk
+      if (!isGeneralFrontdesk) {
+        await tx.officerAssignment.create({
+          data: {
+            applicationId: application.id,
+            assignedById: session.user.id,
+            assignedToId: preferredOfficerId,
+            priority: 1, // High priority (default for frontdesk applications)
+            instructions:
+              applicationDetails || "No specific instructions provided",
+          },
+        });
+
+        // Create notification for assigned officer
+        await tx.notification.create({
+          data: {
+            userId: preferredOfficerId,
+            notificationType: "APPLICATION_SUBMITTED",
+            applicationId: application.id,
+            title: "New Application Assigned",
+            message: `A new application for ${serviceCategory.name} (RR: ${rrNumber}) has been assigned to you and is now in progress.`,
+            isRead: false,
+          },
+        });
+      }
 
       // Create audit log
       await tx.applicationAuditLog.create({
         data: {
           applicationId: application.id,
-          action: "APPLICATION_CREATED",
+          action: isGeneralFrontdesk
+            ? "APPLICATION_OPENED"
+            : "APPLICATION_CREATED",
           performedById: session.user.id,
           newValues: {
             serviceCategoryId,
-            preferredOfficerId,
-            status: ApplicationStatus.DRAFT,
+            preferredOfficerId: isGeneralFrontdesk ? null : preferredOfficerId,
+            citizenName,
+            citizenPhone,
+            status: applicationStatus,
+            rrNumber,
           },
           ipAddress:
             request.headers.get("x-forwarded-for") ||
@@ -674,37 +1056,20 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // Create notification for citizen
-      await tx.notification.create({
-        data: {
-          userId: session.user.id,
-          notificationType: "APPLICATION_SUBMITTED",
-          applicationId: application.id,
-          title: "Application Created Successfully",
-          message: `Your application for ${serviceCategory.name} has been created and is now in draft status.`,
-          isRead: false,
-        },
-      });
-
-      // Create notification for assigned officer
-      await tx.notification.create({
-        data: {
-          userId: preferredOfficerId,
-          notificationType: "APPLICATION_SUBMITTED",
-          applicationId: application.id,
-          title: "New Application Assigned",
-          message: `A new application for ${serviceCategory.name} has been assigned to you.`,
-          isRead: false,
-        },
-      });
-
       return application;
     });
 
+    const statusMessage = isGeneralFrontdesk
+      ? "Application created and placed in queue for officer assignment"
+      : "Application created and assigned to officer in IN_PROGRESS status";
+
     return NextResponse.json({
       id: result.id,
-      message: "Application created successfully in DRAFT status",
-      status: ApplicationStatus.DRAFT,
+      rrNumber: result.rrNumber,
+      message: statusMessage,
+      status: isGeneralFrontdesk
+        ? ApplicationStatus.OPEN
+        : ApplicationStatus.IN_PROGRESS,
     });
   } catch (error) {
     console.error("Error creating application:", error);

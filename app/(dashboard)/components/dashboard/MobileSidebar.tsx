@@ -52,7 +52,7 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     { name: "Dashboard", href: "/dashboard", icon: Home },
     { name: "Applications", href: "/applications", icon: FileText },
     {
-      name: "Assigned Cases",
+      name: "Assigned Applications",
       href: "/officer/assignments",
       icon: ClipboardList,
     },
@@ -73,8 +73,6 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     if (!userRole) return citizenLinks;
 
     switch (userRole) {
-      case UserRole.CITIZEN:
-        return citizenLinks;
       case UserRole.FRONT_DESK:
       case UserRole.DC:
       case UserRole.ADC:
@@ -92,8 +90,6 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
   const getRoleColor = () => {
     const userRole = session?.user?.role;
     switch (userRole) {
-      case UserRole.CITIZEN:
-        return "bg-blue-600";
       case UserRole.FRONT_DESK:
         return "bg-green-600";
       case UserRole.DC:

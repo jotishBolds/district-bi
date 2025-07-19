@@ -23,13 +23,8 @@ export async function GET(request: Request) {
     if (search) {
       where.OR = [
         { rrNumber: { contains: search, mode: "insensitive" } },
-        {
-          citizen: {
-            citizenProfile: {
-              fullName: { contains: search, mode: "insensitive" },
-            },
-          },
-        },
+        { citizenName: { contains: search, mode: "insensitive" } },
+        { subject: { contains: search, mode: "insensitive" } },
         {
           serviceCategory: {
             name: { contains: search, mode: "insensitive" },
@@ -46,16 +41,6 @@ export async function GET(request: Request) {
           select: {
             name: true,
             slaDays: true,
-          },
-        },
-        citizen: {
-          include: {
-            citizenProfile: {
-              select: {
-                fullName: true,
-                phone: true,
-              },
-            },
           },
         },
         currentHolder: {
@@ -109,7 +94,7 @@ export async function GET(request: Request) {
         where: { status: ApplicationStatus.IN_PROGRESS },
       }),
       completed: await prisma.application.count({
-        where: { status: ApplicationStatus.APPROVED },
+        where: { status: ApplicationStatus.RESOLVED },
       }),
       overdue: await prisma.application.count({
         where: {

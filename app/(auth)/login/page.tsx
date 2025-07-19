@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { Loader2, ShieldAlert, AlertCircle, Info } from "lucide-react";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
+import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -203,13 +204,19 @@ function GovernmentLoginForm() {
         <Card className="shadow-lg border-t-4 border-t-blue-700">
           <CardHeader className="space-y-1 pb-2">
             <div className="flex justify-center mb-4">
-              <ShieldAlert className="h-10 w-10 text-blue-700" />
+              <Image
+                src="/assets/skm-logo.png"
+                alt="SKM Logo"
+                width={80}
+                height={80}
+                className="object-contain"
+              />
             </div>
             <CardTitle className="text-2xl font-bold text-center">
-              Secure Government Portal
+              OFFICE OF THE DISTRICT COLLECTOR, GANGTOK
             </CardTitle>
-            <CardDescription className="text-center">
-              Enter your credentials to access the system
+            <CardDescription className="text-center text-lg font-medium">
+              DISTRICT ADMINISTRATIVE CENTRE
             </CardDescription>
           </CardHeader>
 
@@ -318,16 +325,6 @@ function GovernmentLoginForm() {
 
                 <Separator className="my-2" />
 
-                <div className="text-center text-sm">
-                  Need an account?{" "}
-                  <Link
-                    href="/register"
-                    className="text-blue-700 hover:text-blue-800 hover:underline font-medium"
-                  >
-                    Request Access
-                  </Link>
-                </div>
-
                 <div className="text-center text-xs text-gray-500 mt-2">
                   By signing in, you agree to our{" "}
                   <Link href="/privacy-policy" className="underline">
@@ -342,6 +339,11 @@ function GovernmentLoginForm() {
             </form>
           </Form>
         </Card>
+        <div className="mt-4 text-center">
+          <Link href="/" className="text-blue-700 hover:underline font-medium">
+            ← Go to Home Page
+          </Link>
+        </div>
       </div>
     </div>
   );

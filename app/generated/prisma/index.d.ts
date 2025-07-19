@@ -29,6 +29,11 @@ export type CitizenProfile = $Result.DefaultSelection<Prisma.$CitizenProfilePayl
  */
 export type OfficerProfile = $Result.DefaultSelection<Prisma.$OfficerProfilePayload>
 /**
+ * Model FrontdeskOfficer
+ * 
+ */
+export type FrontdeskOfficer = $Result.DefaultSelection<Prisma.$FrontdeskOfficerPayload>
+/**
  * Model ServiceCategory
  * 
  */
@@ -88,13 +93,27 @@ export type SystemSetting = $Result.DefaultSelection<Prisma.$SystemSettingPayloa
  * 
  */
 export type VerificationToken = $Result.DefaultSelection<Prisma.$VerificationTokenPayload>
+/**
+ * Model ApplicationTrackingOTP
+ * 
+ */
+export type ApplicationTrackingOTP = $Result.DefaultSelection<Prisma.$ApplicationTrackingOTPPayload>
+/**
+ * Model FrontdeskForwarding
+ * 
+ */
+export type FrontdeskForwarding = $Result.DefaultSelection<Prisma.$FrontdeskForwardingPayload>
+/**
+ * Model OfficerForwardingHistory
+ * 
+ */
+export type OfficerForwardingHistory = $Result.DefaultSelection<Prisma.$OfficerForwardingHistoryPayload>
 
 /**
  * Enums
  */
 export namespace $Enums {
   export const UserRole: {
-  CITIZEN: 'CITIZEN',
   FRONT_DESK: 'FRONT_DESK',
   DC: 'DC',
   ADC: 'ADC',
@@ -112,10 +131,11 @@ export const ApplicationStatus: {
   DRAFT: 'DRAFT',
   PENDING: 'PENDING',
   VALIDATED: 'VALIDATED',
+  OPEN: 'OPEN',
   IN_PROGRESS: 'IN_PROGRESS',
-  APPROVED: 'APPROVED',
-  CLOSED_WITH_ACTION: 'CLOSED_WITH_ACTION',
-  COMPLETED: 'COMPLETED'
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+  REOPENED: 'REOPENED'
 };
 
 export type ApplicationStatus = (typeof ApplicationStatus)[keyof typeof ApplicationStatus]
@@ -315,6 +335,16 @@ export class PrismaClient<
   get officerProfile(): Prisma.OfficerProfileDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.frontdeskOfficer`: Exposes CRUD operations for the **FrontdeskOfficer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FrontdeskOfficers
+    * const frontdeskOfficers = await prisma.frontdeskOfficer.findMany()
+    * ```
+    */
+  get frontdeskOfficer(): Prisma.FrontdeskOfficerDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.serviceCategory`: Exposes CRUD operations for the **ServiceCategory** model.
     * Example usage:
     * ```ts
@@ -433,6 +463,36 @@ export class PrismaClient<
     * ```
     */
   get verificationToken(): Prisma.VerificationTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.applicationTrackingOTP`: Exposes CRUD operations for the **ApplicationTrackingOTP** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApplicationTrackingOTPS
+    * const applicationTrackingOTPS = await prisma.applicationTrackingOTP.findMany()
+    * ```
+    */
+  get applicationTrackingOTP(): Prisma.ApplicationTrackingOTPDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.frontdeskForwarding`: Exposes CRUD operations for the **FrontdeskForwarding** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FrontdeskForwardings
+    * const frontdeskForwardings = await prisma.frontdeskForwarding.findMany()
+    * ```
+    */
+  get frontdeskForwarding(): Prisma.FrontdeskForwardingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.officerForwardingHistory`: Exposes CRUD operations for the **OfficerForwardingHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OfficerForwardingHistories
+    * const officerForwardingHistories = await prisma.officerForwardingHistory.findMany()
+    * ```
+    */
+  get officerForwardingHistory(): Prisma.OfficerForwardingHistoryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -876,6 +936,7 @@ export namespace Prisma {
     User: 'User',
     CitizenProfile: 'CitizenProfile',
     OfficerProfile: 'OfficerProfile',
+    FrontdeskOfficer: 'FrontdeskOfficer',
     ServiceCategory: 'ServiceCategory',
     Application: 'Application',
     ApplicationWorkflow: 'ApplicationWorkflow',
@@ -887,7 +948,10 @@ export namespace Prisma {
     ApplicationAuditLog: 'ApplicationAuditLog',
     DailyReport: 'DailyReport',
     SystemSetting: 'SystemSetting',
-    VerificationToken: 'VerificationToken'
+    VerificationToken: 'VerificationToken',
+    ApplicationTrackingOTP: 'ApplicationTrackingOTP',
+    FrontdeskForwarding: 'FrontdeskForwarding',
+    OfficerForwardingHistory: 'OfficerForwardingHistory'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -906,7 +970,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "citizenProfile" | "officerProfile" | "serviceCategory" | "application" | "applicationWorkflow" | "applicationValidation" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken"
+      modelProps: "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "application" | "applicationWorkflow" | "applicationValidation" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1129,6 +1193,80 @@ export namespace Prisma {
           count: {
             args: Prisma.OfficerProfileCountArgs<ExtArgs>
             result: $Utils.Optional<OfficerProfileCountAggregateOutputType> | number
+          }
+        }
+      }
+      FrontdeskOfficer: {
+        payload: Prisma.$FrontdeskOfficerPayload<ExtArgs>
+        fields: Prisma.FrontdeskOfficerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FrontdeskOfficerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FrontdeskOfficerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload>
+          }
+          findFirst: {
+            args: Prisma.FrontdeskOfficerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FrontdeskOfficerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload>
+          }
+          findMany: {
+            args: Prisma.FrontdeskOfficerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload>[]
+          }
+          create: {
+            args: Prisma.FrontdeskOfficerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload>
+          }
+          createMany: {
+            args: Prisma.FrontdeskOfficerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FrontdeskOfficerCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload>[]
+          }
+          delete: {
+            args: Prisma.FrontdeskOfficerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload>
+          }
+          update: {
+            args: Prisma.FrontdeskOfficerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload>
+          }
+          deleteMany: {
+            args: Prisma.FrontdeskOfficerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FrontdeskOfficerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FrontdeskOfficerUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload>[]
+          }
+          upsert: {
+            args: Prisma.FrontdeskOfficerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskOfficerPayload>
+          }
+          aggregate: {
+            args: Prisma.FrontdeskOfficerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFrontdeskOfficer>
+          }
+          groupBy: {
+            args: Prisma.FrontdeskOfficerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FrontdeskOfficerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FrontdeskOfficerCountArgs<ExtArgs>
+            result: $Utils.Optional<FrontdeskOfficerCountAggregateOutputType> | number
           }
         }
       }
@@ -2020,6 +2158,228 @@ export namespace Prisma {
           }
         }
       }
+      ApplicationTrackingOTP: {
+        payload: Prisma.$ApplicationTrackingOTPPayload<ExtArgs>
+        fields: Prisma.ApplicationTrackingOTPFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApplicationTrackingOTPFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApplicationTrackingOTPFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload>
+          }
+          findFirst: {
+            args: Prisma.ApplicationTrackingOTPFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApplicationTrackingOTPFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload>
+          }
+          findMany: {
+            args: Prisma.ApplicationTrackingOTPFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload>[]
+          }
+          create: {
+            args: Prisma.ApplicationTrackingOTPCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload>
+          }
+          createMany: {
+            args: Prisma.ApplicationTrackingOTPCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApplicationTrackingOTPCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload>[]
+          }
+          delete: {
+            args: Prisma.ApplicationTrackingOTPDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload>
+          }
+          update: {
+            args: Prisma.ApplicationTrackingOTPUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApplicationTrackingOTPDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApplicationTrackingOTPUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ApplicationTrackingOTPUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload>[]
+          }
+          upsert: {
+            args: Prisma.ApplicationTrackingOTPUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationTrackingOTPPayload>
+          }
+          aggregate: {
+            args: Prisma.ApplicationTrackingOTPAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApplicationTrackingOTP>
+          }
+          groupBy: {
+            args: Prisma.ApplicationTrackingOTPGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApplicationTrackingOTPGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApplicationTrackingOTPCountArgs<ExtArgs>
+            result: $Utils.Optional<ApplicationTrackingOTPCountAggregateOutputType> | number
+          }
+        }
+      }
+      FrontdeskForwarding: {
+        payload: Prisma.$FrontdeskForwardingPayload<ExtArgs>
+        fields: Prisma.FrontdeskForwardingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FrontdeskForwardingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FrontdeskForwardingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload>
+          }
+          findFirst: {
+            args: Prisma.FrontdeskForwardingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FrontdeskForwardingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload>
+          }
+          findMany: {
+            args: Prisma.FrontdeskForwardingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload>[]
+          }
+          create: {
+            args: Prisma.FrontdeskForwardingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload>
+          }
+          createMany: {
+            args: Prisma.FrontdeskForwardingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FrontdeskForwardingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload>[]
+          }
+          delete: {
+            args: Prisma.FrontdeskForwardingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload>
+          }
+          update: {
+            args: Prisma.FrontdeskForwardingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload>
+          }
+          deleteMany: {
+            args: Prisma.FrontdeskForwardingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FrontdeskForwardingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FrontdeskForwardingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload>[]
+          }
+          upsert: {
+            args: Prisma.FrontdeskForwardingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FrontdeskForwardingPayload>
+          }
+          aggregate: {
+            args: Prisma.FrontdeskForwardingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFrontdeskForwarding>
+          }
+          groupBy: {
+            args: Prisma.FrontdeskForwardingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FrontdeskForwardingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FrontdeskForwardingCountArgs<ExtArgs>
+            result: $Utils.Optional<FrontdeskForwardingCountAggregateOutputType> | number
+          }
+        }
+      }
+      OfficerForwardingHistory: {
+        payload: Prisma.$OfficerForwardingHistoryPayload<ExtArgs>
+        fields: Prisma.OfficerForwardingHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OfficerForwardingHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OfficerForwardingHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.OfficerForwardingHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OfficerForwardingHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.OfficerForwardingHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.OfficerForwardingHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.OfficerForwardingHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OfficerForwardingHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.OfficerForwardingHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload>
+          }
+          update: {
+            args: Prisma.OfficerForwardingHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.OfficerForwardingHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OfficerForwardingHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OfficerForwardingHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.OfficerForwardingHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfficerForwardingHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.OfficerForwardingHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOfficerForwardingHistory>
+          }
+          groupBy: {
+            args: Prisma.OfficerForwardingHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OfficerForwardingHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OfficerForwardingHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<OfficerForwardingHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2107,6 +2467,7 @@ export namespace Prisma {
     user?: UserOmit
     citizenProfile?: CitizenProfileOmit
     officerProfile?: OfficerProfileOmit
+    frontdeskOfficer?: FrontdeskOfficerOmit
     serviceCategory?: ServiceCategoryOmit
     application?: ApplicationOmit
     applicationWorkflow?: ApplicationWorkflowOmit
@@ -2119,6 +2480,9 @@ export namespace Prisma {
     dailyReport?: DailyReportOmit
     systemSetting?: SystemSettingOmit
     verificationToken?: VerificationTokenOmit
+    applicationTrackingOTP?: ApplicationTrackingOTPOmit
+    frontdeskForwarding?: FrontdeskForwardingOmit
+    officerForwardingHistory?: OfficerForwardingHistoryOmit
   }
 
   /* Types for Logging */
@@ -2213,7 +2577,6 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    applications: number
     currentHolderFiles: number
     workflowChanges: number
     validations: number
@@ -2224,10 +2587,14 @@ export namespace Prisma {
     documentRequests: number
     notifications: number
     auditLogs: number
+    frontdeskAssignments: number
+    forwardedFrom: number
+    forwardedTo: number
+    officerForwardedFrom: number
+    officerForwardedTo: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    applications?: boolean | UserCountOutputTypeCountApplicationsArgs
     currentHolderFiles?: boolean | UserCountOutputTypeCountCurrentHolderFilesArgs
     workflowChanges?: boolean | UserCountOutputTypeCountWorkflowChangesArgs
     validations?: boolean | UserCountOutputTypeCountValidationsArgs
@@ -2238,6 +2605,11 @@ export namespace Prisma {
     documentRequests?: boolean | UserCountOutputTypeCountDocumentRequestsArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+    frontdeskAssignments?: boolean | UserCountOutputTypeCountFrontdeskAssignmentsArgs
+    forwardedFrom?: boolean | UserCountOutputTypeCountForwardedFromArgs
+    forwardedTo?: boolean | UserCountOutputTypeCountForwardedToArgs
+    officerForwardedFrom?: boolean | UserCountOutputTypeCountOfficerForwardedFromArgs
+    officerForwardedTo?: boolean | UserCountOutputTypeCountOfficerForwardedToArgs
   }
 
   // Custom InputTypes
@@ -2249,13 +2621,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the UserCountOutputType
      */
     select?: UserCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicationWhereInput
   }
 
   /**
@@ -2328,6 +2693,72 @@ export namespace Prisma {
     where?: ApplicationAuditLogWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFrontdeskAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FrontdeskOfficerWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountForwardedFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FrontdeskForwardingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountForwardedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FrontdeskForwardingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountOfficerForwardedFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfficerForwardingHistoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountOfficerForwardedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfficerForwardingHistoryWhereInput
+  }
+
+
+  /**
+   * Count Type OfficerProfileCountOutputType
+   */
+
+  export type OfficerProfileCountOutputType = {
+    frontdeskUsers: number
+  }
+
+  export type OfficerProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    frontdeskUsers?: boolean | OfficerProfileCountOutputTypeCountFrontdeskUsersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * OfficerProfileCountOutputType without action
+   */
+  export type OfficerProfileCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerProfileCountOutputType
+     */
+    select?: OfficerProfileCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * OfficerProfileCountOutputType without action
+   */
+  export type OfficerProfileCountOutputTypeCountFrontdeskUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FrontdeskOfficerWhereInput
+  }
+
 
   /**
    * Count Type ServiceCategoryCountOutputType
@@ -2371,6 +2802,8 @@ export namespace Prisma {
     documentRequests: number
     notifications: number
     auditLogs: number
+    frontdeskForwardings: number
+    officerForwardings: number
   }
 
   export type ApplicationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2380,6 +2813,8 @@ export namespace Prisma {
     documentRequests?: boolean | ApplicationCountOutputTypeCountDocumentRequestsArgs
     notifications?: boolean | ApplicationCountOutputTypeCountNotificationsArgs
     auditLogs?: boolean | ApplicationCountOutputTypeCountAuditLogsArgs
+    frontdeskForwardings?: boolean | ApplicationCountOutputTypeCountFrontdeskForwardingsArgs
+    officerForwardings?: boolean | ApplicationCountOutputTypeCountOfficerForwardingsArgs
   }
 
   // Custom InputTypes
@@ -2433,6 +2868,20 @@ export namespace Prisma {
    */
   export type ApplicationCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ApplicationAuditLogWhereInput
+  }
+
+  /**
+   * ApplicationCountOutputType without action
+   */
+  export type ApplicationCountOutputTypeCountFrontdeskForwardingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FrontdeskForwardingWhereInput
+  }
+
+  /**
+   * ApplicationCountOutputType without action
+   */
+  export type ApplicationCountOutputTypeCountOfficerForwardingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfficerForwardingHistoryWhereInput
   }
 
 
@@ -2638,7 +3087,6 @@ export namespace Prisma {
     updatedAt?: boolean
     citizenProfile?: boolean | User$citizenProfileArgs<ExtArgs>
     officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
-    applications?: boolean | User$applicationsArgs<ExtArgs>
     currentHolderFiles?: boolean | User$currentHolderFilesArgs<ExtArgs>
     workflowChanges?: boolean | User$workflowChangesArgs<ExtArgs>
     validations?: boolean | User$validationsArgs<ExtArgs>
@@ -2649,6 +3097,11 @@ export namespace Prisma {
     documentRequests?: boolean | User$documentRequestsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
+    frontdeskAssignments?: boolean | User$frontdeskAssignmentsArgs<ExtArgs>
+    forwardedFrom?: boolean | User$forwardedFromArgs<ExtArgs>
+    forwardedTo?: boolean | User$forwardedToArgs<ExtArgs>
+    officerForwardedFrom?: boolean | User$officerForwardedFromArgs<ExtArgs>
+    officerForwardedTo?: boolean | User$officerForwardedToArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2692,7 +3145,6 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     citizenProfile?: boolean | User$citizenProfileArgs<ExtArgs>
     officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
-    applications?: boolean | User$applicationsArgs<ExtArgs>
     currentHolderFiles?: boolean | User$currentHolderFilesArgs<ExtArgs>
     workflowChanges?: boolean | User$workflowChangesArgs<ExtArgs>
     validations?: boolean | User$validationsArgs<ExtArgs>
@@ -2703,6 +3155,11 @@ export namespace Prisma {
     documentRequests?: boolean | User$documentRequestsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
+    frontdeskAssignments?: boolean | User$frontdeskAssignmentsArgs<ExtArgs>
+    forwardedFrom?: boolean | User$forwardedFromArgs<ExtArgs>
+    forwardedTo?: boolean | User$forwardedToArgs<ExtArgs>
+    officerForwardedFrom?: boolean | User$officerForwardedFromArgs<ExtArgs>
+    officerForwardedTo?: boolean | User$officerForwardedToArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2713,7 +3170,6 @@ export namespace Prisma {
     objects: {
       citizenProfile: Prisma.$CitizenProfilePayload<ExtArgs> | null
       officerProfile: Prisma.$OfficerProfilePayload<ExtArgs> | null
-      applications: Prisma.$ApplicationPayload<ExtArgs>[]
       currentHolderFiles: Prisma.$ApplicationPayload<ExtArgs>[]
       workflowChanges: Prisma.$ApplicationWorkflowPayload<ExtArgs>[]
       validations: Prisma.$ApplicationValidationPayload<ExtArgs>[]
@@ -2724,6 +3180,11 @@ export namespace Prisma {
       documentRequests: Prisma.$DocumentRequestPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       auditLogs: Prisma.$ApplicationAuditLogPayload<ExtArgs>[]
+      frontdeskAssignments: Prisma.$FrontdeskOfficerPayload<ExtArgs>[]
+      forwardedFrom: Prisma.$FrontdeskForwardingPayload<ExtArgs>[]
+      forwardedTo: Prisma.$FrontdeskForwardingPayload<ExtArgs>[]
+      officerForwardedFrom: Prisma.$OfficerForwardingHistoryPayload<ExtArgs>[]
+      officerForwardedTo: Prisma.$OfficerForwardingHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3131,7 +3592,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     citizenProfile<T extends User$citizenProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$citizenProfileArgs<ExtArgs>>): Prisma__CitizenProfileClient<$Result.GetResult<Prisma.$CitizenProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     officerProfile<T extends User$officerProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$officerProfileArgs<ExtArgs>>): Prisma__OfficerProfileClient<$Result.GetResult<Prisma.$OfficerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    applications<T extends User$applicationsArgs<ExtArgs> = {}>(args?: Subset<T, User$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     currentHolderFiles<T extends User$currentHolderFilesArgs<ExtArgs> = {}>(args?: Subset<T, User$currentHolderFilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workflowChanges<T extends User$workflowChangesArgs<ExtArgs> = {}>(args?: Subset<T, User$workflowChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationWorkflowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     validations<T extends User$validationsArgs<ExtArgs> = {}>(args?: Subset<T, User$validationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationValidationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3142,6 +3602,11 @@ export namespace Prisma {
     documentRequests<T extends User$documentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$documentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends User$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    frontdeskAssignments<T extends User$frontdeskAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$frontdeskAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    forwardedFrom<T extends User$forwardedFromArgs<ExtArgs> = {}>(args?: Subset<T, User$forwardedFromArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    forwardedTo<T extends User$forwardedToArgs<ExtArgs> = {}>(args?: Subset<T, User$forwardedToArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    officerForwardedFrom<T extends User$officerForwardedFromArgs<ExtArgs> = {}>(args?: Subset<T, User$officerForwardedFromArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    officerForwardedTo<T extends User$officerForwardedToArgs<ExtArgs> = {}>(args?: Subset<T, User$officerForwardedToArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3606,30 +4071,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.applications
-   */
-  export type User$applicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Application
-     */
-    select?: ApplicationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Application
-     */
-    omit?: ApplicationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ApplicationInclude<ExtArgs> | null
-    where?: ApplicationWhereInput
-    orderBy?: ApplicationOrderByWithRelationInput | ApplicationOrderByWithRelationInput[]
-    cursor?: ApplicationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ApplicationScalarFieldEnum | ApplicationScalarFieldEnum[]
-  }
-
-  /**
    * User.currentHolderFiles
    */
   export type User$currentHolderFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3867,6 +4308,126 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ApplicationAuditLogScalarFieldEnum | ApplicationAuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.frontdeskAssignments
+   */
+  export type User$frontdeskAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    where?: FrontdeskOfficerWhereInput
+    orderBy?: FrontdeskOfficerOrderByWithRelationInput | FrontdeskOfficerOrderByWithRelationInput[]
+    cursor?: FrontdeskOfficerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FrontdeskOfficerScalarFieldEnum | FrontdeskOfficerScalarFieldEnum[]
+  }
+
+  /**
+   * User.forwardedFrom
+   */
+  export type User$forwardedFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    where?: FrontdeskForwardingWhereInput
+    orderBy?: FrontdeskForwardingOrderByWithRelationInput | FrontdeskForwardingOrderByWithRelationInput[]
+    cursor?: FrontdeskForwardingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FrontdeskForwardingScalarFieldEnum | FrontdeskForwardingScalarFieldEnum[]
+  }
+
+  /**
+   * User.forwardedTo
+   */
+  export type User$forwardedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    where?: FrontdeskForwardingWhereInput
+    orderBy?: FrontdeskForwardingOrderByWithRelationInput | FrontdeskForwardingOrderByWithRelationInput[]
+    cursor?: FrontdeskForwardingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FrontdeskForwardingScalarFieldEnum | FrontdeskForwardingScalarFieldEnum[]
+  }
+
+  /**
+   * User.officerForwardedFrom
+   */
+  export type User$officerForwardedFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    where?: OfficerForwardingHistoryWhereInput
+    orderBy?: OfficerForwardingHistoryOrderByWithRelationInput | OfficerForwardingHistoryOrderByWithRelationInput[]
+    cursor?: OfficerForwardingHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfficerForwardingHistoryScalarFieldEnum | OfficerForwardingHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * User.officerForwardedTo
+   */
+  export type User$officerForwardedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    where?: OfficerForwardingHistoryWhereInput
+    orderBy?: OfficerForwardingHistoryOrderByWithRelationInput | OfficerForwardingHistoryOrderByWithRelationInput[]
+    cursor?: OfficerForwardingHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfficerForwardingHistoryScalarFieldEnum | OfficerForwardingHistoryScalarFieldEnum[]
   }
 
   /**
@@ -5182,6 +5743,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    frontdeskUsers?: boolean | OfficerProfile$frontdeskUsersArgs<ExtArgs>
+    _count?: boolean | OfficerProfileCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["officerProfile"]>
 
   export type OfficerProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5225,6 +5788,8 @@ export namespace Prisma {
   export type OfficerProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "designation" | "department" | "officeLocation" | "isAvailable" | "createdAt" | "updatedAt", ExtArgs["result"]["officerProfile"]>
   export type OfficerProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    frontdeskUsers?: boolean | OfficerProfile$frontdeskUsersArgs<ExtArgs>
+    _count?: boolean | OfficerProfileCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OfficerProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5237,6 +5802,7 @@ export namespace Prisma {
     name: "OfficerProfile"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      frontdeskUsers: Prisma.$FrontdeskOfficerPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5643,6 +6209,7 @@ export namespace Prisma {
   export interface Prisma__OfficerProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    frontdeskUsers<T extends OfficerProfile$frontdeskUsersArgs<ExtArgs> = {}>(args?: Subset<T, OfficerProfile$frontdeskUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6077,6 +6644,30 @@ export namespace Prisma {
   }
 
   /**
+   * OfficerProfile.frontdeskUsers
+   */
+  export type OfficerProfile$frontdeskUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    where?: FrontdeskOfficerWhereInput
+    orderBy?: FrontdeskOfficerOrderByWithRelationInput | FrontdeskOfficerOrderByWithRelationInput[]
+    cursor?: FrontdeskOfficerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FrontdeskOfficerScalarFieldEnum | FrontdeskOfficerScalarFieldEnum[]
+  }
+
+  /**
    * OfficerProfile without action
    */
   export type OfficerProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6092,6 +6683,1078 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: OfficerProfileInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FrontdeskOfficer
+   */
+
+  export type AggregateFrontdeskOfficer = {
+    _count: FrontdeskOfficerCountAggregateOutputType | null
+    _min: FrontdeskOfficerMinAggregateOutputType | null
+    _max: FrontdeskOfficerMaxAggregateOutputType | null
+  }
+
+  export type FrontdeskOfficerMinAggregateOutputType = {
+    id: string | null
+    frontdeskUserId: string | null
+    officerId: string | null
+    createdAt: Date | null
+  }
+
+  export type FrontdeskOfficerMaxAggregateOutputType = {
+    id: string | null
+    frontdeskUserId: string | null
+    officerId: string | null
+    createdAt: Date | null
+  }
+
+  export type FrontdeskOfficerCountAggregateOutputType = {
+    id: number
+    frontdeskUserId: number
+    officerId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type FrontdeskOfficerMinAggregateInputType = {
+    id?: true
+    frontdeskUserId?: true
+    officerId?: true
+    createdAt?: true
+  }
+
+  export type FrontdeskOfficerMaxAggregateInputType = {
+    id?: true
+    frontdeskUserId?: true
+    officerId?: true
+    createdAt?: true
+  }
+
+  export type FrontdeskOfficerCountAggregateInputType = {
+    id?: true
+    frontdeskUserId?: true
+    officerId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type FrontdeskOfficerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FrontdeskOfficer to aggregate.
+     */
+    where?: FrontdeskOfficerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FrontdeskOfficers to fetch.
+     */
+    orderBy?: FrontdeskOfficerOrderByWithRelationInput | FrontdeskOfficerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FrontdeskOfficerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FrontdeskOfficers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FrontdeskOfficers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FrontdeskOfficers
+    **/
+    _count?: true | FrontdeskOfficerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FrontdeskOfficerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FrontdeskOfficerMaxAggregateInputType
+  }
+
+  export type GetFrontdeskOfficerAggregateType<T extends FrontdeskOfficerAggregateArgs> = {
+        [P in keyof T & keyof AggregateFrontdeskOfficer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFrontdeskOfficer[P]>
+      : GetScalarType<T[P], AggregateFrontdeskOfficer[P]>
+  }
+
+
+
+
+  export type FrontdeskOfficerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FrontdeskOfficerWhereInput
+    orderBy?: FrontdeskOfficerOrderByWithAggregationInput | FrontdeskOfficerOrderByWithAggregationInput[]
+    by: FrontdeskOfficerScalarFieldEnum[] | FrontdeskOfficerScalarFieldEnum
+    having?: FrontdeskOfficerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FrontdeskOfficerCountAggregateInputType | true
+    _min?: FrontdeskOfficerMinAggregateInputType
+    _max?: FrontdeskOfficerMaxAggregateInputType
+  }
+
+  export type FrontdeskOfficerGroupByOutputType = {
+    id: string
+    frontdeskUserId: string
+    officerId: string | null
+    createdAt: Date
+    _count: FrontdeskOfficerCountAggregateOutputType | null
+    _min: FrontdeskOfficerMinAggregateOutputType | null
+    _max: FrontdeskOfficerMaxAggregateOutputType | null
+  }
+
+  type GetFrontdeskOfficerGroupByPayload<T extends FrontdeskOfficerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FrontdeskOfficerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FrontdeskOfficerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FrontdeskOfficerGroupByOutputType[P]>
+            : GetScalarType<T[P], FrontdeskOfficerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FrontdeskOfficerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    frontdeskUserId?: boolean
+    officerId?: boolean
+    createdAt?: boolean
+    frontdeskUser?: boolean | UserDefaultArgs<ExtArgs>
+    officer?: boolean | FrontdeskOfficer$officerArgs<ExtArgs>
+  }, ExtArgs["result"]["frontdeskOfficer"]>
+
+  export type FrontdeskOfficerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    frontdeskUserId?: boolean
+    officerId?: boolean
+    createdAt?: boolean
+    frontdeskUser?: boolean | UserDefaultArgs<ExtArgs>
+    officer?: boolean | FrontdeskOfficer$officerArgs<ExtArgs>
+  }, ExtArgs["result"]["frontdeskOfficer"]>
+
+  export type FrontdeskOfficerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    frontdeskUserId?: boolean
+    officerId?: boolean
+    createdAt?: boolean
+    frontdeskUser?: boolean | UserDefaultArgs<ExtArgs>
+    officer?: boolean | FrontdeskOfficer$officerArgs<ExtArgs>
+  }, ExtArgs["result"]["frontdeskOfficer"]>
+
+  export type FrontdeskOfficerSelectScalar = {
+    id?: boolean
+    frontdeskUserId?: boolean
+    officerId?: boolean
+    createdAt?: boolean
+  }
+
+  export type FrontdeskOfficerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "frontdeskUserId" | "officerId" | "createdAt", ExtArgs["result"]["frontdeskOfficer"]>
+  export type FrontdeskOfficerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    frontdeskUser?: boolean | UserDefaultArgs<ExtArgs>
+    officer?: boolean | FrontdeskOfficer$officerArgs<ExtArgs>
+  }
+  export type FrontdeskOfficerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    frontdeskUser?: boolean | UserDefaultArgs<ExtArgs>
+    officer?: boolean | FrontdeskOfficer$officerArgs<ExtArgs>
+  }
+  export type FrontdeskOfficerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    frontdeskUser?: boolean | UserDefaultArgs<ExtArgs>
+    officer?: boolean | FrontdeskOfficer$officerArgs<ExtArgs>
+  }
+
+  export type $FrontdeskOfficerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FrontdeskOfficer"
+    objects: {
+      frontdeskUser: Prisma.$UserPayload<ExtArgs>
+      officer: Prisma.$OfficerProfilePayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      frontdeskUserId: string
+      officerId: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["frontdeskOfficer"]>
+    composites: {}
+  }
+
+  type FrontdeskOfficerGetPayload<S extends boolean | null | undefined | FrontdeskOfficerDefaultArgs> = $Result.GetResult<Prisma.$FrontdeskOfficerPayload, S>
+
+  type FrontdeskOfficerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FrontdeskOfficerFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FrontdeskOfficerCountAggregateInputType | true
+    }
+
+  export interface FrontdeskOfficerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FrontdeskOfficer'], meta: { name: 'FrontdeskOfficer' } }
+    /**
+     * Find zero or one FrontdeskOfficer that matches the filter.
+     * @param {FrontdeskOfficerFindUniqueArgs} args - Arguments to find a FrontdeskOfficer
+     * @example
+     * // Get one FrontdeskOfficer
+     * const frontdeskOfficer = await prisma.frontdeskOfficer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FrontdeskOfficerFindUniqueArgs>(args: SelectSubset<T, FrontdeskOfficerFindUniqueArgs<ExtArgs>>): Prisma__FrontdeskOfficerClient<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FrontdeskOfficer that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FrontdeskOfficerFindUniqueOrThrowArgs} args - Arguments to find a FrontdeskOfficer
+     * @example
+     * // Get one FrontdeskOfficer
+     * const frontdeskOfficer = await prisma.frontdeskOfficer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FrontdeskOfficerFindUniqueOrThrowArgs>(args: SelectSubset<T, FrontdeskOfficerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FrontdeskOfficerClient<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FrontdeskOfficer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskOfficerFindFirstArgs} args - Arguments to find a FrontdeskOfficer
+     * @example
+     * // Get one FrontdeskOfficer
+     * const frontdeskOfficer = await prisma.frontdeskOfficer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FrontdeskOfficerFindFirstArgs>(args?: SelectSubset<T, FrontdeskOfficerFindFirstArgs<ExtArgs>>): Prisma__FrontdeskOfficerClient<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FrontdeskOfficer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskOfficerFindFirstOrThrowArgs} args - Arguments to find a FrontdeskOfficer
+     * @example
+     * // Get one FrontdeskOfficer
+     * const frontdeskOfficer = await prisma.frontdeskOfficer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FrontdeskOfficerFindFirstOrThrowArgs>(args?: SelectSubset<T, FrontdeskOfficerFindFirstOrThrowArgs<ExtArgs>>): Prisma__FrontdeskOfficerClient<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FrontdeskOfficers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskOfficerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FrontdeskOfficers
+     * const frontdeskOfficers = await prisma.frontdeskOfficer.findMany()
+     * 
+     * // Get first 10 FrontdeskOfficers
+     * const frontdeskOfficers = await prisma.frontdeskOfficer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const frontdeskOfficerWithIdOnly = await prisma.frontdeskOfficer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FrontdeskOfficerFindManyArgs>(args?: SelectSubset<T, FrontdeskOfficerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FrontdeskOfficer.
+     * @param {FrontdeskOfficerCreateArgs} args - Arguments to create a FrontdeskOfficer.
+     * @example
+     * // Create one FrontdeskOfficer
+     * const FrontdeskOfficer = await prisma.frontdeskOfficer.create({
+     *   data: {
+     *     // ... data to create a FrontdeskOfficer
+     *   }
+     * })
+     * 
+     */
+    create<T extends FrontdeskOfficerCreateArgs>(args: SelectSubset<T, FrontdeskOfficerCreateArgs<ExtArgs>>): Prisma__FrontdeskOfficerClient<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FrontdeskOfficers.
+     * @param {FrontdeskOfficerCreateManyArgs} args - Arguments to create many FrontdeskOfficers.
+     * @example
+     * // Create many FrontdeskOfficers
+     * const frontdeskOfficer = await prisma.frontdeskOfficer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FrontdeskOfficerCreateManyArgs>(args?: SelectSubset<T, FrontdeskOfficerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FrontdeskOfficers and returns the data saved in the database.
+     * @param {FrontdeskOfficerCreateManyAndReturnArgs} args - Arguments to create many FrontdeskOfficers.
+     * @example
+     * // Create many FrontdeskOfficers
+     * const frontdeskOfficer = await prisma.frontdeskOfficer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FrontdeskOfficers and only return the `id`
+     * const frontdeskOfficerWithIdOnly = await prisma.frontdeskOfficer.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FrontdeskOfficerCreateManyAndReturnArgs>(args?: SelectSubset<T, FrontdeskOfficerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FrontdeskOfficer.
+     * @param {FrontdeskOfficerDeleteArgs} args - Arguments to delete one FrontdeskOfficer.
+     * @example
+     * // Delete one FrontdeskOfficer
+     * const FrontdeskOfficer = await prisma.frontdeskOfficer.delete({
+     *   where: {
+     *     // ... filter to delete one FrontdeskOfficer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FrontdeskOfficerDeleteArgs>(args: SelectSubset<T, FrontdeskOfficerDeleteArgs<ExtArgs>>): Prisma__FrontdeskOfficerClient<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FrontdeskOfficer.
+     * @param {FrontdeskOfficerUpdateArgs} args - Arguments to update one FrontdeskOfficer.
+     * @example
+     * // Update one FrontdeskOfficer
+     * const frontdeskOfficer = await prisma.frontdeskOfficer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FrontdeskOfficerUpdateArgs>(args: SelectSubset<T, FrontdeskOfficerUpdateArgs<ExtArgs>>): Prisma__FrontdeskOfficerClient<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FrontdeskOfficers.
+     * @param {FrontdeskOfficerDeleteManyArgs} args - Arguments to filter FrontdeskOfficers to delete.
+     * @example
+     * // Delete a few FrontdeskOfficers
+     * const { count } = await prisma.frontdeskOfficer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FrontdeskOfficerDeleteManyArgs>(args?: SelectSubset<T, FrontdeskOfficerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FrontdeskOfficers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskOfficerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FrontdeskOfficers
+     * const frontdeskOfficer = await prisma.frontdeskOfficer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FrontdeskOfficerUpdateManyArgs>(args: SelectSubset<T, FrontdeskOfficerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FrontdeskOfficers and returns the data updated in the database.
+     * @param {FrontdeskOfficerUpdateManyAndReturnArgs} args - Arguments to update many FrontdeskOfficers.
+     * @example
+     * // Update many FrontdeskOfficers
+     * const frontdeskOfficer = await prisma.frontdeskOfficer.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FrontdeskOfficers and only return the `id`
+     * const frontdeskOfficerWithIdOnly = await prisma.frontdeskOfficer.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FrontdeskOfficerUpdateManyAndReturnArgs>(args: SelectSubset<T, FrontdeskOfficerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FrontdeskOfficer.
+     * @param {FrontdeskOfficerUpsertArgs} args - Arguments to update or create a FrontdeskOfficer.
+     * @example
+     * // Update or create a FrontdeskOfficer
+     * const frontdeskOfficer = await prisma.frontdeskOfficer.upsert({
+     *   create: {
+     *     // ... data to create a FrontdeskOfficer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FrontdeskOfficer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FrontdeskOfficerUpsertArgs>(args: SelectSubset<T, FrontdeskOfficerUpsertArgs<ExtArgs>>): Prisma__FrontdeskOfficerClient<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FrontdeskOfficers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskOfficerCountArgs} args - Arguments to filter FrontdeskOfficers to count.
+     * @example
+     * // Count the number of FrontdeskOfficers
+     * const count = await prisma.frontdeskOfficer.count({
+     *   where: {
+     *     // ... the filter for the FrontdeskOfficers we want to count
+     *   }
+     * })
+    **/
+    count<T extends FrontdeskOfficerCountArgs>(
+      args?: Subset<T, FrontdeskOfficerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FrontdeskOfficerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FrontdeskOfficer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskOfficerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FrontdeskOfficerAggregateArgs>(args: Subset<T, FrontdeskOfficerAggregateArgs>): Prisma.PrismaPromise<GetFrontdeskOfficerAggregateType<T>>
+
+    /**
+     * Group by FrontdeskOfficer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskOfficerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FrontdeskOfficerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FrontdeskOfficerGroupByArgs['orderBy'] }
+        : { orderBy?: FrontdeskOfficerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FrontdeskOfficerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFrontdeskOfficerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FrontdeskOfficer model
+   */
+  readonly fields: FrontdeskOfficerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FrontdeskOfficer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FrontdeskOfficerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    frontdeskUser<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    officer<T extends FrontdeskOfficer$officerArgs<ExtArgs> = {}>(args?: Subset<T, FrontdeskOfficer$officerArgs<ExtArgs>>): Prisma__OfficerProfileClient<$Result.GetResult<Prisma.$OfficerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FrontdeskOfficer model
+   */
+  interface FrontdeskOfficerFieldRefs {
+    readonly id: FieldRef<"FrontdeskOfficer", 'String'>
+    readonly frontdeskUserId: FieldRef<"FrontdeskOfficer", 'String'>
+    readonly officerId: FieldRef<"FrontdeskOfficer", 'String'>
+    readonly createdAt: FieldRef<"FrontdeskOfficer", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FrontdeskOfficer findUnique
+   */
+  export type FrontdeskOfficerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    /**
+     * Filter, which FrontdeskOfficer to fetch.
+     */
+    where: FrontdeskOfficerWhereUniqueInput
+  }
+
+  /**
+   * FrontdeskOfficer findUniqueOrThrow
+   */
+  export type FrontdeskOfficerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    /**
+     * Filter, which FrontdeskOfficer to fetch.
+     */
+    where: FrontdeskOfficerWhereUniqueInput
+  }
+
+  /**
+   * FrontdeskOfficer findFirst
+   */
+  export type FrontdeskOfficerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    /**
+     * Filter, which FrontdeskOfficer to fetch.
+     */
+    where?: FrontdeskOfficerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FrontdeskOfficers to fetch.
+     */
+    orderBy?: FrontdeskOfficerOrderByWithRelationInput | FrontdeskOfficerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FrontdeskOfficers.
+     */
+    cursor?: FrontdeskOfficerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FrontdeskOfficers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FrontdeskOfficers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FrontdeskOfficers.
+     */
+    distinct?: FrontdeskOfficerScalarFieldEnum | FrontdeskOfficerScalarFieldEnum[]
+  }
+
+  /**
+   * FrontdeskOfficer findFirstOrThrow
+   */
+  export type FrontdeskOfficerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    /**
+     * Filter, which FrontdeskOfficer to fetch.
+     */
+    where?: FrontdeskOfficerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FrontdeskOfficers to fetch.
+     */
+    orderBy?: FrontdeskOfficerOrderByWithRelationInput | FrontdeskOfficerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FrontdeskOfficers.
+     */
+    cursor?: FrontdeskOfficerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FrontdeskOfficers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FrontdeskOfficers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FrontdeskOfficers.
+     */
+    distinct?: FrontdeskOfficerScalarFieldEnum | FrontdeskOfficerScalarFieldEnum[]
+  }
+
+  /**
+   * FrontdeskOfficer findMany
+   */
+  export type FrontdeskOfficerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    /**
+     * Filter, which FrontdeskOfficers to fetch.
+     */
+    where?: FrontdeskOfficerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FrontdeskOfficers to fetch.
+     */
+    orderBy?: FrontdeskOfficerOrderByWithRelationInput | FrontdeskOfficerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FrontdeskOfficers.
+     */
+    cursor?: FrontdeskOfficerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FrontdeskOfficers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FrontdeskOfficers.
+     */
+    skip?: number
+    distinct?: FrontdeskOfficerScalarFieldEnum | FrontdeskOfficerScalarFieldEnum[]
+  }
+
+  /**
+   * FrontdeskOfficer create
+   */
+  export type FrontdeskOfficerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FrontdeskOfficer.
+     */
+    data: XOR<FrontdeskOfficerCreateInput, FrontdeskOfficerUncheckedCreateInput>
+  }
+
+  /**
+   * FrontdeskOfficer createMany
+   */
+  export type FrontdeskOfficerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FrontdeskOfficers.
+     */
+    data: FrontdeskOfficerCreateManyInput | FrontdeskOfficerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FrontdeskOfficer createManyAndReturn
+   */
+  export type FrontdeskOfficerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * The data used to create many FrontdeskOfficers.
+     */
+    data: FrontdeskOfficerCreateManyInput | FrontdeskOfficerCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FrontdeskOfficer update
+   */
+  export type FrontdeskOfficerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FrontdeskOfficer.
+     */
+    data: XOR<FrontdeskOfficerUpdateInput, FrontdeskOfficerUncheckedUpdateInput>
+    /**
+     * Choose, which FrontdeskOfficer to update.
+     */
+    where: FrontdeskOfficerWhereUniqueInput
+  }
+
+  /**
+   * FrontdeskOfficer updateMany
+   */
+  export type FrontdeskOfficerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FrontdeskOfficers.
+     */
+    data: XOR<FrontdeskOfficerUpdateManyMutationInput, FrontdeskOfficerUncheckedUpdateManyInput>
+    /**
+     * Filter which FrontdeskOfficers to update
+     */
+    where?: FrontdeskOfficerWhereInput
+    /**
+     * Limit how many FrontdeskOfficers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FrontdeskOfficer updateManyAndReturn
+   */
+  export type FrontdeskOfficerUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * The data used to update FrontdeskOfficers.
+     */
+    data: XOR<FrontdeskOfficerUpdateManyMutationInput, FrontdeskOfficerUncheckedUpdateManyInput>
+    /**
+     * Filter which FrontdeskOfficers to update
+     */
+    where?: FrontdeskOfficerWhereInput
+    /**
+     * Limit how many FrontdeskOfficers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FrontdeskOfficer upsert
+   */
+  export type FrontdeskOfficerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FrontdeskOfficer to update in case it exists.
+     */
+    where: FrontdeskOfficerWhereUniqueInput
+    /**
+     * In case the FrontdeskOfficer found by the `where` argument doesn't exist, create a new FrontdeskOfficer with this data.
+     */
+    create: XOR<FrontdeskOfficerCreateInput, FrontdeskOfficerUncheckedCreateInput>
+    /**
+     * In case the FrontdeskOfficer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FrontdeskOfficerUpdateInput, FrontdeskOfficerUncheckedUpdateInput>
+  }
+
+  /**
+   * FrontdeskOfficer delete
+   */
+  export type FrontdeskOfficerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    /**
+     * Filter which FrontdeskOfficer to delete.
+     */
+    where: FrontdeskOfficerWhereUniqueInput
+  }
+
+  /**
+   * FrontdeskOfficer deleteMany
+   */
+  export type FrontdeskOfficerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FrontdeskOfficers to delete
+     */
+    where?: FrontdeskOfficerWhereInput
+    /**
+     * Limit how many FrontdeskOfficers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FrontdeskOfficer.officer
+   */
+  export type FrontdeskOfficer$officerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerProfile
+     */
+    select?: OfficerProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerProfile
+     */
+    omit?: OfficerProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerProfileInclude<ExtArgs> | null
+    where?: OfficerProfileWhereInput
+  }
+
+  /**
+   * FrontdeskOfficer without action
+   */
+  export type FrontdeskOfficerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
   }
 
 
@@ -7239,7 +8902,13 @@ export namespace Prisma {
     id: string | null
     rrNumber: string | null
     serviceCategoryId: string | null
-    citizenId: string | null
+    subject: string | null
+    citizenName: string | null
+    citizenPhone: string | null
+    citizenEmail: string | null
+    citizenAddress: string | null
+    citizenGender: string | null
+    citizenAadhaar: string | null
     status: $Enums.ApplicationStatus | null
     currentHolderId: string | null
     submittedAt: Date | null
@@ -7253,7 +8922,13 @@ export namespace Prisma {
     id: string | null
     rrNumber: string | null
     serviceCategoryId: string | null
-    citizenId: string | null
+    subject: string | null
+    citizenName: string | null
+    citizenPhone: string | null
+    citizenEmail: string | null
+    citizenAddress: string | null
+    citizenGender: string | null
+    citizenAadhaar: string | null
     status: $Enums.ApplicationStatus | null
     currentHolderId: string | null
     submittedAt: Date | null
@@ -7267,7 +8942,13 @@ export namespace Prisma {
     id: number
     rrNumber: number
     serviceCategoryId: number
-    citizenId: number
+    subject: number
+    citizenName: number
+    citizenPhone: number
+    citizenEmail: number
+    citizenAddress: number
+    citizenGender: number
+    citizenAadhaar: number
     status: number
     currentHolderId: number
     submittedAt: number
@@ -7283,7 +8964,13 @@ export namespace Prisma {
     id?: true
     rrNumber?: true
     serviceCategoryId?: true
-    citizenId?: true
+    subject?: true
+    citizenName?: true
+    citizenPhone?: true
+    citizenEmail?: true
+    citizenAddress?: true
+    citizenGender?: true
+    citizenAadhaar?: true
     status?: true
     currentHolderId?: true
     submittedAt?: true
@@ -7297,7 +8984,13 @@ export namespace Prisma {
     id?: true
     rrNumber?: true
     serviceCategoryId?: true
-    citizenId?: true
+    subject?: true
+    citizenName?: true
+    citizenPhone?: true
+    citizenEmail?: true
+    citizenAddress?: true
+    citizenGender?: true
+    citizenAadhaar?: true
     status?: true
     currentHolderId?: true
     submittedAt?: true
@@ -7311,7 +9004,13 @@ export namespace Prisma {
     id?: true
     rrNumber?: true
     serviceCategoryId?: true
-    citizenId?: true
+    subject?: true
+    citizenName?: true
+    citizenPhone?: true
+    citizenEmail?: true
+    citizenAddress?: true
+    citizenGender?: true
+    citizenAadhaar?: true
     status?: true
     currentHolderId?: true
     submittedAt?: true
@@ -7398,7 +9097,13 @@ export namespace Prisma {
     id: string
     rrNumber: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail: string | null
+    citizenAddress: string
+    citizenGender: string | null
+    citizenAadhaar: string | null
     status: $Enums.ApplicationStatus
     currentHolderId: string | null
     submittedAt: Date | null
@@ -7429,7 +9134,13 @@ export namespace Prisma {
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
-    citizenId?: boolean
+    subject?: boolean
+    citizenName?: boolean
+    citizenPhone?: boolean
+    citizenEmail?: boolean
+    citizenAddress?: boolean
+    citizenGender?: boolean
+    citizenAadhaar?: boolean
     status?: boolean
     currentHolderId?: boolean
     submittedAt?: boolean
@@ -7438,7 +9149,6 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    citizen?: boolean | UserDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
     workflow?: boolean | Application$workflowArgs<ExtArgs>
     validation?: boolean | Application$validationArgs<ExtArgs>
@@ -7447,6 +9157,8 @@ export namespace Prisma {
     documentRequests?: boolean | Application$documentRequestsArgs<ExtArgs>
     notifications?: boolean | Application$notificationsArgs<ExtArgs>
     auditLogs?: boolean | Application$auditLogsArgs<ExtArgs>
+    frontdeskForwardings?: boolean | Application$frontdeskForwardingsArgs<ExtArgs>
+    officerForwardings?: boolean | Application$officerForwardingsArgs<ExtArgs>
     _count?: boolean | ApplicationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
@@ -7454,7 +9166,13 @@ export namespace Prisma {
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
-    citizenId?: boolean
+    subject?: boolean
+    citizenName?: boolean
+    citizenPhone?: boolean
+    citizenEmail?: boolean
+    citizenAddress?: boolean
+    citizenGender?: boolean
+    citizenAadhaar?: boolean
     status?: boolean
     currentHolderId?: boolean
     submittedAt?: boolean
@@ -7463,7 +9181,6 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    citizen?: boolean | UserDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
@@ -7471,7 +9188,13 @@ export namespace Prisma {
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
-    citizenId?: boolean
+    subject?: boolean
+    citizenName?: boolean
+    citizenPhone?: boolean
+    citizenEmail?: boolean
+    citizenAddress?: boolean
+    citizenGender?: boolean
+    citizenAadhaar?: boolean
     status?: boolean
     currentHolderId?: boolean
     submittedAt?: boolean
@@ -7480,7 +9203,6 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    citizen?: boolean | UserDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
@@ -7488,7 +9210,13 @@ export namespace Prisma {
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
-    citizenId?: boolean
+    subject?: boolean
+    citizenName?: boolean
+    citizenPhone?: boolean
+    citizenEmail?: boolean
+    citizenAddress?: boolean
+    citizenGender?: boolean
+    citizenAadhaar?: boolean
     status?: boolean
     currentHolderId?: boolean
     submittedAt?: boolean
@@ -7498,10 +9226,9 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rrNumber" | "serviceCategoryId" | "citizenId" | "status" | "currentHolderId" | "submittedAt" | "validatedAt" | "completedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rrNumber" | "serviceCategoryId" | "subject" | "citizenName" | "citizenPhone" | "citizenEmail" | "citizenAddress" | "citizenGender" | "citizenAadhaar" | "status" | "currentHolderId" | "submittedAt" | "validatedAt" | "completedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    citizen?: boolean | UserDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
     workflow?: boolean | Application$workflowArgs<ExtArgs>
     validation?: boolean | Application$validationArgs<ExtArgs>
@@ -7510,16 +9237,16 @@ export namespace Prisma {
     documentRequests?: boolean | Application$documentRequestsArgs<ExtArgs>
     notifications?: boolean | Application$notificationsArgs<ExtArgs>
     auditLogs?: boolean | Application$auditLogsArgs<ExtArgs>
+    frontdeskForwardings?: boolean | Application$frontdeskForwardingsArgs<ExtArgs>
+    officerForwardings?: boolean | Application$officerForwardingsArgs<ExtArgs>
     _count?: boolean | ApplicationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    citizen?: boolean | UserDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
   }
   export type ApplicationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    citizen?: boolean | UserDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
   }
 
@@ -7527,7 +9254,6 @@ export namespace Prisma {
     name: "Application"
     objects: {
       serviceCategory: Prisma.$ServiceCategoryPayload<ExtArgs>
-      citizen: Prisma.$UserPayload<ExtArgs>
       currentHolder: Prisma.$UserPayload<ExtArgs> | null
       workflow: Prisma.$ApplicationWorkflowPayload<ExtArgs>[]
       validation: Prisma.$ApplicationValidationPayload<ExtArgs> | null
@@ -7536,12 +9262,20 @@ export namespace Prisma {
       documentRequests: Prisma.$DocumentRequestPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       auditLogs: Prisma.$ApplicationAuditLogPayload<ExtArgs>[]
+      frontdeskForwardings: Prisma.$FrontdeskForwardingPayload<ExtArgs>[]
+      officerForwardings: Prisma.$OfficerForwardingHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       rrNumber: string | null
       serviceCategoryId: string
-      citizenId: string
+      subject: string
+      citizenName: string
+      citizenPhone: string
+      citizenEmail: string | null
+      citizenAddress: string
+      citizenGender: string | null
+      citizenAadhaar: string | null
       status: $Enums.ApplicationStatus
       currentHolderId: string | null
       submittedAt: Date | null
@@ -7944,7 +9678,6 @@ export namespace Prisma {
   export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     serviceCategory<T extends ServiceCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategoryDefaultArgs<ExtArgs>>): Prisma__ServiceCategoryClient<$Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    citizen<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     currentHolder<T extends Application$currentHolderArgs<ExtArgs> = {}>(args?: Subset<T, Application$currentHolderArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     workflow<T extends Application$workflowArgs<ExtArgs> = {}>(args?: Subset<T, Application$workflowArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationWorkflowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     validation<T extends Application$validationArgs<ExtArgs> = {}>(args?: Subset<T, Application$validationArgs<ExtArgs>>): Prisma__ApplicationValidationClient<$Result.GetResult<Prisma.$ApplicationValidationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -7953,6 +9686,8 @@ export namespace Prisma {
     documentRequests<T extends Application$documentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Application$documentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends Application$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Application$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends Application$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Application$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    frontdeskForwardings<T extends Application$frontdeskForwardingsArgs<ExtArgs> = {}>(args?: Subset<T, Application$frontdeskForwardingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    officerForwardings<T extends Application$officerForwardingsArgs<ExtArgs> = {}>(args?: Subset<T, Application$officerForwardingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7985,7 +9720,13 @@ export namespace Prisma {
     readonly id: FieldRef<"Application", 'String'>
     readonly rrNumber: FieldRef<"Application", 'String'>
     readonly serviceCategoryId: FieldRef<"Application", 'String'>
-    readonly citizenId: FieldRef<"Application", 'String'>
+    readonly subject: FieldRef<"Application", 'String'>
+    readonly citizenName: FieldRef<"Application", 'String'>
+    readonly citizenPhone: FieldRef<"Application", 'String'>
+    readonly citizenEmail: FieldRef<"Application", 'String'>
+    readonly citizenAddress: FieldRef<"Application", 'String'>
+    readonly citizenGender: FieldRef<"Application", 'String'>
+    readonly citizenAadhaar: FieldRef<"Application", 'String'>
     readonly status: FieldRef<"Application", 'ApplicationStatus'>
     readonly currentHolderId: FieldRef<"Application", 'String'>
     readonly submittedAt: FieldRef<"Application", 'DateTime'>
@@ -8568,6 +10309,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ApplicationAuditLogScalarFieldEnum | ApplicationAuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * Application.frontdeskForwardings
+   */
+  export type Application$frontdeskForwardingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    where?: FrontdeskForwardingWhereInput
+    orderBy?: FrontdeskForwardingOrderByWithRelationInput | FrontdeskForwardingOrderByWithRelationInput[]
+    cursor?: FrontdeskForwardingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FrontdeskForwardingScalarFieldEnum | FrontdeskForwardingScalarFieldEnum[]
+  }
+
+  /**
+   * Application.officerForwardings
+   */
+  export type Application$officerForwardingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    where?: OfficerForwardingHistoryWhereInput
+    orderBy?: OfficerForwardingHistoryOrderByWithRelationInput | OfficerForwardingHistoryOrderByWithRelationInput[]
+    cursor?: OfficerForwardingHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfficerForwardingHistoryScalarFieldEnum | OfficerForwardingHistoryScalarFieldEnum[]
   }
 
   /**
@@ -19604,6 +21393,3386 @@ export namespace Prisma {
 
 
   /**
+   * Model ApplicationTrackingOTP
+   */
+
+  export type AggregateApplicationTrackingOTP = {
+    _count: ApplicationTrackingOTPCountAggregateOutputType | null
+    _avg: ApplicationTrackingOTPAvgAggregateOutputType | null
+    _sum: ApplicationTrackingOTPSumAggregateOutputType | null
+    _min: ApplicationTrackingOTPMinAggregateOutputType | null
+    _max: ApplicationTrackingOTPMaxAggregateOutputType | null
+  }
+
+  export type ApplicationTrackingOTPAvgAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type ApplicationTrackingOTPSumAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type ApplicationTrackingOTPMinAggregateOutputType = {
+    id: string | null
+    identifier: string | null
+    otp: string | null
+    otpType: string | null
+    sentTo: string | null
+    isUsed: boolean | null
+    attempts: number | null
+    expires: Date | null
+    createdAt: Date | null
+  }
+
+  export type ApplicationTrackingOTPMaxAggregateOutputType = {
+    id: string | null
+    identifier: string | null
+    otp: string | null
+    otpType: string | null
+    sentTo: string | null
+    isUsed: boolean | null
+    attempts: number | null
+    expires: Date | null
+    createdAt: Date | null
+  }
+
+  export type ApplicationTrackingOTPCountAggregateOutputType = {
+    id: number
+    identifier: number
+    otp: number
+    otpType: number
+    sentTo: number
+    isUsed: number
+    attempts: number
+    expires: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ApplicationTrackingOTPAvgAggregateInputType = {
+    attempts?: true
+  }
+
+  export type ApplicationTrackingOTPSumAggregateInputType = {
+    attempts?: true
+  }
+
+  export type ApplicationTrackingOTPMinAggregateInputType = {
+    id?: true
+    identifier?: true
+    otp?: true
+    otpType?: true
+    sentTo?: true
+    isUsed?: true
+    attempts?: true
+    expires?: true
+    createdAt?: true
+  }
+
+  export type ApplicationTrackingOTPMaxAggregateInputType = {
+    id?: true
+    identifier?: true
+    otp?: true
+    otpType?: true
+    sentTo?: true
+    isUsed?: true
+    attempts?: true
+    expires?: true
+    createdAt?: true
+  }
+
+  export type ApplicationTrackingOTPCountAggregateInputType = {
+    id?: true
+    identifier?: true
+    otp?: true
+    otpType?: true
+    sentTo?: true
+    isUsed?: true
+    attempts?: true
+    expires?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ApplicationTrackingOTPAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApplicationTrackingOTP to aggregate.
+     */
+    where?: ApplicationTrackingOTPWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationTrackingOTPS to fetch.
+     */
+    orderBy?: ApplicationTrackingOTPOrderByWithRelationInput | ApplicationTrackingOTPOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApplicationTrackingOTPWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationTrackingOTPS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationTrackingOTPS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApplicationTrackingOTPS
+    **/
+    _count?: true | ApplicationTrackingOTPCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ApplicationTrackingOTPAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ApplicationTrackingOTPSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApplicationTrackingOTPMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApplicationTrackingOTPMaxAggregateInputType
+  }
+
+  export type GetApplicationTrackingOTPAggregateType<T extends ApplicationTrackingOTPAggregateArgs> = {
+        [P in keyof T & keyof AggregateApplicationTrackingOTP]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApplicationTrackingOTP[P]>
+      : GetScalarType<T[P], AggregateApplicationTrackingOTP[P]>
+  }
+
+
+
+
+  export type ApplicationTrackingOTPGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationTrackingOTPWhereInput
+    orderBy?: ApplicationTrackingOTPOrderByWithAggregationInput | ApplicationTrackingOTPOrderByWithAggregationInput[]
+    by: ApplicationTrackingOTPScalarFieldEnum[] | ApplicationTrackingOTPScalarFieldEnum
+    having?: ApplicationTrackingOTPScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApplicationTrackingOTPCountAggregateInputType | true
+    _avg?: ApplicationTrackingOTPAvgAggregateInputType
+    _sum?: ApplicationTrackingOTPSumAggregateInputType
+    _min?: ApplicationTrackingOTPMinAggregateInputType
+    _max?: ApplicationTrackingOTPMaxAggregateInputType
+  }
+
+  export type ApplicationTrackingOTPGroupByOutputType = {
+    id: string
+    identifier: string
+    otp: string
+    otpType: string
+    sentTo: string
+    isUsed: boolean
+    attempts: number
+    expires: Date
+    createdAt: Date
+    _count: ApplicationTrackingOTPCountAggregateOutputType | null
+    _avg: ApplicationTrackingOTPAvgAggregateOutputType | null
+    _sum: ApplicationTrackingOTPSumAggregateOutputType | null
+    _min: ApplicationTrackingOTPMinAggregateOutputType | null
+    _max: ApplicationTrackingOTPMaxAggregateOutputType | null
+  }
+
+  type GetApplicationTrackingOTPGroupByPayload<T extends ApplicationTrackingOTPGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApplicationTrackingOTPGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApplicationTrackingOTPGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApplicationTrackingOTPGroupByOutputType[P]>
+            : GetScalarType<T[P], ApplicationTrackingOTPGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApplicationTrackingOTPSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    identifier?: boolean
+    otp?: boolean
+    otpType?: boolean
+    sentTo?: boolean
+    isUsed?: boolean
+    attempts?: boolean
+    expires?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["applicationTrackingOTP"]>
+
+  export type ApplicationTrackingOTPSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    identifier?: boolean
+    otp?: boolean
+    otpType?: boolean
+    sentTo?: boolean
+    isUsed?: boolean
+    attempts?: boolean
+    expires?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["applicationTrackingOTP"]>
+
+  export type ApplicationTrackingOTPSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    identifier?: boolean
+    otp?: boolean
+    otpType?: boolean
+    sentTo?: boolean
+    isUsed?: boolean
+    attempts?: boolean
+    expires?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["applicationTrackingOTP"]>
+
+  export type ApplicationTrackingOTPSelectScalar = {
+    id?: boolean
+    identifier?: boolean
+    otp?: boolean
+    otpType?: boolean
+    sentTo?: boolean
+    isUsed?: boolean
+    attempts?: boolean
+    expires?: boolean
+    createdAt?: boolean
+  }
+
+  export type ApplicationTrackingOTPOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "identifier" | "otp" | "otpType" | "sentTo" | "isUsed" | "attempts" | "expires" | "createdAt", ExtArgs["result"]["applicationTrackingOTP"]>
+
+  export type $ApplicationTrackingOTPPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApplicationTrackingOTP"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      identifier: string
+      otp: string
+      otpType: string
+      sentTo: string
+      isUsed: boolean
+      attempts: number
+      expires: Date
+      createdAt: Date
+    }, ExtArgs["result"]["applicationTrackingOTP"]>
+    composites: {}
+  }
+
+  type ApplicationTrackingOTPGetPayload<S extends boolean | null | undefined | ApplicationTrackingOTPDefaultArgs> = $Result.GetResult<Prisma.$ApplicationTrackingOTPPayload, S>
+
+  type ApplicationTrackingOTPCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ApplicationTrackingOTPFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ApplicationTrackingOTPCountAggregateInputType | true
+    }
+
+  export interface ApplicationTrackingOTPDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApplicationTrackingOTP'], meta: { name: 'ApplicationTrackingOTP' } }
+    /**
+     * Find zero or one ApplicationTrackingOTP that matches the filter.
+     * @param {ApplicationTrackingOTPFindUniqueArgs} args - Arguments to find a ApplicationTrackingOTP
+     * @example
+     * // Get one ApplicationTrackingOTP
+     * const applicationTrackingOTP = await prisma.applicationTrackingOTP.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApplicationTrackingOTPFindUniqueArgs>(args: SelectSubset<T, ApplicationTrackingOTPFindUniqueArgs<ExtArgs>>): Prisma__ApplicationTrackingOTPClient<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ApplicationTrackingOTP that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ApplicationTrackingOTPFindUniqueOrThrowArgs} args - Arguments to find a ApplicationTrackingOTP
+     * @example
+     * // Get one ApplicationTrackingOTP
+     * const applicationTrackingOTP = await prisma.applicationTrackingOTP.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApplicationTrackingOTPFindUniqueOrThrowArgs>(args: SelectSubset<T, ApplicationTrackingOTPFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApplicationTrackingOTPClient<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApplicationTrackingOTP that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationTrackingOTPFindFirstArgs} args - Arguments to find a ApplicationTrackingOTP
+     * @example
+     * // Get one ApplicationTrackingOTP
+     * const applicationTrackingOTP = await prisma.applicationTrackingOTP.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApplicationTrackingOTPFindFirstArgs>(args?: SelectSubset<T, ApplicationTrackingOTPFindFirstArgs<ExtArgs>>): Prisma__ApplicationTrackingOTPClient<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApplicationTrackingOTP that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationTrackingOTPFindFirstOrThrowArgs} args - Arguments to find a ApplicationTrackingOTP
+     * @example
+     * // Get one ApplicationTrackingOTP
+     * const applicationTrackingOTP = await prisma.applicationTrackingOTP.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApplicationTrackingOTPFindFirstOrThrowArgs>(args?: SelectSubset<T, ApplicationTrackingOTPFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApplicationTrackingOTPClient<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ApplicationTrackingOTPS that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationTrackingOTPFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApplicationTrackingOTPS
+     * const applicationTrackingOTPS = await prisma.applicationTrackingOTP.findMany()
+     * 
+     * // Get first 10 ApplicationTrackingOTPS
+     * const applicationTrackingOTPS = await prisma.applicationTrackingOTP.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const applicationTrackingOTPWithIdOnly = await prisma.applicationTrackingOTP.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApplicationTrackingOTPFindManyArgs>(args?: SelectSubset<T, ApplicationTrackingOTPFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ApplicationTrackingOTP.
+     * @param {ApplicationTrackingOTPCreateArgs} args - Arguments to create a ApplicationTrackingOTP.
+     * @example
+     * // Create one ApplicationTrackingOTP
+     * const ApplicationTrackingOTP = await prisma.applicationTrackingOTP.create({
+     *   data: {
+     *     // ... data to create a ApplicationTrackingOTP
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApplicationTrackingOTPCreateArgs>(args: SelectSubset<T, ApplicationTrackingOTPCreateArgs<ExtArgs>>): Prisma__ApplicationTrackingOTPClient<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ApplicationTrackingOTPS.
+     * @param {ApplicationTrackingOTPCreateManyArgs} args - Arguments to create many ApplicationTrackingOTPS.
+     * @example
+     * // Create many ApplicationTrackingOTPS
+     * const applicationTrackingOTP = await prisma.applicationTrackingOTP.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApplicationTrackingOTPCreateManyArgs>(args?: SelectSubset<T, ApplicationTrackingOTPCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApplicationTrackingOTPS and returns the data saved in the database.
+     * @param {ApplicationTrackingOTPCreateManyAndReturnArgs} args - Arguments to create many ApplicationTrackingOTPS.
+     * @example
+     * // Create many ApplicationTrackingOTPS
+     * const applicationTrackingOTP = await prisma.applicationTrackingOTP.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApplicationTrackingOTPS and only return the `id`
+     * const applicationTrackingOTPWithIdOnly = await prisma.applicationTrackingOTP.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApplicationTrackingOTPCreateManyAndReturnArgs>(args?: SelectSubset<T, ApplicationTrackingOTPCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ApplicationTrackingOTP.
+     * @param {ApplicationTrackingOTPDeleteArgs} args - Arguments to delete one ApplicationTrackingOTP.
+     * @example
+     * // Delete one ApplicationTrackingOTP
+     * const ApplicationTrackingOTP = await prisma.applicationTrackingOTP.delete({
+     *   where: {
+     *     // ... filter to delete one ApplicationTrackingOTP
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApplicationTrackingOTPDeleteArgs>(args: SelectSubset<T, ApplicationTrackingOTPDeleteArgs<ExtArgs>>): Prisma__ApplicationTrackingOTPClient<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ApplicationTrackingOTP.
+     * @param {ApplicationTrackingOTPUpdateArgs} args - Arguments to update one ApplicationTrackingOTP.
+     * @example
+     * // Update one ApplicationTrackingOTP
+     * const applicationTrackingOTP = await prisma.applicationTrackingOTP.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApplicationTrackingOTPUpdateArgs>(args: SelectSubset<T, ApplicationTrackingOTPUpdateArgs<ExtArgs>>): Prisma__ApplicationTrackingOTPClient<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ApplicationTrackingOTPS.
+     * @param {ApplicationTrackingOTPDeleteManyArgs} args - Arguments to filter ApplicationTrackingOTPS to delete.
+     * @example
+     * // Delete a few ApplicationTrackingOTPS
+     * const { count } = await prisma.applicationTrackingOTP.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApplicationTrackingOTPDeleteManyArgs>(args?: SelectSubset<T, ApplicationTrackingOTPDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApplicationTrackingOTPS.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationTrackingOTPUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApplicationTrackingOTPS
+     * const applicationTrackingOTP = await prisma.applicationTrackingOTP.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApplicationTrackingOTPUpdateManyArgs>(args: SelectSubset<T, ApplicationTrackingOTPUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApplicationTrackingOTPS and returns the data updated in the database.
+     * @param {ApplicationTrackingOTPUpdateManyAndReturnArgs} args - Arguments to update many ApplicationTrackingOTPS.
+     * @example
+     * // Update many ApplicationTrackingOTPS
+     * const applicationTrackingOTP = await prisma.applicationTrackingOTP.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ApplicationTrackingOTPS and only return the `id`
+     * const applicationTrackingOTPWithIdOnly = await prisma.applicationTrackingOTP.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ApplicationTrackingOTPUpdateManyAndReturnArgs>(args: SelectSubset<T, ApplicationTrackingOTPUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ApplicationTrackingOTP.
+     * @param {ApplicationTrackingOTPUpsertArgs} args - Arguments to update or create a ApplicationTrackingOTP.
+     * @example
+     * // Update or create a ApplicationTrackingOTP
+     * const applicationTrackingOTP = await prisma.applicationTrackingOTP.upsert({
+     *   create: {
+     *     // ... data to create a ApplicationTrackingOTP
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApplicationTrackingOTP we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApplicationTrackingOTPUpsertArgs>(args: SelectSubset<T, ApplicationTrackingOTPUpsertArgs<ExtArgs>>): Prisma__ApplicationTrackingOTPClient<$Result.GetResult<Prisma.$ApplicationTrackingOTPPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ApplicationTrackingOTPS.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationTrackingOTPCountArgs} args - Arguments to filter ApplicationTrackingOTPS to count.
+     * @example
+     * // Count the number of ApplicationTrackingOTPS
+     * const count = await prisma.applicationTrackingOTP.count({
+     *   where: {
+     *     // ... the filter for the ApplicationTrackingOTPS we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApplicationTrackingOTPCountArgs>(
+      args?: Subset<T, ApplicationTrackingOTPCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApplicationTrackingOTPCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApplicationTrackingOTP.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationTrackingOTPAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApplicationTrackingOTPAggregateArgs>(args: Subset<T, ApplicationTrackingOTPAggregateArgs>): Prisma.PrismaPromise<GetApplicationTrackingOTPAggregateType<T>>
+
+    /**
+     * Group by ApplicationTrackingOTP.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationTrackingOTPGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApplicationTrackingOTPGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApplicationTrackingOTPGroupByArgs['orderBy'] }
+        : { orderBy?: ApplicationTrackingOTPGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApplicationTrackingOTPGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApplicationTrackingOTPGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApplicationTrackingOTP model
+   */
+  readonly fields: ApplicationTrackingOTPFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApplicationTrackingOTP.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApplicationTrackingOTPClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApplicationTrackingOTP model
+   */
+  interface ApplicationTrackingOTPFieldRefs {
+    readonly id: FieldRef<"ApplicationTrackingOTP", 'String'>
+    readonly identifier: FieldRef<"ApplicationTrackingOTP", 'String'>
+    readonly otp: FieldRef<"ApplicationTrackingOTP", 'String'>
+    readonly otpType: FieldRef<"ApplicationTrackingOTP", 'String'>
+    readonly sentTo: FieldRef<"ApplicationTrackingOTP", 'String'>
+    readonly isUsed: FieldRef<"ApplicationTrackingOTP", 'Boolean'>
+    readonly attempts: FieldRef<"ApplicationTrackingOTP", 'Int'>
+    readonly expires: FieldRef<"ApplicationTrackingOTP", 'DateTime'>
+    readonly createdAt: FieldRef<"ApplicationTrackingOTP", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApplicationTrackingOTP findUnique
+   */
+  export type ApplicationTrackingOTPFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationTrackingOTP to fetch.
+     */
+    where: ApplicationTrackingOTPWhereUniqueInput
+  }
+
+  /**
+   * ApplicationTrackingOTP findUniqueOrThrow
+   */
+  export type ApplicationTrackingOTPFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationTrackingOTP to fetch.
+     */
+    where: ApplicationTrackingOTPWhereUniqueInput
+  }
+
+  /**
+   * ApplicationTrackingOTP findFirst
+   */
+  export type ApplicationTrackingOTPFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationTrackingOTP to fetch.
+     */
+    where?: ApplicationTrackingOTPWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationTrackingOTPS to fetch.
+     */
+    orderBy?: ApplicationTrackingOTPOrderByWithRelationInput | ApplicationTrackingOTPOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApplicationTrackingOTPS.
+     */
+    cursor?: ApplicationTrackingOTPWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationTrackingOTPS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationTrackingOTPS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApplicationTrackingOTPS.
+     */
+    distinct?: ApplicationTrackingOTPScalarFieldEnum | ApplicationTrackingOTPScalarFieldEnum[]
+  }
+
+  /**
+   * ApplicationTrackingOTP findFirstOrThrow
+   */
+  export type ApplicationTrackingOTPFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationTrackingOTP to fetch.
+     */
+    where?: ApplicationTrackingOTPWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationTrackingOTPS to fetch.
+     */
+    orderBy?: ApplicationTrackingOTPOrderByWithRelationInput | ApplicationTrackingOTPOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApplicationTrackingOTPS.
+     */
+    cursor?: ApplicationTrackingOTPWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationTrackingOTPS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationTrackingOTPS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApplicationTrackingOTPS.
+     */
+    distinct?: ApplicationTrackingOTPScalarFieldEnum | ApplicationTrackingOTPScalarFieldEnum[]
+  }
+
+  /**
+   * ApplicationTrackingOTP findMany
+   */
+  export type ApplicationTrackingOTPFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * Filter, which ApplicationTrackingOTPS to fetch.
+     */
+    where?: ApplicationTrackingOTPWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApplicationTrackingOTPS to fetch.
+     */
+    orderBy?: ApplicationTrackingOTPOrderByWithRelationInput | ApplicationTrackingOTPOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApplicationTrackingOTPS.
+     */
+    cursor?: ApplicationTrackingOTPWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApplicationTrackingOTPS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApplicationTrackingOTPS.
+     */
+    skip?: number
+    distinct?: ApplicationTrackingOTPScalarFieldEnum | ApplicationTrackingOTPScalarFieldEnum[]
+  }
+
+  /**
+   * ApplicationTrackingOTP create
+   */
+  export type ApplicationTrackingOTPCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ApplicationTrackingOTP.
+     */
+    data: XOR<ApplicationTrackingOTPCreateInput, ApplicationTrackingOTPUncheckedCreateInput>
+  }
+
+  /**
+   * ApplicationTrackingOTP createMany
+   */
+  export type ApplicationTrackingOTPCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApplicationTrackingOTPS.
+     */
+    data: ApplicationTrackingOTPCreateManyInput | ApplicationTrackingOTPCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApplicationTrackingOTP createManyAndReturn
+   */
+  export type ApplicationTrackingOTPCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * The data used to create many ApplicationTrackingOTPS.
+     */
+    data: ApplicationTrackingOTPCreateManyInput | ApplicationTrackingOTPCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApplicationTrackingOTP update
+   */
+  export type ApplicationTrackingOTPUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ApplicationTrackingOTP.
+     */
+    data: XOR<ApplicationTrackingOTPUpdateInput, ApplicationTrackingOTPUncheckedUpdateInput>
+    /**
+     * Choose, which ApplicationTrackingOTP to update.
+     */
+    where: ApplicationTrackingOTPWhereUniqueInput
+  }
+
+  /**
+   * ApplicationTrackingOTP updateMany
+   */
+  export type ApplicationTrackingOTPUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApplicationTrackingOTPS.
+     */
+    data: XOR<ApplicationTrackingOTPUpdateManyMutationInput, ApplicationTrackingOTPUncheckedUpdateManyInput>
+    /**
+     * Filter which ApplicationTrackingOTPS to update
+     */
+    where?: ApplicationTrackingOTPWhereInput
+    /**
+     * Limit how many ApplicationTrackingOTPS to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApplicationTrackingOTP updateManyAndReturn
+   */
+  export type ApplicationTrackingOTPUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * The data used to update ApplicationTrackingOTPS.
+     */
+    data: XOR<ApplicationTrackingOTPUpdateManyMutationInput, ApplicationTrackingOTPUncheckedUpdateManyInput>
+    /**
+     * Filter which ApplicationTrackingOTPS to update
+     */
+    where?: ApplicationTrackingOTPWhereInput
+    /**
+     * Limit how many ApplicationTrackingOTPS to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApplicationTrackingOTP upsert
+   */
+  export type ApplicationTrackingOTPUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ApplicationTrackingOTP to update in case it exists.
+     */
+    where: ApplicationTrackingOTPWhereUniqueInput
+    /**
+     * In case the ApplicationTrackingOTP found by the `where` argument doesn't exist, create a new ApplicationTrackingOTP with this data.
+     */
+    create: XOR<ApplicationTrackingOTPCreateInput, ApplicationTrackingOTPUncheckedCreateInput>
+    /**
+     * In case the ApplicationTrackingOTP was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApplicationTrackingOTPUpdateInput, ApplicationTrackingOTPUncheckedUpdateInput>
+  }
+
+  /**
+   * ApplicationTrackingOTP delete
+   */
+  export type ApplicationTrackingOTPDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+    /**
+     * Filter which ApplicationTrackingOTP to delete.
+     */
+    where: ApplicationTrackingOTPWhereUniqueInput
+  }
+
+  /**
+   * ApplicationTrackingOTP deleteMany
+   */
+  export type ApplicationTrackingOTPDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApplicationTrackingOTPS to delete
+     */
+    where?: ApplicationTrackingOTPWhereInput
+    /**
+     * Limit how many ApplicationTrackingOTPS to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApplicationTrackingOTP without action
+   */
+  export type ApplicationTrackingOTPDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationTrackingOTP
+     */
+    select?: ApplicationTrackingOTPSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationTrackingOTP
+     */
+    omit?: ApplicationTrackingOTPOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FrontdeskForwarding
+   */
+
+  export type AggregateFrontdeskForwarding = {
+    _count: FrontdeskForwardingCountAggregateOutputType | null
+    _min: FrontdeskForwardingMinAggregateOutputType | null
+    _max: FrontdeskForwardingMaxAggregateOutputType | null
+  }
+
+  export type FrontdeskForwardingMinAggregateOutputType = {
+    id: string | null
+    applicationId: string | null
+    fromFrontdeskId: string | null
+    toFrontdeskId: string | null
+    fromOfficerId: string | null
+    toOfficerId: string | null
+    instructions: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+  }
+
+  export type FrontdeskForwardingMaxAggregateOutputType = {
+    id: string | null
+    applicationId: string | null
+    fromFrontdeskId: string | null
+    toFrontdeskId: string | null
+    fromOfficerId: string | null
+    toOfficerId: string | null
+    instructions: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+  }
+
+  export type FrontdeskForwardingCountAggregateOutputType = {
+    id: number
+    applicationId: number
+    fromFrontdeskId: number
+    toFrontdeskId: number
+    fromOfficerId: number
+    toOfficerId: number
+    instructions: number
+    isActive: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type FrontdeskForwardingMinAggregateInputType = {
+    id?: true
+    applicationId?: true
+    fromFrontdeskId?: true
+    toFrontdeskId?: true
+    fromOfficerId?: true
+    toOfficerId?: true
+    instructions?: true
+    isActive?: true
+    createdAt?: true
+  }
+
+  export type FrontdeskForwardingMaxAggregateInputType = {
+    id?: true
+    applicationId?: true
+    fromFrontdeskId?: true
+    toFrontdeskId?: true
+    fromOfficerId?: true
+    toOfficerId?: true
+    instructions?: true
+    isActive?: true
+    createdAt?: true
+  }
+
+  export type FrontdeskForwardingCountAggregateInputType = {
+    id?: true
+    applicationId?: true
+    fromFrontdeskId?: true
+    toFrontdeskId?: true
+    fromOfficerId?: true
+    toOfficerId?: true
+    instructions?: true
+    isActive?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type FrontdeskForwardingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FrontdeskForwarding to aggregate.
+     */
+    where?: FrontdeskForwardingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FrontdeskForwardings to fetch.
+     */
+    orderBy?: FrontdeskForwardingOrderByWithRelationInput | FrontdeskForwardingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FrontdeskForwardingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FrontdeskForwardings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FrontdeskForwardings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FrontdeskForwardings
+    **/
+    _count?: true | FrontdeskForwardingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FrontdeskForwardingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FrontdeskForwardingMaxAggregateInputType
+  }
+
+  export type GetFrontdeskForwardingAggregateType<T extends FrontdeskForwardingAggregateArgs> = {
+        [P in keyof T & keyof AggregateFrontdeskForwarding]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFrontdeskForwarding[P]>
+      : GetScalarType<T[P], AggregateFrontdeskForwarding[P]>
+  }
+
+
+
+
+  export type FrontdeskForwardingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FrontdeskForwardingWhereInput
+    orderBy?: FrontdeskForwardingOrderByWithAggregationInput | FrontdeskForwardingOrderByWithAggregationInput[]
+    by: FrontdeskForwardingScalarFieldEnum[] | FrontdeskForwardingScalarFieldEnum
+    having?: FrontdeskForwardingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FrontdeskForwardingCountAggregateInputType | true
+    _min?: FrontdeskForwardingMinAggregateInputType
+    _max?: FrontdeskForwardingMaxAggregateInputType
+  }
+
+  export type FrontdeskForwardingGroupByOutputType = {
+    id: string
+    applicationId: string
+    fromFrontdeskId: string
+    toFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions: string | null
+    isActive: boolean
+    createdAt: Date
+    _count: FrontdeskForwardingCountAggregateOutputType | null
+    _min: FrontdeskForwardingMinAggregateOutputType | null
+    _max: FrontdeskForwardingMaxAggregateOutputType | null
+  }
+
+  type GetFrontdeskForwardingGroupByPayload<T extends FrontdeskForwardingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FrontdeskForwardingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FrontdeskForwardingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FrontdeskForwardingGroupByOutputType[P]>
+            : GetScalarType<T[P], FrontdeskForwardingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FrontdeskForwardingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    fromFrontdeskId?: boolean
+    toFrontdeskId?: boolean
+    fromOfficerId?: boolean
+    toOfficerId?: boolean
+    instructions?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+    toFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["frontdeskForwarding"]>
+
+  export type FrontdeskForwardingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    fromFrontdeskId?: boolean
+    toFrontdeskId?: boolean
+    fromOfficerId?: boolean
+    toOfficerId?: boolean
+    instructions?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+    toFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["frontdeskForwarding"]>
+
+  export type FrontdeskForwardingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    fromFrontdeskId?: boolean
+    toFrontdeskId?: boolean
+    fromOfficerId?: boolean
+    toOfficerId?: boolean
+    instructions?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+    toFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["frontdeskForwarding"]>
+
+  export type FrontdeskForwardingSelectScalar = {
+    id?: boolean
+    applicationId?: boolean
+    fromFrontdeskId?: boolean
+    toFrontdeskId?: boolean
+    fromOfficerId?: boolean
+    toOfficerId?: boolean
+    instructions?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+  }
+
+  export type FrontdeskForwardingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationId" | "fromFrontdeskId" | "toFrontdeskId" | "fromOfficerId" | "toOfficerId" | "instructions" | "isActive" | "createdAt", ExtArgs["result"]["frontdeskForwarding"]>
+  export type FrontdeskForwardingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+    toFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FrontdeskForwardingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+    toFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FrontdeskForwardingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+    toFrontdesk?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FrontdeskForwardingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FrontdeskForwarding"
+    objects: {
+      application: Prisma.$ApplicationPayload<ExtArgs>
+      fromFrontdesk: Prisma.$UserPayload<ExtArgs>
+      toFrontdesk: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      applicationId: string
+      fromFrontdeskId: string
+      toFrontdeskId: string
+      fromOfficerId: string
+      toOfficerId: string
+      instructions: string | null
+      isActive: boolean
+      createdAt: Date
+    }, ExtArgs["result"]["frontdeskForwarding"]>
+    composites: {}
+  }
+
+  type FrontdeskForwardingGetPayload<S extends boolean | null | undefined | FrontdeskForwardingDefaultArgs> = $Result.GetResult<Prisma.$FrontdeskForwardingPayload, S>
+
+  type FrontdeskForwardingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FrontdeskForwardingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FrontdeskForwardingCountAggregateInputType | true
+    }
+
+  export interface FrontdeskForwardingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FrontdeskForwarding'], meta: { name: 'FrontdeskForwarding' } }
+    /**
+     * Find zero or one FrontdeskForwarding that matches the filter.
+     * @param {FrontdeskForwardingFindUniqueArgs} args - Arguments to find a FrontdeskForwarding
+     * @example
+     * // Get one FrontdeskForwarding
+     * const frontdeskForwarding = await prisma.frontdeskForwarding.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FrontdeskForwardingFindUniqueArgs>(args: SelectSubset<T, FrontdeskForwardingFindUniqueArgs<ExtArgs>>): Prisma__FrontdeskForwardingClient<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FrontdeskForwarding that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FrontdeskForwardingFindUniqueOrThrowArgs} args - Arguments to find a FrontdeskForwarding
+     * @example
+     * // Get one FrontdeskForwarding
+     * const frontdeskForwarding = await prisma.frontdeskForwarding.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FrontdeskForwardingFindUniqueOrThrowArgs>(args: SelectSubset<T, FrontdeskForwardingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FrontdeskForwardingClient<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FrontdeskForwarding that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskForwardingFindFirstArgs} args - Arguments to find a FrontdeskForwarding
+     * @example
+     * // Get one FrontdeskForwarding
+     * const frontdeskForwarding = await prisma.frontdeskForwarding.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FrontdeskForwardingFindFirstArgs>(args?: SelectSubset<T, FrontdeskForwardingFindFirstArgs<ExtArgs>>): Prisma__FrontdeskForwardingClient<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FrontdeskForwarding that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskForwardingFindFirstOrThrowArgs} args - Arguments to find a FrontdeskForwarding
+     * @example
+     * // Get one FrontdeskForwarding
+     * const frontdeskForwarding = await prisma.frontdeskForwarding.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FrontdeskForwardingFindFirstOrThrowArgs>(args?: SelectSubset<T, FrontdeskForwardingFindFirstOrThrowArgs<ExtArgs>>): Prisma__FrontdeskForwardingClient<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FrontdeskForwardings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskForwardingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FrontdeskForwardings
+     * const frontdeskForwardings = await prisma.frontdeskForwarding.findMany()
+     * 
+     * // Get first 10 FrontdeskForwardings
+     * const frontdeskForwardings = await prisma.frontdeskForwarding.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const frontdeskForwardingWithIdOnly = await prisma.frontdeskForwarding.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FrontdeskForwardingFindManyArgs>(args?: SelectSubset<T, FrontdeskForwardingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FrontdeskForwarding.
+     * @param {FrontdeskForwardingCreateArgs} args - Arguments to create a FrontdeskForwarding.
+     * @example
+     * // Create one FrontdeskForwarding
+     * const FrontdeskForwarding = await prisma.frontdeskForwarding.create({
+     *   data: {
+     *     // ... data to create a FrontdeskForwarding
+     *   }
+     * })
+     * 
+     */
+    create<T extends FrontdeskForwardingCreateArgs>(args: SelectSubset<T, FrontdeskForwardingCreateArgs<ExtArgs>>): Prisma__FrontdeskForwardingClient<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FrontdeskForwardings.
+     * @param {FrontdeskForwardingCreateManyArgs} args - Arguments to create many FrontdeskForwardings.
+     * @example
+     * // Create many FrontdeskForwardings
+     * const frontdeskForwarding = await prisma.frontdeskForwarding.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FrontdeskForwardingCreateManyArgs>(args?: SelectSubset<T, FrontdeskForwardingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FrontdeskForwardings and returns the data saved in the database.
+     * @param {FrontdeskForwardingCreateManyAndReturnArgs} args - Arguments to create many FrontdeskForwardings.
+     * @example
+     * // Create many FrontdeskForwardings
+     * const frontdeskForwarding = await prisma.frontdeskForwarding.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FrontdeskForwardings and only return the `id`
+     * const frontdeskForwardingWithIdOnly = await prisma.frontdeskForwarding.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FrontdeskForwardingCreateManyAndReturnArgs>(args?: SelectSubset<T, FrontdeskForwardingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FrontdeskForwarding.
+     * @param {FrontdeskForwardingDeleteArgs} args - Arguments to delete one FrontdeskForwarding.
+     * @example
+     * // Delete one FrontdeskForwarding
+     * const FrontdeskForwarding = await prisma.frontdeskForwarding.delete({
+     *   where: {
+     *     // ... filter to delete one FrontdeskForwarding
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FrontdeskForwardingDeleteArgs>(args: SelectSubset<T, FrontdeskForwardingDeleteArgs<ExtArgs>>): Prisma__FrontdeskForwardingClient<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FrontdeskForwarding.
+     * @param {FrontdeskForwardingUpdateArgs} args - Arguments to update one FrontdeskForwarding.
+     * @example
+     * // Update one FrontdeskForwarding
+     * const frontdeskForwarding = await prisma.frontdeskForwarding.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FrontdeskForwardingUpdateArgs>(args: SelectSubset<T, FrontdeskForwardingUpdateArgs<ExtArgs>>): Prisma__FrontdeskForwardingClient<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FrontdeskForwardings.
+     * @param {FrontdeskForwardingDeleteManyArgs} args - Arguments to filter FrontdeskForwardings to delete.
+     * @example
+     * // Delete a few FrontdeskForwardings
+     * const { count } = await prisma.frontdeskForwarding.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FrontdeskForwardingDeleteManyArgs>(args?: SelectSubset<T, FrontdeskForwardingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FrontdeskForwardings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskForwardingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FrontdeskForwardings
+     * const frontdeskForwarding = await prisma.frontdeskForwarding.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FrontdeskForwardingUpdateManyArgs>(args: SelectSubset<T, FrontdeskForwardingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FrontdeskForwardings and returns the data updated in the database.
+     * @param {FrontdeskForwardingUpdateManyAndReturnArgs} args - Arguments to update many FrontdeskForwardings.
+     * @example
+     * // Update many FrontdeskForwardings
+     * const frontdeskForwarding = await prisma.frontdeskForwarding.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FrontdeskForwardings and only return the `id`
+     * const frontdeskForwardingWithIdOnly = await prisma.frontdeskForwarding.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FrontdeskForwardingUpdateManyAndReturnArgs>(args: SelectSubset<T, FrontdeskForwardingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FrontdeskForwarding.
+     * @param {FrontdeskForwardingUpsertArgs} args - Arguments to update or create a FrontdeskForwarding.
+     * @example
+     * // Update or create a FrontdeskForwarding
+     * const frontdeskForwarding = await prisma.frontdeskForwarding.upsert({
+     *   create: {
+     *     // ... data to create a FrontdeskForwarding
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FrontdeskForwarding we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FrontdeskForwardingUpsertArgs>(args: SelectSubset<T, FrontdeskForwardingUpsertArgs<ExtArgs>>): Prisma__FrontdeskForwardingClient<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FrontdeskForwardings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskForwardingCountArgs} args - Arguments to filter FrontdeskForwardings to count.
+     * @example
+     * // Count the number of FrontdeskForwardings
+     * const count = await prisma.frontdeskForwarding.count({
+     *   where: {
+     *     // ... the filter for the FrontdeskForwardings we want to count
+     *   }
+     * })
+    **/
+    count<T extends FrontdeskForwardingCountArgs>(
+      args?: Subset<T, FrontdeskForwardingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FrontdeskForwardingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FrontdeskForwarding.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskForwardingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FrontdeskForwardingAggregateArgs>(args: Subset<T, FrontdeskForwardingAggregateArgs>): Prisma.PrismaPromise<GetFrontdeskForwardingAggregateType<T>>
+
+    /**
+     * Group by FrontdeskForwarding.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FrontdeskForwardingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FrontdeskForwardingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FrontdeskForwardingGroupByArgs['orderBy'] }
+        : { orderBy?: FrontdeskForwardingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FrontdeskForwardingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFrontdeskForwardingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FrontdeskForwarding model
+   */
+  readonly fields: FrontdeskForwardingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FrontdeskForwarding.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FrontdeskForwardingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    application<T extends ApplicationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicationDefaultArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    fromFrontdesk<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    toFrontdesk<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FrontdeskForwarding model
+   */
+  interface FrontdeskForwardingFieldRefs {
+    readonly id: FieldRef<"FrontdeskForwarding", 'String'>
+    readonly applicationId: FieldRef<"FrontdeskForwarding", 'String'>
+    readonly fromFrontdeskId: FieldRef<"FrontdeskForwarding", 'String'>
+    readonly toFrontdeskId: FieldRef<"FrontdeskForwarding", 'String'>
+    readonly fromOfficerId: FieldRef<"FrontdeskForwarding", 'String'>
+    readonly toOfficerId: FieldRef<"FrontdeskForwarding", 'String'>
+    readonly instructions: FieldRef<"FrontdeskForwarding", 'String'>
+    readonly isActive: FieldRef<"FrontdeskForwarding", 'Boolean'>
+    readonly createdAt: FieldRef<"FrontdeskForwarding", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FrontdeskForwarding findUnique
+   */
+  export type FrontdeskForwardingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    /**
+     * Filter, which FrontdeskForwarding to fetch.
+     */
+    where: FrontdeskForwardingWhereUniqueInput
+  }
+
+  /**
+   * FrontdeskForwarding findUniqueOrThrow
+   */
+  export type FrontdeskForwardingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    /**
+     * Filter, which FrontdeskForwarding to fetch.
+     */
+    where: FrontdeskForwardingWhereUniqueInput
+  }
+
+  /**
+   * FrontdeskForwarding findFirst
+   */
+  export type FrontdeskForwardingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    /**
+     * Filter, which FrontdeskForwarding to fetch.
+     */
+    where?: FrontdeskForwardingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FrontdeskForwardings to fetch.
+     */
+    orderBy?: FrontdeskForwardingOrderByWithRelationInput | FrontdeskForwardingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FrontdeskForwardings.
+     */
+    cursor?: FrontdeskForwardingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FrontdeskForwardings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FrontdeskForwardings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FrontdeskForwardings.
+     */
+    distinct?: FrontdeskForwardingScalarFieldEnum | FrontdeskForwardingScalarFieldEnum[]
+  }
+
+  /**
+   * FrontdeskForwarding findFirstOrThrow
+   */
+  export type FrontdeskForwardingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    /**
+     * Filter, which FrontdeskForwarding to fetch.
+     */
+    where?: FrontdeskForwardingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FrontdeskForwardings to fetch.
+     */
+    orderBy?: FrontdeskForwardingOrderByWithRelationInput | FrontdeskForwardingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FrontdeskForwardings.
+     */
+    cursor?: FrontdeskForwardingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FrontdeskForwardings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FrontdeskForwardings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FrontdeskForwardings.
+     */
+    distinct?: FrontdeskForwardingScalarFieldEnum | FrontdeskForwardingScalarFieldEnum[]
+  }
+
+  /**
+   * FrontdeskForwarding findMany
+   */
+  export type FrontdeskForwardingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    /**
+     * Filter, which FrontdeskForwardings to fetch.
+     */
+    where?: FrontdeskForwardingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FrontdeskForwardings to fetch.
+     */
+    orderBy?: FrontdeskForwardingOrderByWithRelationInput | FrontdeskForwardingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FrontdeskForwardings.
+     */
+    cursor?: FrontdeskForwardingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FrontdeskForwardings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FrontdeskForwardings.
+     */
+    skip?: number
+    distinct?: FrontdeskForwardingScalarFieldEnum | FrontdeskForwardingScalarFieldEnum[]
+  }
+
+  /**
+   * FrontdeskForwarding create
+   */
+  export type FrontdeskForwardingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FrontdeskForwarding.
+     */
+    data: XOR<FrontdeskForwardingCreateInput, FrontdeskForwardingUncheckedCreateInput>
+  }
+
+  /**
+   * FrontdeskForwarding createMany
+   */
+  export type FrontdeskForwardingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FrontdeskForwardings.
+     */
+    data: FrontdeskForwardingCreateManyInput | FrontdeskForwardingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FrontdeskForwarding createManyAndReturn
+   */
+  export type FrontdeskForwardingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * The data used to create many FrontdeskForwardings.
+     */
+    data: FrontdeskForwardingCreateManyInput | FrontdeskForwardingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FrontdeskForwarding update
+   */
+  export type FrontdeskForwardingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FrontdeskForwarding.
+     */
+    data: XOR<FrontdeskForwardingUpdateInput, FrontdeskForwardingUncheckedUpdateInput>
+    /**
+     * Choose, which FrontdeskForwarding to update.
+     */
+    where: FrontdeskForwardingWhereUniqueInput
+  }
+
+  /**
+   * FrontdeskForwarding updateMany
+   */
+  export type FrontdeskForwardingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FrontdeskForwardings.
+     */
+    data: XOR<FrontdeskForwardingUpdateManyMutationInput, FrontdeskForwardingUncheckedUpdateManyInput>
+    /**
+     * Filter which FrontdeskForwardings to update
+     */
+    where?: FrontdeskForwardingWhereInput
+    /**
+     * Limit how many FrontdeskForwardings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FrontdeskForwarding updateManyAndReturn
+   */
+  export type FrontdeskForwardingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * The data used to update FrontdeskForwardings.
+     */
+    data: XOR<FrontdeskForwardingUpdateManyMutationInput, FrontdeskForwardingUncheckedUpdateManyInput>
+    /**
+     * Filter which FrontdeskForwardings to update
+     */
+    where?: FrontdeskForwardingWhereInput
+    /**
+     * Limit how many FrontdeskForwardings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FrontdeskForwarding upsert
+   */
+  export type FrontdeskForwardingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FrontdeskForwarding to update in case it exists.
+     */
+    where: FrontdeskForwardingWhereUniqueInput
+    /**
+     * In case the FrontdeskForwarding found by the `where` argument doesn't exist, create a new FrontdeskForwarding with this data.
+     */
+    create: XOR<FrontdeskForwardingCreateInput, FrontdeskForwardingUncheckedCreateInput>
+    /**
+     * In case the FrontdeskForwarding was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FrontdeskForwardingUpdateInput, FrontdeskForwardingUncheckedUpdateInput>
+  }
+
+  /**
+   * FrontdeskForwarding delete
+   */
+  export type FrontdeskForwardingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+    /**
+     * Filter which FrontdeskForwarding to delete.
+     */
+    where: FrontdeskForwardingWhereUniqueInput
+  }
+
+  /**
+   * FrontdeskForwarding deleteMany
+   */
+  export type FrontdeskForwardingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FrontdeskForwardings to delete
+     */
+    where?: FrontdeskForwardingWhereInput
+    /**
+     * Limit how many FrontdeskForwardings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FrontdeskForwarding without action
+   */
+  export type FrontdeskForwardingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskForwarding
+     */
+    select?: FrontdeskForwardingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskForwarding
+     */
+    omit?: FrontdeskForwardingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskForwardingInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OfficerForwardingHistory
+   */
+
+  export type AggregateOfficerForwardingHistory = {
+    _count: OfficerForwardingHistoryCountAggregateOutputType | null
+    _avg: OfficerForwardingHistoryAvgAggregateOutputType | null
+    _sum: OfficerForwardingHistorySumAggregateOutputType | null
+    _min: OfficerForwardingHistoryMinAggregateOutputType | null
+    _max: OfficerForwardingHistoryMaxAggregateOutputType | null
+  }
+
+  export type OfficerForwardingHistoryAvgAggregateOutputType = {
+    priority: number | null
+  }
+
+  export type OfficerForwardingHistorySumAggregateOutputType = {
+    priority: number | null
+  }
+
+  export type OfficerForwardingHistoryMinAggregateOutputType = {
+    id: string | null
+    applicationId: string | null
+    fromOfficerId: string | null
+    toOfficerId: string | null
+    instructions: string | null
+    priority: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    forwardedAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type OfficerForwardingHistoryMaxAggregateOutputType = {
+    id: string | null
+    applicationId: string | null
+    fromOfficerId: string | null
+    toOfficerId: string | null
+    instructions: string | null
+    priority: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    forwardedAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type OfficerForwardingHistoryCountAggregateOutputType = {
+    id: number
+    applicationId: number
+    fromOfficerId: number
+    toOfficerId: number
+    instructions: number
+    priority: number
+    isActive: number
+    createdAt: number
+    forwardedAt: number
+    completedAt: number
+    _all: number
+  }
+
+
+  export type OfficerForwardingHistoryAvgAggregateInputType = {
+    priority?: true
+  }
+
+  export type OfficerForwardingHistorySumAggregateInputType = {
+    priority?: true
+  }
+
+  export type OfficerForwardingHistoryMinAggregateInputType = {
+    id?: true
+    applicationId?: true
+    fromOfficerId?: true
+    toOfficerId?: true
+    instructions?: true
+    priority?: true
+    isActive?: true
+    createdAt?: true
+    forwardedAt?: true
+    completedAt?: true
+  }
+
+  export type OfficerForwardingHistoryMaxAggregateInputType = {
+    id?: true
+    applicationId?: true
+    fromOfficerId?: true
+    toOfficerId?: true
+    instructions?: true
+    priority?: true
+    isActive?: true
+    createdAt?: true
+    forwardedAt?: true
+    completedAt?: true
+  }
+
+  export type OfficerForwardingHistoryCountAggregateInputType = {
+    id?: true
+    applicationId?: true
+    fromOfficerId?: true
+    toOfficerId?: true
+    instructions?: true
+    priority?: true
+    isActive?: true
+    createdAt?: true
+    forwardedAt?: true
+    completedAt?: true
+    _all?: true
+  }
+
+  export type OfficerForwardingHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OfficerForwardingHistory to aggregate.
+     */
+    where?: OfficerForwardingHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfficerForwardingHistories to fetch.
+     */
+    orderBy?: OfficerForwardingHistoryOrderByWithRelationInput | OfficerForwardingHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OfficerForwardingHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfficerForwardingHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfficerForwardingHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OfficerForwardingHistories
+    **/
+    _count?: true | OfficerForwardingHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OfficerForwardingHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OfficerForwardingHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OfficerForwardingHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OfficerForwardingHistoryMaxAggregateInputType
+  }
+
+  export type GetOfficerForwardingHistoryAggregateType<T extends OfficerForwardingHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateOfficerForwardingHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOfficerForwardingHistory[P]>
+      : GetScalarType<T[P], AggregateOfficerForwardingHistory[P]>
+  }
+
+
+
+
+  export type OfficerForwardingHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfficerForwardingHistoryWhereInput
+    orderBy?: OfficerForwardingHistoryOrderByWithAggregationInput | OfficerForwardingHistoryOrderByWithAggregationInput[]
+    by: OfficerForwardingHistoryScalarFieldEnum[] | OfficerForwardingHistoryScalarFieldEnum
+    having?: OfficerForwardingHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OfficerForwardingHistoryCountAggregateInputType | true
+    _avg?: OfficerForwardingHistoryAvgAggregateInputType
+    _sum?: OfficerForwardingHistorySumAggregateInputType
+    _min?: OfficerForwardingHistoryMinAggregateInputType
+    _max?: OfficerForwardingHistoryMaxAggregateInputType
+  }
+
+  export type OfficerForwardingHistoryGroupByOutputType = {
+    id: string
+    applicationId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions: string | null
+    priority: number
+    isActive: boolean
+    createdAt: Date
+    forwardedAt: Date
+    completedAt: Date | null
+    _count: OfficerForwardingHistoryCountAggregateOutputType | null
+    _avg: OfficerForwardingHistoryAvgAggregateOutputType | null
+    _sum: OfficerForwardingHistorySumAggregateOutputType | null
+    _min: OfficerForwardingHistoryMinAggregateOutputType | null
+    _max: OfficerForwardingHistoryMaxAggregateOutputType | null
+  }
+
+  type GetOfficerForwardingHistoryGroupByPayload<T extends OfficerForwardingHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OfficerForwardingHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OfficerForwardingHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OfficerForwardingHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], OfficerForwardingHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OfficerForwardingHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    fromOfficerId?: boolean
+    toOfficerId?: boolean
+    instructions?: boolean
+    priority?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    forwardedAt?: boolean
+    completedAt?: boolean
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromOfficer?: boolean | UserDefaultArgs<ExtArgs>
+    toOfficer?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["officerForwardingHistory"]>
+
+  export type OfficerForwardingHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    fromOfficerId?: boolean
+    toOfficerId?: boolean
+    instructions?: boolean
+    priority?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    forwardedAt?: boolean
+    completedAt?: boolean
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromOfficer?: boolean | UserDefaultArgs<ExtArgs>
+    toOfficer?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["officerForwardingHistory"]>
+
+  export type OfficerForwardingHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    fromOfficerId?: boolean
+    toOfficerId?: boolean
+    instructions?: boolean
+    priority?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    forwardedAt?: boolean
+    completedAt?: boolean
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromOfficer?: boolean | UserDefaultArgs<ExtArgs>
+    toOfficer?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["officerForwardingHistory"]>
+
+  export type OfficerForwardingHistorySelectScalar = {
+    id?: boolean
+    applicationId?: boolean
+    fromOfficerId?: boolean
+    toOfficerId?: boolean
+    instructions?: boolean
+    priority?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    forwardedAt?: boolean
+    completedAt?: boolean
+  }
+
+  export type OfficerForwardingHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationId" | "fromOfficerId" | "toOfficerId" | "instructions" | "priority" | "isActive" | "createdAt" | "forwardedAt" | "completedAt", ExtArgs["result"]["officerForwardingHistory"]>
+  export type OfficerForwardingHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromOfficer?: boolean | UserDefaultArgs<ExtArgs>
+    toOfficer?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type OfficerForwardingHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromOfficer?: boolean | UserDefaultArgs<ExtArgs>
+    toOfficer?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type OfficerForwardingHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    fromOfficer?: boolean | UserDefaultArgs<ExtArgs>
+    toOfficer?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $OfficerForwardingHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OfficerForwardingHistory"
+    objects: {
+      application: Prisma.$ApplicationPayload<ExtArgs>
+      fromOfficer: Prisma.$UserPayload<ExtArgs>
+      toOfficer: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      applicationId: string
+      fromOfficerId: string
+      toOfficerId: string
+      instructions: string | null
+      priority: number
+      isActive: boolean
+      createdAt: Date
+      forwardedAt: Date
+      completedAt: Date | null
+    }, ExtArgs["result"]["officerForwardingHistory"]>
+    composites: {}
+  }
+
+  type OfficerForwardingHistoryGetPayload<S extends boolean | null | undefined | OfficerForwardingHistoryDefaultArgs> = $Result.GetResult<Prisma.$OfficerForwardingHistoryPayload, S>
+
+  type OfficerForwardingHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OfficerForwardingHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OfficerForwardingHistoryCountAggregateInputType | true
+    }
+
+  export interface OfficerForwardingHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OfficerForwardingHistory'], meta: { name: 'OfficerForwardingHistory' } }
+    /**
+     * Find zero or one OfficerForwardingHistory that matches the filter.
+     * @param {OfficerForwardingHistoryFindUniqueArgs} args - Arguments to find a OfficerForwardingHistory
+     * @example
+     * // Get one OfficerForwardingHistory
+     * const officerForwardingHistory = await prisma.officerForwardingHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OfficerForwardingHistoryFindUniqueArgs>(args: SelectSubset<T, OfficerForwardingHistoryFindUniqueArgs<ExtArgs>>): Prisma__OfficerForwardingHistoryClient<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OfficerForwardingHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OfficerForwardingHistoryFindUniqueOrThrowArgs} args - Arguments to find a OfficerForwardingHistory
+     * @example
+     * // Get one OfficerForwardingHistory
+     * const officerForwardingHistory = await prisma.officerForwardingHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OfficerForwardingHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, OfficerForwardingHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OfficerForwardingHistoryClient<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OfficerForwardingHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfficerForwardingHistoryFindFirstArgs} args - Arguments to find a OfficerForwardingHistory
+     * @example
+     * // Get one OfficerForwardingHistory
+     * const officerForwardingHistory = await prisma.officerForwardingHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OfficerForwardingHistoryFindFirstArgs>(args?: SelectSubset<T, OfficerForwardingHistoryFindFirstArgs<ExtArgs>>): Prisma__OfficerForwardingHistoryClient<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OfficerForwardingHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfficerForwardingHistoryFindFirstOrThrowArgs} args - Arguments to find a OfficerForwardingHistory
+     * @example
+     * // Get one OfficerForwardingHistory
+     * const officerForwardingHistory = await prisma.officerForwardingHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OfficerForwardingHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, OfficerForwardingHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__OfficerForwardingHistoryClient<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OfficerForwardingHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfficerForwardingHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OfficerForwardingHistories
+     * const officerForwardingHistories = await prisma.officerForwardingHistory.findMany()
+     * 
+     * // Get first 10 OfficerForwardingHistories
+     * const officerForwardingHistories = await prisma.officerForwardingHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const officerForwardingHistoryWithIdOnly = await prisma.officerForwardingHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OfficerForwardingHistoryFindManyArgs>(args?: SelectSubset<T, OfficerForwardingHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OfficerForwardingHistory.
+     * @param {OfficerForwardingHistoryCreateArgs} args - Arguments to create a OfficerForwardingHistory.
+     * @example
+     * // Create one OfficerForwardingHistory
+     * const OfficerForwardingHistory = await prisma.officerForwardingHistory.create({
+     *   data: {
+     *     // ... data to create a OfficerForwardingHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends OfficerForwardingHistoryCreateArgs>(args: SelectSubset<T, OfficerForwardingHistoryCreateArgs<ExtArgs>>): Prisma__OfficerForwardingHistoryClient<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OfficerForwardingHistories.
+     * @param {OfficerForwardingHistoryCreateManyArgs} args - Arguments to create many OfficerForwardingHistories.
+     * @example
+     * // Create many OfficerForwardingHistories
+     * const officerForwardingHistory = await prisma.officerForwardingHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OfficerForwardingHistoryCreateManyArgs>(args?: SelectSubset<T, OfficerForwardingHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OfficerForwardingHistories and returns the data saved in the database.
+     * @param {OfficerForwardingHistoryCreateManyAndReturnArgs} args - Arguments to create many OfficerForwardingHistories.
+     * @example
+     * // Create many OfficerForwardingHistories
+     * const officerForwardingHistory = await prisma.officerForwardingHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OfficerForwardingHistories and only return the `id`
+     * const officerForwardingHistoryWithIdOnly = await prisma.officerForwardingHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OfficerForwardingHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, OfficerForwardingHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OfficerForwardingHistory.
+     * @param {OfficerForwardingHistoryDeleteArgs} args - Arguments to delete one OfficerForwardingHistory.
+     * @example
+     * // Delete one OfficerForwardingHistory
+     * const OfficerForwardingHistory = await prisma.officerForwardingHistory.delete({
+     *   where: {
+     *     // ... filter to delete one OfficerForwardingHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OfficerForwardingHistoryDeleteArgs>(args: SelectSubset<T, OfficerForwardingHistoryDeleteArgs<ExtArgs>>): Prisma__OfficerForwardingHistoryClient<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OfficerForwardingHistory.
+     * @param {OfficerForwardingHistoryUpdateArgs} args - Arguments to update one OfficerForwardingHistory.
+     * @example
+     * // Update one OfficerForwardingHistory
+     * const officerForwardingHistory = await prisma.officerForwardingHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OfficerForwardingHistoryUpdateArgs>(args: SelectSubset<T, OfficerForwardingHistoryUpdateArgs<ExtArgs>>): Prisma__OfficerForwardingHistoryClient<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OfficerForwardingHistories.
+     * @param {OfficerForwardingHistoryDeleteManyArgs} args - Arguments to filter OfficerForwardingHistories to delete.
+     * @example
+     * // Delete a few OfficerForwardingHistories
+     * const { count } = await prisma.officerForwardingHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OfficerForwardingHistoryDeleteManyArgs>(args?: SelectSubset<T, OfficerForwardingHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OfficerForwardingHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfficerForwardingHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OfficerForwardingHistories
+     * const officerForwardingHistory = await prisma.officerForwardingHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OfficerForwardingHistoryUpdateManyArgs>(args: SelectSubset<T, OfficerForwardingHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OfficerForwardingHistories and returns the data updated in the database.
+     * @param {OfficerForwardingHistoryUpdateManyAndReturnArgs} args - Arguments to update many OfficerForwardingHistories.
+     * @example
+     * // Update many OfficerForwardingHistories
+     * const officerForwardingHistory = await prisma.officerForwardingHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OfficerForwardingHistories and only return the `id`
+     * const officerForwardingHistoryWithIdOnly = await prisma.officerForwardingHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OfficerForwardingHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, OfficerForwardingHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OfficerForwardingHistory.
+     * @param {OfficerForwardingHistoryUpsertArgs} args - Arguments to update or create a OfficerForwardingHistory.
+     * @example
+     * // Update or create a OfficerForwardingHistory
+     * const officerForwardingHistory = await prisma.officerForwardingHistory.upsert({
+     *   create: {
+     *     // ... data to create a OfficerForwardingHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OfficerForwardingHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OfficerForwardingHistoryUpsertArgs>(args: SelectSubset<T, OfficerForwardingHistoryUpsertArgs<ExtArgs>>): Prisma__OfficerForwardingHistoryClient<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OfficerForwardingHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfficerForwardingHistoryCountArgs} args - Arguments to filter OfficerForwardingHistories to count.
+     * @example
+     * // Count the number of OfficerForwardingHistories
+     * const count = await prisma.officerForwardingHistory.count({
+     *   where: {
+     *     // ... the filter for the OfficerForwardingHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends OfficerForwardingHistoryCountArgs>(
+      args?: Subset<T, OfficerForwardingHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OfficerForwardingHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OfficerForwardingHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfficerForwardingHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OfficerForwardingHistoryAggregateArgs>(args: Subset<T, OfficerForwardingHistoryAggregateArgs>): Prisma.PrismaPromise<GetOfficerForwardingHistoryAggregateType<T>>
+
+    /**
+     * Group by OfficerForwardingHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfficerForwardingHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OfficerForwardingHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OfficerForwardingHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: OfficerForwardingHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OfficerForwardingHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOfficerForwardingHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OfficerForwardingHistory model
+   */
+  readonly fields: OfficerForwardingHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OfficerForwardingHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OfficerForwardingHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    application<T extends ApplicationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicationDefaultArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    fromOfficer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    toOfficer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OfficerForwardingHistory model
+   */
+  interface OfficerForwardingHistoryFieldRefs {
+    readonly id: FieldRef<"OfficerForwardingHistory", 'String'>
+    readonly applicationId: FieldRef<"OfficerForwardingHistory", 'String'>
+    readonly fromOfficerId: FieldRef<"OfficerForwardingHistory", 'String'>
+    readonly toOfficerId: FieldRef<"OfficerForwardingHistory", 'String'>
+    readonly instructions: FieldRef<"OfficerForwardingHistory", 'String'>
+    readonly priority: FieldRef<"OfficerForwardingHistory", 'Int'>
+    readonly isActive: FieldRef<"OfficerForwardingHistory", 'Boolean'>
+    readonly createdAt: FieldRef<"OfficerForwardingHistory", 'DateTime'>
+    readonly forwardedAt: FieldRef<"OfficerForwardingHistory", 'DateTime'>
+    readonly completedAt: FieldRef<"OfficerForwardingHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OfficerForwardingHistory findUnique
+   */
+  export type OfficerForwardingHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which OfficerForwardingHistory to fetch.
+     */
+    where: OfficerForwardingHistoryWhereUniqueInput
+  }
+
+  /**
+   * OfficerForwardingHistory findUniqueOrThrow
+   */
+  export type OfficerForwardingHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which OfficerForwardingHistory to fetch.
+     */
+    where: OfficerForwardingHistoryWhereUniqueInput
+  }
+
+  /**
+   * OfficerForwardingHistory findFirst
+   */
+  export type OfficerForwardingHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which OfficerForwardingHistory to fetch.
+     */
+    where?: OfficerForwardingHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfficerForwardingHistories to fetch.
+     */
+    orderBy?: OfficerForwardingHistoryOrderByWithRelationInput | OfficerForwardingHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OfficerForwardingHistories.
+     */
+    cursor?: OfficerForwardingHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfficerForwardingHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfficerForwardingHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OfficerForwardingHistories.
+     */
+    distinct?: OfficerForwardingHistoryScalarFieldEnum | OfficerForwardingHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * OfficerForwardingHistory findFirstOrThrow
+   */
+  export type OfficerForwardingHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which OfficerForwardingHistory to fetch.
+     */
+    where?: OfficerForwardingHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfficerForwardingHistories to fetch.
+     */
+    orderBy?: OfficerForwardingHistoryOrderByWithRelationInput | OfficerForwardingHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OfficerForwardingHistories.
+     */
+    cursor?: OfficerForwardingHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfficerForwardingHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfficerForwardingHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OfficerForwardingHistories.
+     */
+    distinct?: OfficerForwardingHistoryScalarFieldEnum | OfficerForwardingHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * OfficerForwardingHistory findMany
+   */
+  export type OfficerForwardingHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which OfficerForwardingHistories to fetch.
+     */
+    where?: OfficerForwardingHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfficerForwardingHistories to fetch.
+     */
+    orderBy?: OfficerForwardingHistoryOrderByWithRelationInput | OfficerForwardingHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OfficerForwardingHistories.
+     */
+    cursor?: OfficerForwardingHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfficerForwardingHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfficerForwardingHistories.
+     */
+    skip?: number
+    distinct?: OfficerForwardingHistoryScalarFieldEnum | OfficerForwardingHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * OfficerForwardingHistory create
+   */
+  export type OfficerForwardingHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OfficerForwardingHistory.
+     */
+    data: XOR<OfficerForwardingHistoryCreateInput, OfficerForwardingHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * OfficerForwardingHistory createMany
+   */
+  export type OfficerForwardingHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OfficerForwardingHistories.
+     */
+    data: OfficerForwardingHistoryCreateManyInput | OfficerForwardingHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OfficerForwardingHistory createManyAndReturn
+   */
+  export type OfficerForwardingHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many OfficerForwardingHistories.
+     */
+    data: OfficerForwardingHistoryCreateManyInput | OfficerForwardingHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OfficerForwardingHistory update
+   */
+  export type OfficerForwardingHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OfficerForwardingHistory.
+     */
+    data: XOR<OfficerForwardingHistoryUpdateInput, OfficerForwardingHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which OfficerForwardingHistory to update.
+     */
+    where: OfficerForwardingHistoryWhereUniqueInput
+  }
+
+  /**
+   * OfficerForwardingHistory updateMany
+   */
+  export type OfficerForwardingHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OfficerForwardingHistories.
+     */
+    data: XOR<OfficerForwardingHistoryUpdateManyMutationInput, OfficerForwardingHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which OfficerForwardingHistories to update
+     */
+    where?: OfficerForwardingHistoryWhereInput
+    /**
+     * Limit how many OfficerForwardingHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OfficerForwardingHistory updateManyAndReturn
+   */
+  export type OfficerForwardingHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update OfficerForwardingHistories.
+     */
+    data: XOR<OfficerForwardingHistoryUpdateManyMutationInput, OfficerForwardingHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which OfficerForwardingHistories to update
+     */
+    where?: OfficerForwardingHistoryWhereInput
+    /**
+     * Limit how many OfficerForwardingHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OfficerForwardingHistory upsert
+   */
+  export type OfficerForwardingHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OfficerForwardingHistory to update in case it exists.
+     */
+    where: OfficerForwardingHistoryWhereUniqueInput
+    /**
+     * In case the OfficerForwardingHistory found by the `where` argument doesn't exist, create a new OfficerForwardingHistory with this data.
+     */
+    create: XOR<OfficerForwardingHistoryCreateInput, OfficerForwardingHistoryUncheckedCreateInput>
+    /**
+     * In case the OfficerForwardingHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OfficerForwardingHistoryUpdateInput, OfficerForwardingHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * OfficerForwardingHistory delete
+   */
+  export type OfficerForwardingHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which OfficerForwardingHistory to delete.
+     */
+    where: OfficerForwardingHistoryWhereUniqueInput
+  }
+
+  /**
+   * OfficerForwardingHistory deleteMany
+   */
+  export type OfficerForwardingHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OfficerForwardingHistories to delete
+     */
+    where?: OfficerForwardingHistoryWhereInput
+    /**
+     * Limit how many OfficerForwardingHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OfficerForwardingHistory without action
+   */
+  export type OfficerForwardingHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerForwardingHistory
+     */
+    select?: OfficerForwardingHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerForwardingHistory
+     */
+    omit?: OfficerForwardingHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerForwardingHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -19661,6 +24830,16 @@ export namespace Prisma {
   export type OfficerProfileScalarFieldEnum = (typeof OfficerProfileScalarFieldEnum)[keyof typeof OfficerProfileScalarFieldEnum]
 
 
+  export const FrontdeskOfficerScalarFieldEnum: {
+    id: 'id',
+    frontdeskUserId: 'frontdeskUserId',
+    officerId: 'officerId',
+    createdAt: 'createdAt'
+  };
+
+  export type FrontdeskOfficerScalarFieldEnum = (typeof FrontdeskOfficerScalarFieldEnum)[keyof typeof FrontdeskOfficerScalarFieldEnum]
+
+
   export const ServiceCategoryScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -19678,7 +24857,13 @@ export namespace Prisma {
     id: 'id',
     rrNumber: 'rrNumber',
     serviceCategoryId: 'serviceCategoryId',
-    citizenId: 'citizenId',
+    subject: 'subject',
+    citizenName: 'citizenName',
+    citizenPhone: 'citizenPhone',
+    citizenEmail: 'citizenEmail',
+    citizenAddress: 'citizenAddress',
+    citizenGender: 'citizenGender',
+    citizenAadhaar: 'citizenAadhaar',
     status: 'status',
     currentHolderId: 'currentHolderId',
     submittedAt: 'submittedAt',
@@ -19830,6 +25015,52 @@ export namespace Prisma {
   };
 
   export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
+
+
+  export const ApplicationTrackingOTPScalarFieldEnum: {
+    id: 'id',
+    identifier: 'identifier',
+    otp: 'otp',
+    otpType: 'otpType',
+    sentTo: 'sentTo',
+    isUsed: 'isUsed',
+    attempts: 'attempts',
+    expires: 'expires',
+    createdAt: 'createdAt'
+  };
+
+  export type ApplicationTrackingOTPScalarFieldEnum = (typeof ApplicationTrackingOTPScalarFieldEnum)[keyof typeof ApplicationTrackingOTPScalarFieldEnum]
+
+
+  export const FrontdeskForwardingScalarFieldEnum: {
+    id: 'id',
+    applicationId: 'applicationId',
+    fromFrontdeskId: 'fromFrontdeskId',
+    toFrontdeskId: 'toFrontdeskId',
+    fromOfficerId: 'fromOfficerId',
+    toOfficerId: 'toOfficerId',
+    instructions: 'instructions',
+    isActive: 'isActive',
+    createdAt: 'createdAt'
+  };
+
+  export type FrontdeskForwardingScalarFieldEnum = (typeof FrontdeskForwardingScalarFieldEnum)[keyof typeof FrontdeskForwardingScalarFieldEnum]
+
+
+  export const OfficerForwardingHistoryScalarFieldEnum: {
+    id: 'id',
+    applicationId: 'applicationId',
+    fromOfficerId: 'fromOfficerId',
+    toOfficerId: 'toOfficerId',
+    instructions: 'instructions',
+    priority: 'priority',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    forwardedAt: 'forwardedAt',
+    completedAt: 'completedAt'
+  };
+
+  export type OfficerForwardingHistoryScalarFieldEnum = (typeof OfficerForwardingHistoryScalarFieldEnum)[keyof typeof OfficerForwardingHistoryScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -20029,7 +25260,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     citizenProfile?: XOR<CitizenProfileNullableScalarRelationFilter, CitizenProfileWhereInput> | null
     officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
-    applications?: ApplicationListRelationFilter
     currentHolderFiles?: ApplicationListRelationFilter
     workflowChanges?: ApplicationWorkflowListRelationFilter
     validations?: ApplicationValidationListRelationFilter
@@ -20040,6 +25270,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestListRelationFilter
     notifications?: NotificationListRelationFilter
     auditLogs?: ApplicationAuditLogListRelationFilter
+    frontdeskAssignments?: FrontdeskOfficerListRelationFilter
+    forwardedFrom?: FrontdeskForwardingListRelationFilter
+    forwardedTo?: FrontdeskForwardingListRelationFilter
+    officerForwardedFrom?: OfficerForwardingHistoryListRelationFilter
+    officerForwardedTo?: OfficerForwardingHistoryListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -20054,7 +25289,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     citizenProfile?: CitizenProfileOrderByWithRelationInput
     officerProfile?: OfficerProfileOrderByWithRelationInput
-    applications?: ApplicationOrderByRelationAggregateInput
     currentHolderFiles?: ApplicationOrderByRelationAggregateInput
     workflowChanges?: ApplicationWorkflowOrderByRelationAggregateInput
     validations?: ApplicationValidationOrderByRelationAggregateInput
@@ -20065,6 +25299,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     auditLogs?: ApplicationAuditLogOrderByRelationAggregateInput
+    frontdeskAssignments?: FrontdeskOfficerOrderByRelationAggregateInput
+    forwardedFrom?: FrontdeskForwardingOrderByRelationAggregateInput
+    forwardedTo?: FrontdeskForwardingOrderByRelationAggregateInput
+    officerForwardedFrom?: OfficerForwardingHistoryOrderByRelationAggregateInput
+    officerForwardedTo?: OfficerForwardingHistoryOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -20082,7 +25321,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     citizenProfile?: XOR<CitizenProfileNullableScalarRelationFilter, CitizenProfileWhereInput> | null
     officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
-    applications?: ApplicationListRelationFilter
     currentHolderFiles?: ApplicationListRelationFilter
     workflowChanges?: ApplicationWorkflowListRelationFilter
     validations?: ApplicationValidationListRelationFilter
@@ -20093,6 +25331,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestListRelationFilter
     notifications?: NotificationListRelationFilter
     auditLogs?: ApplicationAuditLogListRelationFilter
+    frontdeskAssignments?: FrontdeskOfficerListRelationFilter
+    forwardedFrom?: FrontdeskForwardingListRelationFilter
+    forwardedTo?: FrontdeskForwardingListRelationFilter
+    officerForwardedFrom?: OfficerForwardingHistoryListRelationFilter
+    officerForwardedTo?: OfficerForwardingHistoryListRelationFilter
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -20209,6 +25452,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"OfficerProfile"> | Date | string
     updatedAt?: DateTimeFilter<"OfficerProfile"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    frontdeskUsers?: FrontdeskOfficerListRelationFilter
   }
 
   export type OfficerProfileOrderByWithRelationInput = {
@@ -20222,6 +25466,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    frontdeskUsers?: FrontdeskOfficerOrderByRelationAggregateInput
   }
 
   export type OfficerProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -20238,6 +25483,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"OfficerProfile"> | Date | string
     updatedAt?: DateTimeFilter<"OfficerProfile"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    frontdeskUsers?: FrontdeskOfficerListRelationFilter
   }, "id" | "userId">
 
   export type OfficerProfileOrderByWithAggregationInput = {
@@ -20268,6 +25514,60 @@ export namespace Prisma {
     isAvailable?: BoolWithAggregatesFilter<"OfficerProfile"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"OfficerProfile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"OfficerProfile"> | Date | string
+  }
+
+  export type FrontdeskOfficerWhereInput = {
+    AND?: FrontdeskOfficerWhereInput | FrontdeskOfficerWhereInput[]
+    OR?: FrontdeskOfficerWhereInput[]
+    NOT?: FrontdeskOfficerWhereInput | FrontdeskOfficerWhereInput[]
+    id?: StringFilter<"FrontdeskOfficer"> | string
+    frontdeskUserId?: StringFilter<"FrontdeskOfficer"> | string
+    officerId?: StringNullableFilter<"FrontdeskOfficer"> | string | null
+    createdAt?: DateTimeFilter<"FrontdeskOfficer"> | Date | string
+    frontdeskUser?: XOR<UserScalarRelationFilter, UserWhereInput>
+    officer?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
+  }
+
+  export type FrontdeskOfficerOrderByWithRelationInput = {
+    id?: SortOrder
+    frontdeskUserId?: SortOrder
+    officerId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    frontdeskUser?: UserOrderByWithRelationInput
+    officer?: OfficerProfileOrderByWithRelationInput
+  }
+
+  export type FrontdeskOfficerWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    frontdeskUserId_officerId?: FrontdeskOfficerFrontdeskUserIdOfficerIdCompoundUniqueInput
+    AND?: FrontdeskOfficerWhereInput | FrontdeskOfficerWhereInput[]
+    OR?: FrontdeskOfficerWhereInput[]
+    NOT?: FrontdeskOfficerWhereInput | FrontdeskOfficerWhereInput[]
+    frontdeskUserId?: StringFilter<"FrontdeskOfficer"> | string
+    officerId?: StringNullableFilter<"FrontdeskOfficer"> | string | null
+    createdAt?: DateTimeFilter<"FrontdeskOfficer"> | Date | string
+    frontdeskUser?: XOR<UserScalarRelationFilter, UserWhereInput>
+    officer?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
+  }, "id" | "frontdeskUserId_officerId">
+
+  export type FrontdeskOfficerOrderByWithAggregationInput = {
+    id?: SortOrder
+    frontdeskUserId?: SortOrder
+    officerId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: FrontdeskOfficerCountOrderByAggregateInput
+    _max?: FrontdeskOfficerMaxOrderByAggregateInput
+    _min?: FrontdeskOfficerMinOrderByAggregateInput
+  }
+
+  export type FrontdeskOfficerScalarWhereWithAggregatesInput = {
+    AND?: FrontdeskOfficerScalarWhereWithAggregatesInput | FrontdeskOfficerScalarWhereWithAggregatesInput[]
+    OR?: FrontdeskOfficerScalarWhereWithAggregatesInput[]
+    NOT?: FrontdeskOfficerScalarWhereWithAggregatesInput | FrontdeskOfficerScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FrontdeskOfficer"> | string
+    frontdeskUserId?: StringWithAggregatesFilter<"FrontdeskOfficer"> | string
+    officerId?: StringNullableWithAggregatesFilter<"FrontdeskOfficer"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"FrontdeskOfficer"> | Date | string
   }
 
   export type ServiceCategoryWhereInput = {
@@ -20344,7 +25644,13 @@ export namespace Prisma {
     id?: StringFilter<"Application"> | string
     rrNumber?: StringNullableFilter<"Application"> | string | null
     serviceCategoryId?: StringFilter<"Application"> | string
-    citizenId?: StringFilter<"Application"> | string
+    subject?: StringFilter<"Application"> | string
+    citizenName?: StringFilter<"Application"> | string
+    citizenPhone?: StringFilter<"Application"> | string
+    citizenEmail?: StringNullableFilter<"Application"> | string | null
+    citizenAddress?: StringFilter<"Application"> | string
+    citizenGender?: StringNullableFilter<"Application"> | string | null
+    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
     status?: EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
     currentHolderId?: StringNullableFilter<"Application"> | string | null
     submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
@@ -20353,7 +25659,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
     serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
-    citizen?: XOR<UserScalarRelationFilter, UserWhereInput>
     currentHolder?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     workflow?: ApplicationWorkflowListRelationFilter
     validation?: XOR<ApplicationValidationNullableScalarRelationFilter, ApplicationValidationWhereInput> | null
@@ -20362,13 +25667,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestListRelationFilter
     notifications?: NotificationListRelationFilter
     auditLogs?: ApplicationAuditLogListRelationFilter
+    frontdeskForwardings?: FrontdeskForwardingListRelationFilter
+    officerForwardings?: OfficerForwardingHistoryListRelationFilter
   }
 
   export type ApplicationOrderByWithRelationInput = {
     id?: SortOrder
     rrNumber?: SortOrderInput | SortOrder
     serviceCategoryId?: SortOrder
-    citizenId?: SortOrder
+    subject?: SortOrder
+    citizenName?: SortOrder
+    citizenPhone?: SortOrder
+    citizenEmail?: SortOrderInput | SortOrder
+    citizenAddress?: SortOrder
+    citizenGender?: SortOrderInput | SortOrder
+    citizenAadhaar?: SortOrderInput | SortOrder
     status?: SortOrder
     currentHolderId?: SortOrderInput | SortOrder
     submittedAt?: SortOrderInput | SortOrder
@@ -20377,7 +25690,6 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     serviceCategory?: ServiceCategoryOrderByWithRelationInput
-    citizen?: UserOrderByWithRelationInput
     currentHolder?: UserOrderByWithRelationInput
     workflow?: ApplicationWorkflowOrderByRelationAggregateInput
     validation?: ApplicationValidationOrderByWithRelationInput
@@ -20386,6 +25698,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     auditLogs?: ApplicationAuditLogOrderByRelationAggregateInput
+    frontdeskForwardings?: FrontdeskForwardingOrderByRelationAggregateInput
+    officerForwardings?: OfficerForwardingHistoryOrderByRelationAggregateInput
   }
 
   export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
@@ -20395,7 +25709,13 @@ export namespace Prisma {
     OR?: ApplicationWhereInput[]
     NOT?: ApplicationWhereInput | ApplicationWhereInput[]
     serviceCategoryId?: StringFilter<"Application"> | string
-    citizenId?: StringFilter<"Application"> | string
+    subject?: StringFilter<"Application"> | string
+    citizenName?: StringFilter<"Application"> | string
+    citizenPhone?: StringFilter<"Application"> | string
+    citizenEmail?: StringNullableFilter<"Application"> | string | null
+    citizenAddress?: StringFilter<"Application"> | string
+    citizenGender?: StringNullableFilter<"Application"> | string | null
+    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
     status?: EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
     currentHolderId?: StringNullableFilter<"Application"> | string | null
     submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
@@ -20404,7 +25724,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
     serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
-    citizen?: XOR<UserScalarRelationFilter, UserWhereInput>
     currentHolder?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     workflow?: ApplicationWorkflowListRelationFilter
     validation?: XOR<ApplicationValidationNullableScalarRelationFilter, ApplicationValidationWhereInput> | null
@@ -20413,13 +25732,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestListRelationFilter
     notifications?: NotificationListRelationFilter
     auditLogs?: ApplicationAuditLogListRelationFilter
+    frontdeskForwardings?: FrontdeskForwardingListRelationFilter
+    officerForwardings?: OfficerForwardingHistoryListRelationFilter
   }, "id" | "rrNumber">
 
   export type ApplicationOrderByWithAggregationInput = {
     id?: SortOrder
     rrNumber?: SortOrderInput | SortOrder
     serviceCategoryId?: SortOrder
-    citizenId?: SortOrder
+    subject?: SortOrder
+    citizenName?: SortOrder
+    citizenPhone?: SortOrder
+    citizenEmail?: SortOrderInput | SortOrder
+    citizenAddress?: SortOrder
+    citizenGender?: SortOrderInput | SortOrder
+    citizenAadhaar?: SortOrderInput | SortOrder
     status?: SortOrder
     currentHolderId?: SortOrderInput | SortOrder
     submittedAt?: SortOrderInput | SortOrder
@@ -20439,7 +25766,13 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Application"> | string
     rrNumber?: StringNullableWithAggregatesFilter<"Application"> | string | null
     serviceCategoryId?: StringWithAggregatesFilter<"Application"> | string
-    citizenId?: StringWithAggregatesFilter<"Application"> | string
+    subject?: StringWithAggregatesFilter<"Application"> | string
+    citizenName?: StringWithAggregatesFilter<"Application"> | string
+    citizenPhone?: StringWithAggregatesFilter<"Application"> | string
+    citizenEmail?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    citizenAddress?: StringWithAggregatesFilter<"Application"> | string
+    citizenGender?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    citizenAadhaar?: StringNullableWithAggregatesFilter<"Application"> | string | null
     status?: EnumApplicationStatusWithAggregatesFilter<"Application"> | $Enums.ApplicationStatus
     currentHolderId?: StringNullableWithAggregatesFilter<"Application"> | string | null
     submittedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
@@ -21179,6 +26512,249 @@ export namespace Prisma {
     type?: StringWithAggregatesFilter<"VerificationToken"> | string
   }
 
+  export type ApplicationTrackingOTPWhereInput = {
+    AND?: ApplicationTrackingOTPWhereInput | ApplicationTrackingOTPWhereInput[]
+    OR?: ApplicationTrackingOTPWhereInput[]
+    NOT?: ApplicationTrackingOTPWhereInput | ApplicationTrackingOTPWhereInput[]
+    id?: StringFilter<"ApplicationTrackingOTP"> | string
+    identifier?: StringFilter<"ApplicationTrackingOTP"> | string
+    otp?: StringFilter<"ApplicationTrackingOTP"> | string
+    otpType?: StringFilter<"ApplicationTrackingOTP"> | string
+    sentTo?: StringFilter<"ApplicationTrackingOTP"> | string
+    isUsed?: BoolFilter<"ApplicationTrackingOTP"> | boolean
+    attempts?: IntFilter<"ApplicationTrackingOTP"> | number
+    expires?: DateTimeFilter<"ApplicationTrackingOTP"> | Date | string
+    createdAt?: DateTimeFilter<"ApplicationTrackingOTP"> | Date | string
+  }
+
+  export type ApplicationTrackingOTPOrderByWithRelationInput = {
+    id?: SortOrder
+    identifier?: SortOrder
+    otp?: SortOrder
+    otpType?: SortOrder
+    sentTo?: SortOrder
+    isUsed?: SortOrder
+    attempts?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApplicationTrackingOTPWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ApplicationTrackingOTPWhereInput | ApplicationTrackingOTPWhereInput[]
+    OR?: ApplicationTrackingOTPWhereInput[]
+    NOT?: ApplicationTrackingOTPWhereInput | ApplicationTrackingOTPWhereInput[]
+    identifier?: StringFilter<"ApplicationTrackingOTP"> | string
+    otp?: StringFilter<"ApplicationTrackingOTP"> | string
+    otpType?: StringFilter<"ApplicationTrackingOTP"> | string
+    sentTo?: StringFilter<"ApplicationTrackingOTP"> | string
+    isUsed?: BoolFilter<"ApplicationTrackingOTP"> | boolean
+    attempts?: IntFilter<"ApplicationTrackingOTP"> | number
+    expires?: DateTimeFilter<"ApplicationTrackingOTP"> | Date | string
+    createdAt?: DateTimeFilter<"ApplicationTrackingOTP"> | Date | string
+  }, "id">
+
+  export type ApplicationTrackingOTPOrderByWithAggregationInput = {
+    id?: SortOrder
+    identifier?: SortOrder
+    otp?: SortOrder
+    otpType?: SortOrder
+    sentTo?: SortOrder
+    isUsed?: SortOrder
+    attempts?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+    _count?: ApplicationTrackingOTPCountOrderByAggregateInput
+    _avg?: ApplicationTrackingOTPAvgOrderByAggregateInput
+    _max?: ApplicationTrackingOTPMaxOrderByAggregateInput
+    _min?: ApplicationTrackingOTPMinOrderByAggregateInput
+    _sum?: ApplicationTrackingOTPSumOrderByAggregateInput
+  }
+
+  export type ApplicationTrackingOTPScalarWhereWithAggregatesInput = {
+    AND?: ApplicationTrackingOTPScalarWhereWithAggregatesInput | ApplicationTrackingOTPScalarWhereWithAggregatesInput[]
+    OR?: ApplicationTrackingOTPScalarWhereWithAggregatesInput[]
+    NOT?: ApplicationTrackingOTPScalarWhereWithAggregatesInput | ApplicationTrackingOTPScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ApplicationTrackingOTP"> | string
+    identifier?: StringWithAggregatesFilter<"ApplicationTrackingOTP"> | string
+    otp?: StringWithAggregatesFilter<"ApplicationTrackingOTP"> | string
+    otpType?: StringWithAggregatesFilter<"ApplicationTrackingOTP"> | string
+    sentTo?: StringWithAggregatesFilter<"ApplicationTrackingOTP"> | string
+    isUsed?: BoolWithAggregatesFilter<"ApplicationTrackingOTP"> | boolean
+    attempts?: IntWithAggregatesFilter<"ApplicationTrackingOTP"> | number
+    expires?: DateTimeWithAggregatesFilter<"ApplicationTrackingOTP"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"ApplicationTrackingOTP"> | Date | string
+  }
+
+  export type FrontdeskForwardingWhereInput = {
+    AND?: FrontdeskForwardingWhereInput | FrontdeskForwardingWhereInput[]
+    OR?: FrontdeskForwardingWhereInput[]
+    NOT?: FrontdeskForwardingWhereInput | FrontdeskForwardingWhereInput[]
+    id?: StringFilter<"FrontdeskForwarding"> | string
+    applicationId?: StringFilter<"FrontdeskForwarding"> | string
+    fromFrontdeskId?: StringFilter<"FrontdeskForwarding"> | string
+    toFrontdeskId?: StringFilter<"FrontdeskForwarding"> | string
+    fromOfficerId?: StringFilter<"FrontdeskForwarding"> | string
+    toOfficerId?: StringFilter<"FrontdeskForwarding"> | string
+    instructions?: StringNullableFilter<"FrontdeskForwarding"> | string | null
+    isActive?: BoolFilter<"FrontdeskForwarding"> | boolean
+    createdAt?: DateTimeFilter<"FrontdeskForwarding"> | Date | string
+    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
+    fromFrontdesk?: XOR<UserScalarRelationFilter, UserWhereInput>
+    toFrontdesk?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type FrontdeskForwardingOrderByWithRelationInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    fromFrontdeskId?: SortOrder
+    toFrontdeskId?: SortOrder
+    fromOfficerId?: SortOrder
+    toOfficerId?: SortOrder
+    instructions?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    application?: ApplicationOrderByWithRelationInput
+    fromFrontdesk?: UserOrderByWithRelationInput
+    toFrontdesk?: UserOrderByWithRelationInput
+  }
+
+  export type FrontdeskForwardingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FrontdeskForwardingWhereInput | FrontdeskForwardingWhereInput[]
+    OR?: FrontdeskForwardingWhereInput[]
+    NOT?: FrontdeskForwardingWhereInput | FrontdeskForwardingWhereInput[]
+    applicationId?: StringFilter<"FrontdeskForwarding"> | string
+    fromFrontdeskId?: StringFilter<"FrontdeskForwarding"> | string
+    toFrontdeskId?: StringFilter<"FrontdeskForwarding"> | string
+    fromOfficerId?: StringFilter<"FrontdeskForwarding"> | string
+    toOfficerId?: StringFilter<"FrontdeskForwarding"> | string
+    instructions?: StringNullableFilter<"FrontdeskForwarding"> | string | null
+    isActive?: BoolFilter<"FrontdeskForwarding"> | boolean
+    createdAt?: DateTimeFilter<"FrontdeskForwarding"> | Date | string
+    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
+    fromFrontdesk?: XOR<UserScalarRelationFilter, UserWhereInput>
+    toFrontdesk?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type FrontdeskForwardingOrderByWithAggregationInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    fromFrontdeskId?: SortOrder
+    toFrontdeskId?: SortOrder
+    fromOfficerId?: SortOrder
+    toOfficerId?: SortOrder
+    instructions?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    _count?: FrontdeskForwardingCountOrderByAggregateInput
+    _max?: FrontdeskForwardingMaxOrderByAggregateInput
+    _min?: FrontdeskForwardingMinOrderByAggregateInput
+  }
+
+  export type FrontdeskForwardingScalarWhereWithAggregatesInput = {
+    AND?: FrontdeskForwardingScalarWhereWithAggregatesInput | FrontdeskForwardingScalarWhereWithAggregatesInput[]
+    OR?: FrontdeskForwardingScalarWhereWithAggregatesInput[]
+    NOT?: FrontdeskForwardingScalarWhereWithAggregatesInput | FrontdeskForwardingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FrontdeskForwarding"> | string
+    applicationId?: StringWithAggregatesFilter<"FrontdeskForwarding"> | string
+    fromFrontdeskId?: StringWithAggregatesFilter<"FrontdeskForwarding"> | string
+    toFrontdeskId?: StringWithAggregatesFilter<"FrontdeskForwarding"> | string
+    fromOfficerId?: StringWithAggregatesFilter<"FrontdeskForwarding"> | string
+    toOfficerId?: StringWithAggregatesFilter<"FrontdeskForwarding"> | string
+    instructions?: StringNullableWithAggregatesFilter<"FrontdeskForwarding"> | string | null
+    isActive?: BoolWithAggregatesFilter<"FrontdeskForwarding"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"FrontdeskForwarding"> | Date | string
+  }
+
+  export type OfficerForwardingHistoryWhereInput = {
+    AND?: OfficerForwardingHistoryWhereInput | OfficerForwardingHistoryWhereInput[]
+    OR?: OfficerForwardingHistoryWhereInput[]
+    NOT?: OfficerForwardingHistoryWhereInput | OfficerForwardingHistoryWhereInput[]
+    id?: StringFilter<"OfficerForwardingHistory"> | string
+    applicationId?: StringFilter<"OfficerForwardingHistory"> | string
+    fromOfficerId?: StringFilter<"OfficerForwardingHistory"> | string
+    toOfficerId?: StringFilter<"OfficerForwardingHistory"> | string
+    instructions?: StringNullableFilter<"OfficerForwardingHistory"> | string | null
+    priority?: IntFilter<"OfficerForwardingHistory"> | number
+    isActive?: BoolFilter<"OfficerForwardingHistory"> | boolean
+    createdAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
+    forwardedAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
+    completedAt?: DateTimeNullableFilter<"OfficerForwardingHistory"> | Date | string | null
+    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
+    fromOfficer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    toOfficer?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type OfficerForwardingHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    fromOfficerId?: SortOrder
+    toOfficerId?: SortOrder
+    instructions?: SortOrderInput | SortOrder
+    priority?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    forwardedAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    application?: ApplicationOrderByWithRelationInput
+    fromOfficer?: UserOrderByWithRelationInput
+    toOfficer?: UserOrderByWithRelationInput
+  }
+
+  export type OfficerForwardingHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OfficerForwardingHistoryWhereInput | OfficerForwardingHistoryWhereInput[]
+    OR?: OfficerForwardingHistoryWhereInput[]
+    NOT?: OfficerForwardingHistoryWhereInput | OfficerForwardingHistoryWhereInput[]
+    applicationId?: StringFilter<"OfficerForwardingHistory"> | string
+    fromOfficerId?: StringFilter<"OfficerForwardingHistory"> | string
+    toOfficerId?: StringFilter<"OfficerForwardingHistory"> | string
+    instructions?: StringNullableFilter<"OfficerForwardingHistory"> | string | null
+    priority?: IntFilter<"OfficerForwardingHistory"> | number
+    isActive?: BoolFilter<"OfficerForwardingHistory"> | boolean
+    createdAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
+    forwardedAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
+    completedAt?: DateTimeNullableFilter<"OfficerForwardingHistory"> | Date | string | null
+    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
+    fromOfficer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    toOfficer?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type OfficerForwardingHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    fromOfficerId?: SortOrder
+    toOfficerId?: SortOrder
+    instructions?: SortOrderInput | SortOrder
+    priority?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    forwardedAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    _count?: OfficerForwardingHistoryCountOrderByAggregateInput
+    _avg?: OfficerForwardingHistoryAvgOrderByAggregateInput
+    _max?: OfficerForwardingHistoryMaxOrderByAggregateInput
+    _min?: OfficerForwardingHistoryMinOrderByAggregateInput
+    _sum?: OfficerForwardingHistorySumOrderByAggregateInput
+  }
+
+  export type OfficerForwardingHistoryScalarWhereWithAggregatesInput = {
+    AND?: OfficerForwardingHistoryScalarWhereWithAggregatesInput | OfficerForwardingHistoryScalarWhereWithAggregatesInput[]
+    OR?: OfficerForwardingHistoryScalarWhereWithAggregatesInput[]
+    NOT?: OfficerForwardingHistoryScalarWhereWithAggregatesInput | OfficerForwardingHistoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OfficerForwardingHistory"> | string
+    applicationId?: StringWithAggregatesFilter<"OfficerForwardingHistory"> | string
+    fromOfficerId?: StringWithAggregatesFilter<"OfficerForwardingHistory"> | string
+    toOfficerId?: StringWithAggregatesFilter<"OfficerForwardingHistory"> | string
+    instructions?: StringNullableWithAggregatesFilter<"OfficerForwardingHistory"> | string | null
+    priority?: IntWithAggregatesFilter<"OfficerForwardingHistory"> | number
+    isActive?: BoolWithAggregatesFilter<"OfficerForwardingHistory"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"OfficerForwardingHistory"> | Date | string
+    forwardedAt?: DateTimeWithAggregatesFilter<"OfficerForwardingHistory"> | Date | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"OfficerForwardingHistory"> | Date | string | null
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -21191,7 +26767,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
@@ -21202,6 +26777,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -21216,7 +26796,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
@@ -21227,6 +26806,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUpdateInput = {
@@ -21241,7 +26825,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
@@ -21252,6 +26835,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -21266,7 +26854,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
@@ -21277,6 +26864,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -21401,6 +26993,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutOfficerProfileInput
+    frontdeskUsers?: FrontdeskOfficerCreateNestedManyWithoutOfficerInput
   }
 
   export type OfficerProfileUncheckedCreateInput = {
@@ -21413,6 +27006,7 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    frontdeskUsers?: FrontdeskOfficerUncheckedCreateNestedManyWithoutOfficerInput
   }
 
   export type OfficerProfileUpdateInput = {
@@ -21425,6 +27019,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOfficerProfileNestedInput
+    frontdeskUsers?: FrontdeskOfficerUpdateManyWithoutOfficerNestedInput
   }
 
   export type OfficerProfileUncheckedUpdateInput = {
@@ -21437,6 +27032,7 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    frontdeskUsers?: FrontdeskOfficerUncheckedUpdateManyWithoutOfficerNestedInput
   }
 
   export type OfficerProfileCreateManyInput = {
@@ -21472,6 +27068,53 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskOfficerCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    frontdeskUser: UserCreateNestedOneWithoutFrontdeskAssignmentsInput
+    officer?: OfficerProfileCreateNestedOneWithoutFrontdeskUsersInput
+  }
+
+  export type FrontdeskOfficerUncheckedCreateInput = {
+    id?: string
+    frontdeskUserId: string
+    officerId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskOfficerUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    frontdeskUser?: UserUpdateOneRequiredWithoutFrontdeskAssignmentsNestedInput
+    officer?: OfficerProfileUpdateOneWithoutFrontdeskUsersNestedInput
+  }
+
+  export type FrontdeskOfficerUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    frontdeskUserId?: StringFieldUpdateOperationsInput | string
+    officerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskOfficerCreateManyInput = {
+    id?: string
+    frontdeskUserId: string
+    officerId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskOfficerUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskOfficerUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    frontdeskUserId?: StringFieldUpdateOperationsInput | string
+    officerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ServiceCategoryCreateInput = {
@@ -21551,6 +27194,13 @@ export namespace Prisma {
   export type ApplicationCreateInput = {
     id?: string
     rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -21558,7 +27208,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    citizen: UserCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
@@ -21567,13 +27216,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -21588,11 +27245,20 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21600,7 +27266,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    citizen?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
@@ -21609,13 +27274,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21630,13 +27303,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationCreateManyInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -21649,6 +27330,13 @@ export namespace Prisma {
   export type ApplicationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21661,7 +27349,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22432,6 +28126,259 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ApplicationTrackingOTPCreateInput = {
+    id?: string
+    identifier: string
+    otp: string
+    otpType: string
+    sentTo: string
+    isUsed?: boolean
+    attempts?: number
+    expires: Date | string
+    createdAt?: Date | string
+  }
+
+  export type ApplicationTrackingOTPUncheckedCreateInput = {
+    id?: string
+    identifier: string
+    otp: string
+    otpType: string
+    sentTo: string
+    isUsed?: boolean
+    attempts?: number
+    expires: Date | string
+    createdAt?: Date | string
+  }
+
+  export type ApplicationTrackingOTPUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identifier?: StringFieldUpdateOperationsInput | string
+    otp?: StringFieldUpdateOperationsInput | string
+    otpType?: StringFieldUpdateOperationsInput | string
+    sentTo?: StringFieldUpdateOperationsInput | string
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    attempts?: IntFieldUpdateOperationsInput | number
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationTrackingOTPUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identifier?: StringFieldUpdateOperationsInput | string
+    otp?: StringFieldUpdateOperationsInput | string
+    otpType?: StringFieldUpdateOperationsInput | string
+    sentTo?: StringFieldUpdateOperationsInput | string
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    attempts?: IntFieldUpdateOperationsInput | number
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationTrackingOTPCreateManyInput = {
+    id?: string
+    identifier: string
+    otp: string
+    otpType: string
+    sentTo: string
+    isUsed?: boolean
+    attempts?: number
+    expires: Date | string
+    createdAt?: Date | string
+  }
+
+  export type ApplicationTrackingOTPUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identifier?: StringFieldUpdateOperationsInput | string
+    otp?: StringFieldUpdateOperationsInput | string
+    otpType?: StringFieldUpdateOperationsInput | string
+    sentTo?: StringFieldUpdateOperationsInput | string
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    attempts?: IntFieldUpdateOperationsInput | number
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationTrackingOTPUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identifier?: StringFieldUpdateOperationsInput | string
+    otp?: StringFieldUpdateOperationsInput | string
+    otpType?: StringFieldUpdateOperationsInput | string
+    sentTo?: StringFieldUpdateOperationsInput | string
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    attempts?: IntFieldUpdateOperationsInput | number
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskForwardingCreateInput = {
+    id?: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutFrontdeskForwardingsInput
+    fromFrontdesk: UserCreateNestedOneWithoutForwardedFromInput
+    toFrontdesk: UserCreateNestedOneWithoutForwardedToInput
+  }
+
+  export type FrontdeskForwardingUncheckedCreateInput = {
+    id?: string
+    applicationId: string
+    fromFrontdeskId: string
+    toFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskForwardingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutFrontdeskForwardingsNestedInput
+    fromFrontdesk?: UserUpdateOneRequiredWithoutForwardedFromNestedInput
+    toFrontdesk?: UserUpdateOneRequiredWithoutForwardedToNestedInput
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    fromFrontdeskId?: StringFieldUpdateOperationsInput | string
+    toFrontdeskId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskForwardingCreateManyInput = {
+    id?: string
+    applicationId: string
+    fromFrontdeskId: string
+    toFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskForwardingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    fromFrontdeskId?: StringFieldUpdateOperationsInput | string
+    toFrontdeskId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfficerForwardingHistoryCreateInput = {
+    id?: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
+    application: ApplicationCreateNestedOneWithoutOfficerForwardingsInput
+    fromOfficer: UserCreateNestedOneWithoutOfficerForwardedFromInput
+    toOfficer: UserCreateNestedOneWithoutOfficerForwardedToInput
+  }
+
+  export type OfficerForwardingHistoryUncheckedCreateInput = {
+    id?: string
+    applicationId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type OfficerForwardingHistoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    application?: ApplicationUpdateOneRequiredWithoutOfficerForwardingsNestedInput
+    fromOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedFromNestedInput
+    toOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedToNestedInput
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OfficerForwardingHistoryCreateManyInput = {
+    id?: string
+    applicationId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type OfficerForwardingHistoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -22554,6 +28501,24 @@ export namespace Prisma {
     none?: ApplicationAuditLogWhereInput
   }
 
+  export type FrontdeskOfficerListRelationFilter = {
+    every?: FrontdeskOfficerWhereInput
+    some?: FrontdeskOfficerWhereInput
+    none?: FrontdeskOfficerWhereInput
+  }
+
+  export type FrontdeskForwardingListRelationFilter = {
+    every?: FrontdeskForwardingWhereInput
+    some?: FrontdeskForwardingWhereInput
+    none?: FrontdeskForwardingWhereInput
+  }
+
+  export type OfficerForwardingHistoryListRelationFilter = {
+    every?: OfficerForwardingHistoryWhereInput
+    some?: OfficerForwardingHistoryWhereInput
+    none?: OfficerForwardingHistoryWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -22588,6 +28553,18 @@ export namespace Prisma {
   }
 
   export type ApplicationAuditLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FrontdeskOfficerOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FrontdeskForwardingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OfficerForwardingHistoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -22783,6 +28760,32 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type FrontdeskOfficerFrontdeskUserIdOfficerIdCompoundUniqueInput = {
+    frontdeskUserId: string
+    officerId: string
+  }
+
+  export type FrontdeskOfficerCountOrderByAggregateInput = {
+    id?: SortOrder
+    frontdeskUserId?: SortOrder
+    officerId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FrontdeskOfficerMaxOrderByAggregateInput = {
+    id?: SortOrder
+    frontdeskUserId?: SortOrder
+    officerId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FrontdeskOfficerMinOrderByAggregateInput = {
+    id?: SortOrder
+    frontdeskUserId?: SortOrder
+    officerId?: SortOrder
+    createdAt?: SortOrder
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -22874,7 +28877,13 @@ export namespace Prisma {
     id?: SortOrder
     rrNumber?: SortOrder
     serviceCategoryId?: SortOrder
-    citizenId?: SortOrder
+    subject?: SortOrder
+    citizenName?: SortOrder
+    citizenPhone?: SortOrder
+    citizenEmail?: SortOrder
+    citizenAddress?: SortOrder
+    citizenGender?: SortOrder
+    citizenAadhaar?: SortOrder
     status?: SortOrder
     currentHolderId?: SortOrder
     submittedAt?: SortOrder
@@ -22888,7 +28897,13 @@ export namespace Prisma {
     id?: SortOrder
     rrNumber?: SortOrder
     serviceCategoryId?: SortOrder
-    citizenId?: SortOrder
+    subject?: SortOrder
+    citizenName?: SortOrder
+    citizenPhone?: SortOrder
+    citizenEmail?: SortOrder
+    citizenAddress?: SortOrder
+    citizenGender?: SortOrder
+    citizenAadhaar?: SortOrder
     status?: SortOrder
     currentHolderId?: SortOrder
     submittedAt?: SortOrder
@@ -22902,7 +28917,13 @@ export namespace Prisma {
     id?: SortOrder
     rrNumber?: SortOrder
     serviceCategoryId?: SortOrder
-    citizenId?: SortOrder
+    subject?: SortOrder
+    citizenName?: SortOrder
+    citizenPhone?: SortOrder
+    citizenEmail?: SortOrder
+    citizenAddress?: SortOrder
+    citizenGender?: SortOrder
+    citizenAadhaar?: SortOrder
     status?: SortOrder
     currentHolderId?: SortOrder
     submittedAt?: SortOrder
@@ -23425,6 +29446,133 @@ export namespace Prisma {
     type?: SortOrder
   }
 
+  export type ApplicationTrackingOTPCountOrderByAggregateInput = {
+    id?: SortOrder
+    identifier?: SortOrder
+    otp?: SortOrder
+    otpType?: SortOrder
+    sentTo?: SortOrder
+    isUsed?: SortOrder
+    attempts?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApplicationTrackingOTPAvgOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type ApplicationTrackingOTPMaxOrderByAggregateInput = {
+    id?: SortOrder
+    identifier?: SortOrder
+    otp?: SortOrder
+    otpType?: SortOrder
+    sentTo?: SortOrder
+    isUsed?: SortOrder
+    attempts?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApplicationTrackingOTPMinOrderByAggregateInput = {
+    id?: SortOrder
+    identifier?: SortOrder
+    otp?: SortOrder
+    otpType?: SortOrder
+    sentTo?: SortOrder
+    isUsed?: SortOrder
+    attempts?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApplicationTrackingOTPSumOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type FrontdeskForwardingCountOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    fromFrontdeskId?: SortOrder
+    toFrontdeskId?: SortOrder
+    fromOfficerId?: SortOrder
+    toOfficerId?: SortOrder
+    instructions?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FrontdeskForwardingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    fromFrontdeskId?: SortOrder
+    toFrontdeskId?: SortOrder
+    fromOfficerId?: SortOrder
+    toOfficerId?: SortOrder
+    instructions?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FrontdeskForwardingMinOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    fromFrontdeskId?: SortOrder
+    toFrontdeskId?: SortOrder
+    fromOfficerId?: SortOrder
+    toOfficerId?: SortOrder
+    instructions?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type OfficerForwardingHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    fromOfficerId?: SortOrder
+    toOfficerId?: SortOrder
+    instructions?: SortOrder
+    priority?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    forwardedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type OfficerForwardingHistoryAvgOrderByAggregateInput = {
+    priority?: SortOrder
+  }
+
+  export type OfficerForwardingHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    fromOfficerId?: SortOrder
+    toOfficerId?: SortOrder
+    instructions?: SortOrder
+    priority?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    forwardedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type OfficerForwardingHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    fromOfficerId?: SortOrder
+    toOfficerId?: SortOrder
+    instructions?: SortOrder
+    priority?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    forwardedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type OfficerForwardingHistorySumOrderByAggregateInput = {
+    priority?: SortOrder
+  }
+
   export type CitizenProfileCreateNestedOneWithoutUserInput = {
     create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
@@ -23435,13 +29583,6 @@ export namespace Prisma {
     create?: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: OfficerProfileCreateOrConnectWithoutUserInput
     connect?: OfficerProfileWhereUniqueInput
-  }
-
-  export type ApplicationCreateNestedManyWithoutCitizenInput = {
-    create?: XOR<ApplicationCreateWithoutCitizenInput, ApplicationUncheckedCreateWithoutCitizenInput> | ApplicationCreateWithoutCitizenInput[] | ApplicationUncheckedCreateWithoutCitizenInput[]
-    connectOrCreate?: ApplicationCreateOrConnectWithoutCitizenInput | ApplicationCreateOrConnectWithoutCitizenInput[]
-    createMany?: ApplicationCreateManyCitizenInputEnvelope
-    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
   export type ApplicationCreateNestedManyWithoutCurrentHolderInput = {
@@ -23514,6 +29655,41 @@ export namespace Prisma {
     connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
   }
 
+  export type FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
+    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+  }
+
+  export type FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutFromFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput> | FrontdeskForwardingCreateWithoutFromFrontdeskInput[] | FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutFromFrontdeskInput | FrontdeskForwardingCreateOrConnectWithoutFromFrontdeskInput[]
+    createMany?: FrontdeskForwardingCreateManyFromFrontdeskInputEnvelope
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+  }
+
+  export type FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutToFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput> | FrontdeskForwardingCreateWithoutToFrontdeskInput[] | FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutToFrontdeskInput | FrontdeskForwardingCreateOrConnectWithoutToFrontdeskInput[]
+    createMany?: FrontdeskForwardingCreateManyToFrontdeskInputEnvelope
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+  }
+
+  export type OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput> | OfficerForwardingHistoryCreateWithoutFromOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput[]
+    createMany?: OfficerForwardingHistoryCreateManyFromOfficerInputEnvelope
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+  }
+
+  export type OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutToOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput> | OfficerForwardingHistoryCreateWithoutToOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutToOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutToOfficerInput[]
+    createMany?: OfficerForwardingHistoryCreateManyToOfficerInputEnvelope
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+  }
+
   export type CitizenProfileUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
@@ -23524,13 +29700,6 @@ export namespace Prisma {
     create?: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: OfficerProfileCreateOrConnectWithoutUserInput
     connect?: OfficerProfileWhereUniqueInput
-  }
-
-  export type ApplicationUncheckedCreateNestedManyWithoutCitizenInput = {
-    create?: XOR<ApplicationCreateWithoutCitizenInput, ApplicationUncheckedCreateWithoutCitizenInput> | ApplicationCreateWithoutCitizenInput[] | ApplicationUncheckedCreateWithoutCitizenInput[]
-    connectOrCreate?: ApplicationCreateOrConnectWithoutCitizenInput | ApplicationCreateOrConnectWithoutCitizenInput[]
-    createMany?: ApplicationCreateManyCitizenInputEnvelope
-    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
   export type ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput = {
@@ -23603,6 +29772,41 @@ export namespace Prisma {
     connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
   }
 
+  export type FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
+    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+  }
+
+  export type FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutFromFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput> | FrontdeskForwardingCreateWithoutFromFrontdeskInput[] | FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutFromFrontdeskInput | FrontdeskForwardingCreateOrConnectWithoutFromFrontdeskInput[]
+    createMany?: FrontdeskForwardingCreateManyFromFrontdeskInputEnvelope
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+  }
+
+  export type FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutToFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput> | FrontdeskForwardingCreateWithoutToFrontdeskInput[] | FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutToFrontdeskInput | FrontdeskForwardingCreateOrConnectWithoutToFrontdeskInput[]
+    createMany?: FrontdeskForwardingCreateManyToFrontdeskInputEnvelope
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+  }
+
+  export type OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput> | OfficerForwardingHistoryCreateWithoutFromOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput[]
+    createMany?: OfficerForwardingHistoryCreateManyFromOfficerInputEnvelope
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+  }
+
+  export type OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutToOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput> | OfficerForwardingHistoryCreateWithoutToOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutToOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutToOfficerInput[]
+    createMany?: OfficerForwardingHistoryCreateManyToOfficerInputEnvelope
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -23645,20 +29849,6 @@ export namespace Prisma {
     delete?: OfficerProfileWhereInput | boolean
     connect?: OfficerProfileWhereUniqueInput
     update?: XOR<XOR<OfficerProfileUpdateToOneWithWhereWithoutUserInput, OfficerProfileUpdateWithoutUserInput>, OfficerProfileUncheckedUpdateWithoutUserInput>
-  }
-
-  export type ApplicationUpdateManyWithoutCitizenNestedInput = {
-    create?: XOR<ApplicationCreateWithoutCitizenInput, ApplicationUncheckedCreateWithoutCitizenInput> | ApplicationCreateWithoutCitizenInput[] | ApplicationUncheckedCreateWithoutCitizenInput[]
-    connectOrCreate?: ApplicationCreateOrConnectWithoutCitizenInput | ApplicationCreateOrConnectWithoutCitizenInput[]
-    upsert?: ApplicationUpsertWithWhereUniqueWithoutCitizenInput | ApplicationUpsertWithWhereUniqueWithoutCitizenInput[]
-    createMany?: ApplicationCreateManyCitizenInputEnvelope
-    set?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    disconnect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    delete?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    update?: ApplicationUpdateWithWhereUniqueWithoutCitizenInput | ApplicationUpdateWithWhereUniqueWithoutCitizenInput[]
-    updateMany?: ApplicationUpdateManyWithWhereWithoutCitizenInput | ApplicationUpdateManyWithWhereWithoutCitizenInput[]
-    deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
   export type ApplicationUpdateManyWithoutCurrentHolderNestedInput = {
@@ -23801,6 +29991,76 @@ export namespace Prisma {
     deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
   }
 
+  export type FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
+    upsert?: FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput[]
+    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
+    set?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    disconnect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    delete?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    update?: FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput[]
+    updateMany?: FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput | FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput[]
+    deleteMany?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+  }
+
+  export type FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutFromFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput> | FrontdeskForwardingCreateWithoutFromFrontdeskInput[] | FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutFromFrontdeskInput | FrontdeskForwardingCreateOrConnectWithoutFromFrontdeskInput[]
+    upsert?: FrontdeskForwardingUpsertWithWhereUniqueWithoutFromFrontdeskInput | FrontdeskForwardingUpsertWithWhereUniqueWithoutFromFrontdeskInput[]
+    createMany?: FrontdeskForwardingCreateManyFromFrontdeskInputEnvelope
+    set?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    disconnect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    delete?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    update?: FrontdeskForwardingUpdateWithWhereUniqueWithoutFromFrontdeskInput | FrontdeskForwardingUpdateWithWhereUniqueWithoutFromFrontdeskInput[]
+    updateMany?: FrontdeskForwardingUpdateManyWithWhereWithoutFromFrontdeskInput | FrontdeskForwardingUpdateManyWithWhereWithoutFromFrontdeskInput[]
+    deleteMany?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
+  }
+
+  export type FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutToFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput> | FrontdeskForwardingCreateWithoutToFrontdeskInput[] | FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutToFrontdeskInput | FrontdeskForwardingCreateOrConnectWithoutToFrontdeskInput[]
+    upsert?: FrontdeskForwardingUpsertWithWhereUniqueWithoutToFrontdeskInput | FrontdeskForwardingUpsertWithWhereUniqueWithoutToFrontdeskInput[]
+    createMany?: FrontdeskForwardingCreateManyToFrontdeskInputEnvelope
+    set?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    disconnect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    delete?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    update?: FrontdeskForwardingUpdateWithWhereUniqueWithoutToFrontdeskInput | FrontdeskForwardingUpdateWithWhereUniqueWithoutToFrontdeskInput[]
+    updateMany?: FrontdeskForwardingUpdateManyWithWhereWithoutToFrontdeskInput | FrontdeskForwardingUpdateManyWithWhereWithoutToFrontdeskInput[]
+    deleteMany?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
+  }
+
+  export type OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput> | OfficerForwardingHistoryCreateWithoutFromOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput[]
+    upsert?: OfficerForwardingHistoryUpsertWithWhereUniqueWithoutFromOfficerInput | OfficerForwardingHistoryUpsertWithWhereUniqueWithoutFromOfficerInput[]
+    createMany?: OfficerForwardingHistoryCreateManyFromOfficerInputEnvelope
+    set?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    disconnect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    delete?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    update?: OfficerForwardingHistoryUpdateWithWhereUniqueWithoutFromOfficerInput | OfficerForwardingHistoryUpdateWithWhereUniqueWithoutFromOfficerInput[]
+    updateMany?: OfficerForwardingHistoryUpdateManyWithWhereWithoutFromOfficerInput | OfficerForwardingHistoryUpdateManyWithWhereWithoutFromOfficerInput[]
+    deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
+  }
+
+  export type OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutToOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput> | OfficerForwardingHistoryCreateWithoutToOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutToOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutToOfficerInput[]
+    upsert?: OfficerForwardingHistoryUpsertWithWhereUniqueWithoutToOfficerInput | OfficerForwardingHistoryUpsertWithWhereUniqueWithoutToOfficerInput[]
+    createMany?: OfficerForwardingHistoryCreateManyToOfficerInputEnvelope
+    set?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    disconnect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    delete?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    update?: OfficerForwardingHistoryUpdateWithWhereUniqueWithoutToOfficerInput | OfficerForwardingHistoryUpdateWithWhereUniqueWithoutToOfficerInput[]
+    updateMany?: OfficerForwardingHistoryUpdateManyWithWhereWithoutToOfficerInput | OfficerForwardingHistoryUpdateManyWithWhereWithoutToOfficerInput[]
+    deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
+  }
+
   export type CitizenProfileUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
@@ -23819,20 +30079,6 @@ export namespace Prisma {
     delete?: OfficerProfileWhereInput | boolean
     connect?: OfficerProfileWhereUniqueInput
     update?: XOR<XOR<OfficerProfileUpdateToOneWithWhereWithoutUserInput, OfficerProfileUpdateWithoutUserInput>, OfficerProfileUncheckedUpdateWithoutUserInput>
-  }
-
-  export type ApplicationUncheckedUpdateManyWithoutCitizenNestedInput = {
-    create?: XOR<ApplicationCreateWithoutCitizenInput, ApplicationUncheckedCreateWithoutCitizenInput> | ApplicationCreateWithoutCitizenInput[] | ApplicationUncheckedCreateWithoutCitizenInput[]
-    connectOrCreate?: ApplicationCreateOrConnectWithoutCitizenInput | ApplicationCreateOrConnectWithoutCitizenInput[]
-    upsert?: ApplicationUpsertWithWhereUniqueWithoutCitizenInput | ApplicationUpsertWithWhereUniqueWithoutCitizenInput[]
-    createMany?: ApplicationCreateManyCitizenInputEnvelope
-    set?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    disconnect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    delete?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-    update?: ApplicationUpdateWithWhereUniqueWithoutCitizenInput | ApplicationUpdateWithWhereUniqueWithoutCitizenInput[]
-    updateMany?: ApplicationUpdateManyWithWhereWithoutCitizenInput | ApplicationUpdateManyWithWhereWithoutCitizenInput[]
-    deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
   export type ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput = {
@@ -23975,6 +30221,76 @@ export namespace Prisma {
     deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
   }
 
+  export type FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
+    upsert?: FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput[]
+    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
+    set?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    disconnect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    delete?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    update?: FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput[]
+    updateMany?: FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput | FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput[]
+    deleteMany?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutFromFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput> | FrontdeskForwardingCreateWithoutFromFrontdeskInput[] | FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutFromFrontdeskInput | FrontdeskForwardingCreateOrConnectWithoutFromFrontdeskInput[]
+    upsert?: FrontdeskForwardingUpsertWithWhereUniqueWithoutFromFrontdeskInput | FrontdeskForwardingUpsertWithWhereUniqueWithoutFromFrontdeskInput[]
+    createMany?: FrontdeskForwardingCreateManyFromFrontdeskInputEnvelope
+    set?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    disconnect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    delete?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    update?: FrontdeskForwardingUpdateWithWhereUniqueWithoutFromFrontdeskInput | FrontdeskForwardingUpdateWithWhereUniqueWithoutFromFrontdeskInput[]
+    updateMany?: FrontdeskForwardingUpdateManyWithWhereWithoutFromFrontdeskInput | FrontdeskForwardingUpdateManyWithWhereWithoutFromFrontdeskInput[]
+    deleteMany?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutToFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput> | FrontdeskForwardingCreateWithoutToFrontdeskInput[] | FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutToFrontdeskInput | FrontdeskForwardingCreateOrConnectWithoutToFrontdeskInput[]
+    upsert?: FrontdeskForwardingUpsertWithWhereUniqueWithoutToFrontdeskInput | FrontdeskForwardingUpsertWithWhereUniqueWithoutToFrontdeskInput[]
+    createMany?: FrontdeskForwardingCreateManyToFrontdeskInputEnvelope
+    set?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    disconnect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    delete?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    update?: FrontdeskForwardingUpdateWithWhereUniqueWithoutToFrontdeskInput | FrontdeskForwardingUpdateWithWhereUniqueWithoutToFrontdeskInput[]
+    updateMany?: FrontdeskForwardingUpdateManyWithWhereWithoutToFrontdeskInput | FrontdeskForwardingUpdateManyWithWhereWithoutToFrontdeskInput[]
+    deleteMany?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput> | OfficerForwardingHistoryCreateWithoutFromOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput[]
+    upsert?: OfficerForwardingHistoryUpsertWithWhereUniqueWithoutFromOfficerInput | OfficerForwardingHistoryUpsertWithWhereUniqueWithoutFromOfficerInput[]
+    createMany?: OfficerForwardingHistoryCreateManyFromOfficerInputEnvelope
+    set?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    disconnect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    delete?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    update?: OfficerForwardingHistoryUpdateWithWhereUniqueWithoutFromOfficerInput | OfficerForwardingHistoryUpdateWithWhereUniqueWithoutFromOfficerInput[]
+    updateMany?: OfficerForwardingHistoryUpdateManyWithWhereWithoutFromOfficerInput | OfficerForwardingHistoryUpdateManyWithWhereWithoutFromOfficerInput[]
+    deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutToOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput> | OfficerForwardingHistoryCreateWithoutToOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutToOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutToOfficerInput[]
+    upsert?: OfficerForwardingHistoryUpsertWithWhereUniqueWithoutToOfficerInput | OfficerForwardingHistoryUpsertWithWhereUniqueWithoutToOfficerInput[]
+    createMany?: OfficerForwardingHistoryCreateManyToOfficerInputEnvelope
+    set?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    disconnect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    delete?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    update?: OfficerForwardingHistoryUpdateWithWhereUniqueWithoutToOfficerInput | OfficerForwardingHistoryUpdateWithWhereUniqueWithoutToOfficerInput[]
+    updateMany?: OfficerForwardingHistoryUpdateManyWithWhereWithoutToOfficerInput | OfficerForwardingHistoryUpdateManyWithWhereWithoutToOfficerInput[]
+    deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutCitizenProfileInput = {
     create?: XOR<UserCreateWithoutCitizenProfileInput, UserUncheckedCreateWithoutCitizenProfileInput>
     connectOrCreate?: UserCreateOrConnectWithoutCitizenProfileInput
@@ -23995,12 +30311,84 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type FrontdeskOfficerCreateNestedManyWithoutOfficerInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput> | FrontdeskOfficerCreateWithoutOfficerInput[] | FrontdeskOfficerUncheckedCreateWithoutOfficerInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutOfficerInput | FrontdeskOfficerCreateOrConnectWithoutOfficerInput[]
+    createMany?: FrontdeskOfficerCreateManyOfficerInputEnvelope
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+  }
+
+  export type FrontdeskOfficerUncheckedCreateNestedManyWithoutOfficerInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput> | FrontdeskOfficerCreateWithoutOfficerInput[] | FrontdeskOfficerUncheckedCreateWithoutOfficerInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutOfficerInput | FrontdeskOfficerCreateOrConnectWithoutOfficerInput[]
+    createMany?: FrontdeskOfficerCreateManyOfficerInputEnvelope
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+  }
+
   export type UserUpdateOneRequiredWithoutOfficerProfileNestedInput = {
     create?: XOR<UserCreateWithoutOfficerProfileInput, UserUncheckedCreateWithoutOfficerProfileInput>
     connectOrCreate?: UserCreateOrConnectWithoutOfficerProfileInput
     upsert?: UserUpsertWithoutOfficerProfileInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOfficerProfileInput, UserUpdateWithoutOfficerProfileInput>, UserUncheckedUpdateWithoutOfficerProfileInput>
+  }
+
+  export type FrontdeskOfficerUpdateManyWithoutOfficerNestedInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput> | FrontdeskOfficerCreateWithoutOfficerInput[] | FrontdeskOfficerUncheckedCreateWithoutOfficerInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutOfficerInput | FrontdeskOfficerCreateOrConnectWithoutOfficerInput[]
+    upsert?: FrontdeskOfficerUpsertWithWhereUniqueWithoutOfficerInput | FrontdeskOfficerUpsertWithWhereUniqueWithoutOfficerInput[]
+    createMany?: FrontdeskOfficerCreateManyOfficerInputEnvelope
+    set?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    disconnect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    delete?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    update?: FrontdeskOfficerUpdateWithWhereUniqueWithoutOfficerInput | FrontdeskOfficerUpdateWithWhereUniqueWithoutOfficerInput[]
+    updateMany?: FrontdeskOfficerUpdateManyWithWhereWithoutOfficerInput | FrontdeskOfficerUpdateManyWithWhereWithoutOfficerInput[]
+    deleteMany?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+  }
+
+  export type FrontdeskOfficerUncheckedUpdateManyWithoutOfficerNestedInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput> | FrontdeskOfficerCreateWithoutOfficerInput[] | FrontdeskOfficerUncheckedCreateWithoutOfficerInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutOfficerInput | FrontdeskOfficerCreateOrConnectWithoutOfficerInput[]
+    upsert?: FrontdeskOfficerUpsertWithWhereUniqueWithoutOfficerInput | FrontdeskOfficerUpsertWithWhereUniqueWithoutOfficerInput[]
+    createMany?: FrontdeskOfficerCreateManyOfficerInputEnvelope
+    set?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    disconnect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    delete?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    update?: FrontdeskOfficerUpdateWithWhereUniqueWithoutOfficerInput | FrontdeskOfficerUpdateWithWhereUniqueWithoutOfficerInput[]
+    updateMany?: FrontdeskOfficerUpdateManyWithWhereWithoutOfficerInput | FrontdeskOfficerUpdateManyWithWhereWithoutOfficerInput[]
+    deleteMany?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutFrontdeskAssignmentsInput = {
+    create?: XOR<UserCreateWithoutFrontdeskAssignmentsInput, UserUncheckedCreateWithoutFrontdeskAssignmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFrontdeskAssignmentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type OfficerProfileCreateNestedOneWithoutFrontdeskUsersInput = {
+    create?: XOR<OfficerProfileCreateWithoutFrontdeskUsersInput, OfficerProfileUncheckedCreateWithoutFrontdeskUsersInput>
+    connectOrCreate?: OfficerProfileCreateOrConnectWithoutFrontdeskUsersInput
+    connect?: OfficerProfileWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutFrontdeskAssignmentsNestedInput = {
+    create?: XOR<UserCreateWithoutFrontdeskAssignmentsInput, UserUncheckedCreateWithoutFrontdeskAssignmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFrontdeskAssignmentsInput
+    upsert?: UserUpsertWithoutFrontdeskAssignmentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFrontdeskAssignmentsInput, UserUpdateWithoutFrontdeskAssignmentsInput>, UserUncheckedUpdateWithoutFrontdeskAssignmentsInput>
+  }
+
+  export type OfficerProfileUpdateOneWithoutFrontdeskUsersNestedInput = {
+    create?: XOR<OfficerProfileCreateWithoutFrontdeskUsersInput, OfficerProfileUncheckedCreateWithoutFrontdeskUsersInput>
+    connectOrCreate?: OfficerProfileCreateOrConnectWithoutFrontdeskUsersInput
+    upsert?: OfficerProfileUpsertWithoutFrontdeskUsersInput
+    disconnect?: OfficerProfileWhereInput | boolean
+    delete?: OfficerProfileWhereInput | boolean
+    connect?: OfficerProfileWhereUniqueInput
+    update?: XOR<XOR<OfficerProfileUpdateToOneWithWhereWithoutFrontdeskUsersInput, OfficerProfileUpdateWithoutFrontdeskUsersInput>, OfficerProfileUncheckedUpdateWithoutFrontdeskUsersInput>
   }
 
   export type ApplicationCreateNestedManyWithoutServiceCategoryInput = {
@@ -24059,12 +30447,6 @@ export namespace Prisma {
     connect?: ServiceCategoryWhereUniqueInput
   }
 
-  export type UserCreateNestedOneWithoutApplicationsInput = {
-    create?: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutApplicationsInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type UserCreateNestedOneWithoutCurrentHolderFilesInput = {
     create?: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
     connectOrCreate?: UserCreateOrConnectWithoutCurrentHolderFilesInput
@@ -24119,6 +30501,20 @@ export namespace Prisma {
     connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
   }
 
+  export type FrontdeskForwardingCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutApplicationInput, FrontdeskForwardingUncheckedCreateWithoutApplicationInput> | FrontdeskForwardingCreateWithoutApplicationInput[] | FrontdeskForwardingUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutApplicationInput | FrontdeskForwardingCreateOrConnectWithoutApplicationInput[]
+    createMany?: FrontdeskForwardingCreateManyApplicationInputEnvelope
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+  }
+
+  export type OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutApplicationInput, OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput> | OfficerForwardingHistoryCreateWithoutApplicationInput[] | OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput | OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput[]
+    createMany?: OfficerForwardingHistoryCreateManyApplicationInputEnvelope
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+  }
+
   export type ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput = {
     create?: XOR<ApplicationWorkflowCreateWithoutApplicationInput, ApplicationWorkflowUncheckedCreateWithoutApplicationInput> | ApplicationWorkflowCreateWithoutApplicationInput[] | ApplicationWorkflowUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutApplicationInput | ApplicationWorkflowCreateOrConnectWithoutApplicationInput[]
@@ -24167,6 +30563,20 @@ export namespace Prisma {
     connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
   }
 
+  export type FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutApplicationInput, FrontdeskForwardingUncheckedCreateWithoutApplicationInput> | FrontdeskForwardingCreateWithoutApplicationInput[] | FrontdeskForwardingUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutApplicationInput | FrontdeskForwardingCreateOrConnectWithoutApplicationInput[]
+    createMany?: FrontdeskForwardingCreateManyApplicationInputEnvelope
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+  }
+
+  export type OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutApplicationInput, OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput> | OfficerForwardingHistoryCreateWithoutApplicationInput[] | OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput | OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput[]
+    createMany?: OfficerForwardingHistoryCreateManyApplicationInputEnvelope
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+  }
+
   export type EnumApplicationStatusFieldUpdateOperationsInput = {
     set?: $Enums.ApplicationStatus
   }
@@ -24177,14 +30587,6 @@ export namespace Prisma {
     upsert?: ServiceCategoryUpsertWithoutApplicationsInput
     connect?: ServiceCategoryWhereUniqueInput
     update?: XOR<XOR<ServiceCategoryUpdateToOneWithWhereWithoutApplicationsInput, ServiceCategoryUpdateWithoutApplicationsInput>, ServiceCategoryUncheckedUpdateWithoutApplicationsInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutApplicationsNestedInput = {
-    create?: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutApplicationsInput
-    upsert?: UserUpsertWithoutApplicationsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApplicationsInput, UserUpdateWithoutApplicationsInput>, UserUncheckedUpdateWithoutApplicationsInput>
   }
 
   export type UserUpdateOneWithoutCurrentHolderFilesNestedInput = {
@@ -24291,6 +30693,34 @@ export namespace Prisma {
     deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
   }
 
+  export type FrontdeskForwardingUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutApplicationInput, FrontdeskForwardingUncheckedCreateWithoutApplicationInput> | FrontdeskForwardingCreateWithoutApplicationInput[] | FrontdeskForwardingUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutApplicationInput | FrontdeskForwardingCreateOrConnectWithoutApplicationInput[]
+    upsert?: FrontdeskForwardingUpsertWithWhereUniqueWithoutApplicationInput | FrontdeskForwardingUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: FrontdeskForwardingCreateManyApplicationInputEnvelope
+    set?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    disconnect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    delete?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    update?: FrontdeskForwardingUpdateWithWhereUniqueWithoutApplicationInput | FrontdeskForwardingUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: FrontdeskForwardingUpdateManyWithWhereWithoutApplicationInput | FrontdeskForwardingUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
+  }
+
+  export type OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutApplicationInput, OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput> | OfficerForwardingHistoryCreateWithoutApplicationInput[] | OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput | OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput[]
+    upsert?: OfficerForwardingHistoryUpsertWithWhereUniqueWithoutApplicationInput | OfficerForwardingHistoryUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: OfficerForwardingHistoryCreateManyApplicationInputEnvelope
+    set?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    disconnect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    delete?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    update?: OfficerForwardingHistoryUpdateWithWhereUniqueWithoutApplicationInput | OfficerForwardingHistoryUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: OfficerForwardingHistoryUpdateManyWithWhereWithoutApplicationInput | OfficerForwardingHistoryUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
+  }
+
   export type ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput = {
     create?: XOR<ApplicationWorkflowCreateWithoutApplicationInput, ApplicationWorkflowUncheckedCreateWithoutApplicationInput> | ApplicationWorkflowCreateWithoutApplicationInput[] | ApplicationWorkflowUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutApplicationInput | ApplicationWorkflowCreateOrConnectWithoutApplicationInput[]
@@ -24383,6 +30813,34 @@ export namespace Prisma {
     update?: ApplicationAuditLogUpdateWithWhereUniqueWithoutApplicationInput | ApplicationAuditLogUpdateWithWhereUniqueWithoutApplicationInput[]
     updateMany?: ApplicationAuditLogUpdateManyWithWhereWithoutApplicationInput | ApplicationAuditLogUpdateManyWithWhereWithoutApplicationInput[]
     deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<FrontdeskForwardingCreateWithoutApplicationInput, FrontdeskForwardingUncheckedCreateWithoutApplicationInput> | FrontdeskForwardingCreateWithoutApplicationInput[] | FrontdeskForwardingUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutApplicationInput | FrontdeskForwardingCreateOrConnectWithoutApplicationInput[]
+    upsert?: FrontdeskForwardingUpsertWithWhereUniqueWithoutApplicationInput | FrontdeskForwardingUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: FrontdeskForwardingCreateManyApplicationInputEnvelope
+    set?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    disconnect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    delete?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+    update?: FrontdeskForwardingUpdateWithWhereUniqueWithoutApplicationInput | FrontdeskForwardingUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: FrontdeskForwardingUpdateManyWithWhereWithoutApplicationInput | FrontdeskForwardingUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutApplicationInput, OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput> | OfficerForwardingHistoryCreateWithoutApplicationInput[] | OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput | OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput[]
+    upsert?: OfficerForwardingHistoryUpsertWithWhereUniqueWithoutApplicationInput | OfficerForwardingHistoryUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: OfficerForwardingHistoryCreateManyApplicationInputEnvelope
+    set?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    disconnect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    delete?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+    update?: OfficerForwardingHistoryUpdateWithWhereUniqueWithoutApplicationInput | OfficerForwardingHistoryUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: OfficerForwardingHistoryUpdateManyWithWhereWithoutApplicationInput | OfficerForwardingHistoryUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
   }
 
   export type ApplicationCreateNestedOneWithoutWorkflowInput = {
@@ -24631,6 +31089,90 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type ApplicationCreateNestedOneWithoutFrontdeskForwardingsInput = {
+    create?: XOR<ApplicationCreateWithoutFrontdeskForwardingsInput, ApplicationUncheckedCreateWithoutFrontdeskForwardingsInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutFrontdeskForwardingsInput
+    connect?: ApplicationWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutForwardedFromInput = {
+    create?: XOR<UserCreateWithoutForwardedFromInput, UserUncheckedCreateWithoutForwardedFromInput>
+    connectOrCreate?: UserCreateOrConnectWithoutForwardedFromInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutForwardedToInput = {
+    create?: XOR<UserCreateWithoutForwardedToInput, UserUncheckedCreateWithoutForwardedToInput>
+    connectOrCreate?: UserCreateOrConnectWithoutForwardedToInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ApplicationUpdateOneRequiredWithoutFrontdeskForwardingsNestedInput = {
+    create?: XOR<ApplicationCreateWithoutFrontdeskForwardingsInput, ApplicationUncheckedCreateWithoutFrontdeskForwardingsInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutFrontdeskForwardingsInput
+    upsert?: ApplicationUpsertWithoutFrontdeskForwardingsInput
+    connect?: ApplicationWhereUniqueInput
+    update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutFrontdeskForwardingsInput, ApplicationUpdateWithoutFrontdeskForwardingsInput>, ApplicationUncheckedUpdateWithoutFrontdeskForwardingsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutForwardedFromNestedInput = {
+    create?: XOR<UserCreateWithoutForwardedFromInput, UserUncheckedCreateWithoutForwardedFromInput>
+    connectOrCreate?: UserCreateOrConnectWithoutForwardedFromInput
+    upsert?: UserUpsertWithoutForwardedFromInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutForwardedFromInput, UserUpdateWithoutForwardedFromInput>, UserUncheckedUpdateWithoutForwardedFromInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutForwardedToNestedInput = {
+    create?: XOR<UserCreateWithoutForwardedToInput, UserUncheckedCreateWithoutForwardedToInput>
+    connectOrCreate?: UserCreateOrConnectWithoutForwardedToInput
+    upsert?: UserUpsertWithoutForwardedToInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutForwardedToInput, UserUpdateWithoutForwardedToInput>, UserUncheckedUpdateWithoutForwardedToInput>
+  }
+
+  export type ApplicationCreateNestedOneWithoutOfficerForwardingsInput = {
+    create?: XOR<ApplicationCreateWithoutOfficerForwardingsInput, ApplicationUncheckedCreateWithoutOfficerForwardingsInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutOfficerForwardingsInput
+    connect?: ApplicationWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutOfficerForwardedFromInput = {
+    create?: XOR<UserCreateWithoutOfficerForwardedFromInput, UserUncheckedCreateWithoutOfficerForwardedFromInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOfficerForwardedFromInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutOfficerForwardedToInput = {
+    create?: XOR<UserCreateWithoutOfficerForwardedToInput, UserUncheckedCreateWithoutOfficerForwardedToInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOfficerForwardedToInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ApplicationUpdateOneRequiredWithoutOfficerForwardingsNestedInput = {
+    create?: XOR<ApplicationCreateWithoutOfficerForwardingsInput, ApplicationUncheckedCreateWithoutOfficerForwardingsInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutOfficerForwardingsInput
+    upsert?: ApplicationUpsertWithoutOfficerForwardingsInput
+    connect?: ApplicationWhereUniqueInput
+    update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutOfficerForwardingsInput, ApplicationUpdateWithoutOfficerForwardingsInput>, ApplicationUncheckedUpdateWithoutOfficerForwardingsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutOfficerForwardedFromNestedInput = {
+    create?: XOR<UserCreateWithoutOfficerForwardedFromInput, UserUncheckedCreateWithoutOfficerForwardedFromInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOfficerForwardedFromInput
+    upsert?: UserUpsertWithoutOfficerForwardedFromInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOfficerForwardedFromInput, UserUpdateWithoutOfficerForwardedFromInput>, UserUncheckedUpdateWithoutOfficerForwardedFromInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutOfficerForwardedToNestedInput = {
+    create?: XOR<UserCreateWithoutOfficerForwardedToInput, UserUncheckedCreateWithoutOfficerForwardedToInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOfficerForwardedToInput
+    upsert?: UserUpsertWithoutOfficerForwardedToInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOfficerForwardedToInput, UserUpdateWithoutOfficerForwardedToInput>, UserUncheckedUpdateWithoutOfficerForwardedToInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -24976,6 +31518,7 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    frontdeskUsers?: FrontdeskOfficerCreateNestedManyWithoutOfficerInput
   }
 
   export type OfficerProfileUncheckedCreateWithoutUserInput = {
@@ -24987,6 +31530,7 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    frontdeskUsers?: FrontdeskOfficerUncheckedCreateNestedManyWithoutOfficerInput
   }
 
   export type OfficerProfileCreateOrConnectWithoutUserInput = {
@@ -24994,59 +31538,16 @@ export namespace Prisma {
     create: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
   }
 
-  export type ApplicationCreateWithoutCitizenInput = {
-    id?: string
-    rrNumber?: string | null
-    status?: $Enums.ApplicationStatus
-    submittedAt?: Date | string | null
-    validatedAt?: Date | string | null
-    completedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
-  }
-
-  export type ApplicationUncheckedCreateWithoutCitizenInput = {
-    id?: string
-    rrNumber?: string | null
-    serviceCategoryId: string
-    status?: $Enums.ApplicationStatus
-    currentHolderId?: string | null
-    submittedAt?: Date | string | null
-    validatedAt?: Date | string | null
-    completedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
-  }
-
-  export type ApplicationCreateOrConnectWithoutCitizenInput = {
-    where: ApplicationWhereUniqueInput
-    create: XOR<ApplicationCreateWithoutCitizenInput, ApplicationUncheckedCreateWithoutCitizenInput>
-  }
-
-  export type ApplicationCreateManyCitizenInputEnvelope = {
-    data: ApplicationCreateManyCitizenInput | ApplicationCreateManyCitizenInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ApplicationCreateWithoutCurrentHolderInput = {
     id?: string
     rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -25054,7 +31555,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    citizen: UserCreateNestedOneWithoutApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -25062,13 +31562,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutCurrentHolderInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -25082,6 +31590,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutCurrentHolderInput = {
@@ -25382,6 +31892,160 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FrontdeskOfficerCreateWithoutFrontdeskUserInput = {
+    id?: string
+    createdAt?: Date | string
+    officer?: OfficerProfileCreateNestedOneWithoutFrontdeskUsersInput
+  }
+
+  export type FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput = {
+    id?: string
+    officerId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    create: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput>
+  }
+
+  export type FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope = {
+    data: FrontdeskOfficerCreateManyFrontdeskUserInput | FrontdeskOfficerCreateManyFrontdeskUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FrontdeskForwardingCreateWithoutFromFrontdeskInput = {
+    id?: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutFrontdeskForwardingsInput
+    toFrontdesk: UserCreateNestedOneWithoutForwardedToInput
+  }
+
+  export type FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput = {
+    id?: string
+    applicationId: string
+    toFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskForwardingCreateOrConnectWithoutFromFrontdeskInput = {
+    where: FrontdeskForwardingWhereUniqueInput
+    create: XOR<FrontdeskForwardingCreateWithoutFromFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput>
+  }
+
+  export type FrontdeskForwardingCreateManyFromFrontdeskInputEnvelope = {
+    data: FrontdeskForwardingCreateManyFromFrontdeskInput | FrontdeskForwardingCreateManyFromFrontdeskInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FrontdeskForwardingCreateWithoutToFrontdeskInput = {
+    id?: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutFrontdeskForwardingsInput
+    fromFrontdesk: UserCreateNestedOneWithoutForwardedFromInput
+  }
+
+  export type FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput = {
+    id?: string
+    applicationId: string
+    fromFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskForwardingCreateOrConnectWithoutToFrontdeskInput = {
+    where: FrontdeskForwardingWhereUniqueInput
+    create: XOR<FrontdeskForwardingCreateWithoutToFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput>
+  }
+
+  export type FrontdeskForwardingCreateManyToFrontdeskInputEnvelope = {
+    data: FrontdeskForwardingCreateManyToFrontdeskInput | FrontdeskForwardingCreateManyToFrontdeskInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OfficerForwardingHistoryCreateWithoutFromOfficerInput = {
+    id?: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
+    application: ApplicationCreateNestedOneWithoutOfficerForwardingsInput
+    toOfficer: UserCreateNestedOneWithoutOfficerForwardedToInput
+  }
+
+  export type OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput = {
+    id?: string
+    applicationId: string
+    toOfficerId: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput = {
+    where: OfficerForwardingHistoryWhereUniqueInput
+    create: XOR<OfficerForwardingHistoryCreateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput>
+  }
+
+  export type OfficerForwardingHistoryCreateManyFromOfficerInputEnvelope = {
+    data: OfficerForwardingHistoryCreateManyFromOfficerInput | OfficerForwardingHistoryCreateManyFromOfficerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OfficerForwardingHistoryCreateWithoutToOfficerInput = {
+    id?: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
+    application: ApplicationCreateNestedOneWithoutOfficerForwardingsInput
+    fromOfficer: UserCreateNestedOneWithoutOfficerForwardedFromInput
+  }
+
+  export type OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput = {
+    id?: string
+    applicationId: string
+    fromOfficerId: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type OfficerForwardingHistoryCreateOrConnectWithoutToOfficerInput = {
+    where: OfficerForwardingHistoryWhereUniqueInput
+    create: XOR<OfficerForwardingHistoryCreateWithoutToOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput>
+  }
+
+  export type OfficerForwardingHistoryCreateManyToOfficerInputEnvelope = {
+    data: OfficerForwardingHistoryCreateManyToOfficerInput | OfficerForwardingHistoryCreateManyToOfficerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CitizenProfileUpsertWithoutUserInput = {
     update: XOR<CitizenProfileUpdateWithoutUserInput, CitizenProfileUncheckedUpdateWithoutUserInput>
     create: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
@@ -25433,6 +32097,7 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    frontdeskUsers?: FrontdeskOfficerUpdateManyWithoutOfficerNestedInput
   }
 
   export type OfficerProfileUncheckedUpdateWithoutUserInput = {
@@ -25444,39 +32109,7 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ApplicationUpsertWithWhereUniqueWithoutCitizenInput = {
-    where: ApplicationWhereUniqueInput
-    update: XOR<ApplicationUpdateWithoutCitizenInput, ApplicationUncheckedUpdateWithoutCitizenInput>
-    create: XOR<ApplicationCreateWithoutCitizenInput, ApplicationUncheckedCreateWithoutCitizenInput>
-  }
-
-  export type ApplicationUpdateWithWhereUniqueWithoutCitizenInput = {
-    where: ApplicationWhereUniqueInput
-    data: XOR<ApplicationUpdateWithoutCitizenInput, ApplicationUncheckedUpdateWithoutCitizenInput>
-  }
-
-  export type ApplicationUpdateManyWithWhereWithoutCitizenInput = {
-    where: ApplicationScalarWhereInput
-    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutCitizenInput>
-  }
-
-  export type ApplicationScalarWhereInput = {
-    AND?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
-    OR?: ApplicationScalarWhereInput[]
-    NOT?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
-    id?: StringFilter<"Application"> | string
-    rrNumber?: StringNullableFilter<"Application"> | string | null
-    serviceCategoryId?: StringFilter<"Application"> | string
-    citizenId?: StringFilter<"Application"> | string
-    status?: EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
-    currentHolderId?: StringNullableFilter<"Application"> | string | null
-    submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    validatedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    createdAt?: DateTimeFilter<"Application"> | Date | string
-    updatedAt?: DateTimeFilter<"Application"> | Date | string
+    frontdeskUsers?: FrontdeskOfficerUncheckedUpdateManyWithoutOfficerNestedInput
   }
 
   export type ApplicationUpsertWithWhereUniqueWithoutCurrentHolderInput = {
@@ -25493,6 +32126,29 @@ export namespace Prisma {
   export type ApplicationUpdateManyWithWhereWithoutCurrentHolderInput = {
     where: ApplicationScalarWhereInput
     data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutCurrentHolderInput>
+  }
+
+  export type ApplicationScalarWhereInput = {
+    AND?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+    OR?: ApplicationScalarWhereInput[]
+    NOT?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+    id?: StringFilter<"Application"> | string
+    rrNumber?: StringNullableFilter<"Application"> | string | null
+    serviceCategoryId?: StringFilter<"Application"> | string
+    subject?: StringFilter<"Application"> | string
+    citizenName?: StringFilter<"Application"> | string
+    citizenPhone?: StringFilter<"Application"> | string
+    citizenEmail?: StringNullableFilter<"Application"> | string | null
+    citizenAddress?: StringFilter<"Application"> | string
+    citizenGender?: StringNullableFilter<"Application"> | string | null
+    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
+    status?: EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
+    currentHolderId?: StringNullableFilter<"Application"> | string | null
+    submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    validatedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    createdAt?: DateTimeFilter<"Application"> | Date | string
+    updatedAt?: DateTimeFilter<"Application"> | Date | string
   }
 
   export type ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput = {
@@ -25742,6 +32398,127 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ApplicationAuditLog"> | Date | string
   }
 
+  export type FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    update: XOR<FrontdeskOfficerUpdateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedUpdateWithoutFrontdeskUserInput>
+    create: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput>
+  }
+
+  export type FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    data: XOR<FrontdeskOfficerUpdateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedUpdateWithoutFrontdeskUserInput>
+  }
+
+  export type FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput = {
+    where: FrontdeskOfficerScalarWhereInput
+    data: XOR<FrontdeskOfficerUpdateManyMutationInput, FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserInput>
+  }
+
+  export type FrontdeskOfficerScalarWhereInput = {
+    AND?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+    OR?: FrontdeskOfficerScalarWhereInput[]
+    NOT?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+    id?: StringFilter<"FrontdeskOfficer"> | string
+    frontdeskUserId?: StringFilter<"FrontdeskOfficer"> | string
+    officerId?: StringNullableFilter<"FrontdeskOfficer"> | string | null
+    createdAt?: DateTimeFilter<"FrontdeskOfficer"> | Date | string
+  }
+
+  export type FrontdeskForwardingUpsertWithWhereUniqueWithoutFromFrontdeskInput = {
+    where: FrontdeskForwardingWhereUniqueInput
+    update: XOR<FrontdeskForwardingUpdateWithoutFromFrontdeskInput, FrontdeskForwardingUncheckedUpdateWithoutFromFrontdeskInput>
+    create: XOR<FrontdeskForwardingCreateWithoutFromFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutFromFrontdeskInput>
+  }
+
+  export type FrontdeskForwardingUpdateWithWhereUniqueWithoutFromFrontdeskInput = {
+    where: FrontdeskForwardingWhereUniqueInput
+    data: XOR<FrontdeskForwardingUpdateWithoutFromFrontdeskInput, FrontdeskForwardingUncheckedUpdateWithoutFromFrontdeskInput>
+  }
+
+  export type FrontdeskForwardingUpdateManyWithWhereWithoutFromFrontdeskInput = {
+    where: FrontdeskForwardingScalarWhereInput
+    data: XOR<FrontdeskForwardingUpdateManyMutationInput, FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskInput>
+  }
+
+  export type FrontdeskForwardingScalarWhereInput = {
+    AND?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
+    OR?: FrontdeskForwardingScalarWhereInput[]
+    NOT?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
+    id?: StringFilter<"FrontdeskForwarding"> | string
+    applicationId?: StringFilter<"FrontdeskForwarding"> | string
+    fromFrontdeskId?: StringFilter<"FrontdeskForwarding"> | string
+    toFrontdeskId?: StringFilter<"FrontdeskForwarding"> | string
+    fromOfficerId?: StringFilter<"FrontdeskForwarding"> | string
+    toOfficerId?: StringFilter<"FrontdeskForwarding"> | string
+    instructions?: StringNullableFilter<"FrontdeskForwarding"> | string | null
+    isActive?: BoolFilter<"FrontdeskForwarding"> | boolean
+    createdAt?: DateTimeFilter<"FrontdeskForwarding"> | Date | string
+  }
+
+  export type FrontdeskForwardingUpsertWithWhereUniqueWithoutToFrontdeskInput = {
+    where: FrontdeskForwardingWhereUniqueInput
+    update: XOR<FrontdeskForwardingUpdateWithoutToFrontdeskInput, FrontdeskForwardingUncheckedUpdateWithoutToFrontdeskInput>
+    create: XOR<FrontdeskForwardingCreateWithoutToFrontdeskInput, FrontdeskForwardingUncheckedCreateWithoutToFrontdeskInput>
+  }
+
+  export type FrontdeskForwardingUpdateWithWhereUniqueWithoutToFrontdeskInput = {
+    where: FrontdeskForwardingWhereUniqueInput
+    data: XOR<FrontdeskForwardingUpdateWithoutToFrontdeskInput, FrontdeskForwardingUncheckedUpdateWithoutToFrontdeskInput>
+  }
+
+  export type FrontdeskForwardingUpdateManyWithWhereWithoutToFrontdeskInput = {
+    where: FrontdeskForwardingScalarWhereInput
+    data: XOR<FrontdeskForwardingUpdateManyMutationInput, FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskInput>
+  }
+
+  export type OfficerForwardingHistoryUpsertWithWhereUniqueWithoutFromOfficerInput = {
+    where: OfficerForwardingHistoryWhereUniqueInput
+    update: XOR<OfficerForwardingHistoryUpdateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedUpdateWithoutFromOfficerInput>
+    create: XOR<OfficerForwardingHistoryCreateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput>
+  }
+
+  export type OfficerForwardingHistoryUpdateWithWhereUniqueWithoutFromOfficerInput = {
+    where: OfficerForwardingHistoryWhereUniqueInput
+    data: XOR<OfficerForwardingHistoryUpdateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedUpdateWithoutFromOfficerInput>
+  }
+
+  export type OfficerForwardingHistoryUpdateManyWithWhereWithoutFromOfficerInput = {
+    where: OfficerForwardingHistoryScalarWhereInput
+    data: XOR<OfficerForwardingHistoryUpdateManyMutationInput, OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerInput>
+  }
+
+  export type OfficerForwardingHistoryScalarWhereInput = {
+    AND?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
+    OR?: OfficerForwardingHistoryScalarWhereInput[]
+    NOT?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
+    id?: StringFilter<"OfficerForwardingHistory"> | string
+    applicationId?: StringFilter<"OfficerForwardingHistory"> | string
+    fromOfficerId?: StringFilter<"OfficerForwardingHistory"> | string
+    toOfficerId?: StringFilter<"OfficerForwardingHistory"> | string
+    instructions?: StringNullableFilter<"OfficerForwardingHistory"> | string | null
+    priority?: IntFilter<"OfficerForwardingHistory"> | number
+    isActive?: BoolFilter<"OfficerForwardingHistory"> | boolean
+    createdAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
+    forwardedAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
+    completedAt?: DateTimeNullableFilter<"OfficerForwardingHistory"> | Date | string | null
+  }
+
+  export type OfficerForwardingHistoryUpsertWithWhereUniqueWithoutToOfficerInput = {
+    where: OfficerForwardingHistoryWhereUniqueInput
+    update: XOR<OfficerForwardingHistoryUpdateWithoutToOfficerInput, OfficerForwardingHistoryUncheckedUpdateWithoutToOfficerInput>
+    create: XOR<OfficerForwardingHistoryCreateWithoutToOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutToOfficerInput>
+  }
+
+  export type OfficerForwardingHistoryUpdateWithWhereUniqueWithoutToOfficerInput = {
+    where: OfficerForwardingHistoryWhereUniqueInput
+    data: XOR<OfficerForwardingHistoryUpdateWithoutToOfficerInput, OfficerForwardingHistoryUncheckedUpdateWithoutToOfficerInput>
+  }
+
+  export type OfficerForwardingHistoryUpdateManyWithWhereWithoutToOfficerInput = {
+    where: OfficerForwardingHistoryScalarWhereInput
+    data: XOR<OfficerForwardingHistoryUpdateManyMutationInput, OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerInput>
+  }
+
   export type UserCreateWithoutCitizenProfileInput = {
     id?: string
     email: string
@@ -25753,7 +32530,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
@@ -25764,6 +32540,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutCitizenProfileInput = {
@@ -25777,7 +32558,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
@@ -25788,6 +32568,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutCitizenProfileInput = {
@@ -25817,7 +32602,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
@@ -25828,6 +32612,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCitizenProfileInput = {
@@ -25841,7 +32630,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
@@ -25852,6 +32640,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserCreateWithoutOfficerProfileInput = {
@@ -25865,7 +32658,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
@@ -25876,6 +32668,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutOfficerProfileInput = {
@@ -25889,7 +32686,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
@@ -25900,11 +32696,38 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutOfficerProfileInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutOfficerProfileInput, UserUncheckedCreateWithoutOfficerProfileInput>
+  }
+
+  export type FrontdeskOfficerCreateWithoutOfficerInput = {
+    id?: string
+    createdAt?: Date | string
+    frontdeskUser: UserCreateNestedOneWithoutFrontdeskAssignmentsInput
+  }
+
+  export type FrontdeskOfficerUncheckedCreateWithoutOfficerInput = {
+    id?: string
+    frontdeskUserId: string
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskOfficerCreateOrConnectWithoutOfficerInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    create: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput>
+  }
+
+  export type FrontdeskOfficerCreateManyOfficerInputEnvelope = {
+    data: FrontdeskOfficerCreateManyOfficerInput | FrontdeskOfficerCreateManyOfficerInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserUpsertWithoutOfficerProfileInput = {
@@ -25929,7 +32752,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
@@ -25940,6 +32762,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfficerProfileInput = {
@@ -25953,7 +32780,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
@@ -25964,18 +32790,237 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type FrontdeskOfficerUpsertWithWhereUniqueWithoutOfficerInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    update: XOR<FrontdeskOfficerUpdateWithoutOfficerInput, FrontdeskOfficerUncheckedUpdateWithoutOfficerInput>
+    create: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput>
+  }
+
+  export type FrontdeskOfficerUpdateWithWhereUniqueWithoutOfficerInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    data: XOR<FrontdeskOfficerUpdateWithoutOfficerInput, FrontdeskOfficerUncheckedUpdateWithoutOfficerInput>
+  }
+
+  export type FrontdeskOfficerUpdateManyWithWhereWithoutOfficerInput = {
+    where: FrontdeskOfficerScalarWhereInput
+    data: XOR<FrontdeskOfficerUpdateManyMutationInput, FrontdeskOfficerUncheckedUpdateManyWithoutOfficerInput>
+  }
+
+  export type UserCreateWithoutFrontdeskAssignmentsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+  }
+
+  export type UserUncheckedCreateWithoutFrontdeskAssignmentsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+  }
+
+  export type UserCreateOrConnectWithoutFrontdeskAssignmentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFrontdeskAssignmentsInput, UserUncheckedCreateWithoutFrontdeskAssignmentsInput>
+  }
+
+  export type OfficerProfileCreateWithoutFrontdeskUsersInput = {
+    id?: string
+    fullName: string
+    designation: string
+    department: string
+    officeLocation?: string | null
+    isAvailable?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutOfficerProfileInput
+  }
+
+  export type OfficerProfileUncheckedCreateWithoutFrontdeskUsersInput = {
+    id?: string
+    userId: string
+    fullName: string
+    designation: string
+    department: string
+    officeLocation?: string | null
+    isAvailable?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfficerProfileCreateOrConnectWithoutFrontdeskUsersInput = {
+    where: OfficerProfileWhereUniqueInput
+    create: XOR<OfficerProfileCreateWithoutFrontdeskUsersInput, OfficerProfileUncheckedCreateWithoutFrontdeskUsersInput>
+  }
+
+  export type UserUpsertWithoutFrontdeskAssignmentsInput = {
+    update: XOR<UserUpdateWithoutFrontdeskAssignmentsInput, UserUncheckedUpdateWithoutFrontdeskAssignmentsInput>
+    create: XOR<UserCreateWithoutFrontdeskAssignmentsInput, UserUncheckedCreateWithoutFrontdeskAssignmentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFrontdeskAssignmentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFrontdeskAssignmentsInput, UserUncheckedUpdateWithoutFrontdeskAssignmentsInput>
+  }
+
+  export type UserUpdateWithoutFrontdeskAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFrontdeskAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type OfficerProfileUpsertWithoutFrontdeskUsersInput = {
+    update: XOR<OfficerProfileUpdateWithoutFrontdeskUsersInput, OfficerProfileUncheckedUpdateWithoutFrontdeskUsersInput>
+    create: XOR<OfficerProfileCreateWithoutFrontdeskUsersInput, OfficerProfileUncheckedCreateWithoutFrontdeskUsersInput>
+    where?: OfficerProfileWhereInput
+  }
+
+  export type OfficerProfileUpdateToOneWithWhereWithoutFrontdeskUsersInput = {
+    where?: OfficerProfileWhereInput
+    data: XOR<OfficerProfileUpdateWithoutFrontdeskUsersInput, OfficerProfileUncheckedUpdateWithoutFrontdeskUsersInput>
+  }
+
+  export type OfficerProfileUpdateWithoutFrontdeskUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    designation?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutOfficerProfileNestedInput
+  }
+
+  export type OfficerProfileUncheckedUpdateWithoutFrontdeskUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    designation?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ApplicationCreateWithoutServiceCategoryInput = {
     id?: string
     rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizen: UserCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
@@ -25984,12 +33029,20 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutServiceCategoryInput = {
     id?: string
     rrNumber?: string | null
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -26004,6 +33057,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutServiceCategoryInput = {
@@ -26057,59 +33112,6 @@ export namespace Prisma {
     create: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
   }
 
-  export type UserCreateWithoutApplicationsInput = {
-    id?: string
-    email: string
-    phone?: string | null
-    passwordHash?: string | null
-    role?: $Enums.UserRole
-    isActive?: boolean
-    lastLoginAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-  }
-
-  export type UserUncheckedCreateWithoutApplicationsInput = {
-    id?: string
-    email: string
-    phone?: string | null
-    passwordHash?: string | null
-    role?: $Enums.UserRole
-    isActive?: boolean
-    lastLoginAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-  }
-
-  export type UserCreateOrConnectWithoutApplicationsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
-  }
-
   export type UserCreateWithoutCurrentHolderFilesInput = {
     id?: string
     email: string
@@ -26122,7 +33124,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -26132,6 +33133,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutCurrentHolderFilesInput = {
@@ -26146,7 +33152,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -26156,6 +33161,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutCurrentHolderFilesInput = {
@@ -26378,6 +33388,72 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FrontdeskForwardingCreateWithoutApplicationInput = {
+    id?: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    fromFrontdesk: UserCreateNestedOneWithoutForwardedFromInput
+    toFrontdesk: UserCreateNestedOneWithoutForwardedToInput
+  }
+
+  export type FrontdeskForwardingUncheckedCreateWithoutApplicationInput = {
+    id?: string
+    fromFrontdeskId: string
+    toFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskForwardingCreateOrConnectWithoutApplicationInput = {
+    where: FrontdeskForwardingWhereUniqueInput
+    create: XOR<FrontdeskForwardingCreateWithoutApplicationInput, FrontdeskForwardingUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type FrontdeskForwardingCreateManyApplicationInputEnvelope = {
+    data: FrontdeskForwardingCreateManyApplicationInput | FrontdeskForwardingCreateManyApplicationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OfficerForwardingHistoryCreateWithoutApplicationInput = {
+    id?: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
+    fromOfficer: UserCreateNestedOneWithoutOfficerForwardedFromInput
+    toOfficer: UserCreateNestedOneWithoutOfficerForwardedToInput
+  }
+
+  export type OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput = {
+    id?: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput = {
+    where: OfficerForwardingHistoryWhereUniqueInput
+    create: XOR<OfficerForwardingHistoryCreateWithoutApplicationInput, OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type OfficerForwardingHistoryCreateManyApplicationInputEnvelope = {
+    data: OfficerForwardingHistoryCreateManyApplicationInput | OfficerForwardingHistoryCreateManyApplicationInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ServiceCategoryUpsertWithoutApplicationsInput = {
     update: XOR<ServiceCategoryUpdateWithoutApplicationsInput, ServiceCategoryUncheckedUpdateWithoutApplicationsInput>
     create: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
@@ -26409,65 +33485,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserUpsertWithoutApplicationsInput = {
-    update: XOR<UserUpdateWithoutApplicationsInput, UserUncheckedUpdateWithoutApplicationsInput>
-    create: XOR<UserCreateWithoutApplicationsInput, UserUncheckedCreateWithoutApplicationsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutApplicationsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutApplicationsInput, UserUncheckedUpdateWithoutApplicationsInput>
-  }
-
-  export type UserUpdateWithoutApplicationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutApplicationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-  }
-
   export type UserUpsertWithoutCurrentHolderFilesInput = {
     update: XOR<UserUpdateWithoutCurrentHolderFilesInput, UserUncheckedUpdateWithoutCurrentHolderFilesInput>
     create: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
@@ -26491,7 +33508,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -26501,6 +33517,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCurrentHolderFilesInput = {
@@ -26515,7 +33536,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -26525,6 +33545,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput = {
@@ -26654,9 +33679,48 @@ export namespace Prisma {
     data: XOR<ApplicationAuditLogUpdateManyMutationInput, ApplicationAuditLogUncheckedUpdateManyWithoutApplicationInput>
   }
 
+  export type FrontdeskForwardingUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: FrontdeskForwardingWhereUniqueInput
+    update: XOR<FrontdeskForwardingUpdateWithoutApplicationInput, FrontdeskForwardingUncheckedUpdateWithoutApplicationInput>
+    create: XOR<FrontdeskForwardingCreateWithoutApplicationInput, FrontdeskForwardingUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type FrontdeskForwardingUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: FrontdeskForwardingWhereUniqueInput
+    data: XOR<FrontdeskForwardingUpdateWithoutApplicationInput, FrontdeskForwardingUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type FrontdeskForwardingUpdateManyWithWhereWithoutApplicationInput = {
+    where: FrontdeskForwardingScalarWhereInput
+    data: XOR<FrontdeskForwardingUpdateManyMutationInput, FrontdeskForwardingUncheckedUpdateManyWithoutApplicationInput>
+  }
+
+  export type OfficerForwardingHistoryUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: OfficerForwardingHistoryWhereUniqueInput
+    update: XOR<OfficerForwardingHistoryUpdateWithoutApplicationInput, OfficerForwardingHistoryUncheckedUpdateWithoutApplicationInput>
+    create: XOR<OfficerForwardingHistoryCreateWithoutApplicationInput, OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type OfficerForwardingHistoryUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: OfficerForwardingHistoryWhereUniqueInput
+    data: XOR<OfficerForwardingHistoryUpdateWithoutApplicationInput, OfficerForwardingHistoryUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type OfficerForwardingHistoryUpdateManyWithWhereWithoutApplicationInput = {
+    where: OfficerForwardingHistoryScalarWhereInput
+    data: XOR<OfficerForwardingHistoryUpdateManyMutationInput, OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationInput>
+  }
+
   export type ApplicationCreateWithoutWorkflowInput = {
     id?: string
     rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -26664,7 +33728,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    citizen: UserCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -26672,13 +33735,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutWorkflowInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -26692,6 +33763,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutWorkflowInput = {
@@ -26711,7 +33784,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -26721,6 +33793,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutWorkflowChangesInput = {
@@ -26735,7 +33812,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -26745,6 +33821,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutWorkflowChangesInput = {
@@ -26766,6 +33847,13 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -26773,7 +33861,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    citizen?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -26781,13 +33868,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -26801,6 +33896,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutWorkflowChangesInput = {
@@ -26826,7 +33923,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -26836,6 +33932,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkflowChangesInput = {
@@ -26850,7 +33951,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -26860,11 +33960,23 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type ApplicationCreateWithoutValidationInput = {
     id?: string
     rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -26872,7 +33984,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    citizen: UserCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -26880,13 +33991,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutValidationInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -26900,6 +34019,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutValidationInput = {
@@ -26919,7 +34040,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -26929,6 +34049,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutValidationsInput = {
@@ -26943,7 +34068,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -26953,6 +34077,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutValidationsInput = {
@@ -26974,6 +34103,13 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutValidationInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -26981,7 +34117,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    citizen?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -26989,13 +34124,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutValidationInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27009,6 +34152,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutValidationsInput = {
@@ -27034,7 +34179,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -27044,6 +34188,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutValidationsInput = {
@@ -27058,7 +34207,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -27068,11 +34216,23 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type ApplicationCreateWithoutOfficerAssignmentsInput = {
     id?: string
     rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -27080,7 +34240,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    citizen: UserCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
@@ -27088,13 +34247,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutOfficerAssignmentsInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -27108,6 +34275,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutOfficerAssignmentsInput = {
@@ -27127,7 +34296,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
@@ -27137,6 +34305,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutAssignmentsGivenInput = {
@@ -27151,7 +34324,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
@@ -27161,6 +34333,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutAssignmentsGivenInput = {
@@ -27180,7 +34357,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
@@ -27190,6 +34366,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutAssignmentsReceivedInput = {
@@ -27204,7 +34385,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
@@ -27214,6 +34394,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutAssignmentsReceivedInput = {
@@ -27235,6 +34420,13 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutOfficerAssignmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27242,7 +34434,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    citizen?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
@@ -27250,13 +34441,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutOfficerAssignmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27270,6 +34469,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutAssignmentsGivenInput = {
@@ -27295,7 +34496,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
@@ -27305,6 +34505,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignmentsGivenInput = {
@@ -27319,7 +34524,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
@@ -27329,6 +34533,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUpsertWithoutAssignmentsReceivedInput = {
@@ -27354,7 +34563,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
@@ -27364,6 +34572,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignmentsReceivedInput = {
@@ -27378,7 +34591,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
@@ -27388,11 +34600,23 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type ApplicationCreateWithoutDocumentsInput = {
     id?: string
     rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -27400,7 +34624,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    citizen: UserCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
@@ -27408,13 +34631,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutDocumentsInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -27428,6 +34659,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutDocumentsInput = {
@@ -27447,7 +34680,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
@@ -27457,6 +34689,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutUploadedDocumentsInput = {
@@ -27471,7 +34708,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
@@ -27481,6 +34717,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutUploadedDocumentsInput = {
@@ -27500,7 +34741,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
@@ -27510,6 +34750,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutVerifiedDocumentsInput = {
@@ -27524,7 +34769,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
@@ -27534,6 +34778,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutVerifiedDocumentsInput = {
@@ -27555,6 +34804,13 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27562,7 +34818,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    citizen?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
@@ -27570,13 +34825,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27590,6 +34853,8 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutUploadedDocumentsInput = {
@@ -27615,7 +34880,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
@@ -27625,6 +34889,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUploadedDocumentsInput = {
@@ -27639,7 +34908,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
@@ -27649,6 +34917,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUpsertWithoutVerifiedDocumentsInput = {
@@ -27674,7 +34947,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
@@ -27684,6 +34956,11 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVerifiedDocumentsInput = {
@@ -27698,7 +34975,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
@@ -27708,11 +34984,23 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type ApplicationCreateWithoutDocumentRequestsInput = {
     id?: string
     rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -27720,7 +35008,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    citizen: UserCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
@@ -27728,13 +35015,21 @@ export namespace Prisma {
     documents?: DocumentCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutDocumentRequestsInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -27748,6 +35043,8 @@ export namespace Prisma {
     documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutDocumentRequestsInput = {
@@ -27767,7 +35064,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
@@ -27777,6 +35073,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutDocumentRequestsInput = {
@@ -27791,7 +35092,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
@@ -27801,6 +35101,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutDocumentRequestsInput = {
@@ -27822,6 +35127,13 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutDocumentRequestsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27829,7 +35141,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    citizen?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
@@ -27837,13 +35148,21 @@ export namespace Prisma {
     documents?: DocumentUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutDocumentRequestsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27857,6 +35176,8 @@ export namespace Prisma {
     documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutDocumentRequestsInput = {
@@ -27882,7 +35203,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
@@ -27892,6 +35212,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentRequestsInput = {
@@ -27906,7 +35231,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
@@ -27916,6 +35240,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserCreateWithoutNotificationsInput = {
@@ -27930,7 +35259,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
@@ -27940,6 +35268,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -27954,7 +35287,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
@@ -27964,6 +35296,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -27974,6 +35311,13 @@ export namespace Prisma {
   export type ApplicationCreateWithoutNotificationsInput = {
     id?: string
     rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -27981,7 +35325,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    citizen: UserCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
@@ -27989,13 +35332,21 @@ export namespace Prisma {
     documents?: DocumentCreateNestedManyWithoutApplicationInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutNotificationsInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -28009,6 +35360,8 @@ export namespace Prisma {
     documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutNotificationsInput = {
@@ -28039,7 +35392,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
@@ -28049,6 +35401,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -28063,7 +35420,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
@@ -28073,6 +35429,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type ApplicationUpsertWithoutNotificationsInput = {
@@ -28089,6 +35450,13 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutNotificationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28096,7 +35464,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    citizen?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
@@ -28104,13 +35471,21 @@ export namespace Prisma {
     documents?: DocumentUpdateManyWithoutApplicationNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutNotificationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28124,11 +35499,20 @@ export namespace Prisma {
     documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationCreateWithoutAuditLogsInput = {
     id?: string
     rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -28136,7 +35520,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    citizen: UserCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
@@ -28144,13 +35527,21 @@ export namespace Prisma {
     documents?: DocumentCreateNestedManyWithoutApplicationInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutAuditLogsInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -28164,6 +35555,8 @@ export namespace Prisma {
     documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutAuditLogsInput = {
@@ -28183,7 +35576,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    applications?: ApplicationCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
@@ -28193,6 +35585,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -28207,7 +35604,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    applications?: ApplicationUncheckedCreateNestedManyWithoutCitizenInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
@@ -28217,6 +35613,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -28238,6 +35639,13 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutAuditLogsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28245,7 +35653,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    citizen?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
@@ -28253,13 +35660,21 @@ export namespace Prisma {
     documents?: DocumentUpdateManyWithoutApplicationNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutAuditLogsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28273,6 +35688,8 @@ export namespace Prisma {
     documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutAuditLogsInput = {
@@ -28298,7 +35715,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
@@ -28308,6 +35724,11 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -28322,7 +35743,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    applications?: ApplicationUncheckedUpdateManyWithoutCitizenNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
@@ -28332,12 +35752,52 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
-  export type ApplicationCreateManyCitizenInput = {
+  export type ApplicationCreateWithoutFrontdeskForwardingsInput = {
+    id?: string
+    rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
+    status?: $Enums.ApplicationStatus
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutFrontdeskForwardingsInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -28345,13 +35805,739 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutFrontdeskForwardingsInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutFrontdeskForwardingsInput, ApplicationUncheckedCreateWithoutFrontdeskForwardingsInput>
+  }
+
+  export type UserCreateWithoutForwardedFromInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+  }
+
+  export type UserUncheckedCreateWithoutForwardedFromInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+  }
+
+  export type UserCreateOrConnectWithoutForwardedFromInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutForwardedFromInput, UserUncheckedCreateWithoutForwardedFromInput>
+  }
+
+  export type UserCreateWithoutForwardedToInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+  }
+
+  export type UserUncheckedCreateWithoutForwardedToInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+  }
+
+  export type UserCreateOrConnectWithoutForwardedToInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutForwardedToInput, UserUncheckedCreateWithoutForwardedToInput>
+  }
+
+  export type ApplicationUpsertWithoutFrontdeskForwardingsInput = {
+    update: XOR<ApplicationUpdateWithoutFrontdeskForwardingsInput, ApplicationUncheckedUpdateWithoutFrontdeskForwardingsInput>
+    create: XOR<ApplicationCreateWithoutFrontdeskForwardingsInput, ApplicationUncheckedCreateWithoutFrontdeskForwardingsInput>
+    where?: ApplicationWhereInput
+  }
+
+  export type ApplicationUpdateToOneWithWhereWithoutFrontdeskForwardingsInput = {
+    where?: ApplicationWhereInput
+    data: XOR<ApplicationUpdateWithoutFrontdeskForwardingsInput, ApplicationUncheckedUpdateWithoutFrontdeskForwardingsInput>
+  }
+
+  export type ApplicationUpdateWithoutFrontdeskForwardingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutFrontdeskForwardingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type UserUpsertWithoutForwardedFromInput = {
+    update: XOR<UserUpdateWithoutForwardedFromInput, UserUncheckedUpdateWithoutForwardedFromInput>
+    create: XOR<UserCreateWithoutForwardedFromInput, UserUncheckedCreateWithoutForwardedFromInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutForwardedFromInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutForwardedFromInput, UserUncheckedUpdateWithoutForwardedFromInput>
+  }
+
+  export type UserUpdateWithoutForwardedFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutForwardedFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type UserUpsertWithoutForwardedToInput = {
+    update: XOR<UserUpdateWithoutForwardedToInput, UserUncheckedUpdateWithoutForwardedToInput>
+    create: XOR<UserCreateWithoutForwardedToInput, UserUncheckedCreateWithoutForwardedToInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutForwardedToInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutForwardedToInput, UserUncheckedUpdateWithoutForwardedToInput>
+  }
+
+  export type UserUpdateWithoutForwardedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutForwardedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type ApplicationCreateWithoutOfficerForwardingsInput = {
+    id?: string
+    rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
+    status?: $Enums.ApplicationStatus
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutOfficerForwardingsInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
+    status?: $Enums.ApplicationStatus
+    currentHolderId?: string | null
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutOfficerForwardingsInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutOfficerForwardingsInput, ApplicationUncheckedCreateWithoutOfficerForwardingsInput>
+  }
+
+  export type UserCreateWithoutOfficerForwardedFromInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+  }
+
+  export type UserUncheckedCreateWithoutOfficerForwardedFromInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+  }
+
+  export type UserCreateOrConnectWithoutOfficerForwardedFromInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOfficerForwardedFromInput, UserUncheckedCreateWithoutOfficerForwardedFromInput>
+  }
+
+  export type UserCreateWithoutOfficerForwardedToInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+  }
+
+  export type UserUncheckedCreateWithoutOfficerForwardedToInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+  }
+
+  export type UserCreateOrConnectWithoutOfficerForwardedToInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOfficerForwardedToInput, UserUncheckedCreateWithoutOfficerForwardedToInput>
+  }
+
+  export type ApplicationUpsertWithoutOfficerForwardingsInput = {
+    update: XOR<ApplicationUpdateWithoutOfficerForwardingsInput, ApplicationUncheckedUpdateWithoutOfficerForwardingsInput>
+    create: XOR<ApplicationCreateWithoutOfficerForwardingsInput, ApplicationUncheckedCreateWithoutOfficerForwardingsInput>
+    where?: ApplicationWhereInput
+  }
+
+  export type ApplicationUpdateToOneWithWhereWithoutOfficerForwardingsInput = {
+    where?: ApplicationWhereInput
+    data: XOR<ApplicationUpdateWithoutOfficerForwardingsInput, ApplicationUncheckedUpdateWithoutOfficerForwardingsInput>
+  }
+
+  export type ApplicationUpdateWithoutOfficerForwardingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutOfficerForwardingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type UserUpsertWithoutOfficerForwardedFromInput = {
+    update: XOR<UserUpdateWithoutOfficerForwardedFromInput, UserUncheckedUpdateWithoutOfficerForwardedFromInput>
+    create: XOR<UserCreateWithoutOfficerForwardedFromInput, UserUncheckedCreateWithoutOfficerForwardedFromInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOfficerForwardedFromInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOfficerForwardedFromInput, UserUncheckedUpdateWithoutOfficerForwardedFromInput>
+  }
+
+  export type UserUpdateWithoutOfficerForwardedFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOfficerForwardedFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type UserUpsertWithoutOfficerForwardedToInput = {
+    update: XOR<UserUpdateWithoutOfficerForwardedToInput, UserUncheckedUpdateWithoutOfficerForwardedToInput>
+    create: XOR<UserCreateWithoutOfficerForwardedToInput, UserUncheckedCreateWithoutOfficerForwardedToInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOfficerForwardedToInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOfficerForwardedToInput, UserUncheckedUpdateWithoutOfficerForwardedToInput>
+  }
+
+  export type UserUpdateWithoutOfficerForwardedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOfficerForwardedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
   }
 
   export type ApplicationCreateManyCurrentHolderInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
@@ -28459,62 +36645,68 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type ApplicationUpdateWithoutCitizenInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+  export type FrontdeskOfficerCreateManyFrontdeskUserInput = {
+    id?: string
+    officerId?: string | null
+    createdAt?: Date | string
   }
 
-  export type ApplicationUncheckedUpdateWithoutCitizenInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+  export type FrontdeskForwardingCreateManyFromFrontdeskInput = {
+    id?: string
+    applicationId: string
+    toFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
   }
 
-  export type ApplicationUncheckedUpdateManyWithoutCitizenInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type FrontdeskForwardingCreateManyToFrontdeskInput = {
+    id?: string
+    applicationId: string
+    fromFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type OfficerForwardingHistoryCreateManyFromOfficerInput = {
+    id?: string
+    applicationId: string
+    toOfficerId: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type OfficerForwardingHistoryCreateManyToOfficerInput = {
+    id?: string
+    applicationId: string
+    fromOfficerId: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
   }
 
   export type ApplicationUpdateWithoutCurrentHolderInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28522,7 +36714,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    citizen?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -28530,13 +36721,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutCurrentHolderInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28550,13 +36749,21 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutCurrentHolderInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28862,10 +37069,196 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FrontdeskOfficerUpdateWithoutFrontdeskUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    officer?: OfficerProfileUpdateOneWithoutFrontdeskUsersNestedInput
+  }
+
+  export type FrontdeskOfficerUncheckedUpdateWithoutFrontdeskUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    officerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    officerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskForwardingUpdateWithoutFromFrontdeskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutFrontdeskForwardingsNestedInput
+    toFrontdesk?: UserUpdateOneRequiredWithoutForwardedToNestedInput
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateWithoutFromFrontdeskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    toFrontdeskId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    toFrontdeskId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskForwardingUpdateWithoutToFrontdeskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutFrontdeskForwardingsNestedInput
+    fromFrontdesk?: UserUpdateOneRequiredWithoutForwardedFromNestedInput
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateWithoutToFrontdeskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    fromFrontdeskId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    fromFrontdeskId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfficerForwardingHistoryUpdateWithoutFromOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    application?: ApplicationUpdateOneRequiredWithoutOfficerForwardingsNestedInput
+    toOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedToNestedInput
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateWithoutFromOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OfficerForwardingHistoryUpdateWithoutToOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    application?: ApplicationUpdateOneRequiredWithoutOfficerForwardingsNestedInput
+    fromOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedFromNestedInput
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateWithoutToOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type FrontdeskOfficerCreateManyOfficerInput = {
+    id?: string
+    frontdeskUserId: string
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskOfficerUpdateWithoutOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    frontdeskUser?: UserUpdateOneRequiredWithoutFrontdeskAssignmentsNestedInput
+  }
+
+  export type FrontdeskOfficerUncheckedUpdateWithoutOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    frontdeskUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskOfficerUncheckedUpdateManyWithoutOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    frontdeskUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ApplicationCreateManyServiceCategoryInput = {
     id?: string
     rrNumber?: string | null
-    citizenId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
@@ -28878,13 +37271,19 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutServiceCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizen?: UserUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
@@ -28893,12 +37292,20 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutServiceCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28913,12 +37320,20 @@ export namespace Prisma {
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutServiceCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28991,6 +37406,29 @@ export namespace Prisma {
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: string | null
     createdAt?: Date | string
+  }
+
+  export type FrontdeskForwardingCreateManyApplicationInput = {
+    id?: string
+    fromFrontdeskId: string
+    toFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type OfficerForwardingHistoryCreateManyApplicationInput = {
+    id?: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    priority?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    forwardedAt?: Date | string
+    completedAt?: Date | string | null
   }
 
   export type ApplicationWorkflowUpdateWithoutApplicationInput = {
@@ -29186,6 +37624,75 @@ export namespace Prisma {
     newValues?: NullableJsonNullValueInput | InputJsonValue
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskForwardingUpdateWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fromFrontdesk?: UserUpdateOneRequiredWithoutForwardedFromNestedInput
+    toFrontdesk?: UserUpdateOneRequiredWithoutForwardedToNestedInput
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromFrontdeskId?: StringFieldUpdateOperationsInput | string
+    toFrontdeskId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskForwardingUncheckedUpdateManyWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromFrontdeskId?: StringFieldUpdateOperationsInput | string
+    toFrontdeskId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfficerForwardingHistoryUpdateWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fromOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedFromNestedInput
+    toOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedToNestedInput
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 

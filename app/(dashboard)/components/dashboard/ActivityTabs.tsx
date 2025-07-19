@@ -46,23 +46,6 @@ export default function ActivityTabs({ userRole }: ActivityTabsProps) {
 
   const getActivities = (): ActivityItem[] => {
     switch (userRole) {
-      case UserRole.CITIZEN:
-        return [
-          {
-            id: "1",
-            title: "Application Submitted",
-            description: "Your application RR-2025-0001 has been submitted",
-            date: "2025-05-10",
-            unread: false,
-          },
-          {
-            id: "2",
-            title: "Document Requested",
-            description: "Additional document needed for RR-2025-0001",
-            date: "2025-05-09",
-            unread: true,
-          },
-        ];
       case UserRole.FRONT_DESK:
         return [
           {
@@ -126,16 +109,6 @@ export default function ActivityTabs({ userRole }: ActivityTabsProps) {
 
   const getNotifications = (): ActivityItem[] => {
     switch (userRole) {
-      case UserRole.CITIZEN:
-        return [
-          {
-            id: "1",
-            title: "Status Update",
-            description: "Your application status has changed to In Progress",
-            date: "2025-05-10",
-            unread: true,
-          },
-        ];
       case UserRole.FRONT_DESK:
         return [
           {

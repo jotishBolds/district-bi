@@ -51,11 +51,6 @@ export async function PATCH(
       where: { id: applicationId },
       include: {
         serviceCategory: true,
-        citizen: {
-          include: {
-            citizenProfile: true,
-          },
-        },
         documents: true,
         officerAssignments: {
           include: {
@@ -116,10 +111,7 @@ export async function PATCH(
 
     switch (status) {
       case ApplicationStatus.PENDING:
-        if (
-          session.user.role === UserRole.CITIZEN &&
-          application.status === ApplicationStatus.DRAFT
-        ) {
+        if (application.status === ApplicationStatus.DRAFT) {
           result = await handleStatusTransition(
             application,
             status,
@@ -148,6 +140,23 @@ export async function PATCH(
           throw new Error("Invalid status transition");
         }
         break;
+      case ApplicationStatus.OPEN:
+        if (
+          session.user.role === UserRole.FRONT_DESK &&
+          application.status === ApplicationStatus.VALIDATED
+        ) {
+          result = await handleStatusTransition(
+            application,
+            status,
+            session.user.id,
+            comments || "Application moved to queue",
+            request
+          );
+        } else {
+          throw new Error("Invalid status transition");
+        }
+        break;
+
       case ApplicationStatus.IN_PROGRESS:
         if (
           [
@@ -164,7 +173,8 @@ export async function PATCH(
               | typeof UserRole.SDM
               | typeof UserRole.DYDIR
           ) &&
-          application.status === ApplicationStatus.VALIDATED &&
+          (application.status === ApplicationStatus.OPEN ||
+            application.status === ApplicationStatus.REOPENED) &&
           application.currentHolderId === session.user.id
         ) {
           result = await handleStatusTransition(
@@ -178,7 +188,8 @@ export async function PATCH(
           throw new Error("Invalid status transition");
         }
         break;
-      case ApplicationStatus.APPROVED:
+
+      case ApplicationStatus.RESOLVED:
         if (
           [
             UserRole.DC,
@@ -197,7 +208,7 @@ export async function PATCH(
           application.status === ApplicationStatus.IN_PROGRESS &&
           application.currentHolderId === session.user.id
         ) {
-          result = await handleApprovalTransition(
+          result = await handleResolutionTransition(
             application,
             session.user.id,
             comments,
@@ -207,13 +218,67 @@ export async function PATCH(
           throw new Error("Invalid status transition");
         }
         break;
-      case ApplicationStatus.CLOSED_WITH_ACTION:
-        result = await handleRejectionTransition(
-          application,
-          session.user.id,
-          comments || "Application closed with action",
-          request
-        );
+
+      case ApplicationStatus.CLOSED:
+        if (
+          [
+            UserRole.DC,
+            UserRole.ADC,
+            UserRole.RO,
+            UserRole.SDM,
+            UserRole.DYDIR,
+          ].includes(
+            session.user.role as
+              | typeof UserRole.DC
+              | typeof UserRole.ADC
+              | typeof UserRole.RO
+              | typeof UserRole.SDM
+              | typeof UserRole.DYDIR
+          ) &&
+          (application.status === ApplicationStatus.IN_PROGRESS ||
+            application.status === ApplicationStatus.RESOLVED) &&
+          application.currentHolderId === session.user.id
+        ) {
+          result = await handleClosureTransition(
+            application,
+            session.user.id,
+            comments || "Application closed",
+            request
+          );
+        } else {
+          throw new Error("Invalid status transition");
+        }
+        break;
+
+      case ApplicationStatus.REOPENED:
+        if (
+          [
+            UserRole.DC,
+            UserRole.ADC,
+            UserRole.RO,
+            UserRole.SDM,
+            UserRole.DYDIR,
+          ].includes(
+            session.user.role as
+              | typeof UserRole.DC
+              | typeof UserRole.ADC
+              | typeof UserRole.RO
+              | typeof UserRole.SDM
+              | typeof UserRole.DYDIR
+          ) &&
+          (application.status === ApplicationStatus.RESOLVED ||
+            application.status === ApplicationStatus.CLOSED) &&
+          application.currentHolderId === session.user.id
+        ) {
+          result = await handleReopenTransition(
+            application,
+            session.user.id,
+            comments || "Application reopened",
+            request
+          );
+        } else {
+          throw new Error("Invalid status transition");
+        }
         break;
 
       default:
@@ -259,29 +324,20 @@ async function checkStatusChangePermission(
     return true;
   }
 
-  // Citizens can only submit their own draft applications
-  if (user.role === UserRole.CITIZEN) {
+  // Front desk can validate pending applications and move to queue
+  if (user.role === UserRole.FRONT_DESK) {
     return (
-      application.citizenId === user.id &&
-      application.status === ApplicationStatus.DRAFT &&
-      newStatus === ApplicationStatus.PENDING
+      (application.status === ApplicationStatus.PENDING &&
+        [ApplicationStatus.VALIDATED, ApplicationStatus.CLOSED].includes(
+          newStatus as
+            | typeof ApplicationStatus.VALIDATED
+            | typeof ApplicationStatus.CLOSED
+        )) ||
+      (application.status === ApplicationStatus.VALIDATED &&
+        newStatus === ApplicationStatus.OPEN)
     );
   }
 
-  // Front desk can validate pending applications
-  if (user.role === UserRole.FRONT_DESK) {
-    return (
-      application.status === ApplicationStatus.PENDING &&
-      [
-        ApplicationStatus.VALIDATED,
-        ApplicationStatus.CLOSED_WITH_ACTION,
-      ].includes(
-        newStatus as
-          | typeof ApplicationStatus.VALIDATED
-          | typeof ApplicationStatus.CLOSED_WITH_ACTION
-      )
-    );
-  }
   // Officers can process their assigned applications
   if (
     [
@@ -301,17 +357,32 @@ async function checkStatusChangePermission(
   ) {
     return (
       application.currentHolderId === user.id &&
-      ((application.status === ApplicationStatus.VALIDATED &&
+      // OPEN/REOPENED -> IN_PROGRESS
+      (((application.status === ApplicationStatus.OPEN ||
+        application.status === ApplicationStatus.REOPENED) &&
         newStatus === ApplicationStatus.IN_PROGRESS) ||
+        // IN_PROGRESS -> RESOLVED, CLOSED, REOPENED
         (application.status === ApplicationStatus.IN_PROGRESS &&
           [
-            ApplicationStatus.APPROVED,
-            ApplicationStatus.CLOSED_WITH_ACTION,
+            ApplicationStatus.RESOLVED,
+            ApplicationStatus.CLOSED,
+            ApplicationStatus.REOPENED,
           ].includes(
             newStatus as
-              | typeof ApplicationStatus.APPROVED
-              | typeof ApplicationStatus.CLOSED_WITH_ACTION
-          )))
+              | typeof ApplicationStatus.RESOLVED
+              | typeof ApplicationStatus.CLOSED
+              | typeof ApplicationStatus.REOPENED
+          )) ||
+        // RESOLVED -> REOPENED, CLOSED
+        (application.status === ApplicationStatus.RESOLVED &&
+          [ApplicationStatus.REOPENED, ApplicationStatus.CLOSED].includes(
+            newStatus as
+              | typeof ApplicationStatus.REOPENED
+              | typeof ApplicationStatus.CLOSED
+          )) ||
+        // CLOSED -> REOPENED
+        (application.status === ApplicationStatus.CLOSED &&
+          newStatus === ApplicationStatus.REOPENED))
     );
   }
 
@@ -334,7 +405,10 @@ async function handleStatusTransition(
         ...(newStatus === ApplicationStatus.PENDING && {
           submittedAt: new Date(),
         }),
-        ...(newStatus === ApplicationStatus.APPROVED && {
+        ...(newStatus === ApplicationStatus.RESOLVED && {
+          completedAt: new Date(),
+        }),
+        ...(newStatus === ApplicationStatus.CLOSED && {
           completedAt: new Date(),
         }),
         updatedAt: new Date(),
@@ -370,29 +444,20 @@ async function handleStatusTransition(
       [ApplicationStatus.DRAFT]: "Your application has been saved as draft.",
       [ApplicationStatus.PENDING]:
         "Your application has been submitted and is pending validation.",
+      [ApplicationStatus.OPEN]:
+        "Your application is in the queue for processing.",
       [ApplicationStatus.VALIDATED]: "Your application has been validated.",
       [ApplicationStatus.IN_PROGRESS]:
         "Your application is now being processed.",
-      [ApplicationStatus.APPROVED]:
-        "Congratulations! Your application has been approved.",
-      [ApplicationStatus.CLOSED_WITH_ACTION]:
-        "Your application has been closed with action taken.",
-      [ApplicationStatus.COMPLETED]:
-        "Your application process has been completed.",
+      [ApplicationStatus.RESOLVED]:
+        "Congratulations! Your application has been resolved.",
+      [ApplicationStatus.CLOSED]: "Your application has been closed.",
+      [ApplicationStatus.REOPENED]:
+        "Your application has been reopened for further processing.",
     };
 
-    await tx.notification.create({
-      data: {
-        userId: application.citizenId,
-        notificationType: "STATUS_CHANGED",
-        applicationId: application.id,
-        title: "Application Status Updated",
-        message: `${statusMessages[newStatus]} Application: ${
-          application.rrNumber || application.id
-        }`,
-        isRead: false,
-      },
-    });
+    // Note: Citizen notifications removed as applications are managed by frontdesk
+    // Citizens can track status using the tracking system with RR number/phone
 
     return updatedApplication;
   });
@@ -514,19 +579,8 @@ async function handleValidationTransition(
       },
     });
 
-    // Create notification for citizen
-    await tx.notification.create({
-      data: {
-        userId: application.citizenId,
-        notificationType: "STATUS_CHANGED",
-        applicationId: application.id,
-        title: "Application Validated",
-        message: `Your application has been validated and assigned RR Number: ${rrNumber}. It has been forwarded to ${
-          preferredOfficer?.officerProfile?.fullName || "the assigned officer"
-        }.`,
-        isRead: false,
-      },
-    });
+    // Note: Citizen notifications removed as applications are managed by frontdesk
+    // Citizens can track status using the tracking system with RR number/phone
 
     // Create notification for assigned officer
     if (preferredOfficer) {
@@ -546,8 +600,8 @@ async function handleValidationTransition(
   });
 }
 
-// Handle approval transition
-async function handleApprovalTransition(
+// Handle resolution transition
+async function handleResolutionTransition(
   application: ApplicationWithIncludes,
   userId: string,
   comments: string,
@@ -557,7 +611,7 @@ async function handleApprovalTransition(
     const updatedApplication = await tx.application.update({
       where: { id: application.id },
       data: {
-        status: ApplicationStatus.APPROVED,
+        status: ApplicationStatus.RESOLVED,
         completedAt: new Date(),
         updatedAt: new Date(),
       },
@@ -568,9 +622,9 @@ async function handleApprovalTransition(
       data: {
         applicationId: application.id,
         fromStatus: application.status,
-        toStatus: ApplicationStatus.APPROVED,
+        toStatus: ApplicationStatus.RESOLVED,
         changedById: userId,
-        comments: comments || "Application approved",
+        comments: comments || "Application resolved",
       },
     });
 
@@ -578,13 +632,10 @@ async function handleApprovalTransition(
     await tx.applicationAuditLog.create({
       data: {
         applicationId: application.id,
-        action: "APPLICATION_APPROVED",
+        action: "APPLICATION_RESOLVED",
         performedById: userId,
         oldValues: { status: application.status },
-        newValues: {
-          status: ApplicationStatus.APPROVED,
-          completedAt: new Date(),
-        },
+        newValues: { status: ApplicationStatus.RESOLVED },
         ipAddress:
           request.headers.get("x-forwarded-for") ||
           request.headers.get("x-real-ip") ||
@@ -592,24 +643,12 @@ async function handleApprovalTransition(
       },
     });
 
-    // Create notification for citizen
-    await tx.notification.create({
-      data: {
-        userId: application.citizenId,
-        notificationType: "STATUS_CHANGED",
-        applicationId: application.id,
-        title: "Application Approved",
-        message: `Congratulations! Your application ${application.rrNumber} for ${application.serviceCategory.name} has been approved.`,
-        isRead: false,
-      },
-    });
-
     return updatedApplication;
   });
 }
 
-// Handle rejection transition
-async function handleRejectionTransition(
+// Handle closure transition
+async function handleClosureTransition(
   application: ApplicationWithIncludes,
   userId: string,
   comments: string,
@@ -619,7 +658,8 @@ async function handleRejectionTransition(
     const updatedApplication = await tx.application.update({
       where: { id: application.id },
       data: {
-        status: ApplicationStatus.CLOSED_WITH_ACTION,
+        status: ApplicationStatus.CLOSED,
+        completedAt: new Date(),
         updatedAt: new Date(),
       },
     });
@@ -629,9 +669,9 @@ async function handleRejectionTransition(
       data: {
         applicationId: application.id,
         fromStatus: application.status,
-        toStatus: ApplicationStatus.CLOSED_WITH_ACTION,
+        toStatus: ApplicationStatus.CLOSED,
         changedById: userId,
-        comments: comments || "Application rejected",
+        comments: comments || "Application closed",
       },
     });
 
@@ -639,10 +679,10 @@ async function handleRejectionTransition(
     await tx.applicationAuditLog.create({
       data: {
         applicationId: application.id,
-        action: "APPLICATION_CLOSED_WITH_ACTION",
+        action: "APPLICATION_CLOSED",
         performedById: userId,
         oldValues: { status: application.status },
-        newValues: { status: ApplicationStatus.CLOSED_WITH_ACTION },
+        newValues: { status: ApplicationStatus.CLOSED },
         ipAddress:
           request.headers.get("x-forwarded-for") ||
           request.headers.get("x-real-ip") ||
@@ -650,21 +690,49 @@ async function handleRejectionTransition(
       },
     });
 
-    // Create notification for citizen
-    await tx.notification.create({
+    return updatedApplication;
+  });
+}
+
+// Handle reopen transition
+async function handleReopenTransition(
+  application: ApplicationWithIncludes,
+  userId: string,
+  comments: string,
+  request: NextRequest
+) {
+  return await prisma.$transaction(async (tx) => {
+    const updatedApplication = await tx.application.update({
+      where: { id: application.id },
       data: {
-        userId: application.citizenId,
-        notificationType: "STATUS_CHANGED",
+        status: ApplicationStatus.REOPENED,
+        updatedAt: new Date(),
+      },
+    });
+
+    // Create workflow entry
+    await tx.applicationWorkflow.create({
+      data: {
         applicationId: application.id,
-        title: "Application Closed with Action",
-        message: `Your application ${
-          application.rrNumber || application.id
-        } has been closed with action taken. ${
-          comments
-            ? `Details: ${comments}`
-            : "Please contact the office for details."
-        }`,
-        isRead: false,
+        fromStatus: application.status,
+        toStatus: ApplicationStatus.REOPENED,
+        changedById: userId,
+        comments: comments || "Application reopened",
+      },
+    });
+
+    // Create audit log
+    await tx.applicationAuditLog.create({
+      data: {
+        applicationId: application.id,
+        action: "APPLICATION_REOPENED",
+        performedById: userId,
+        oldValues: { status: application.status },
+        newValues: { status: ApplicationStatus.REOPENED },
+        ipAddress:
+          request.headers.get("x-forwarded-for") ||
+          request.headers.get("x-real-ip") ||
+          "unknown",
       },
     });
 

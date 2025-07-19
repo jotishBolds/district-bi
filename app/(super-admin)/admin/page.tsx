@@ -38,8 +38,6 @@ export default async function DashboardPage() {
 
   const renderRoleSpecificText = () => {
     switch (session.user?.role) {
-      case UserRole.CITIZEN:
-        return "Track and manage your applications";
       case UserRole.FRONT_DESK:
         return "Manage application validations and submissions";
       case UserRole.DC:
@@ -47,7 +45,7 @@ export default async function DashboardPage() {
       case UserRole.RO:
       case UserRole.SDM:
       case UserRole.DYDIR:
-        return "Review and process assigned cases";
+        return "Review and process assigned applications";
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:
         return "System administration and oversight";
@@ -76,15 +74,6 @@ export default async function DashboardPage() {
                   {renderRoleSpecificText()}
                 </PageHeaderDescription>
               </div>
-
-              {session.user?.role === UserRole.CITIZEN && (
-                <div className="mt-4 md:mt-0">
-                  <Button className="bg-blue-700 hover:bg-blue-800" size="lg">
-                    <FileText className="mr-2 h-4 w-4" />
-                    New Application
-                  </Button>
-                </div>
-              )}
             </div>
           </PageHeader>
         </div>

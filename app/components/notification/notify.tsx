@@ -54,11 +54,7 @@ interface Notification {
     serviceCategory: {
       name: string;
     };
-    citizen: {
-      citizenProfile: {
-        fullName: string;
-      };
-    };
+    citizenName: string;
   };
 }
 
@@ -289,7 +285,7 @@ export default function NotificationsComponent() {
       setCurrentPage(1);
       fetchNotifications(1, filter, selectedType);
     },
-    [selectedFilter, selectedType, fetchNotifications]
+    [selectedFilter, selectedType]
   );
 
   const handleTypeFilter = useCallback(
@@ -299,14 +295,14 @@ export default function NotificationsComponent() {
       setCurrentPage(1);
       fetchNotifications(1, selectedFilter, type);
     },
-    [selectedType, selectedFilter, fetchNotifications]
+    [selectedType, selectedFilter]
   );
 
   useEffect(() => {
     if (session?.user?.id) {
       fetchNotifications();
     }
-  }, [session, fetchNotifications]);
+  }, [session?.user?.id]);
 
   const NotificationDropdown = useCallback(
     () => (

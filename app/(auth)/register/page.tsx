@@ -11,7 +11,6 @@ import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
   CardContent,
@@ -23,12 +22,18 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 
@@ -37,9 +42,8 @@ const registerFormSchema = z
   .object({
     email: z
       .string()
-      .email("Please enter a valid  email address")
+      .email("Please enter a valid email address")
       .min(1, "Email is required"),
-
     fullName: z
       .string()
       .min(3, "Full name must be at least 3 characters")
@@ -49,31 +53,33 @@ const registerFormSchema = z
       .min(10, "Phone number must be at least 10 digits")
       .max(15, "Phone number cannot exceed 15 digits")
       .regex(/^\+?[0-9\s\-()]+$/, "Please enter a valid phone number"),
-    address: z
-      .string()
-      .min(5, "Address must be at least 5 characters")
-      .max(200, "Address cannot exceed 200 characters"),
+    role: z.enum(["ADMIN", "FRONT_DESK"], {
+      required_error: "Please select a role",
+    }),
+    designation: z.string().optional(),
+    department: z.string().optional(),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters")
       .max(100, "Password cannot exceed 100 characters")
       .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/,
-        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Password must contain at least one lowercase letter, one uppercase letter, and one number"
       ),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: "Passwords don't match",
     path: ["confirmPassword"],
   });
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
-export default function GovernmentRegisterForm() {
-  const router = useRouter();
+export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
@@ -81,14 +87,19 @@ export default function GovernmentRegisterForm() {
       email: "",
       fullName: "",
       phone: "",
-      address: "",
+      role: "FRONT_DESK",
+      designation: "",
+      department: "",
       password: "",
       confirmPassword: "",
     },
   });
 
+  const selectedRole = form.watch("role");
+
   const handleSubmit = async (data: RegisterFormValues) => {
     setErrorMessage(null);
+    setSuccessMessage(null);
     setIsLoading(true);
 
     try {
@@ -102,126 +113,141 @@ export default function GovernmentRegisterForm() {
           password: data.password,
           fullName: data.fullName,
           phone: data.phone,
-          address: data.address,
+          role: data.role,
+          designation: data.designation,
+          department: data.department,
         }),
       });
 
-      const responseData = await response.json();
+      const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(responseData.error || "Registration failed");
+        throw new Error(result.error || "Registration failed");
       }
 
-      toast.success("Registration submitted successfully");
-      router.push(
-        `/verify-otp?email=${encodeURIComponent(
-          data.email
-        )}&type=EMAIL_VERIFICATION&fromRegister=true`
+      setSuccessMessage(result.message);
+      toast.success(
+        "Registration successful! Check your email for verification."
       );
+
+      // Redirect to login after successful registration
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     } catch (error) {
-      if (error instanceof Error) {
-        setErrorMessage(error.message);
-        toast.error(error.message);
-      } else {
-        setErrorMessage("Registration failed");
-        toast.error("Registration failed");
-      }
       console.error("Registration error:", error);
+      const message =
+        error instanceof Error ? error.message : "Registration failed";
+      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-gray-50">
-      <div className="w-full max-w-xl">
-        <Card className="shadow-lg border-t-4 border-t-blue-700">
-          <CardHeader className="space-y-1 pb-2">
-            <div className="flex justify-center mb-4">
-              <UserPlus className="h-10 w-10 text-blue-700" />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
+        <Card className="shadow-lg">
+          <CardHeader className="space-y-1">
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                <UserPlus className="w-6 h-6 text-white" />
+              </div>
             </div>
             <CardTitle className="text-2xl font-bold text-center">
-              Request Government Access
+              Register for Access
             </CardTitle>
             <CardDescription className="text-center">
-              Complete this form to request access to government services
+              Create an admin or frontdesk account
             </CardDescription>
           </CardHeader>
 
-          {errorMessage && (
-            <Alert className="mx-6 mb-2 bg-red-50 text-red-800 border-red-300 w-auto">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Registration Error</AlertTitle>
-              <AlertDescription>{errorMessage}</AlertDescription>
-            </Alert>
-          )}
-
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
-              <CardContent className="space-y-4 pt-4">
-                <Alert className="bg-amber-50 text-amber-800 border-amber-300">
-                  <ShieldAlert className="h-4 w-4" />
-                  <AlertDescription>
-                    This system is for authorized government personnel only.
-                    Unauthorized access attempts may be subject to legal action.
+              <CardContent className="space-y-4">
+                {/* Error Alert */}
+                {errorMessage && (
+                  <Alert className="border-red-200 bg-red-50">
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                    <AlertTitle className="text-red-800">Error</AlertTitle>
+                    <AlertDescription className="text-red-700">
+                      {errorMessage}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Success Alert */}
+                {successMessage && (
+                  <Alert className="border-green-200 bg-green-50">
+                    <AlertCircle className="h-4 w-4 text-green-600" />
+                    <AlertTitle className="text-green-800">Success</AlertTitle>
+                    <AlertDescription className="text-green-700">
+                      {successMessage}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Security Notice */}
+                <Alert className="border-amber-200 bg-amber-50">
+                  <ShieldAlert className="h-4 w-4 text-amber-600" />
+                  <AlertTitle className="text-amber-800">
+                    Authorized Personnel Only
+                  </AlertTitle>
+                  <AlertDescription className="text-amber-700 text-sm">
+                    This registration is for government officials and authorized
+                    frontdesk staff only.
                   </AlertDescription>
                 </Alert>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Government Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="name@agency.gov"
-                            disabled={isLoading}
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription className="text-xs">
-                          Must be a valid .gov email address
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <FormField
+                  control={form.control}
+                  name="fullName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Enter your full name"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                  <FormField
-                    control={form.control}
-                    name="fullName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Full Legal Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="First Middle Last"
-                            disabled={isLoading}
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription className="text-xs">
-                          Must be a valid full name
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="email"
+                          placeholder="Enter your email address"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Government Phone Number</FormLabel>
+                      <FormLabel>Phone Number</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="+1 (555) 555-5555"
-                          disabled={isLoading}
                           {...field}
+                          placeholder="Enter your phone number"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage />
@@ -231,24 +257,75 @@ export default function GovernmentRegisterForm() {
 
                 <FormField
                   control={form.control}
-                  name="address"
+                  name="role"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Official Address</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Department and physical location"
-                          rows={3}
-                          disabled={isLoading}
-                          {...field}
-                        />
-                      </FormControl>
+                      <FormLabel>Role</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        disabled={isLoading}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select your role" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="FRONT_DESK">
+                            Front Desk Officer
+                          </SelectItem>
+                          <SelectItem value="ADMIN">Administrator</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <Separator className="my-2" />
+                {/* Conditional fields for officers */}
+                {(selectedRole === "ADMIN" ||
+                  selectedRole === "FRONT_DESK") && (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="designation"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Designation (Optional)</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Enter your designation"
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="department"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Department (Optional)</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Enter your department"
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
+
+                <Separator />
 
                 <FormField
                   control={form.control}
@@ -258,16 +335,12 @@ export default function GovernmentRegisterForm() {
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <Input
-                          type="password"
-                          placeholder="••••••••••••"
-                          disabled={isLoading}
                           {...field}
+                          type="password"
+                          placeholder="Create a secure password"
+                          disabled={isLoading}
                         />
                       </FormControl>
-                      <FormDescription className="text-xs">
-                        Minimum 12 characters with uppercase, lowercase, number,
-                        and special character
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -281,10 +354,10 @@ export default function GovernmentRegisterForm() {
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
                         <Input
-                          type="password"
-                          placeholder="••••••••••••"
-                          disabled={isLoading}
                           {...field}
+                          type="password"
+                          placeholder="Confirm your password"
+                          disabled={isLoading}
                         />
                       </FormControl>
                       <FormMessage />
@@ -292,42 +365,29 @@ export default function GovernmentRegisterForm() {
                   )}
                 />
               </CardContent>
-              <CardFooter className="flex flex-col gap-4 pt-2">
-                <Button
-                  type="submit"
-                  className="w-full bg-blue-700 hover:bg-blue-800"
-                  disabled={isLoading}
-                >
+
+              <CardFooter className="flex flex-col space-y-4">
+                <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Submitting Request...
+                      Creating Account...
                     </>
                   ) : (
-                    "Submit Access Request"
+                    "Create Account"
                   )}
                 </Button>
 
-                <div className="text-center text-sm">
+                <div className="text-sm text-center text-gray-600">
                   Already have an account?{" "}
-                  <Link
-                    href="/login"
-                    className="text-blue-700 hover:text-blue-800 hover:underline font-medium"
-                  >
+                  <Link href="/login" className="text-blue-600 hover:underline">
                     Sign in
                   </Link>
                 </div>
 
-                <div className="text-center text-xs text-gray-500 mt-2">
-                  By requesting access, you agree to abide by all applicable
-                  government
-                  <br />
-                  <Link href="/security-policy" className="underline">
-                    security policies
-                  </Link>{" "}
-                  and{" "}
-                  <Link href="/terms-of-use" className="underline">
-                    terms of use
+                <div className="text-sm text-center text-gray-600">
+                  <Link href="/" className="text-blue-600 hover:underline">
+                    Back to Home
                   </Link>
                 </div>
               </CardFooter>

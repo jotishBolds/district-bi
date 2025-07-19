@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import StatusCards from "../components/dashboard/StatusCards";
 import RecentApplications from "../components/dashboard/RecentApplications";
 import ActivityTabs from "../components/dashboard/ActivityTabs";
+import FrontdeskDashboard from "../components/dashboard/FrontdeskDashboard";
 import {
   PageHeader,
   PageHeaderDescription,
@@ -38,14 +39,12 @@ export default async function DashboardPage() {
 
   const renderRoleSpecificText = () => {
     switch (session.user?.role) {
-      case UserRole.CITIZEN:
-        return "Track and manage your applications";
       case UserRole.FRONT_DESK:
         return "Manage application validations and submissions";
       case UserRole.DC:
       case UserRole.ADC:
       case UserRole.RO:
-        return "Review and process assigned cases";
+        return "Review and process assigned applications";
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:
         return "System administration and oversight";
@@ -74,15 +73,6 @@ export default async function DashboardPage() {
                   {renderRoleSpecificText()}
                 </PageHeaderDescription>
               </div>
-
-              {session && session.user?.role === UserRole.CITIZEN && (
-                <div className="mt-4 md:mt-0">
-                  <ButtonLink
-                    path="/dashboard/applications/create"
-                    label="New Application"
-                  />
-                </div>
-              )}
             </div>
           </PageHeader>
         </div>
@@ -97,18 +87,27 @@ export default async function DashboardPage() {
 
         <Separator className="my-6" />
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Recent Applications - Takes up 2/3 of the space */}
-          <div className="lg:col-span-2">
-            <RecentApplications userRole={session.user?.role} />
+        {/* Frontdesk-specific dashboard */}
+        {session.user?.role === UserRole.FRONT_DESK && (
+          <div className="mb-6">
+            <FrontdeskDashboard />
           </div>
+        )}
 
-          {/* Activity Feed - Takes up 1/3 of the space */}
-          <div className="lg:col-span-1">
-            <ActivityTabs userRole={session.user?.role} />
+        {/* Main Content Grid - Show for non-frontdesk or as additional content */}
+        {session.user?.role !== UserRole.FRONT_DESK && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Recent Applications - Takes up 2/3 of the space */}
+            <div className="lg:col-span-2">
+              <RecentApplications userRole={session.user?.role} />
+            </div>
+
+            {/* Activity Feed - Takes up 1/3 of the space */}
+            <div className="lg:col-span-1">
+              <ActivityTabs userRole={session.user?.role} />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Footer Section */}
         <footer className="mt-12 text-center">
