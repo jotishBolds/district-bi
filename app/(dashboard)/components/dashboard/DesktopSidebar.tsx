@@ -137,7 +137,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
   const dcLinks = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
     {
-      name: "Application Progress",
+      name: "Application Status Report",
       href: "/dashboard/application-progress",
       icon: BarChart3,
     },
