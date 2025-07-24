@@ -162,6 +162,9 @@ export default function FrontdeskManagementPage() {
       const response = await fetch("/api/admin/officers");
       if (!response.ok) throw new Error("Failed to fetch officers");
       const data = await response.json();
+
+      console.log("Officers API response:", data); // Debug log
+
       // Filter officers to only include those with profiles and are available
       const availableOfficers = Array.isArray(data.officers)
         ? data.officers.filter(
@@ -169,6 +172,8 @@ export default function FrontdeskManagementPage() {
               officer.profile && officer.profile.isAvailable && officer.isActive
           )
         : [];
+
+      console.log("Filtered available officers:", availableOfficers); // Debug log
       setOfficers(availableOfficers);
     } catch (error) {
       console.error("Error fetching officers:", error);
@@ -214,7 +219,7 @@ export default function FrontdeskManagementPage() {
       if (data.assignedOfficerId && data.assignedOfficerId !== "GENERAL") {
         await handleAssignOfficer(userId, data.assignedOfficerId);
       } else {
-        // Create general assignment
+        // Create general assignment (no specific officer)
         await handleAssignOfficer(userId);
       }
 
@@ -324,79 +329,125 @@ export default function FrontdeskManagementPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Frontdesk Users</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <User className="w-5 h-5" />
+            Frontdesk Users
+          </CardTitle>
           <CardDescription>
-            List of all frontdesk users and their officer assignments
+            Manage frontdesk users and their officer assignments
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Assigned Officer</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {(frontdeskUsers || []).map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.email}</TableCell>
-                  <TableCell>{user.phone || "N/A"}</TableCell>
-                  <TableCell>
-                    <Badge variant={user.isActive ? "default" : "secondary"}>
-                      {user.isActive ? "Active" : "Inactive"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {user.frontdeskAssignments &&
-                    user.frontdeskAssignments.length > 0 ? (
-                      <div className="space-y-1">
-                        {(user.frontdeskAssignments || []).map((assignment) => (
-                          <Badge key={assignment.id} variant="outline">
-                            {assignment.officer?.fullName ||
-                              "General Frontdesk"}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <Badge variant="secondary">No assignments</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {new Date(user.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedFrontdeskUser(user);
-                          setIsAssignDialogOpen(true);
-                        }}
-                      >
-                        <Settings size={16} />
-                      </Button>
-                      <Switch
-                        checked={user.isActive}
-                        onCheckedChange={() =>
-                          toggleUserStatus(user.id, user.isActive)
-                        }
-                      />
-                    </div>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[200px]">
+                    User Information
+                  </TableHead>
+                  <TableHead className="hidden md:table-cell">
+                    Contact
+                  </TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="min-w-[150px]">
+                    Officer Assignment
+                  </TableHead>
+                  <TableHead className="hidden lg:table-cell">
+                    Created
+                  </TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {(frontdeskUsers || []).map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="font-medium">{user.email}</div>
+                        <div className="text-sm text-gray-500 md:hidden">
+                          {user.phone || "No phone"}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <div className="text-sm">
+                        {user.phone || (
+                          <span className="text-gray-400">No phone</span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={user.isActive ? "default" : "secondary"}>
+                        {user.isActive ? "Active" : "Inactive"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {user.frontdeskAssignments &&
+                      user.frontdeskAssignments.length > 0 ? (
+                        <div className="space-y-1">
+                          {(user.frontdeskAssignments || []).map(
+                            (assignment) => (
+                              <Badge
+                                key={assignment.id}
+                                variant="outline"
+                                className="block w-fit"
+                              >
+                                {assignment.officer?.fullName ||
+                                  "General Frontdesk"}
+                              </Badge>
+                            )
+                          )}
+                        </div>
+                      ) : (
+                        <Badge variant="secondary">Unassigned</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <div className="text-sm text-gray-500">
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedFrontdeskUser(user);
+                            setIsAssignDialogOpen(true);
+                          }}
+                          className="flex items-center gap-1"
+                        >
+                          <Settings size={14} />
+                          <span className="hidden sm:inline">Assign</span>
+                        </Button>
+                        <Switch
+                          checked={user.isActive}
+                          onCheckedChange={() =>
+                            toggleUserStatus(user.id, user.isActive)
+                          }
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
 
           {(frontdeskUsers || []).length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              No frontdesk users found. Create one to get started.
+            <div className="text-center py-12">
+              <UserPlus className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No frontdesk users found
+              </h3>
+              <p className="text-gray-500 mb-4">
+                Get started by creating your first frontdesk user.
+              </p>
+              <Button onClick={() => setIsCreateDialogOpen(true)}>
+                <UserPlus size={16} className="mr-2" />
+                Create Frontdesk User
+              </Button>
             </div>
           )}
         </CardContent>
@@ -404,9 +455,12 @@ export default function FrontdeskManagementPage() {
 
       {/* Create Frontdesk User Dialog */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-md md:max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Create Frontdesk User</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <UserPlus className="w-5 h-5" />
+              Create Frontdesk User
+            </DialogTitle>
             <DialogDescription>
               Add a new frontdesk user to handle application submissions and
               validation.
@@ -414,97 +468,137 @@ export default function FrontdeskManagementPage() {
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="frontdesk@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="fullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="John Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number</FormLabel>
-                    <FormControl>
-                      <Input placeholder="1234567890" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="fullName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="frontdesk@example.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input placeholder="1234567890" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Minimum 6 characters"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <Separator />
+
               <FormField
                 control={form.control}
                 name="assignedOfficerId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Assign to Officer (Optional)</FormLabel>
+                    <FormLabel>Officer Assignment</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value || ""}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select an officer or leave empty for general frontdesk" />
+                          <SelectValue placeholder="Select officer assignment" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className="max-h-[200px] overflow-y-auto">
                         <SelectItem value="GENERAL">
-                          General Frontdesk (All Officers)
+                          <div className="flex items-center gap-2">
+                            <User className="w-4 h-4" />
+                            <div>
+                              <div className="font-medium">
+                                General Frontdesk
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                Handle applications for all officers
+                              </div>
+                            </div>
+                          </div>
                         </SelectItem>
-                        {(officers || []).map((officer) => (
-                          <SelectItem
-                            key={officer.id}
-                            value={officer.profile?.id || officer.id}
-                          >
-                            {officer.profile?.fullName || officer.email} -{" "}
-                            {officer.profile?.designation || officer.role}
+                        {officers.length > 0 ? (
+                          officers.map((officer) => (
+                            <SelectItem
+                              key={officer.id}
+                              value={officer.profile?.id || officer.id}
+                            >
+                              <div className="flex items-center gap-2">
+                                <User className="w-4 h-4" />
+                                <div>
+                                  <div className="font-medium">
+                                    {officer.profile?.fullName || officer.email}
+                                  </div>
+                                  <div className="text-xs text-gray-500">
+                                    {officer.profile?.designation ||
+                                      officer.role}{" "}
+                                    - {officer.profile?.department}
+                                  </div>
+                                </div>
+                              </div>
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <SelectItem value="no-officers" disabled>
+                            No officers available
                           </SelectItem>
-                        ))}
+                        )}
                       </SelectContent>
                     </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <DialogFooter>
+
+              <DialogFooter className="gap-2 sm:gap-0">
                 <Button
                   type="button"
                   variant="outline"
@@ -512,7 +606,9 @@ export default function FrontdeskManagementPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Create User</Button>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? "Creating..." : "Create User"}
+                </Button>
               </DialogFooter>
             </form>
           </Form>
@@ -521,50 +617,106 @@ export default function FrontdeskManagementPage() {
 
       {/* Assign Officer Dialog */}
       <Dialog open={isAssignDialogOpen} onOpenChange={setIsAssignDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-md md:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Manage Officer Assignment</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Settings className="w-5 h-5" />
+              Manage Officer Assignment
+            </DialogTitle>
             <DialogDescription>
-              Assign or reassign this frontdesk user to a specific officer.
+              Assign or reassign this frontdesk user to a specific officer or
+              general frontdesk.
             </DialogDescription>
           </DialogHeader>
           {selectedFrontdeskUser && (
-            <div className="space-y-4">
-              <div>
+            <div className="space-y-6">
+              <div className="bg-gray-50 rounded-lg p-4">
                 <Label className="text-sm font-medium text-gray-500">
-                  User
+                  Frontdesk User
                 </Label>
-                <p className="text-lg">{selectedFrontdeskUser.email}</p>
-              </div>
-              <Separator />
-              <div className="space-y-3">
-                <Label>Select Officer Assignment</Label>
-                <div className="grid gap-2">
-                  <Button
-                    variant="outline"
-                    className="justify-start"
-                    onClick={() =>
-                      handleAssignOfficer(selectedFrontdeskUser.id)
+                <p className="text-lg font-medium">
+                  {selectedFrontdeskUser.email}
+                </p>
+                <p className="text-sm text-gray-600">
+                  Status:{" "}
+                  <Badge
+                    variant={
+                      selectedFrontdeskUser.isActive ? "default" : "secondary"
                     }
                   >
-                    General Frontdesk (All Officers)
-                  </Button>
-                  {(officers || []).map((officer) => (
-                    <Button
-                      key={officer.id}
-                      variant="outline"
-                      className="justify-start"
-                      onClick={() =>
-                        handleAssignOfficer(
-                          selectedFrontdeskUser.id,
-                          officer.profile?.id || officer.id
-                        )
-                      }
-                    >
-                      {officer.profile?.fullName || officer.email} -{" "}
-                      {officer.profile?.designation || officer.role}
-                    </Button>
-                  ))}
+                    {selectedFrontdeskUser.isActive ? "Active" : "Inactive"}
+                  </Badge>
+                </p>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-4">
+                <Label className="text-base font-medium">
+                  Select Officer Assignment
+                </Label>
+
+                {/* General Frontdesk Option */}
+                <Button
+                  variant="outline"
+                  className="w-full justify-start h-auto p-4"
+                  onClick={() => handleAssignOfficer(selectedFrontdeskUser.id)}
+                >
+                  <div className="flex items-start gap-3">
+                    <User className="w-5 h-5 mt-0.5 text-blue-600" />
+                    <div className="text-left">
+                      <div className="font-medium">General Frontdesk</div>
+                      <div className="text-sm text-gray-500">
+                        Handle applications for all officers
+                      </div>
+                    </div>
+                  </div>
+                </Button>
+
+                {/* Individual Officers */}
+                <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                  {officers.length > 0 ? (
+                    officers.map((officer) => (
+                      <Button
+                        key={officer.id}
+                        variant="outline"
+                        className="w-full justify-start h-auto p-4"
+                        onClick={() =>
+                          handleAssignOfficer(
+                            selectedFrontdeskUser.id,
+                            officer.profile?.id || officer.id
+                          )
+                        }
+                      >
+                        <div className="flex items-start gap-3">
+                          <User className="w-5 h-5 mt-0.5 text-green-600" />
+                          <div className="text-left">
+                            <div className="font-medium">
+                              {officer.profile?.fullName || officer.email}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {officer.profile?.designation || officer.role}
+                              {officer.profile?.department &&
+                                ` - ${officer.profile.department}`}
+                            </div>
+                            {officer.profile?.officeLocation && (
+                              <div className="text-xs text-gray-400">
+                                📍 {officer.profile.officeLocation}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </Button>
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <User className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+                      <p>No officers available for assignment</p>
+                      <p className="text-sm">
+                        Officers need to have active profiles to be assigned
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

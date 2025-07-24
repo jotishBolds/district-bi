@@ -59,6 +59,14 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { UserRole } from "@/app/generated/prisma";
+import {
+  OFFICER_ROLE_MAPPINGS,
+  getRoleMapping,
+  getAllRoles,
+  getRolesByLevel,
+  isOfficerRole as checkOfficerRole,
+  isAdminRole,
+} from "@/lib/officer-roles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -76,6 +84,16 @@ import {
   UserCog,
   UserPlus,
   X,
+  Shield,
+  Crown,
+  Users,
+  Building,
+  MapPin,
+  Phone,
+  Mail,
+  Calendar,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -85,10 +103,23 @@ type User = {
   email: string;
   phone?: string | null;
   role: UserRole;
+  level?: number | null;
   isActive: boolean;
   lastLoginAt?: Date | null;
   createdAt: Date;
   officerProfile?: {
+    fullName: string;
+    designation?: string;
+    department?: string;
+    officeLocation?: string;
+    sectionId?: string;
+    section?: {
+      id: string;
+      name: string;
+      description?: string;
+    };
+  } | null;
+  citizenProfile?: {
     fullName: string;
   } | null;
 };
@@ -98,11 +129,13 @@ type FormData = {
   email: string;
   phone?: string;
   role: UserRole;
+  level?: number;
   fullName: string;
   isActive: boolean;
   designation?: string;
   department?: string;
   officeLocation?: string;
+  sectionId?: string;
   password?: string;
 };
 
@@ -110,12 +143,14 @@ const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   phone: z.string().optional(),
   role: z.nativeEnum(UserRole),
+  level: z.number().int().min(-2).max(7).optional(),
   fullName: z.string().min(2, { message: "Full name is required" }),
   isActive: z.boolean(),
   // For officer specific fields
   designation: z.string().optional(),
   department: z.string().optional(),
   officeLocation: z.string().optional(),
+  sectionId: z.string().optional(),
   // Password is optional - if not provided, a random one will be generated
   password: z
     .string()
@@ -123,24 +158,28 @@ const formSchema = z.object({
     .optional(),
 });
 
-// Function to determine if the role is an officer role
-const isOfficerRole = (role: UserRole): boolean => {
-  return [
-    UserRole.FRONT_DESK,
-    UserRole.DC,
-    UserRole.ADC,
-    UserRole.RO,
-    UserRole.SDM,
-    UserRole.DYDIR,
-  ].includes(
-    role as
-      | typeof UserRole.FRONT_DESK
-      | typeof UserRole.DC
-      | typeof UserRole.ADC
-      | typeof UserRole.RO
-      | typeof UserRole.SDM
-      | typeof UserRole.DYDIR
-  );
+// Helper function to get role badge variant
+const getRoleBadgeVariant = (role: UserRole) => {
+  if (isAdminRole(role)) return "destructive";
+  if (checkOfficerRole(role)) return "default";
+  return "secondary";
+};
+
+// Helper function to get level badge variant
+const getLevelBadgeVariant = (level?: number | null) => {
+  if (level === null || level === undefined) return "outline";
+  if (level <= 0) return "destructive";
+  if (level <= 2) return "default";
+  if (level <= 4) return "secondary";
+  return "outline";
+};
+
+// Helper function to get role icon
+const getRoleIcon = (role: UserRole) => {
+  if (role === UserRole.SUPER_ADMIN) return Crown;
+  if (role === UserRole.ADMIN) return Shield;
+  if (checkOfficerRole(role)) return UserCog;
+  return User;
 };
 
 export default function UserManagement() {
@@ -154,16 +193,19 @@ export default function UserManagement() {
       email: "",
       phone: "",
       fullName: "",
-      role: UserRole.FRONT_DESK,
+      role: UserRole.OS_RC, // Default to a lower level officer role
+      level: 6, // Default to level 6
       isActive: true,
       designation: "",
       department: "",
       officeLocation: "",
+      sectionId: "",
       password: "",
     },
   });
 
   const [users, setUsers] = useState<User[]>([]);
+  const [sections, setSections] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -189,17 +231,26 @@ export default function UserManagement() {
     }
   }, [session, router]);
 
-  // Fetch users
+  // Fetch users and sections
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("/api/admin/users");
-        if (!response.ok) throw new Error("Failed to fetch users");
-        const data = await response.json();
-        setUsers(data.users);
+        const [usersResponse, sectionsResponse] = await Promise.all([
+          fetch("/api/admin/users"),
+          fetch("/api/admin/sections"),
+        ]);
+
+        if (!usersResponse.ok) throw new Error("Failed to fetch users");
+        if (!sectionsResponse.ok) throw new Error("Failed to fetch sections");
+
+        const usersData = await usersResponse.json();
+        const sectionsData = await sectionsResponse.json();
+
+        setUsers(usersData.users);
+        setSections(sectionsData.sections);
       } catch (error) {
-        toast.error("Failed to load users. Please try again.");
-        console.error("Error fetching users:", error);
+        toast.error("Failed to load data. Please try again.");
+        console.error("Error fetching data:", error);
       } finally {
         setIsLoading(false);
       }
@@ -210,9 +261,31 @@ export default function UserManagement() {
       (session.user.role === UserRole.ADMIN ||
         session.user.role === UserRole.SUPER_ADMIN)
     ) {
-      fetchUsers();
+      fetchData();
     }
   }, [session]);
+
+  // Watch role changes and auto-populate level and default section
+  useEffect(() => {
+    if (watchRole) {
+      const roleMapping = getRoleMapping(watchRole);
+      if (roleMapping) {
+        form.setValue("level", roleMapping.level);
+
+        // Find matching section by name
+        const defaultSection = sections.find(
+          (s) => s.name === roleMapping.defaultSection
+        );
+        if (defaultSection) {
+          form.setValue("sectionId", defaultSection.id);
+        }
+
+        // Set default designation
+        form.setValue("designation", roleMapping.shortDesignation);
+        form.setValue("department", roleMapping.defaultSection);
+      }
+    }
+  }, [watchRole, sections, form]);
 
   // Filter users based on search query, role and status
   const filteredUsers = users.filter((user) => {
@@ -327,16 +400,19 @@ export default function UserManagement() {
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
 
-    // Reset form with user data
+    // Reset form with user data, ensuring all fields have defined values
     form.reset({
-      email: user.email,
+      email: user.email || "",
       phone: user.phone || "",
-      fullName: user.officerProfile?.fullName || "",
+      fullName:
+        user.officerProfile?.fullName || user.citizenProfile?.fullName || "",
       role: user.role,
+      level: user.level ?? undefined,
       isActive: user.isActive,
-      designation: user.officerProfile ? "Officer" : "",
-      department: user.officerProfile ? "Department" : "",
-      officeLocation: user.officerProfile ? "Office" : "",
+      designation: user.officerProfile?.designation || "",
+      department: user.officerProfile?.department || "",
+      officeLocation: user.officerProfile?.officeLocation || "",
+      sectionId: user.officerProfile?.sectionId || "",
       password: "", // Don't prefill password
     });
 
@@ -475,11 +551,34 @@ export default function UserManagement() {
             <SelectContent>
               <SelectItem value="ALL">All Roles</SelectItem>
               <SelectItem value={UserRole.FRONT_DESK}>Front Desk</SelectItem>
-              <SelectItem value={UserRole.DC}>DC</SelectItem>
-              <SelectItem value={UserRole.ADC}>ADC</SelectItem>
-              <SelectItem value={UserRole.RO}>RO</SelectItem>
-              <SelectItem value={UserRole.SDM}>SDM</SelectItem>
-              <SelectItem value={UserRole.DYDIR}>DYDIR</SelectItem>
+              <SelectItem value={UserRole.DC}>District Collector</SelectItem>
+              <SelectItem value={UserRole.ADC_GTK}>ADC (Gangtok)</SelectItem>
+              <SelectItem value={UserRole.ADC_HQ}>ADC (HQ)</SelectItem>
+              <SelectItem value={UserRole.SDM_GTK}>SDM (Gangtok)</SelectItem>
+              <SelectItem value={UserRole.SDM_HQ}>SDM (HQ)</SelectItem>
+              <SelectItem value={UserRole.AC}>Assistant Collector</SelectItem>
+              <SelectItem value={UserRole.DPO_DDMA}>
+                Joint Director (DDMA)
+              </SelectItem>
+              <SelectItem value={UserRole.DD_REV}>DD (Revenue)</SelectItem>
+              <SelectItem value={UserRole.DD_ACQ}>DD (Acquisition)</SelectItem>
+              <SelectItem value={UserRole.US_ADM}>
+                US (Administration)
+              </SelectItem>
+              <SelectItem value={UserRole.AO}>Accounts Officer</SelectItem>
+              <SelectItem value={UserRole.TO_DDMA}>Training Officer</SelectItem>
+              <SelectItem value={UserRole.AD_IT}>AD (IT)</SelectItem>
+              <SelectItem value={UserRole.US_ELECTION}>
+                US (Election)
+              </SelectItem>
+              <SelectItem value={UserRole.OS_COI_RC}>OS (COI & RC)</SelectItem>
+              <SelectItem value={UserRole.OS_RC}>OS (Registration)</SelectItem>
+              <SelectItem value={UserRole.RI_LEGAL}>RI (Legal)</SelectItem>
+              {/* Legacy roles for backward compatibility */}
+              <SelectItem value={UserRole.ADC}>ADC (Legacy)</SelectItem>
+              <SelectItem value={UserRole.RO}>RO (Legacy)</SelectItem>
+              <SelectItem value={UserRole.SDM}>SDM (Legacy)</SelectItem>
+              <SelectItem value={UserRole.DYDIR}>DYDIR (Legacy)</SelectItem>
               <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
               <SelectItem value={UserRole.SUPER_ADMIN}>Super Admin</SelectItem>
             </SelectContent>
@@ -526,6 +625,12 @@ export default function UserManagement() {
                     <TableHead className="w-[250px]">User</TableHead>
                     <TableHead className="hidden md:table-cell">Role</TableHead>
                     <TableHead className="hidden lg:table-cell">
+                      Level
+                    </TableHead>
+                    <TableHead className="hidden xl:table-cell">
+                      Section
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell">
                       Last Login
                     </TableHead>
                     <TableHead className="hidden sm:table-cell">
@@ -535,102 +640,181 @@ export default function UserManagement() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredUsers.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="flex flex-col">
-                          <span className="font-medium">
-                            {user.officerProfile?.fullName || "Unnamed User"}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {user.email}
-                          </span>
-                          <span className="text-xs text-muted-foreground md:hidden">
-                            {user.role}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        <Badge
-                          variant="outline"
-                          className={`
-                            ${
-                              user.role === UserRole.ADMIN ||
-                              user.role === UserRole.SUPER_ADMIN
-                                ? "border-red-200 bg-red-50 text-red-800"
-                                : user.role === UserRole.FRONT_DESK
-                                ? "border-blue-200 bg-blue-50 text-blue-800"
-                                : "border-emerald-200 bg-emerald-50 text-emerald-800"
-                            }
-                          `}
-                        >
-                          {user.role}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden lg:table-cell">
-                        {user.lastLoginAt
-                          ? new Date(user.lastLoginAt).toLocaleDateString()
-                          : "Never"}
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <Badge
-                          variant={user.isActive ? "default" : "secondary"}
-                          className={
-                            user.isActive
-                              ? "bg-green-100 text-green-800 hover:bg-green-100"
-                              : "bg-gray-100 text-gray-800 hover:bg-gray-100"
-                          }
-                        >
-                          {user.isActive ? "Active" : "Inactive"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Open menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem
-                              onClick={() => handleEditUser(user)}
-                            >
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => toggleUserStatus(user)}
-                            >
-                              {user.isActive ? (
-                                <>
-                                  <X className="mr-2 h-4 w-4" />
-                                  Deactivate
-                                </>
-                              ) : (
-                                <>
-                                  <Check className="mr-2 h-4 w-4" />
-                                  Activate
-                                </>
+                  {filteredUsers.map((user) => {
+                    const roleMapping = getRoleMapping(user.role);
+                    const RoleIcon = getRoleIcon(user.role);
+
+                    return (
+                      <TableRow key={user.id} className="hover:bg-muted/50">
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="flex-shrink-0">
+                              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                                <RoleIcon className="w-4 h-4 text-muted-foreground" />
+                              </div>
+                            </div>
+                            <div className="flex flex-col min-w-0">
+                              <span className="font-medium truncate">
+                                {user.officerProfile?.fullName ||
+                                  user.citizenProfile?.fullName ||
+                                  "Unnamed User"}
+                              </span>
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Mail className="w-3 h-3" />
+                                <span className="truncate">{user.email}</span>
+                              </div>
+                              {user.phone && (
+                                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                  <Phone className="w-3 h-3" />
+                                  <span>{user.phone}</span>
+                                </div>
                               )}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              className="text-red-600"
-                              onClick={() => {
-                                setSelectedUser(user);
-                                setDeleteDialogOpen(true);
-                              }}
+                              <div className="md:hidden mt-1">
+                                <Badge
+                                  variant={getRoleBadgeVariant(user.role)}
+                                  className="text-xs"
+                                >
+                                  {roleMapping?.shortDesignation || user.role}
+                                </Badge>
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          <div className="flex flex-col gap-1">
+                            <Badge
+                              variant={getRoleBadgeVariant(user.role)}
+                              className="w-fit"
                             >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                              <div className="flex items-center gap-1">
+                                <RoleIcon className="w-3 h-3" />
+                                <span>
+                                  {roleMapping?.shortDesignation || user.role}
+                                </span>
+                              </div>
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              {roleMapping?.fullName || user.role}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <div className="flex items-center gap-2">
+                            <Badge
+                              variant={getLevelBadgeVariant(user.level)}
+                              className="w-fit"
+                            >
+                              {user.level !== null && user.level !== undefined
+                                ? `Level ${user.level}`
+                                : "N/A"}
+                            </Badge>
+                            {user.level !== null &&
+                              user.level !== undefined && (
+                                <span className="text-xs text-muted-foreground">
+                                  {user.level === 0
+                                    ? "Highest"
+                                    : user.level === 6
+                                    ? "Lowest"
+                                    : `Priority ${user.level}`}
+                                </span>
+                              )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden xl:table-cell">
+                          <div className="flex items-center gap-2">
+                            <Building className="w-4 h-4 text-muted-foreground" />
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium">
+                                {user.officerProfile?.section?.name ||
+                                  "No Section"}
+                              </span>
+                              {user.officerProfile?.section?.description && (
+                                <span className="text-xs text-muted-foreground">
+                                  {user.officerProfile.section.description}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm">
+                              {user.lastLoginAt
+                                ? new Date(
+                                    user.lastLoginAt
+                                  ).toLocaleDateString()
+                                : "Never"}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">
+                          <Badge
+                            variant={user.isActive ? "default" : "secondary"}
+                            className={
+                              user.isActive
+                                ? "bg-green-100 text-green-800 hover:bg-green-100"
+                                : "bg-gray-100 text-gray-800 hover:bg-gray-100"
+                            }
+                          >
+                            <div className="flex items-center gap-1">
+                              {user.isActive ? (
+                                <div className="w-2 h-2 bg-green-500 rounded-full" />
+                              ) : (
+                                <div className="w-2 h-2 bg-gray-400 rounded-full" />
+                              )}
+                              {user.isActive ? "Active" : "Inactive"}
+                            </div>
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Open menu</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem
+                                onClick={() => handleEditUser(user)}
+                              >
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => toggleUserStatus(user)}
+                              >
+                                {user.isActive ? (
+                                  <>
+                                    <X className="mr-2 h-4 w-4" />
+                                    Deactivate
+                                  </>
+                                ) : (
+                                  <>
+                                    <Check className="mr-2 h-4 w-4" />
+                                    Activate
+                                  </>
+                                )}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="text-red-600"
+                                onClick={() => {
+                                  setSelectedUser(user);
+                                  setDeleteDialogOpen(true);
+                                }}
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
@@ -706,26 +890,75 @@ export default function UserManagement() {
                       <FormLabel>Role</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value || ""}
                       >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select a role" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value={UserRole.FRONT_DESK}>
-                            Front Desk
-                          </SelectItem>
-                          <SelectItem value={UserRole.DC}>DC</SelectItem>
-                          <SelectItem value={UserRole.ADC}>ADC</SelectItem>
-                          <SelectItem value={UserRole.RO}>RO</SelectItem>
-                          <SelectItem value={UserRole.SDM}>SDM</SelectItem>
-                          <SelectItem value={UserRole.DYDIR}>DYDIR</SelectItem>
-                          <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
+                        <SelectContent className="max-h-[300px] overflow-y-auto">
+                          {/* Administrative Roles */}
+                          <div className="px-2 py-1.5 text-sm font-semibold text-gray-900 bg-gray-50">
+                            Administrative Roles
+                          </div>
                           <SelectItem value={UserRole.SUPER_ADMIN}>
-                            Super Admin
+                            <div className="flex items-center gap-2">
+                              <Crown className="w-4 h-4" />
+                              <span>Super Administrator</span>
+                            </div>
                           </SelectItem>
+                          <SelectItem value={UserRole.ADMIN}>
+                            <div className="flex items-center gap-2">
+                              <Shield className="w-4 h-4" />
+                              <span>Administrator</span>
+                            </div>
+                          </SelectItem>
+
+                          {/* Officer Roles by Level */}
+                          {Object.entries(getRolesByLevel()).map(
+                            ([level, roles]) => {
+                              const levelNum = parseInt(level);
+                              if (levelNum < 0 || levelNum > 6) return null;
+
+                              return (
+                                <div key={level}>
+                                  <div className="px-2 py-1.5 text-sm font-semibold text-gray-900 bg-gray-50">
+                                    Level {level} Officers (
+                                    {levelNum === 0
+                                      ? "Highest"
+                                      : levelNum === 6
+                                      ? "Lowest"
+                                      : `Priority ${levelNum}`}
+                                    )
+                                  </div>
+                                  {roles
+                                    .filter(
+                                      (role) => role !== UserRole.FRONT_DESK
+                                    )
+                                    .map((role) => {
+                                      const mapping = getRoleMapping(role);
+                                      return (
+                                        <SelectItem key={role} value={role}>
+                                          <div className="flex items-center gap-2">
+                                            <UserCog className="w-4 h-4" />
+                                            <div className="flex flex-col">
+                                              <span>
+                                                {mapping?.fullName || role}
+                                              </span>
+                                              <span className="text-xs text-gray-500">
+                                                {mapping?.shortDesignation ||
+                                                  role}
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </SelectItem>
+                                      );
+                                    })}
+                                </div>
+                              );
+                            }
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -754,8 +987,69 @@ export default function UserManagement() {
                 />
               </div>
 
+              {/* Level and Section fields - shown for all roles */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="level"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Level</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={-2}
+                          max={7}
+                          placeholder="Auto-filled based on role"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value
+                                ? parseInt(e.target.value)
+                                : undefined
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <FormDescription className="text-xs">
+                        -2: Super Admin, -1: Admin, 0-6: Officer levels (0
+                        highest)
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="sectionId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Section</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value || ""}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a section" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {sections.map((section) => (
+                            <SelectItem key={section.id} value={section.id}>
+                              {section.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               {/* Officer-specific fields, only shown when an officer role is selected */}
-              {isOfficerRole(watchRole) && (
+              {checkOfficerRole(watchRole) && (
                 <>
                   <Separator />
                   <h3 className="text-sm font-medium">Officer Details</h3>
@@ -915,26 +1209,75 @@ export default function UserManagement() {
                       <FormLabel>Role</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value || ""}
                       >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select a role" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value={UserRole.FRONT_DESK}>
-                            Front Desk
-                          </SelectItem>
-                          <SelectItem value={UserRole.DC}>DC</SelectItem>
-                          <SelectItem value={UserRole.ADC}>ADC</SelectItem>
-                          <SelectItem value={UserRole.RO}>RO</SelectItem>
-                          <SelectItem value={UserRole.SDM}>SDM</SelectItem>
-                          <SelectItem value={UserRole.DYDIR}>DYDIR</SelectItem>
-                          <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
+                        <SelectContent className="max-h-[300px] overflow-y-auto">
+                          {/* Administrative Roles */}
+                          <div className="px-2 py-1.5 text-sm font-semibold text-gray-900 bg-gray-50">
+                            Administrative Roles
+                          </div>
                           <SelectItem value={UserRole.SUPER_ADMIN}>
-                            Super Admin
+                            <div className="flex items-center gap-2">
+                              <Crown className="w-4 h-4" />
+                              <span>Super Administrator</span>
+                            </div>
                           </SelectItem>
+                          <SelectItem value={UserRole.ADMIN}>
+                            <div className="flex items-center gap-2">
+                              <Shield className="w-4 h-4" />
+                              <span>Administrator</span>
+                            </div>
+                          </SelectItem>
+
+                          {/* Officer Roles by Level */}
+                          {Object.entries(getRolesByLevel()).map(
+                            ([level, roles]) => {
+                              const levelNum = parseInt(level);
+                              if (levelNum < 0 || levelNum > 6) return null;
+
+                              return (
+                                <div key={level}>
+                                  <div className="px-2 py-1.5 text-sm font-semibold text-gray-900 bg-gray-50">
+                                    Level {level} Officers (
+                                    {levelNum === 0
+                                      ? "Highest"
+                                      : levelNum === 6
+                                      ? "Lowest"
+                                      : `Priority ${levelNum}`}
+                                    )
+                                  </div>
+                                  {roles
+                                    .filter(
+                                      (role) => role !== UserRole.FRONT_DESK
+                                    )
+                                    .map((role) => {
+                                      const mapping = getRoleMapping(role);
+                                      return (
+                                        <SelectItem key={role} value={role}>
+                                          <div className="flex items-center gap-2">
+                                            <UserCog className="w-4 h-4" />
+                                            <div className="flex flex-col">
+                                              <span>
+                                                {mapping?.fullName || role}
+                                              </span>
+                                              <span className="text-xs text-gray-500">
+                                                {mapping?.shortDesignation ||
+                                                  role}
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </SelectItem>
+                                      );
+                                    })}
+                                </div>
+                              );
+                            }
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -963,8 +1306,69 @@ export default function UserManagement() {
                 />
               </div>
 
+              {/* Level and Section fields - shown for all roles */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="level"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Level</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={-2}
+                          max={7}
+                          placeholder="Auto-filled based on role"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.value
+                                ? parseInt(e.target.value)
+                                : undefined
+                            )
+                          }
+                        />
+                      </FormControl>
+                      <FormDescription className="text-xs">
+                        -2: Super Admin, -1: Admin, 0-6: Officer levels (0
+                        highest)
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="sectionId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Section</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value || ""}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a section" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {sections.map((section) => (
+                            <SelectItem key={section.id} value={section.id}>
+                              {section.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               {/* Officer-specific fields, only shown when an officer role is selected */}
-              {isOfficerRole(watchRole) && (
+              {checkOfficerRole(watchRole) && (
                 <>
                   <Separator />
                   <h3 className="text-sm font-medium">Officer Details</h3>

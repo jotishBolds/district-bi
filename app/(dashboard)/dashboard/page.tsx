@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { CalendarDays, FileText, Bell } from "lucide-react";
 import { UserRole } from "@/app/generated/prisma";
 import { getServerAuthSession } from "@/lib/auth";
+import { isOfficerRole } from "@/lib/officer-roles";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -38,17 +39,20 @@ export default async function DashboardPage() {
   };
 
   const renderRoleSpecificText = () => {
-    switch (session.user?.role) {
+    const userRole = session.user?.role;
+    if (!userRole) return "Manage your dashboard";
+
+    switch (userRole) {
       case UserRole.FRONT_DESK:
         return "Manage application validations and submissions";
-      case UserRole.DC:
-      case UserRole.ADC:
-      case UserRole.RO:
-        return "Review and process assigned applications";
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:
         return "System administration and oversight";
       default:
+        // Check if it's an officer role
+        if (isOfficerRole(userRole)) {
+          return "Review and process assigned applications";
+        }
         return "Manage your dashboard";
     }
   };

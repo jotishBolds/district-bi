@@ -126,6 +126,7 @@ exports.Prisma.UserScalarFieldEnum = {
   phone: 'phone',
   passwordHash: 'passwordHash',
   role: 'role',
+  level: 'level',
   isActive: 'isActive',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
@@ -150,6 +151,7 @@ exports.Prisma.OfficerProfileScalarFieldEnum = {
   designation: 'designation',
   department: 'department',
   officeLocation: 'officeLocation',
+  sectionId: 'sectionId',
   isAvailable: 'isAvailable',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -167,6 +169,15 @@ exports.Prisma.ServiceCategoryScalarFieldEnum = {
   name: 'name',
   description: 'description',
   slaDays: 'slaDays',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SectionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -368,9 +379,25 @@ exports.Prisma.JsonNullValueFilter = {
 exports.UserRole = exports.$Enums.UserRole = {
   FRONT_DESK: 'FRONT_DESK',
   DC: 'DC',
+  ADC_GTK: 'ADC_GTK',
+  ADC_HQ: 'ADC_HQ',
   ADC: 'ADC',
-  RO: 'RO',
+  SDM_GTK: 'SDM_GTK',
+  SDM_HQ: 'SDM_HQ',
   SDM: 'SDM',
+  AC: 'AC',
+  DPO_DDMA: 'DPO_DDMA',
+  DD_REV: 'DD_REV',
+  DD_ACQ: 'DD_ACQ',
+  US_ADM: 'US_ADM',
+  AO: 'AO',
+  TO_DDMA: 'TO_DDMA',
+  AD_IT: 'AD_IT',
+  US_ELECTION: 'US_ELECTION',
+  OS_COI_RC: 'OS_COI_RC',
+  OS_RC: 'OS_RC',
+  RI_LEGAL: 'RI_LEGAL',
+  RO: 'RO',
   DYDIR: 'DYDIR',
   ADMIN: 'ADMIN',
   SUPER_ADMIN: 'SUPER_ADMIN'
@@ -408,6 +435,7 @@ exports.Prisma.ModelName = {
   OfficerProfile: 'OfficerProfile',
   FrontdeskOfficer: 'FrontdeskOfficer',
   ServiceCategory: 'ServiceCategory',
+  Section: 'Section',
   Application: 'Application',
   ApplicationWorkflow: 'ApplicationWorkflow',
   ApplicationValidation: 'ApplicationValidation',

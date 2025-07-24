@@ -17,11 +17,13 @@ const updateUserSchema = z.object({
     .optional(),
   phone: z.string().optional(),
   role: z.nativeEnum(UserRole).optional(),
+  level: z.number().int().min(-2).max(7).optional(),
   fullName: z.string().min(2, { message: "Full name is required" }).optional(),
   isActive: z.boolean().optional(),
   designation: z.string().optional(),
   department: z.string().optional(),
   officeLocation: z.string().optional(),
+  sectionId: z.string().optional(),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" })
@@ -34,16 +36,48 @@ function isOfficerRole(role: UserRole): boolean {
     UserRole.FRONT_DESK,
     UserRole.DC,
     UserRole.ADC,
-    UserRole.RO,
+    UserRole.ADC_GTK,
+    UserRole.ADC_HQ,
     UserRole.SDM,
+    UserRole.SDM_GTK,
+    UserRole.SDM_HQ,
+    UserRole.AC,
+    UserRole.DPO_DDMA,
+    UserRole.DD_REV,
+    UserRole.DD_ACQ,
+    UserRole.US_ADM,
+    UserRole.AO,
+    UserRole.TO_DDMA,
+    UserRole.AD_IT,
+    UserRole.US_ELECTION,
+    UserRole.OS_COI_RC,
+    UserRole.OS_RC,
+    UserRole.RI_LEGAL,
+    UserRole.RO,
     UserRole.DYDIR,
   ].includes(
     role as
       | typeof UserRole.FRONT_DESK
       | typeof UserRole.DC
       | typeof UserRole.ADC
-      | typeof UserRole.RO
+      | typeof UserRole.ADC_GTK
+      | typeof UserRole.ADC_HQ
       | typeof UserRole.SDM
+      | typeof UserRole.SDM_GTK
+      | typeof UserRole.SDM_HQ
+      | typeof UserRole.AC
+      | typeof UserRole.DPO_DDMA
+      | typeof UserRole.DD_REV
+      | typeof UserRole.DD_ACQ
+      | typeof UserRole.US_ADM
+      | typeof UserRole.AO
+      | typeof UserRole.TO_DDMA
+      | typeof UserRole.AD_IT
+      | typeof UserRole.US_ELECTION
+      | typeof UserRole.OS_COI_RC
+      | typeof UserRole.OS_RC
+      | typeof UserRole.RI_LEGAL
+      | typeof UserRole.RO
       | typeof UserRole.DYDIR
   );
 }

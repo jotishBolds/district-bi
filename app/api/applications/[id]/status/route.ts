@@ -8,6 +8,7 @@ import {
   Application,
   User,
 } from "@/app/generated/prisma";
+import { isOfficerRole, isOfficerOrOfficial } from "@/lib/officer-roles";
 
 // Define types for our application interfaces
 interface ApplicationWithIncludes extends Application {
@@ -159,20 +160,7 @@ export async function PATCH(
 
       case ApplicationStatus.IN_PROGRESS:
         if (
-          [
-            UserRole.DC,
-            UserRole.ADC,
-            UserRole.RO,
-            UserRole.SDM,
-            UserRole.DYDIR,
-          ].includes(
-            session.user.role as
-              | typeof UserRole.DC
-              | typeof UserRole.ADC
-              | typeof UserRole.RO
-              | typeof UserRole.SDM
-              | typeof UserRole.DYDIR
-          ) &&
+          isOfficerOrOfficial(session.user.role) &&
           (application.status === ApplicationStatus.OPEN ||
             application.status === ApplicationStatus.REOPENED) &&
           application.currentHolderId === session.user.id
@@ -191,20 +179,7 @@ export async function PATCH(
 
       case ApplicationStatus.RESOLVED:
         if (
-          [
-            UserRole.DC,
-            UserRole.ADC,
-            UserRole.RO,
-            UserRole.SDM,
-            UserRole.DYDIR,
-          ].includes(
-            session.user.role as
-              | typeof UserRole.DC
-              | typeof UserRole.ADC
-              | typeof UserRole.RO
-              | typeof UserRole.SDM
-              | typeof UserRole.DYDIR
-          ) &&
+          isOfficerRole(session.user.role) &&
           application.status === ApplicationStatus.IN_PROGRESS &&
           application.currentHolderId === session.user.id
         ) {
@@ -221,20 +196,7 @@ export async function PATCH(
 
       case ApplicationStatus.CLOSED:
         if (
-          [
-            UserRole.DC,
-            UserRole.ADC,
-            UserRole.RO,
-            UserRole.SDM,
-            UserRole.DYDIR,
-          ].includes(
-            session.user.role as
-              | typeof UserRole.DC
-              | typeof UserRole.ADC
-              | typeof UserRole.RO
-              | typeof UserRole.SDM
-              | typeof UserRole.DYDIR
-          ) &&
+          isOfficerRole(session.user.role) &&
           (application.status === ApplicationStatus.IN_PROGRESS ||
             application.status === ApplicationStatus.RESOLVED) &&
           application.currentHolderId === session.user.id
@@ -252,20 +214,7 @@ export async function PATCH(
 
       case ApplicationStatus.REOPENED:
         if (
-          [
-            UserRole.DC,
-            UserRole.ADC,
-            UserRole.RO,
-            UserRole.SDM,
-            UserRole.DYDIR,
-          ].includes(
-            session.user.role as
-              | typeof UserRole.DC
-              | typeof UserRole.ADC
-              | typeof UserRole.RO
-              | typeof UserRole.SDM
-              | typeof UserRole.DYDIR
-          ) &&
+          isOfficerRole(session.user.role) &&
           (application.status === ApplicationStatus.RESOLVED ||
             application.status === ApplicationStatus.CLOSED) &&
           application.currentHolderId === session.user.id
@@ -339,22 +288,7 @@ async function checkStatusChangePermission(
   }
 
   // Officers can process their assigned applications
-  if (
-    [
-      UserRole.DC,
-      UserRole.ADC,
-      UserRole.RO,
-      UserRole.SDM,
-      UserRole.DYDIR,
-    ].includes(
-      user.role as
-        | typeof UserRole.DC
-        | typeof UserRole.ADC
-        | typeof UserRole.RO
-        | typeof UserRole.SDM
-        | typeof UserRole.DYDIR
-    )
-  ) {
+  if (isOfficerRole(user.role)) {
     return (
       application.currentHolderId === user.id &&
       // OPEN/REOPENED -> IN_PROGRESS

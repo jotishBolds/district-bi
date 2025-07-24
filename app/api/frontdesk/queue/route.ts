@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { UserRole, ApplicationStatus } from "@/app/generated/prisma";
+import { getAllOfficerRoles } from "@/lib/officer-roles";
 
 // GET: Fetch open applications for specific frontdesk users
 export async function GET(request: NextRequest) {
@@ -28,11 +29,8 @@ export async function GET(request: NextRequest) {
       },
       include: {
         officer: {
-          select: {
-            id: true,
-            fullName: true,
-            designation: true,
-            department: true,
+          include: {
+            user: true, // Get the user information through officer profile
           },
         },
       },
@@ -75,9 +73,14 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       applications: queuedApplications,
-      assignedOfficers: frontdeskAssignments.map(
-        (assignment) => assignment.officer
-      ),
+      assignedOfficers: frontdeskAssignments
+        .filter((assignment) => assignment.officer && assignment.officer.user) // Filter out null assignments
+        .map((assignment) => ({
+          id: assignment.officer!.user.id, // Use user ID, not officer profile ID
+          fullName: assignment.officer!.fullName,
+          designation: assignment.officer!.designation,
+          department: assignment.officer!.department,
+        })),
     });
   } catch (error) {
     console.error("Error fetching queue:", error);
@@ -125,10 +128,18 @@ export async function POST(request: NextRequest) {
     const frontdeskAssignment = await prisma.frontdeskOfficer.findFirst({
       where: {
         frontdeskUserId: session.user.id,
-        officerId: officerId,
+        officer: {
+          user: {
+            id: officerId, // Find by user ID
+          },
+        },
       },
       include: {
-        officer: true,
+        officer: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
 
@@ -160,18 +171,12 @@ export async function POST(request: NextRequest) {
     // Verify officer exists and is available
     const officer = await prisma.user.findFirst({
       where: {
+        id: officerId, // Search by user ID directly
         role: {
-          in: [
-            UserRole.DC,
-            UserRole.ADC,
-            UserRole.RO,
-            UserRole.SDM,
-            UserRole.DYDIR,
-          ],
+          in: getAllOfficerRoles(), // Use all valid officer and official roles
         },
         isActive: true,
         officerProfile: {
-          id: officerId, // Search by officer profile ID
           isAvailable: true,
         },
       },

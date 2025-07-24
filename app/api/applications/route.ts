@@ -344,6 +344,11 @@ import {
   DocumentType,
   Prisma,
 } from "@/app/generated/prisma";
+import {
+  isOfficerRole,
+  isOfficerOrOfficial,
+  getAllOfficerRoles,
+} from "@/lib/officer-roles";
 // import { put } from "@vercel/blob"; // Commented out for development
 import { v4 as uuidv4 } from "uuid";
 import { writeFile, mkdir } from "fs/promises";
@@ -484,18 +489,8 @@ export async function GET(request: NextRequest) {
           ],
         };
       }
-    } else if (
-      (
-        [
-          UserRole.DC,
-          UserRole.ADC,
-          UserRole.RO,
-          UserRole.SDM,
-          UserRole.DYDIR,
-        ] as UserRole[]
-      ).includes(session.user.role)
-    ) {
-      // For officers
+    } else if (isOfficerOrOfficial(session.user.role)) {
+      // For officers and officials
       if (includeForwardingHistory) {
         // Include applications currently held by user OR applications that were forwarded by user
         whereClause = {
@@ -692,15 +687,8 @@ export async function GET(request: NextRequest) {
           return true;
         }
 
-        // If the last assignment was made by an officer, exclude it from validation tab
-        const officerRoles: UserRole[] = [
-          UserRole.DC,
-          UserRole.ADC,
-          UserRole.RO,
-          UserRole.SDM,
-          UserRole.DYDIR,
-        ];
-        if (officerRoles.includes(lastAssignment.assignedBy.role as UserRole)) {
+        // If the last assignment was made by an officer or official, exclude it from validation tab
+        if (isOfficerOrOfficial(lastAssignment.assignedBy.role as UserRole)) {
           return false;
         }
 
@@ -823,13 +811,7 @@ export async function POST(request: NextRequest) {
         where: {
           id: preferredOfficerId,
           role: {
-            in: [
-              UserRole.DC,
-              UserRole.ADC,
-              UserRole.RO,
-              UserRole.SDM,
-              UserRole.DYDIR,
-            ],
+            in: getAllOfficerRoles(),
           },
           isActive: true,
           officerProfile: {

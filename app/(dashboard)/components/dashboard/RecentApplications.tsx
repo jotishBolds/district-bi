@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -8,8 +10,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { UserRole } from "@/app/generated/prisma";
+import { isOfficerRole, isOfficerOrOfficial } from "@/lib/officer-roles";
 import Link from "next/link";
-import { ArrowRight, FileText, ExternalLink, Search } from "lucide-react";
+import {
+  ArrowRight,
+  FileText,
+  ExternalLink,
+  Search,
+  Loader2,
+  AlertTriangle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface Application {
   id: string;
@@ -26,195 +37,209 @@ interface RecentApplicationsProps {
 export default function RecentApplications({
   userRole,
 }: RecentApplicationsProps) {
-  const getApplications = (): Application[] => {
-    switch (userRole) {
-      case UserRole.FRONT_DESK:
-        return [
-          {
-            id: "1",
-            rrNumber: "RR-2025-0101",
-            service: "Land Certificate",
-            status: "Pending Validation",
-            updatedAt: "2025-05-10",
-          },
-          {
-            id: "2",
-            rrNumber: "RR-2025-0102",
-            service: "Income Certificate",
-            status: "Validated",
-            updatedAt: "2025-05-10",
-          },
-          {
-            id: "3",
-            rrNumber: "RR-2025-0103",
-            service: "Caste Certificate",
-            status: "Closed with Action",
-            updatedAt: "2025-05-09",
-          },
-        ];
-      case UserRole.DC:
-      case UserRole.ADC:
-      case UserRole.RO:
-        return [
-          {
-            id: "1",
-            rrNumber: "RR-2025-0201",
-            service: "Land Mutation",
-            status: "Assigned",
-            updatedAt: "2025-05-10",
-          },
-          {
-            id: "2",
-            rrNumber: "RR-2025-0202",
-            service: "Property Tax Appeal",
-            status: "In Review",
-            updatedAt: "2025-05-09",
-          },
-          {
-            id: "3",
-            rrNumber: "RR-2025-0203",
-            service: "Land Dispute",
-            status: "Approved",
-            updatedAt: "2025-05-08",
-          },
-        ];
-      case UserRole.ADMIN:
-      case UserRole.SUPER_ADMIN:
-        return [
-          {
-            id: "1",
-            rrNumber: "RR-2025-0301",
-            service: "Land Certificate",
-            status: "Completed",
-            updatedAt: "2025-05-10",
-          },
-          {
-            id: "2",
-            rrNumber: "RR-2025-0302",
-            service: "User Registration",
-            status: "Pending Approval",
-            updatedAt: "2025-05-10",
-          },
-          {
-            id: "3",
-            rrNumber: "RR-2025-0303",
-            service: "System Configuration",
-            status: "In Progress",
-            updatedAt: "2025-05-09",
-          },
-        ];
-      default:
-        return [];
-    }
-  };
-  const getStatusColor = (status: string): string => {
-    const statusMap: Record<string, string> = {
-      Draft: "bg-gray-100 text-gray-800 border-gray-200",
-      Pending: "bg-amber-100 text-amber-800 border-amber-200",
-      "In Progress": "bg-blue-100 text-blue-800 border-blue-200",
-      Completed: "bg-green-100 text-green-800 border-green-200",
-      "Closed with Action": "bg-red-100 text-red-800 border-red-200",
-      Validated: "bg-green-100 text-green-800 border-green-200",
-      "Pending Validation": "bg-amber-100 text-amber-800 border-amber-200",
-      Assigned: "bg-blue-100 text-blue-800 border-blue-200",
-      "In Review": "bg-purple-100 text-purple-800 border-purple-200",
-      Approved: "bg-green-100 text-green-800 border-green-200",
-      "Pending Approval": "bg-amber-100 text-amber-800 border-amber-200",
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/dashboard/recent-applications");
+        if (!response.ok) {
+          throw new Error("Failed to fetch recent applications");
+        }
+        const data = await response.json();
+        setApplications(data.applications || []);
+      } catch (err) {
+        console.error("Error fetching recent applications:", err);
+        setError("Failed to load recent applications");
+        setApplications([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    return statusMap[status] || "bg-gray-100 text-gray-800 border-gray-200";
-  };
+    fetchApplications();
+  }, [userRole]);
 
-  const getTitle = () => {
-    switch (userRole) {
-      case UserRole.FRONT_DESK:
-        return "Applications Pending Review";
-      case UserRole.DC:
-      case UserRole.ADC:
-      case UserRole.RO:
-        return "Cases Assigned to You";
-      case UserRole.ADMIN:
-      case UserRole.SUPER_ADMIN:
-        return "System Overview";
+  const getStatusColor = (status: string): string => {
+    switch (status.toLowerCase()) {
+      case "pending validation":
+      case "pending":
+        return "bg-amber-100 text-amber-800 border-amber-200";
+      case "validated":
+      case "completed":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "in progress":
+      case "assigned":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case "rejected":
+      case "cancelled":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "under review":
+        return "bg-purple-100 text-purple-800 border-purple-200";
       default:
-        return "Recent Applications";
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
-  return (
-    <Card className="border border-gray-200 shadow-sm h-full">
-      <CardHeader className="pb-0 border-b ">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <FileText className="h-5 w-5 text-blue-600 mr-2" />
-            <CardTitle className="text-lg font-semibold text-gray-800">
-              {getTitle()}
-            </CardTitle>
+  const getDashboardPath = () => {
+    if (userRole === UserRole.FRONT_DESK) {
+      return "/applications?tab=queue";
+    }
+    if (userRole && isOfficerOrOfficial(userRole)) {
+      return "/applications?tab=assigned";
+    }
+    if (userRole === UserRole.ADMIN || userRole === UserRole.SUPER_ADMIN) {
+      return "/admin/applications";
+    }
+    return "/applications";
+  };
+
+  const getViewAllText = () => {
+    if (userRole === UserRole.FRONT_DESK) {
+      return "View Queue";
+    }
+    if (userRole && isOfficerOrOfficial(userRole)) {
+      return "View Assigned";
+    }
+    return "View All Applications";
+  };
+
+  if (loading) {
+    return (
+      <Card className="border border-gray-200 shadow-sm">
+        <CardHeader className="pb-3 border-b border-gray-100">
+          <CardTitle className="text-lg font-semibold flex items-center">
+            <FileText className="h-5 w-5 mr-2 text-blue-600" />
+            Recent Applications
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between p-4 border border-gray-100 rounded-lg animate-pulse"
+              >
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-200 rounded w-32"></div>
+                  <div className="h-3 bg-gray-200 rounded w-24"></div>
+                  <div className="h-3 bg-gray-200 rounded w-20"></div>
+                </div>
+                <div className="h-6 w-16 bg-gray-200 rounded"></div>
+              </div>
+            ))}
           </div>
-        </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="border border-red-200 shadow-sm">
+        <CardHeader className="pb-3 border-b border-gray-100">
+          <CardTitle className="text-lg font-semibold flex items-center">
+            <FileText className="h-5 w-5 mr-2 text-blue-600" />
+            Recent Applications
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-center text-red-600 py-8">
+            <AlertTriangle className="h-6 w-6 mr-2" />
+            <span className="text-sm">{error}</span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="border border-gray-200 shadow-sm">
+      <CardHeader className="pb-3 border-b border-gray-100">
+        <CardTitle className="text-lg font-semibold flex items-center">
+          <FileText className="h-5 w-5 mr-2 text-blue-600" />
+          Recent Applications
+        </CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="divide-y divide-gray-100">
-          {getApplications().map((app) => (
-            <div
-              key={app.id}
-              className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors duration-200"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="bg-blue-50 p-2 rounded-full hidden sm:block">
-                  <FileText className="h-5 w-5 text-blue-600" />
+      <CardContent className="p-6">
+        {applications.length === 0 ? (
+          <div className="text-center py-8">
+            <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500 text-sm">
+              No recent applications found
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {applications.map((application) => (
+              <div
+                key={application.id}
+                className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center space-x-3 mb-2">
+                    <h4 className="font-medium text-gray-900">
+                      {application.rrNumber || `APP-${application.id}`}
+                    </h4>
+                    <Badge
+                      variant="outline"
+                      className={`text-xs px-2 py-1 ${getStatusColor(
+                        application.status
+                      )}`}
+                    >
+                      {application.status}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-1">
+                    {application.service}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Updated on{" "}
+                    {new Date(application.updatedAt).toLocaleDateString()}
+                  </p>
                 </div>
-                <div>
-                  <div className="font-medium text-gray-900">
-                    {app.rrNumber ? (
-                      <Link
-                        href={`/applications/${app.id}`}
-                        className="hover:text-blue-600 hover:underline flex items-center"
-                      >
-                        {app.rrNumber}
+                <div className="flex items-center space-x-2">
+                  {/* Individual application view button */}
+                  <Link
+                    href={`/track?id=${application.rrNumber || application.id}`}
+                  >
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <Search className="h-4 w-4" />
+                    </Button>
+                  </Link>
+
+                  {/* Officer/Admin specific view button */}
+                  {userRole &&
+                    (isOfficerOrOfficial(userRole) ||
+                      userRole === UserRole.ADMIN ||
+                      userRole === UserRole.SUPER_ADMIN ||
+                      userRole === UserRole.FRONT_DESK) && (
+                      <Link href={`/applications/${application.id}`}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
                       </Link>
-                    ) : (
-                      <span className="text-gray-500">Draft</span>
                     )}
-                  </div>
-                  <div className="text-sm text-gray-500 mt-1">
-                    {app.service}
-                  </div>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <Badge
-                  className={`${getStatusColor(
-                    app.status
-                  )} py-1 px-2 text-xs font-medium`}
-                >
-                  {app.status}
-                </Badge>
-                <div className="text-xs text-gray-500 hidden md:block">
-                  {app.updatedAt}
-                </div>
-                <Link
-                  href={`/applications/${app.id}`}
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  <span className="sr-only">View</span>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </CardContent>
-      <CardFooter className="flex justify-center border-t py-4 bg-gray-50">
-        <Button
-          variant="outline"
-          className="text-blue-600 border-blue-200 hover:bg-blue-50"
-        >
-          <Link href="/applications" className="flex items-center">
-            View All Applications
+      <CardFooter className="border-t border-gray-100 pt-4">
+        <Link href={getDashboardPath()} className="w-full">
+          <Button variant="outline" className="w-full">
+            {getViewAllText()}
             <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

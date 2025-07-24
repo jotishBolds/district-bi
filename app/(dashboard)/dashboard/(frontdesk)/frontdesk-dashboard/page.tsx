@@ -566,14 +566,14 @@ export default function FrontdeskDashboard() {
 
   return (
     <div className="p-4 sm:p-6 max-w-8xl mx-auto">
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
           Frontdesk Dashboard
         </h1>
         <p className="text-gray-600 text-lg">
           Manage applications for your assigned officers
         </p>
-      </div>
+      </div> */}
 
       {/* Enhanced Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">

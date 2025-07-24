@@ -16,6 +16,8 @@ import {
   Gavel,
   ClipboardList,
   HelpCircle,
+  BarChart3,
+  ListChecks,
 } from "lucide-react";
 import {
   SheetContent,
@@ -30,14 +32,22 @@ import { Badge } from "@/components/ui/badge";
 
 import Link from "next/link";
 import { UserRole } from "@/app/generated/prisma";
+import { isOfficerRole, isOfficerOrOfficial } from "@/lib/officer-roles";
 interface MobileSidebarProps {
   userRole?: UserRole;
+}
+
+interface SidebarLink {
+  name: string;
+  href: string;
+  icon: any;
+  badge?: number;
 }
 export default function MobileSidebar({ userRole }: MobileSidebarProps) {
   const { data: session } = useSession();
   const pathname = usePathname();
 
-  const citizenLinks = [
+  const citizenLinks: SidebarLink[] = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
     {
       name: "Applications",
@@ -48,7 +58,7 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     { name: "Help & Support", href: "/help", icon: HelpCircle },
   ];
 
-  const officerLinks = [
+  const officerLinks: SidebarLink[] = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
     { name: "Applications", href: "/applications", icon: FileText },
     {
@@ -60,7 +70,23 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     { name: "Help & Support", href: "/help", icon: HelpCircle },
   ];
 
-  const adminLinks = [
+  const dcLinks: SidebarLink[] = [
+    { name: "Dashboard", href: "/dashboard", icon: Home },
+    {
+      name: "Application Progress",
+      href: "/dashboard/application-progress",
+      icon: BarChart3,
+    },
+    {
+      name: "Assigned Applications",
+      href: "/dashboard/officers-verify",
+      icon: ClipboardList,
+    },
+
+    { name: "Help & Support", href: "/help", icon: HelpCircle },
+  ];
+
+  const adminLinks: SidebarLink[] = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
     { name: "Applications", href: "/applications", icon: FileText },
     { name: "User Management", href: "/admin/users", icon: Users },
@@ -72,41 +98,68 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     const userRole = session?.user?.role;
     if (!userRole) return citizenLinks;
 
-    switch (userRole) {
-      case UserRole.FRONT_DESK:
-      case UserRole.DC:
-      case UserRole.ADC:
-      case UserRole.RO:
-      case UserRole.SDM:
-      case UserRole.DYDIR:
-        return officerLinks;
-      case UserRole.ADMIN:
-      case UserRole.SUPER_ADMIN:
-        return adminLinks;
-      default:
-        return citizenLinks;
+    if (userRole === UserRole.DC) {
+      return dcLinks;
     }
+
+    if (
+      userRole === UserRole.FRONT_DESK ||
+      (userRole && isOfficerOrOfficial(userRole))
+    ) {
+      return officerLinks;
+    }
+
+    if (userRole === UserRole.ADMIN || userRole === UserRole.SUPER_ADMIN) {
+      return adminLinks;
+    }
+
+    return citizenLinks;
   };
   const getRoleColor = () => {
     const userRole = session?.user?.role;
-    switch (userRole) {
-      case UserRole.FRONT_DESK:
-        return "bg-green-600";
-      case UserRole.DC:
-      case UserRole.ADC:
-        return "bg-purple-600";
-      case UserRole.RO:
-        return "bg-amber-600";
-      case UserRole.SDM:
-        return "bg-cyan-600";
-      case UserRole.DYDIR:
-        return "bg-teal-600";
-      case UserRole.ADMIN:
-      case UserRole.SUPER_ADMIN:
-        return "bg-red-600";
-      default:
-        return "bg-blue-600";
+    if (!userRole) return "bg-blue-600";
+
+    if (userRole === UserRole.FRONT_DESK) return "bg-green-600";
+    if (userRole === UserRole.ADMIN || userRole === UserRole.SUPER_ADMIN)
+      return "bg-red-600";
+
+    // For officer and official roles, use a mapping based on level/type
+    if (isOfficerOrOfficial(userRole)) {
+      switch (userRole) {
+        case UserRole.DC:
+        case UserRole.ADC:
+        case UserRole.ADC_GTK:
+        case UserRole.ADC_HQ:
+          return "bg-purple-600";
+        case UserRole.SDM:
+        case UserRole.SDM_GTK:
+        case UserRole.SDM_HQ:
+          return "bg-cyan-600";
+        case UserRole.AC:
+        case UserRole.DPO_DDMA:
+        case UserRole.DD_REV:
+        case UserRole.DD_ACQ:
+          return "bg-indigo-600";
+        case UserRole.US_ADM:
+        case UserRole.AO:
+        case UserRole.TO_DDMA:
+        case UserRole.AD_IT:
+        case UserRole.US_ELECTION:
+          return "bg-emerald-600";
+        case UserRole.OS_COI_RC:
+        case UserRole.OS_RC:
+        case UserRole.RI_LEGAL:
+          return "bg-orange-600";
+        case UserRole.RO:
+          return "bg-amber-600";
+        case UserRole.DYDIR:
+          return "bg-teal-600";
+        default:
+          return "bg-slate-600";
+      }
     }
+
+    return "bg-blue-600";
   };
 
   const getRoleName = () => {

@@ -22,6 +22,7 @@ import {
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { UserRole } from "@/app/generated/prisma";
+import { isOfficerRole, isOfficerOrOfficial } from "@/lib/officer-roles";
 
 export default function UserNav() {
   const { data: session } = useSession();
@@ -38,24 +39,38 @@ export default function UserNav() {
   };
 
   const getRoleColor = (role?: UserRole | null) => {
-    switch (role) {
-      case UserRole.ADMIN:
-      case UserRole.SUPER_ADMIN:
-        return "bg-red-100 text-red-800";
-      case UserRole.DC:
-      case UserRole.ADC:
-        return "bg-purple-100 text-purple-800";
-      case UserRole.RO:
-        return "bg-amber-100 text-amber-800";
-      case UserRole.SDM:
-        return "bg-cyan-100 text-cyan-800";
-      case UserRole.DYDIR:
-        return "bg-teal-100 text-teal-800";
-      case UserRole.FRONT_DESK:
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-blue-100 text-blue-800";
+    if (!role) return "bg-blue-100 text-blue-800";
+
+    if (role === UserRole.ADMIN || role === UserRole.SUPER_ADMIN) {
+      return "bg-red-100 text-red-800";
     }
+
+    if (role === UserRole.FRONT_DESK) {
+      return "bg-green-100 text-green-800";
+    }
+
+    if (isOfficerOrOfficial(role)) {
+      // Different colors for different officer/official types
+      switch (role) {
+        case UserRole.DC:
+        case UserRole.ADC:
+        case UserRole.ADC_GTK:
+        case UserRole.ADC_HQ:
+          return "bg-purple-100 text-purple-800";
+        case UserRole.RO:
+          return "bg-amber-100 text-amber-800";
+        case UserRole.SDM:
+        case UserRole.SDM_GTK:
+        case UserRole.SDM_HQ:
+          return "bg-cyan-100 text-cyan-800";
+        case UserRole.DYDIR:
+          return "bg-teal-100 text-teal-800";
+        default:
+          return "bg-slate-100 text-slate-800";
+      }
+    }
+
+    return "bg-blue-100 text-blue-800";
   };
 
   const getRoleName = (role?: UserRole | null) => {

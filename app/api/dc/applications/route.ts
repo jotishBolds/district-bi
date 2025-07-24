@@ -14,8 +14,16 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status") || "";
-    const search = searchParams.get("search") || ""; // Build where clause
+    const search = searchParams.get("search") || "";
+    const officerId = searchParams.get("officerId") || "";
+    const ageFilter = searchParams.get("ageFilter") || "";
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const skip = (page - 1) * limit;
+
+    // Build where clause
     const where: Prisma.ApplicationWhereInput = {};
+
     if (status && status !== "ALL") {
       where.status = status as ApplicationStatus;
     }
@@ -33,9 +41,48 @@ export async function GET(request: Request) {
       ];
     }
 
+    // Officer filter
+    if (officerId) {
+      where.currentHolderId = officerId;
+    }
+
+    // Age filter (only for OPEN and IN_PROGRESS status)
+    if (
+      ageFilter &&
+      (status === "OPEN" || status === "IN_PROGRESS" || status === "ALL")
+    ) {
+      const now = new Date();
+      let dateThreshold: Date;
+
+      switch (ageFilter) {
+        case "recent": // < 3 days
+          dateThreshold = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+          where.submittedAt = { gte: dateThreshold };
+          break;
+        case "medium": // 3-7 days
+          const sevenDaysAgo = new Date(
+            now.getTime() - 7 * 24 * 60 * 60 * 1000
+          );
+          const threeDaysAgo = new Date(
+            now.getTime() - 3 * 24 * 60 * 60 * 1000
+          );
+          where.submittedAt = {
+            gte: sevenDaysAgo,
+            lt: threeDaysAgo,
+          };
+          break;
+        case "old": // > 7 days
+          dateThreshold = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          where.submittedAt = { lt: dateThreshold };
+          break;
+      }
+    }
+
     // Get applications with all necessary relations
     const applications = await prisma.application.findMany({
       where,
+      skip,
+      take: limit,
       include: {
         serviceCategory: {
           select: {
@@ -44,7 +91,10 @@ export async function GET(request: Request) {
           },
         },
         currentHolder: {
-          include: {
+          select: {
+            id: true,
+            level: true,
+            role: true,
             officerProfile: {
               select: {
                 fullName: true,
@@ -55,20 +105,20 @@ export async function GET(request: Request) {
         },
         workflow: {
           select: {
+            fromStatus: true,
             toStatus: true,
+            comments: true,
             createdAt: true,
-          },
-          orderBy: {
-            createdAt: "asc",
-          },
-        },
-        officerAssignments: {
-          include: {
-            assignedTo: {
-              include: {
+            changedBy: {
+              select: {
+                id: true,
+                role: true,
+                level: true,
+                email: true,
                 officerProfile: {
                   select: {
                     fullName: true,
+                    designation: true,
                   },
                 },
               },
@@ -78,45 +128,286 @@ export async function GET(request: Request) {
             createdAt: "asc",
           },
         },
+        officerAssignments: {
+          include: {
+            assignedTo: {
+              select: {
+                id: true,
+                level: true,
+                role: true,
+                officerProfile: {
+                  select: {
+                    fullName: true,
+                    designation: true,
+                  },
+                },
+              },
+            },
+            assignedBy: {
+              select: {
+                id: true,
+                level: true,
+                role: true,
+                email: true,
+                officerProfile: {
+                  select: {
+                    fullName: true,
+                    designation: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+        documents: {
+          select: {
+            id: true,
+            documentType: true,
+            fileName: true,
+            filePath: true,
+            fileSize: true,
+            isVerified: true,
+            verificationNotes: true,
+            createdAt: true,
+            uploadedBy: {
+              select: {
+                id: true,
+                role: true,
+                email: true,
+                citizenProfile: {
+                  select: {
+                    fullName: true,
+                  },
+                },
+              },
+            },
+            verifiedBy: {
+              select: {
+                id: true,
+                role: true,
+                officerProfile: {
+                  select: {
+                    fullName: true,
+                    designation: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        officerForwardings: {
+          select: {
+            id: true,
+            instructions: true,
+            priority: true,
+            isActive: true,
+            createdAt: true,
+            fromOfficer: {
+              select: {
+                id: true,
+                level: true,
+                role: true,
+                officerProfile: {
+                  select: {
+                    fullName: true,
+                    designation: true,
+                  },
+                },
+              },
+            },
+            toOfficer: {
+              select: {
+                id: true,
+                level: true,
+                role: true,
+                officerProfile: {
+                  select: {
+                    fullName: true,
+                    designation: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        frontdeskForwardings: {
+          select: {
+            id: true,
+            instructions: true,
+            isActive: true,
+            createdAt: true,
+            fromFrontdesk: {
+              select: {
+                id: true,
+                role: true,
+                email: true,
+              },
+            },
+            toFrontdesk: {
+              select: {
+                id: true,
+                role: true,
+                email: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
       },
     });
 
-    // Calculate stats
-    const stats = {
-      total: await prisma.application.count(),
-      pending: await prisma.application.count({
-        where: { status: ApplicationStatus.PENDING },
+    // Get total count for pagination
+    const totalCount = await prisma.application.count({ where });
+
+    // Calculate stats for status overview
+    const statusStats = await Promise.all([
+      prisma.application.count({
+        where: { status: ApplicationStatus.OPEN },
       }),
-      inProgress: await prisma.application.count({
+      prisma.application.count({
         where: { status: ApplicationStatus.IN_PROGRESS },
       }),
-      completed: await prisma.application.count({
+      prisma.application.count({
         where: { status: ApplicationStatus.RESOLVED },
       }),
-      overdue: await prisma.application.count({
+      prisma.application.count({
+        where: { status: ApplicationStatus.CLOSED },
+      }),
+      prisma.application.count({
+        where: { status: ApplicationStatus.REOPENED },
+      }),
+    ]);
+
+    // Get age-wise stats for OPEN and IN_PROGRESS
+    const now = new Date();
+    const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    const ageStats = await Promise.all([
+      // Recent (< 3 days) for OPEN and IN_PROGRESS
+      prisma.application.count({
         where: {
           status: {
-            in: [ApplicationStatus.VALIDATED, ApplicationStatus.IN_PROGRESS],
+            in: [ApplicationStatus.OPEN, ApplicationStatus.IN_PROGRESS],
           },
-          validatedAt: {
-            not: null,
+          submittedAt: { gte: threeDaysAgo },
+        },
+      }),
+      // Medium (3-7 days) for OPEN and IN_PROGRESS
+      prisma.application.count({
+        where: {
+          status: {
+            in: [ApplicationStatus.OPEN, ApplicationStatus.IN_PROGRESS],
           },
-          completedAt: null,
-          serviceCategory: {
-            slaDays: {
-              not: undefined,
-            },
+          submittedAt: {
+            gte: sevenDaysAgo,
+            lt: threeDaysAgo,
           },
         },
       }),
+      // Old (> 7 days) for OPEN and IN_PROGRESS
+      prisma.application.count({
+        where: {
+          status: {
+            in: [ApplicationStatus.OPEN, ApplicationStatus.IN_PROGRESS],
+          },
+          submittedAt: { lt: sevenDaysAgo },
+        },
+      }),
+    ]);
+
+    // Get officers with application counts
+    const officersWithCounts = await prisma.user.findMany({
+      where: {
+        role: {
+          in: Object.values(UserRole).filter((role) =>
+            [
+              "DC",
+              "ADC_GTK",
+              "ADC_HQ",
+              "SDM_GTK",
+              "SDM_HQ",
+              "AC",
+              "DPO_DDMA",
+              "DD_REV",
+              "DD_ACQ",
+              "US_ADM",
+              "AO",
+              "TO_DDMA",
+              "AD_IT",
+              "US_ELECTION",
+              "OS_COI_RC",
+              "OS_RC",
+              "RI_LEGAL",
+            ].includes(role)
+          ),
+        },
+      },
+      select: {
+        id: true,
+        role: true,
+        level: true,
+        officerProfile: {
+          select: {
+            fullName: true,
+            designation: true,
+          },
+        },
+      },
+      orderBy: [{ level: "asc" }, { officerProfile: { fullName: "asc" } }],
+    });
+
+    // Get application counts for each officer
+    const officersWithApplicationCounts = await Promise.all(
+      officersWithCounts.map(async (officer) => {
+        const count = await prisma.application.count({
+          where: { currentHolderId: officer.id },
+        });
+        return { ...officer, applicationCount: count };
+      })
+    );
+
+    // Calculate stats
+    const stats = {
+      total: await prisma.application.count(),
+      open: statusStats[0],
+      inProgress: statusStats[1],
+      resolved: statusStats[2],
+      closed: statusStats[3],
+      reopened: statusStats[4],
+      ageStats: {
+        recent: ageStats[0],
+        medium: ageStats[1],
+        old: ageStats[2],
+      },
+      pagination: {
+        page,
+        limit,
+        totalCount,
+        totalPages: Math.ceil(totalCount / limit),
+        hasNext: page * limit < totalCount,
+        hasPrev: page > 1,
+      },
     };
 
     return NextResponse.json({
       applications,
       stats,
+      officers: officersWithApplicationCounts,
     });
   } catch (error) {
     console.error("Error fetching DC applications:", error);

@@ -15,10 +15,16 @@ import {
   ClipboardList,
   HelpCircle,
   ListChecks,
+  BarChart3,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { UserRole } from "@/app/generated/prisma";
+import {
+  isOfficerRole,
+  isOfficerOrOfficial,
+  getRoleMapping,
+} from "@/lib/officer-roles";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -65,7 +71,6 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
 
   const officerLinks = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
-
     {
       name: "Assigned Applications",
       href: "/dashboard/officers-verify",
@@ -94,8 +99,8 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       : isGeneralFrontdesk === false
       ? [
           {
-            name: "Validate Applications",
-            href: "/dashboard/validate-applications",
+            name: "Manage applications",
+            href: "/dashboard/frontdesk-dashboard",
             icon: ClipboardList,
           },
           {
@@ -129,44 +134,70 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
     { name: "Help & Support", href: "/help", icon: HelpCircle },
   ];
 
+  const dcLinks = [
+    { name: "Dashboard", href: "/dashboard", icon: Home },
+    {
+      name: "Application Progress",
+      href: "/dashboard/application-progress",
+      icon: BarChart3,
+    },
+    {
+      name: "Assigned Applications",
+      href: "/dashboard/officers-verify",
+      icon: ClipboardList,
+    },
+
+    { name: "Help & Support", href: "/help", icon: HelpCircle },
+  ];
+
   const getLinks = () => {
     switch (userRole) {
       case UserRole.FRONT_DESK:
         return frontDeskLinks;
-      case UserRole.DC:
-      case UserRole.ADC:
-      case UserRole.RO:
-      case UserRole.SDM:
-      case UserRole.DYDIR:
-        return officerLinks;
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:
         return adminLinks;
+      case UserRole.DC:
+        return dcLinks;
       default:
+        // Check if it's an officer or official role using the officer-roles utility
+        if (userRole && isOfficerOrOfficial(userRole)) {
+          return officerLinks;
+        }
+        // Default fallback
         return frontDeskLinks;
     }
   };
 
   const getRoleBadge = () => {
+    if (!userRole) return { text: "User", color: "bg-gray-100 text-gray-800" };
+
     switch (userRole) {
       case UserRole.FRONT_DESK:
         return { text: "Front Desk", color: "bg-green-100 text-green-800" };
-      case UserRole.DC:
-        return { text: "DC", color: "bg-purple-100 text-purple-800" };
-      case UserRole.ADC:
-        return { text: "ADC", color: "bg-indigo-100 text-indigo-800" };
-      case UserRole.RO:
-        return { text: "RO", color: "bg-amber-100 text-amber-800" };
-      case UserRole.SDM:
-        return { text: "SDM", color: "bg-cyan-100 text-cyan-800" };
-      case UserRole.DYDIR:
-        return { text: "DYDIR", color: "bg-teal-100 text-teal-800" };
       case UserRole.ADMIN:
         return { text: "Admin", color: "bg-red-100 text-red-800" };
       case UserRole.SUPER_ADMIN:
         return { text: "Super Admin", color: "bg-gray-800 text-white" };
       default:
-        return { text: "User", color: "bg-gray-100 text-gray-800" };
+        // Check if it's an officer or official role and get the mapping
+        if (isOfficerOrOfficial(userRole)) {
+          const roleMapping = getRoleMapping(userRole);
+          const displayText = roleMapping?.shortDesignation || userRole;
+          const level = roleMapping?.level ?? 0;
+
+          // Color based on officer level (higher level = more important = different color)
+          let color = "bg-blue-100 text-blue-800"; // Default officer color
+          if (level === 0)
+            color = "bg-purple-100 text-purple-800"; // Highest level (DC)
+          else if (level <= 2)
+            color = "bg-indigo-100 text-indigo-800"; // High level
+          else if (level <= 4) color = "bg-cyan-100 text-cyan-800"; // Mid level
+          else color = "bg-amber-100 text-amber-800"; // Lower level
+
+          return { text: displayText, color };
+        }
+        return { text: userRole, color: "bg-gray-100 text-gray-800" };
     }
   };
 

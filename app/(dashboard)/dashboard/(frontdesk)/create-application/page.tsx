@@ -556,7 +556,7 @@ export default function CreateApplicationPage() {
       if (isGeneralFrontdesk) {
         router.push(`/dashboard`); // General frontdesk goes to main dashboard
       } else {
-        router.push(`/dashboard/validate-applications`); // Specific frontdesk goes to validate
+        router.push(`/dashboard/frontdesk-dashboard`); // Specific frontdesk goes to validate
       }
     } catch (error) {
       console.error("Error creating application:", error);

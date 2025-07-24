@@ -179,8 +179,13 @@ export default function ApplicationQueuePage() {
   const handlePullApplication = (application: QueuedApplication) => {
     setSelectedApplication(application);
     setIsPullDialogOpen(true);
+
+    // Auto-select officer if there's only one assigned
+    const defaultOfficerId =
+      assignedOfficers.length === 1 ? assignedOfficers[0].id : "";
+
     form.reset({
-      officerId: "",
+      officerId: defaultOfficerId,
       priority: 2,
       instructions: "",
     });
@@ -706,33 +711,55 @@ export default function ApplicationQueuePage() {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-4"
                   >
-                    <FormField
-                      control={form.control}
-                      name="officerId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Assign to Officer *</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select an officer" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {assignedOfficers.map((officer) => (
-                                <SelectItem key={officer.id} value={officer.id}>
-                                  {officer.fullName} - {officer.designation}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {assignedOfficers.length === 1 ? (
+                      // Show assigned officer info instead of dropdown when only one officer
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">
+                          Assigned Officer
+                        </label>
+                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                          <div className="font-medium text-blue-900">
+                            {assignedOfficers[0].fullName}
+                          </div>
+                          <div className="text-sm text-blue-700">
+                            {assignedOfficers[0].designation} -{" "}
+                            {assignedOfficers[0].department}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      // Show dropdown when multiple officers
+                      <FormField
+                        control={form.control}
+                        name="officerId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Assign to Officer *</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select an officer" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {assignedOfficers.map((officer) => (
+                                  <SelectItem
+                                    key={officer.id}
+                                    value={officer.id}
+                                  >
+                                    {officer.fullName} - {officer.designation}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
 
                     <FormField
                       control={form.control}

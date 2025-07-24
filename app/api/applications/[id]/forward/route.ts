@@ -3,6 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { UserRole, ApplicationStatus } from "@/app/generated/prisma";
+import {
+  getAllOfficerRoles,
+  getForwardableOfficerRoles,
+  isOfficerOrOfficial,
+  canAssignTo,
+  getLevelPriority,
+} from "@/lib/officer-roles";
 
 export async function POST(
   request: NextRequest,
@@ -17,7 +24,7 @@ export async function POST(
     }
 
     // Only officers can forward applications
-    if (session.user.role === UserRole.FRONT_DESK) {
+    if (!isOfficerOrOfficial(session.user.role)) {
       return NextResponse.json(
         { error: "Only officers can forward applications" },
         { status: 403 }
@@ -61,13 +68,7 @@ export async function POST(
       where: {
         id: assignedToId,
         role: {
-          in: [
-            UserRole.DC,
-            UserRole.ADC,
-            UserRole.RO,
-            UserRole.SDM,
-            UserRole.DYDIR,
-          ],
+          in: getForwardableOfficerRoles(),
         },
         isActive: true,
       },
@@ -80,6 +81,18 @@ export async function POST(
       return NextResponse.json(
         { error: "Target officer not found or inactive" },
         { status: 404 }
+      );
+    }
+
+    // Check level-based hierarchy: current user can only forward to same level or lower
+    if (!canAssignTo(session.user.role, targetOfficer.role)) {
+      const currentLevel = getLevelPriority(session.user.role);
+      const targetLevel = getLevelPriority(targetOfficer.role);
+      return NextResponse.json(
+        {
+          error: `Cannot forward to higher level officer. Your level: ${currentLevel}, Target level: ${targetLevel}`,
+        },
+        { status: 403 }
       );
     }
 

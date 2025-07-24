@@ -3,6 +3,12 @@ import { NextResponse } from "next/server";
 import { getServerAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { UserRole } from "@/app/generated/prisma";
+import {
+  getForwardableOfficerRoles,
+  canAssignTo,
+  getLevelPriority,
+  getRoleMapping,
+} from "@/lib/officer-roles";
 
 export async function GET() {
   try {
@@ -10,19 +16,15 @@ export async function GET() {
 
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    } // Fetch available officers with DC, ADC, RO, SDM, or DYDIR roles, excluding the current user
-    const officers = await prisma.user.findMany({
+    }
+
+    // Get all officers first
+    const allOfficers = await prisma.user.findMany({
       where: {
         AND: [
           {
             role: {
-              in: [
-                UserRole.DC,
-                UserRole.ADC,
-                UserRole.RO,
-                UserRole.SDM,
-                UserRole.DYDIR,
-              ],
+              in: getForwardableOfficerRoles(),
             },
             isActive: true,
             officerProfile: {
@@ -49,15 +51,41 @@ export async function GET() {
       },
     });
 
+    // Filter officers based on user type:
+    // - Front desk users can see ALL officers
+    // - Officers can only assign to same or lower level based on hierarchy
+    let officers;
+    if (session.user.role === UserRole.FRONT_DESK) {
+      // Frontdesk can forward to any officer
+      officers = allOfficers;
+    } else {
+      // Officers can only assign to same or lower level
+      officers = allOfficers.filter((officer) =>
+        canAssignTo(session.user.role, officer.role)
+      );
+    }
+
     // Transform the data to match the expected format in the component
-    const formattedOfficers = officers.map((officer) => ({
-      id: officer.id,
-      fullName: officer.officerProfile?.fullName || "",
-      designation: officer.officerProfile?.designation || "",
-      department: officer.officerProfile?.department || "",
-      officeLocation: officer.officerProfile?.officeLocation || "",
-      role: officer.role,
-    }));
+    const formattedOfficers = officers.map((officer) => {
+      const roleMapping = getRoleMapping(officer.role);
+      return {
+        id: officer.id,
+        role: officer.role,
+        fullName: officer.officerProfile?.fullName || "",
+        designation:
+          officer.officerProfile?.designation || roleMapping?.fullName || "",
+        department:
+          officer.officerProfile?.department ||
+          roleMapping?.defaultSection ||
+          "",
+        officeLocation: officer.officerProfile?.officeLocation || "",
+        level: roleMapping?.level || 0,
+        userType: roleMapping?.userType || "Officer",
+      };
+    });
+
+    // Sort by level (ascending - lower numbers = higher priority)
+    formattedOfficers.sort((a, b) => a.level - b.level);
 
     return NextResponse.json(formattedOfficers);
   } catch (error) {

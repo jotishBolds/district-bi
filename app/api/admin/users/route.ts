@@ -6,18 +6,21 @@ import { authOptions } from "@/lib/auth";
 import * as bcrypt from "bcryptjs";
 import { z } from "zod";
 import { Prisma, UserRole } from "@/app/generated/prisma";
+import { OFFICER_ROLE_MAPPINGS } from "@/lib/officer-roles";
 
 // Schema for creating users
 const createUserSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   phone: z.string().optional(),
   role: z.nativeEnum(UserRole),
+  level: z.number().int().min(-2).max(7).optional(), // -2 for super admin, 0-6 for officers
   fullName: z.string().min(2, { message: "Full name is required" }),
   isActive: z.boolean().default(true),
   // For officer specific fields
   designation: z.string().optional(),
   department: z.string().optional(),
   officeLocation: z.string().optional(),
+  sectionId: z.string().optional(),
   // Password is optional - if not provided, a random one will be generated
   password: z
     .string()
@@ -43,8 +46,24 @@ function isOfficerRole(role: UserRole) {
       UserRole.FRONT_DESK,
       UserRole.DC,
       UserRole.ADC,
-      UserRole.RO,
+      UserRole.ADC_GTK,
+      UserRole.ADC_HQ,
       UserRole.SDM,
+      UserRole.SDM_GTK,
+      UserRole.SDM_HQ,
+      UserRole.AC,
+      UserRole.DPO_DDMA,
+      UserRole.DD_REV,
+      UserRole.DD_ACQ,
+      UserRole.US_ADM,
+      UserRole.AO,
+      UserRole.TO_DDMA,
+      UserRole.AD_IT,
+      UserRole.US_ELECTION,
+      UserRole.OS_COI_RC,
+      UserRole.OS_RC,
+      UserRole.RI_LEGAL,
+      UserRole.RO,
       UserRole.DYDIR,
     ] as const
   ).includes(
@@ -52,8 +71,24 @@ function isOfficerRole(role: UserRole) {
       | typeof UserRole.FRONT_DESK
       | typeof UserRole.DC
       | typeof UserRole.ADC
-      | typeof UserRole.RO
+      | typeof UserRole.ADC_GTK
+      | typeof UserRole.ADC_HQ
       | typeof UserRole.SDM
+      | typeof UserRole.SDM_GTK
+      | typeof UserRole.SDM_HQ
+      | typeof UserRole.AC
+      | typeof UserRole.DPO_DDMA
+      | typeof UserRole.DD_REV
+      | typeof UserRole.DD_ACQ
+      | typeof UserRole.US_ADM
+      | typeof UserRole.AO
+      | typeof UserRole.TO_DDMA
+      | typeof UserRole.AD_IT
+      | typeof UserRole.US_ELECTION
+      | typeof UserRole.OS_COI_RC
+      | typeof UserRole.OS_RC
+      | typeof UserRole.RI_LEGAL
+      | typeof UserRole.RO
       | typeof UserRole.DYDIR
   );
 }
@@ -80,8 +115,8 @@ export async function GET(req: NextRequest) {
           },
         },
         officerProfile: {
-          select: {
-            fullName: true,
+          include: {
+            section: true,
           },
         },
       },
@@ -136,6 +171,10 @@ export async function POST(req: NextRequest) {
     // Create user with transaction to ensure related profiles are created
     const user = await prisma.$transaction(
       async (tx: Prisma.TransactionClient) => {
+        // Get role mapping for default level and other properties
+        const roleMapping = OFFICER_ROLE_MAPPINGS[validatedData.role];
+        const level = validatedData.level ?? roleMapping?.level ?? 0; // Default to 0 if no mapping
+
         // Create the user
         const newUser = await tx.user.create({
           data: {
@@ -143,6 +182,7 @@ export async function POST(req: NextRequest) {
             phone: validatedData.phone,
             passwordHash,
             role: validatedData.role,
+            level: level,
             isActive: validatedData.isActive,
           },
         });
@@ -157,9 +197,16 @@ export async function POST(req: NextRequest) {
             data: {
               userId: newUser.id,
               fullName: validatedData.fullName,
-              designation: validatedData.designation || "Officer",
-              department: validatedData.department || "General",
+              designation:
+                validatedData.designation ||
+                roleMapping?.shortDesignation ||
+                "Officer",
+              department:
+                validatedData.department ||
+                roleMapping?.defaultSection ||
+                "General",
               officeLocation: validatedData.officeLocation,
+              sectionId: validatedData.sectionId,
             },
           });
         } else {
@@ -183,7 +230,11 @@ export async function POST(req: NextRequest) {
       where: { id: user.id },
       include: {
         citizenProfile: true,
-        officerProfile: true,
+        officerProfile: {
+          include: {
+            section: true,
+          },
+        },
       },
     });
 
