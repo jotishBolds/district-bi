@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../app/generated/prisma"
@@ -12,95 +6,37 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
- 
-
-}
-
-enum UserRole {
-  FRONT_DESK // Validates applications and generates RR numbers to Citizen
-  DC // District Collector
-  ADC_GTK // Additional District Collector (Gangtok)
-  ADC_HQ // Additional District Collector (HQ)
-  ADC // Additional District Collector (Generic)
-  SDM_GTK // Subdivisional Magistrate (Gangtok)
-  SDM_HQ // Subdivisional Magistrate (HQ)
-  SDM // Subdivisional Magistrate (Generic)
-  AC // Assistant Collector
-  DPO_DDMA // Joint Director (DDMA)
-  DD_REV // Deputy Director (Revenue)
-  DD_ACQ // Deputy Director (Acquisition)
-  US_ADM // Under Secretary (Administration)
-  AO // Accounts Officer
-  TO_DDMA // Training Officer (DDMA)
-  AD_IT // Assistant Director (IT)
-  US_ELECTION // Under Secretary (Election)
-  OS_COI_RC // Office Superintendent (COI & RC)
-  OS_RC // Office Superintendent (RC)
-  RI_LEGAL // Revenue Inspector (Legal)
-  RO // Revenue Officer (Legacy)
-  DYDIR // Deputy Director (Legacy)
-  DISPATCH_HANDLER // Handles dispatch of closed applications
-  ADMIN
-  SUPER_ADMIN
-}
-
-enum ApplicationStatus {
-  DRAFT // Citizen is still filling the form
-  PENDING // Waiting for front desk validation
-  VALIDATED // RR number assigned by general frontdesk
-  OPEN // In queue waiting for specific frontdesk to pull
-  IN_PROGRESS // With assigned officer
-  RESOLVED // Application resolved by officer
-  CLOSED // Application closed by officer
-  REOPENED // Application reopened by officer
-}
-
-enum DocumentType {
-  ID_PROOF
-  ADDRESS_PROOF
-  APPLICATION_FORM
-  SUPPORTING_DOCUMENT
-  PAYMENT_RECEIPT
-}
-
-enum NotificationType {
-  APPLICATION_SUBMITTED
-  STATUS_CHANGED
-  DOCUMENT_REQUESTED
-  PAYMENT_REQUIRED
 }
 
 model User {
-  id           String    @id @default(uuid())
-  email        String    @unique
-  phone        String?   @unique
-  passwordHash String?
-  role         UserRole  @default(FRONT_DESK)
-  level        Int?      // 0 = highest priority (DC), 6 = lowest priority (Officials)
-  isActive     Boolean   @default(true)
-  lastLoginAt  DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
- 
-  // Relations
-  citizenProfile      CitizenProfile?
-  officerProfile      OfficerProfile?
-  currentHolderFiles  Application[]           @relation("CurrentHolder")
-  dispatchedApplications Application[]        @relation("DispatchedBy")
-  workflowChanges     ApplicationWorkflow[]   @relation("ChangedBy")
-  validations         ApplicationValidation[] @relation("ValidatedBy")
-  verifiedDocuments   Document[]              @relation("VerifiedBy")
-  uploadedDocuments   Document[]              @relation("UploadedBy")
-  assignmentsGiven    OfficerAssignment[]     @relation("AssignedBy")
-  assignmentsReceived OfficerAssignment[]     @relation("AssignedTo")
-  documentRequests    DocumentRequest[]       @relation("RequestedBy")
-  notifications       Notification[]
-  auditLogs           ApplicationAuditLog[]   @relation("PerformedBy")
-  frontdeskAssignments FrontdeskOfficer[]     @relation("FrontdeskAssignments")
-  forwardedFrom       FrontdeskForwarding[]   @relation("ForwardedFrom")
-  forwardedTo         FrontdeskForwarding[]   @relation("ForwardedTo")
-  officerForwardedFrom OfficerForwardingHistory[] @relation("OfficerForwardedFrom")
-  officerForwardedTo   OfficerForwardingHistory[] @relation("OfficerForwardedTo")
+  id                     String                     @id @default(uuid())
+  email                  String                     @unique
+  phone                  String?                    @unique
+  passwordHash           String?
+  role                   UserRole                   @default(FRONT_DESK)
+  isActive               Boolean                    @default(true)
+  lastLoginAt            DateTime?
+  createdAt              DateTime                   @default(now())
+  updatedAt              DateTime                   @updatedAt
+  level                  Int?
+  auditLogs              ApplicationAuditLog[]      @relation("PerformedBy")
+  validations            ApplicationValidation[]    @relation("ValidatedBy")
+  workflowChanges        ApplicationWorkflow[]      @relation("ChangedBy")
+  currentHolderFiles     Application[]              @relation("CurrentHolder")
+  dispatchedApplications Application[]              @relation("DispatchedBy")
+  citizenProfile         CitizenProfile?
+  documentRequests       DocumentRequest[]          @relation("RequestedBy")
+  uploadedDocuments      Document[]                 @relation("UploadedBy")
+  verifiedDocuments      Document[]                 @relation("VerifiedBy")
+  forwardedFrom          FrontdeskForwarding[]      @relation("ForwardedFrom")
+  forwardedTo            FrontdeskForwarding[]      @relation("ForwardedTo")
+  frontdeskAssignments   FrontdeskOfficer[]         @relation("FrontdeskAssignments")
+  notifications          Notification[]
+  assignmentsGiven       OfficerAssignment[]        @relation("AssignedBy")
+  assignmentsReceived    OfficerAssignment[]        @relation("AssignedTo")
+  officerForwardedFrom   OfficerForwardingHistory[] @relation("OfficerForwardedFrom")
+  officerForwardedTo     OfficerForwardingHistory[] @relation("OfficerForwardedTo")
+  officerProfile         OfficerProfile?
 
   @@map("users")
 }
@@ -114,131 +50,113 @@ model CitizenProfile {
   aadhaarNumber String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("citizen_profiles")
 }
 
 model OfficerProfile {
-  id             String   @id @default(uuid())
-  userId         String   @unique
+  id             String             @id @default(uuid())
+  userId         String             @unique
   fullName       String
   designation    String
   department     String
   officeLocation String?
-  sectionId      String?  // Optional relation to Section
-  isAvailable    Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  // Relations
-  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  section        Section?          @relation(fields: [sectionId], references: [id])
+  isAvailable    Boolean            @default(true)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  sectionId      String?
   frontdeskUsers FrontdeskOfficer[]
+  section        Section?           @relation(fields: [sectionId], references: [id])
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("officer_profiles")
 }
 
 model FrontdeskOfficer {
-  id         String  @id @default(uuid())
+  id              String          @id @default(uuid())
   frontdeskUserId String
-  officerId  String?  // null means general frontdesk (can handle all officers)
-  createdAt  DateTime @default(now())
-
-  // Relations
-  frontdeskUser User            @relation("FrontdeskAssignments", fields: [frontdeskUserId], references: [id], onDelete: Cascade)
-  officer       OfficerProfile? @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId       String?
+  createdAt       DateTime        @default(now())
+  frontdeskUser   User            @relation("FrontdeskAssignments", fields: [frontdeskUserId], references: [id], onDelete: Cascade)
+  officer         OfficerProfile? @relation(fields: [officerId], references: [id], onDelete: Cascade)
 
   @@unique([frontdeskUserId, officerId])
   @@map("frontdesk_officers")
 }
 
 model ServiceCategory {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String?
-  slaDays     Int // Service Level Agreement in days
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relations
+  id           String        @id @default(uuid())
+  name         String        @unique
+  description  String?
+  slaDays      Int
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   applications Application[]
 
   @@map("service_categories")
 }
 
 model Section {
-  id          String   @id @default(uuid())
-  name        String   @unique // e.g., "General Section", "Revenue Section", etc.
+  id          String           @id @default(uuid())
+  name        String           @unique
   description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relations
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
   officers    OfficerProfile[]
 
   @@map("sections")
 }
 
 model Department {
-  id          String   @id @default(uuid())
-  name        String   @unique // e.g., "Government Department", "Private Department", etc.
-  description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relations
+  id           String        @id @default(uuid())
+  name         String        @unique
+  description  String?
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   applications Application[]
 
   @@map("departments")
 }
 
 model Application {
-  id                String            @id @default(uuid())
-  rrNumber          String?           @unique // Generated by front desk
-  serviceCategoryId String
-  departmentId      String            // Department this application belongs to
-  subject           String            @default("Application Subject") // Subject of the application
-  
-  // Citizen details (stored directly, no user account needed)
-  citizenName       String
-  citizenPhone      String
-  citizenEmail      String?
-  citizenAddress    String
-  citizenGender     String?
-  citizenAadhaar    String?
-  
-  // Application tracking
-  status            ApplicationStatus @default(DRAFT)
-  currentHolderId   String?
-  submittedAt       DateTime?
-  validatedAt       DateTime?
-  completedAt       DateTime?
-  isDispatched      Boolean          @default(false) // Dispatch tracking
-  dispatchedAt      DateTime?        // When application was dispatched
-  dispatchedById    String?          // Who dispatched the application
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-
-  // Relations
-  serviceCategory    ServiceCategory        @relation(fields: [serviceCategoryId], references: [id])
-  department         Department             @relation(fields: [departmentId], references: [id])
-  currentHolder      User?                  @relation("CurrentHolder", fields: [currentHolderId], references: [id])
-  dispatchedBy       User?                  @relation("DispatchedBy", fields: [dispatchedById], references: [id])
-  workflow           ApplicationWorkflow[]
-  validation         ApplicationValidation?
-  officerAssignments OfficerAssignment[]
-  documents          Document[]
-  documentRequests   DocumentRequest[]
-  notifications      Notification[]
-  auditLogs          ApplicationAuditLog[]
+  id                   String                     @id @default(uuid())
+  rrNumber             String?                    @unique
+  serviceCategoryId    String
+  status               ApplicationStatus          @default(DRAFT)
+  currentHolderId      String?
+  submittedAt          DateTime?
+  validatedAt          DateTime?
+  completedAt          DateTime?
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+  citizenAadhaar       String?
+  citizenAddress       String
+  citizenEmail         String?
+  citizenGender        String?
+  citizenName          String
+  citizenPhone         String
+  subject              String                     @default("Application Subject")
+  departmentId         String
+  dispatchedAt         DateTime?
+  dispatchedById       String?
+  isDispatched         Boolean                    @default(false)
+  auditLogs            ApplicationAuditLog[]
+  validation           ApplicationValidation?
+  workflow             ApplicationWorkflow[]
+  currentHolder        User?                      @relation("CurrentHolder", fields: [currentHolderId], references: [id])
+  department           Department                 @relation(fields: [departmentId], references: [id])
+  dispatchedBy         User?                      @relation("DispatchedBy", fields: [dispatchedById], references: [id])
+  serviceCategory      ServiceCategory            @relation(fields: [serviceCategoryId], references: [id])
+  documentRequests     DocumentRequest[]
+  documents            Document[]
   frontdeskForwardings FrontdeskForwarding[]
-  officerForwardings OfficerForwardingHistory[]
+  notifications        Notification[]
+  officerAssignments   OfficerAssignment[]
+  officerForwardings   OfficerForwardingHistory[]
 
   @@map("applications")
 }
@@ -251,45 +169,39 @@ model ApplicationWorkflow {
   changedById   String
   comments      String?
   createdAt     DateTime           @default(now())
-
-  // Relations
-  application Application @relation(fields: [applicationId], references: [id])
-  changedBy   User        @relation("ChangedBy", fields: [changedById], references: [id])
+  application   Application        @relation(fields: [applicationId], references: [id])
+  changedBy     User               @relation("ChangedBy", fields: [changedById], references: [id])
 
   @@map("application_workflow")
 }
 
 model ApplicationValidation {
-  id                    String   @id @default(uuid())
-  applicationId         String   @unique
+  id                    String      @id @default(uuid())
+  applicationId         String      @unique
   validatedById         String
   rrNumber              String
-  isDocumentsComplete   Boolean  @default(false)
-  isEligibilityVerified Boolean  @default(false)
+  isDocumentsComplete   Boolean     @default(false)
+  isEligibilityVerified Boolean     @default(false)
   validationNotes       String?
-  createdAt             DateTime @default(now())
-
-  // Relations
-  application Application @relation(fields: [applicationId], references: [id])
-  validatedBy User        @relation("ValidatedBy", fields: [validatedById], references: [id])
+  createdAt             DateTime    @default(now())
+  application           Application @relation(fields: [applicationId], references: [id])
+  validatedBy           User        @relation("ValidatedBy", fields: [validatedById], references: [id])
 
   @@map("application_validations")
 }
 
 model OfficerAssignment {
-  id                     String    @id @default(uuid())
+  id                     String      @id @default(uuid())
   applicationId          String
   assignedById           String
   assignedToId           String
   expectedCompletionDate DateTime?
-  priority               Int       @default(2) // 1=High, 2=Medium, 3=Low
+  priority               Int         @default(2)
   instructions           String?
-  createdAt              DateTime  @default(now())
-
-  // Relations
-  application Application @relation(fields: [applicationId], references: [id])
-  assignedBy  User        @relation("AssignedBy", fields: [assignedById], references: [id])
-  assignedTo  User        @relation("AssignedTo", fields: [assignedToId], references: [id])
+  createdAt              DateTime    @default(now())
+  application            Application @relation(fields: [applicationId], references: [id])
+  assignedBy             User        @relation("AssignedBy", fields: [assignedById], references: [id])
+  assignedTo             User        @relation("AssignedTo", fields: [assignedToId], references: [id])
 
   @@map("officer_assignments")
 }
@@ -300,18 +212,16 @@ model Document {
   documentType      DocumentType
   fileName          String
   filePath          String
-  fileSize          Int // In bytes
+  fileSize          Int
   uploadedById      String
   isVerified        Boolean      @default(false)
   verifiedById      String?
   verificationNotes String?
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
-
-  // Relations
-  application Application @relation(fields: [applicationId], references: [id])
-  uploadedBy  User        @relation("UploadedBy", fields: [uploadedById], references: [id])
-  verifiedBy  User?       @relation("VerifiedBy", fields: [verifiedById], references: [id])
+  application       Application  @relation(fields: [applicationId], references: [id])
+  uploadedBy        User         @relation("UploadedBy", fields: [uploadedById], references: [id])
+  verifiedBy        User?        @relation("VerifiedBy", fields: [verifiedById], references: [id])
 
   @@map("documents")
 }
@@ -326,10 +236,8 @@ model DocumentRequest {
   isCompleted   Boolean      @default(false)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-
-  // Relations
-  application Application @relation(fields: [applicationId], references: [id])
-  requestedBy User        @relation("RequestedBy", fields: [requestedById], references: [id])
+  application   Application  @relation(fields: [applicationId], references: [id])
+  requestedBy   User         @relation("RequestedBy", fields: [requestedById], references: [id])
 
   @@map("document_requests")
 }
@@ -344,27 +252,23 @@ model Notification {
   isRead           Boolean          @default(false)
   readAt           DateTime?
   createdAt        DateTime         @default(now())
-
-  // Relations
-  user        User         @relation(fields: [userId], references: [id])
-  application Application? @relation(fields: [applicationId], references: [id])
+  application      Application?     @relation(fields: [applicationId], references: [id])
+  user             User             @relation(fields: [userId], references: [id])
 
   @@map("notifications")
 }
 
 model ApplicationAuditLog {
-  id            String   @id @default(uuid())
+  id            String      @id @default(uuid())
   applicationId String
   action        String
   performedById String
   oldValues     Json?
   newValues     Json?
   ipAddress     String?
-  createdAt     DateTime @default(now())
-
-  // Relations
-  application Application @relation(fields: [applicationId], references: [id])
-  performedBy User        @relation("PerformedBy", fields: [performedById], references: [id])
+  createdAt     DateTime    @default(now())
+  application   Application @relation(fields: [applicationId], references: [id])
+  performedBy   User        @relation("PerformedBy", fields: [performedById], references: [id])
 
   @@map("application_audit_logs")
 }
@@ -376,7 +280,7 @@ model DailyReport {
   pendingValidation Int      @default(0)
   inProgress        Int      @default(0)
   completed         Int      @default(0)
-  avgProcessingTime Int? // Stored in minutes
+  avgProcessingTime Int?
   createdAt         DateTime @default(now())
 
   @@map("daily_reports")
@@ -394,68 +298,116 @@ model SystemSetting {
   @@map("system_settings")
 }
 
-// For handling password reset and email verification
 model VerificationToken {
   id         String   @id @default(uuid())
   identifier String
   token      String   @unique
   expires    DateTime
-  type       String // "EMAIL_VERIFICATION" or "PASSWORD_RESET" or "PHONE_VERIFICATION"
+  type       String
 
   @@unique([identifier, token])
   @@map("verification_tokens")
 }
 
-// For application tracking via RR number/phone with OTP
 model ApplicationTrackingOTP {
-  id           String   @id @default(uuid())
-  identifier   String   // RR number or phone number
-  otp          String
-  otpType      String   // "RR_NUMBER" or "PHONE_NUMBER"
-  sentTo       String   // email or phone where OTP was sent
-  isUsed       Boolean  @default(false)
-  attempts     Int      @default(0)
-  expires      DateTime
-  createdAt    DateTime @default(now())
+  id         String   @id @default(uuid())
+  identifier String
+  otp        String
+  otpType    String
+  sentTo     String
+  isUsed     Boolean  @default(false)
+  attempts   Int      @default(0)
+  expires    DateTime
+  createdAt  DateTime @default(now())
 
   @@map("application_tracking_otps")
 }
 
 model FrontdeskForwarding {
-  id               String   @id @default(uuid())
-  applicationId    String
-  fromFrontdeskId  String   // Frontdesk user who forwarded
-  toFrontdeskId    String   // Frontdesk user who received
-  fromOfficerId    String   // Officer assigned to sender frontdesk
-  toOfficerId      String   // Officer assigned to receiver frontdesk
-  instructions     String?
-  isActive         Boolean  @default(true) // false when application is forwarded back
-  createdAt        DateTime @default(now())
-
-  // Relations
-  application      Application @relation(fields: [applicationId], references: [id])
-  fromFrontdesk    User        @relation("ForwardedFrom", fields: [fromFrontdeskId], references: [id])
-  toFrontdesk      User        @relation("ForwardedTo", fields: [toFrontdeskId], references: [id])
+  id              String      @id @default(uuid())
+  applicationId   String
+  fromFrontdeskId String
+  toFrontdeskId   String
+  fromOfficerId   String
+  toOfficerId     String
+  instructions    String?
+  isActive        Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  application     Application @relation(fields: [applicationId], references: [id])
+  fromFrontdesk   User        @relation("ForwardedFrom", fields: [fromFrontdeskId], references: [id])
+  toFrontdesk     User        @relation("ForwardedTo", fields: [toFrontdeskId], references: [id])
 
   @@map("frontdesk_forwardings")
 }
 
 model OfficerForwardingHistory {
-  id               String   @id @default(uuid())
-  applicationId    String
-  fromOfficerId    String   // Officer who forwarded
-  toOfficerId      String   // Officer who received
-  instructions     String?
-  priority         Int      @default(2) // 1=High, 2=Medium, 3=Low
-  isActive         Boolean  @default(true) // false when forwarding is completed
-  createdAt        DateTime @default(now())
-  forwardedAt      DateTime @default(now()) // When it was forwarded
-  completedAt      DateTime? // When the forwarding was completed (application moved to next officer)
-
-  // Relations
-  application      Application @relation(fields: [applicationId], references: [id])
-  fromOfficer      User        @relation("OfficerForwardedFrom", fields: [fromOfficerId], references: [id])
-  toOfficer        User        @relation("OfficerForwardedTo", fields: [toOfficerId], references: [id])
+  id            String      @id @default(uuid())
+  applicationId String
+  fromOfficerId String
+  toOfficerId   String
+  instructions  String?
+  priority      Int         @default(2)
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  completedAt   DateTime?
+  forwardedAt   DateTime    @default(now())
+  application   Application @relation(fields: [applicationId], references: [id])
+  fromOfficer   User        @relation("OfficerForwardedFrom", fields: [fromOfficerId], references: [id])
+  toOfficer     User        @relation("OfficerForwardedTo", fields: [toOfficerId], references: [id])
 
   @@map("officer_forwarding_history")
+}
+
+enum UserRole {
+  FRONT_DESK
+  DC
+  ADC
+  RO
+  SDM
+  DYDIR
+  ADMIN
+  SUPER_ADMIN
+  ADC_GTK
+  ADC_HQ
+  SDM_GTK
+  SDM_HQ
+  AC
+  DPO_DDMA
+  DD_REV
+  DD_ACQ
+  US_ADM
+  AO
+  TO_DDMA
+  AD_IT
+  US_ELECTION
+  OS_COI_RC
+  OS_RC
+  RI_LEGAL
+  DISPATCH_HANDLER
+}
+
+enum ApplicationStatus {
+  DRAFT
+  PENDING
+  VALIDATED
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  REOPENED
+}
+
+enum DocumentType {
+  ID_PROOF
+  ADDRESS_PROOF
+  APPLICATION_FORM
+  SUPPORTING_DOCUMENT
+  PAYMENT_RECEIPT
+}
+
+enum NotificationType {
+  APPLICATION_SUBMITTED
+  STATUS_CHANGED
+  DOCUMENT_REQUESTED
+  PAYMENT_REQUIRED
 }

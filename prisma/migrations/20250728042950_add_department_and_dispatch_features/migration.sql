@@ -23,10 +23,10 @@ CREATE TABLE "departments" (
 CREATE UNIQUE INDEX "departments_name_key" ON "departments"("name");
 
 -- Insert default departments
-INSERT INTO "departments" ("id", "name", "description") VALUES 
-  (gen_random_uuid(), 'Government Department', 'Government related applications'),
-  (gen_random_uuid(), 'Private Department', 'Private sector applications'),
-  (gen_random_uuid(), 'General Department', 'General purpose applications');
+INSERT INTO "departments" ("id", "name", "description", "updatedAt") VALUES 
+  (gen_random_uuid(), 'Government Department', 'Government related applications', CURRENT_TIMESTAMP),
+  (gen_random_uuid(), 'Private Department', 'Private sector applications', CURRENT_TIMESTAMP),
+  (gen_random_uuid(), 'General Department', 'General purpose applications', CURRENT_TIMESTAMP);
 
 -- AlterTable - Add columns with default values for existing records
 ALTER TABLE "applications" 

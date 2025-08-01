@@ -14,9 +14,10 @@ const updateDepartmentSchema = z.object({
 // GET - Get specific department
 export async function GET(
   request: NextRequest,
-  { params }: { params: { departmentId: string } }
+  { params }: { params: Promise<{ departmentId: string }> }
 ) {
   try {
+    const { departmentId } = await params;
     const session = await getServerAuthSession();
 
     if (!session?.user) {
@@ -32,7 +33,7 @@ export async function GET(
     }
 
     const department = await prisma.department.findUnique({
-      where: { id: params.departmentId },
+      where: { id: departmentId },
       include: {
         _count: {
           select: {
@@ -62,9 +63,10 @@ export async function GET(
 // PATCH - Update department
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { departmentId: string } }
+  { params }: { params: Promise<{ departmentId: string }> }
 ) {
   try {
+    const { departmentId } = await params;
     const session = await getServerAuthSession();
 
     if (!session?.user) {
@@ -83,7 +85,7 @@ export async function PATCH(
 
     // Check if department exists
     const existingDepartment = await prisma.department.findUnique({
-      where: { id: params.departmentId },
+      where: { id: departmentId },
     });
 
     if (!existingDepartment) {
@@ -108,7 +110,7 @@ export async function PATCH(
     }
 
     const department = await prisma.department.update({
-      where: { id: params.departmentId },
+      where: { id: departmentId },
       data: validatedData,
     });
 
@@ -132,9 +134,10 @@ export async function PATCH(
 // DELETE - Delete department
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { departmentId: string } }
+  { params }: { params: Promise<{ departmentId: string }> }
 ) {
   try {
+    const { departmentId } = await params;
     const session = await getServerAuthSession();
 
     if (!session?.user) {
@@ -150,7 +153,7 @@ export async function DELETE(
 
     // Check if department exists
     const existingDepartment = await prisma.department.findUnique({
-      where: { id: params.departmentId },
+      where: { id: departmentId },
       include: {
         _count: {
           select: {
@@ -179,7 +182,7 @@ export async function DELETE(
     }
 
     await prisma.department.delete({
-      where: { id: params.departmentId },
+      where: { id: departmentId },
     });
 
     return NextResponse.json(

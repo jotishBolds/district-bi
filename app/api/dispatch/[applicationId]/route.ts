@@ -7,9 +7,10 @@ import { UserRole, ApplicationStatus } from "@/app/generated/prisma";
 // PATCH - Toggle dispatch status for a single application
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { applicationId: string } }
+  { params }: { params: Promise<{ applicationId: string }> }
 ) {
   try {
+    const { applicationId } = await params;
     const session = await getServerAuthSession();
 
     if (!session?.user) {
@@ -31,7 +32,7 @@ export async function PATCH(
 
     // Find the application
     const application = await prisma.application.findUnique({
-      where: { id: params.applicationId },
+      where: { id: applicationId },
       include: {
         serviceCategory: {
           select: {
@@ -63,7 +64,7 @@ export async function PATCH(
 
     // Update dispatch status
     const updatedApplication = await prisma.application.update({
-      where: { id: params.applicationId },
+      where: { id: applicationId },
       data: {
         isDispatched,
         dispatchedAt: isDispatched ? new Date() : null,
