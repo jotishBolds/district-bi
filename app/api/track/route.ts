@@ -226,6 +226,7 @@ export async function PUT(request: NextRequest) {
         },
         include: {
           serviceCategory: true,
+          department: true,
           workflow: {
             include: {
               changedBy: {
@@ -262,6 +263,7 @@ export async function PUT(request: NextRequest) {
         },
         include: {
           serviceCategory: true,
+          department: true,
           workflow: {
             include: {
               changedBy: {
@@ -311,15 +313,23 @@ export async function PUT(request: NextRequest) {
           citizenName: app.citizenName,
           citizenPhone: app.citizenPhone,
           serviceCategoryName: app.serviceCategory.name,
+          departmentName: app.department?.name || "Not Assigned",
           submittedAt: app.submittedAt,
           validatedAt: app.validatedAt,
           completedAt: app.completedAt,
           createdAt: app.createdAt,
           currentHolder: app.currentHolder?.officerProfile?.fullName,
+          currentHolderRole: app.currentHolder?.role,
+          currentHolderLevel: app.currentHolder?.level,
+          currentHolderDesignation:
+            app.currentHolder?.officerProfile?.designation,
           workflow: app.workflow.map((w) => ({
             status: w.toStatus,
             changedAt: w.createdAt,
             changedBy: w.changedBy.officerProfile?.fullName || "System",
+            changedByRole: w.changedBy.role,
+            changedByLevel: w.changedBy.level,
+            changedByDesignation: w.changedBy.officerProfile?.designation,
             comments: w.comments,
           })),
           validation: app.validation
@@ -353,15 +363,23 @@ export async function PUT(request: NextRequest) {
           citizenName: application.citizenName,
           citizenPhone: application.citizenPhone,
           serviceCategoryName: application.serviceCategory.name,
+          departmentName: application.department?.name || "Not Assigned",
           submittedAt: application.submittedAt,
           validatedAt: application.validatedAt,
           completedAt: application.completedAt,
           createdAt: application.createdAt,
           currentHolder: application.currentHolder?.officerProfile?.fullName,
+          currentHolderRole: application.currentHolder?.role,
+          currentHolderLevel: application.currentHolder?.level,
+          currentHolderDesignation:
+            application.currentHolder?.officerProfile?.designation,
           workflow: application.workflow.map((w) => ({
             status: w.toStatus,
             changedAt: w.createdAt,
             changedBy: w.changedBy.officerProfile?.fullName || "System",
+            changedByRole: w.changedBy.role,
+            changedByLevel: w.changedBy.level,
+            changedByDesignation: w.changedBy.officerProfile?.designation,
             comments: w.comments,
           })),
           validation: application.validation

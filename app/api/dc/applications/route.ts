@@ -16,6 +16,7 @@ export async function GET(request: Request) {
     const status = searchParams.get("status") || "";
     const search = searchParams.get("search") || "";
     const officerId = searchParams.get("officerId") || "";
+    const departmentId = searchParams.get("departmentId") || "";
     const ageFilter = searchParams.get("ageFilter") || "";
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
@@ -44,6 +45,11 @@ export async function GET(request: Request) {
     // Officer filter
     if (officerId) {
       where.currentHolderId = officerId;
+    }
+
+    // Department filter
+    if (departmentId) {
+      where.departmentId = departmentId;
     }
 
     // Age filter (only for OPEN and IN_PROGRESS status)
@@ -381,6 +387,17 @@ export async function GET(request: Request) {
       })
     );
 
+    // Get departments
+    const departments = await prisma.department.findMany({
+      where: { isActive: true },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+      },
+      orderBy: { name: "asc" },
+    });
+
     // Calculate stats
     const stats = {
       total: await prisma.application.count(),
@@ -408,6 +425,7 @@ export async function GET(request: Request) {
       applications,
       stats,
       officers: officersWithApplicationCounts,
+      departments,
     });
   } catch (error) {
     console.error("Error fetching DC applications:", error);

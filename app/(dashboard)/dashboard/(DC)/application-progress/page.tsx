@@ -36,6 +36,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { getRoleMapping } from "@/lib/officer-roles";
+import { UserRole } from "@/app/generated/prisma";
 
 // Enhanced Types
 interface Document {
@@ -167,6 +168,11 @@ interface Application {
   citizenEmail?: string;
   citizenAddress: string;
   subject?: string;
+  department?: {
+    id: string;
+    name: string;
+    description?: string;
+  };
   serviceCategory: {
     name: string;
     slaDays: number;
@@ -219,10 +225,14 @@ const DCDashboard = () => {
   const { data: session } = useSession();
   const [applications, setApplications] = useState<Application[]>([]);
   const [officers, setOfficers] = useState<Officer[]>([]);
+  const [departments, setDepartments] = useState<
+    { id: string; name: string; description?: string }[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
   const [selectedOfficer, setSelectedOfficer] = useState<string>("");
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
   const [ageFilter, setAgeFilter] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<"cards" | "list">("cards");
@@ -266,6 +276,7 @@ const DCDashboard = () => {
         status: status || selectedStatus === "ALL" ? "" : selectedStatus,
         search: searchTerm,
         officerId: selectedOfficer,
+        departmentId: selectedDepartment,
         ageFilter: ageFilter,
         page: page.toString(),
         limit: "10",
@@ -275,6 +286,7 @@ const DCDashboard = () => {
       const data = await response.json();
       setApplications(data.applications || []);
       setOfficers(data.officers || []);
+      setDepartments(data.departments || []);
       setStats(data.stats || stats);
     } catch (error) {
       console.error("Error fetching applications:", error);
@@ -285,7 +297,13 @@ const DCDashboard = () => {
 
   useEffect(() => {
     fetchApplications();
-  }, [selectedStatus, selectedOfficer, ageFilter, currentPage]);
+  }, [
+    selectedStatus,
+    selectedOfficer,
+    selectedDepartment,
+    ageFilter,
+    currentPage,
+  ]);
 
   const handleStatusCardClick = (status: string) => {
     setSelectedStatus(status);
@@ -300,6 +318,7 @@ const DCDashboard = () => {
   const clearFilters = () => {
     setSearchTerm("");
     setSelectedOfficer("");
+    setSelectedDepartment("");
     setAgeFilter("");
     setSelectedStatus("ALL");
     setShowApplications(false);
@@ -408,7 +427,7 @@ const DCDashboard = () => {
   };
 
   const getOfficerShortForm = (role: string) => {
-    const mapping = getRoleMapping(role as any);
+    const mapping = getRoleMapping(role as UserRole);
     return mapping?.shortDesignation || role;
   };
 
@@ -706,7 +725,8 @@ const DCDashboard = () => {
               Filter by Application Age
             </h3>
             <p className="text-sm text-gray-600">
-              Filter applications based on how long they've been in the system
+              Filter applications based on how long they&apos;ve been in the
+              system
             </p>
           </div>
         </div>
@@ -797,6 +817,22 @@ const DCDashboard = () => {
             </select>
           </div>
 
+          {/* Department Filter */}
+          <div className="min-w-[200px]">
+            <select
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
+              className="w-full h-12 rounded-xl border border-gray-300 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 px-4 text-sm transition-all duration-200"
+            >
+              <option value="">All Departments</option>
+              {departments.map((department) => (
+                <option key={department.id} value={department.id}>
+                  {department.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* View Mode Toggle */}
           <div className="flex bg-gray-100 rounded-xl p-1">
             <button
@@ -824,7 +860,10 @@ const DCDashboard = () => {
           </div>
 
           {/* Clear Filters */}
-          {(searchTerm || selectedOfficer || ageFilter) && (
+          {(searchTerm ||
+            selectedOfficer ||
+            selectedDepartment ||
+            ageFilter) && (
             <button
               onClick={clearFilters}
               className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-200 text-sm font-medium"
@@ -867,9 +906,17 @@ const DCDashboard = () => {
                       <h3 className="text-xl font-semibold text-gray-900">
                         {app.rrNumber}
                       </h3>
-                      <p className="text-sm text-gray-600">
-                        {app.serviceCategory.name}
-                      </p>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <span>{app.serviceCategory.name}</span>
+                        {app.department && (
+                          <>
+                            <span>•</span>
+                            <span className="text-blue-600 font-medium">
+                              {app.department.name}
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
 

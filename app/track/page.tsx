@@ -33,6 +33,8 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getRoleMapping } from "@/lib/officer-roles";
+import { UserRole } from "@/app/generated/prisma";
 
 interface ApplicationData {
   id: string;
@@ -42,15 +44,22 @@ interface ApplicationData {
   citizenName: string;
   citizenPhone: string;
   serviceCategoryName: string;
+  departmentName: string;
   submittedAt: string | null;
   validatedAt: string | null;
   completedAt: string | null;
   createdAt: string;
   currentHolder: string | null;
+  currentHolderRole?: string;
+  currentHolderLevel?: number;
+  currentHolderDesignation?: string;
   workflow: Array<{
     status: string;
     changedAt: string;
     changedBy: string;
+    changedByRole?: string;
+    changedByLevel?: number;
+    changedByDesignation?: string;
     comments: string | null;
   }>;
   validation: {
@@ -90,6 +99,37 @@ export default function TrackApplicationPage() {
   const [inputType, setInputType] = useState<
     "RR_NUMBER" | "PHONE_NUMBER" | null
   >(null);
+
+  // Helper function to get officer display information
+  const getOfficerDisplayInfo = (entry: {
+    changedBy: string;
+    changedByRole?: string;
+    changedByDesignation?: string;
+    changedByLevel?: number;
+  }) => {
+    if (!entry.changedByRole) {
+      return {
+        name: entry.changedBy,
+        designation: null,
+        level: null,
+        levelDisplay: null,
+      };
+    }
+
+    const roleMapping = getRoleMapping(entry.changedByRole as UserRole);
+
+    return {
+      name: entry.changedBy,
+      designation: entry.changedByDesignation || roleMapping?.shortDesignation,
+      level: entry.changedByLevel ?? roleMapping?.level,
+      levelDisplay:
+        entry.changedByLevel !== null && entry.changedByLevel !== undefined
+          ? `Level ${entry.changedByLevel}`
+          : roleMapping?.level !== undefined
+          ? `Level ${roleMapping.level}`
+          : null,
+    };
+  };
 
   // Smart input detection function
   const detectInputType = (
@@ -519,6 +559,9 @@ export default function TrackApplicationPage() {
                         <CardTitle className="text-lg text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
                           {app.serviceCategoryName}
                         </CardTitle>
+                        <p className="text-emerald-600 font-medium mb-2 text-sm">
+                          Department: {app.departmentName}
+                        </p>
                         {app.subject && (
                           <p className="text-blue-600 font-medium mb-2 text-sm">
                             {app.subject}
@@ -570,9 +613,16 @@ export default function TrackApplicationPage() {
                             <Shield className="w-3 h-3" />
                             Handler
                           </div>
-                          <p className="font-medium text-slate-900 truncate">
-                            {app.currentHolder}
-                          </p>
+                          <div className="space-y-1">
+                            <p className="font-medium text-slate-900 truncate">
+                              {app.currentHolder}
+                            </p>
+                            {app.currentHolderDesignation && (
+                              <p className="text-xs text-slate-500 truncate">
+                                {app.currentHolderDesignation}
+                              </p>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>
@@ -605,6 +655,9 @@ export default function TrackApplicationPage() {
                             <h3 className="text-lg font-semibold text-slate-900 group-hover:text-blue-600 transition-colors truncate">
                               {app.serviceCategoryName}
                             </h3>
+                            <p className="text-emerald-600 font-medium text-sm mt-1">
+                              Department: {app.departmentName}
+                            </p>
                             {app.subject && (
                               <p className="text-blue-600 font-medium text-sm mt-1 truncate">
                                 {app.subject}
@@ -642,9 +695,16 @@ export default function TrackApplicationPage() {
                                 <Shield className="w-3 h-3" />
                                 Handler
                               </div>
-                              <p className="text-slate-900 mt-1 truncate">
-                                {app.currentHolder}
-                              </p>
+                              <div className="mt-1 space-y-1">
+                                <p className="text-slate-900 truncate">
+                                  {app.currentHolder}
+                                </p>
+                                {app.currentHolderDesignation && (
+                                  <p className="text-xs text-slate-500 truncate">
+                                    {app.currentHolderDesignation}
+                                  </p>
+                                )}
+                              </div>
                             </div>
                           )}
                           <div>
@@ -732,6 +792,9 @@ export default function TrackApplicationPage() {
               </h1>
               <p className="text-slate-600 text-lg font-bold">
                 {applicationData.serviceCategoryName}
+              </p>
+              <p className="text-emerald-600 text-base font-medium mt-1">
+                Department: {applicationData.departmentName}
               </p>
             </div>
           </div>
@@ -823,9 +886,46 @@ export default function TrackApplicationPage() {
                           <Shield className="w-4 h-4" />
                           Current Handler
                         </div>
-                        <p className="font-semibold text-slate-900">
-                          {applicationData.currentHolder}
-                        </p>
+                        <div className="space-y-1">
+                          <p className="font-semibold text-slate-900">
+                            {applicationData.currentHolder}
+                          </p>
+                          {applicationData.currentHolderDesignation && (
+                            <p className="text-sm text-slate-600">
+                              {applicationData.currentHolderDesignation}
+                            </p>
+                          )}
+                          {applicationData.currentHolderLevel !== undefined && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-slate-500">
+                                Level {applicationData.currentHolderLevel}
+                              </span>
+                              <div
+                                className="px-2 py-1 rounded-full text-xs font-medium"
+                                style={{
+                                  backgroundColor:
+                                    applicationData.currentHolderLevel <= 2
+                                      ? "#fee2e2"
+                                      : applicationData.currentHolderLevel <= 4
+                                      ? "#fef3c7"
+                                      : "#e0f2fe",
+                                  color:
+                                    applicationData.currentHolderLevel <= 2
+                                      ? "#dc2626"
+                                      : applicationData.currentHolderLevel <= 4
+                                      ? "#d97706"
+                                      : "#0284c7",
+                                }}
+                              >
+                                {applicationData.currentHolderLevel <= 2
+                                  ? "Senior Officer"
+                                  : applicationData.currentHolderLevel <= 4
+                                  ? "Mid-Level Officer"
+                                  : "Officer"}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -845,43 +945,100 @@ export default function TrackApplicationPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
-                    {applicationData.workflow.map((entry, index) => (
-                      <div key={index} className="relative">
-                        {index !== applicationData.workflow.length - 1 && (
-                          <div className="absolute left-4 top-8 w-0.5 h-16 bg-slate-200" />
-                        )}
-                        <div className="flex gap-4">
-                          <div
-                            className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
-                            style={{ backgroundColor: "#1170cd" }}
-                          >
-                            <CheckCircle size={16} className="text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                              {getStatusBadge(entry.status)}
-                              <span className="text-sm text-slate-500">
-                                {new Date(entry.changedAt).toLocaleString()}
-                              </span>
+                    {applicationData.workflow.map((entry, index) => {
+                      const officerInfo = getOfficerDisplayInfo(entry);
+                      return (
+                        <div key={index} className="relative">
+                          {index !== applicationData.workflow.length - 1 && (
+                            <div className="absolute left-4 top-8 w-0.5 h-16 bg-slate-200" />
+                          )}
+                          <div className="flex gap-4">
+                            <div
+                              className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+                              style={{ backgroundColor: "#1170cd" }}
+                            >
+                              <CheckCircle size={16} className="text-white" />
                             </div>
-                            <p className="text-sm text-slate-600 mb-1">
-                              <span className="font-medium">Updated by:</span>{" "}
-                              {entry.changedBy}
-                            </p>
-                            {entry.comments && (
-                              <div className="bg-slate-50 rounded-lg p-3 mt-2">
-                                <div className="flex items-start gap-2">
-                                  <MessageSquare className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
-                                  <p className="text-sm text-slate-700">
-                                    {entry.comments}
-                                  </p>
-                                </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                                {getStatusBadge(entry.status)}
+                                <span className="text-sm text-slate-500">
+                                  {new Date(entry.changedAt).toLocaleString()}
+                                </span>
                               </div>
-                            )}
+                              <div className="space-y-1 mb-2">
+                                <p className="text-sm text-slate-600">
+                                  <span className="font-medium">
+                                    Updated by:
+                                  </span>{" "}
+                                  {officerInfo.name}
+                                </p>
+                                {officerInfo.designation && (
+                                  <p className="text-sm text-slate-500">
+                                    <span className="font-medium">
+                                      Designation:
+                                    </span>{" "}
+                                    {officerInfo.designation}
+                                  </p>
+                                )}
+                                {officerInfo.levelDisplay && (
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-slate-500">
+                                      {officerInfo.levelDisplay}
+                                    </span>
+                                    <div
+                                      className="px-2 py-1 rounded-full text-xs font-medium"
+                                      style={{
+                                        backgroundColor:
+                                          officerInfo.level !== null &&
+                                          officerInfo.level !== undefined &&
+                                          officerInfo.level <= 2
+                                            ? "#fee2e2"
+                                            : officerInfo.level !== null &&
+                                              officerInfo.level !== undefined &&
+                                              officerInfo.level <= 4
+                                            ? "#fef3c7"
+                                            : "#e0f2fe",
+                                        color:
+                                          officerInfo.level !== null &&
+                                          officerInfo.level !== undefined &&
+                                          officerInfo.level <= 2
+                                            ? "#dc2626"
+                                            : officerInfo.level !== null &&
+                                              officerInfo.level !== undefined &&
+                                              officerInfo.level <= 4
+                                            ? "#d97706"
+                                            : "#0284c7",
+                                      }}
+                                    >
+                                      {officerInfo.level !== null &&
+                                      officerInfo.level !== undefined &&
+                                      officerInfo.level <= 2
+                                        ? "Senior Officer"
+                                        : officerInfo.level !== null &&
+                                          officerInfo.level !== undefined &&
+                                          officerInfo.level <= 4
+                                        ? "Mid-Level Officer"
+                                        : "Officer"}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                              {entry.comments && (
+                                <div className="bg-slate-50 rounded-lg p-3 mt-2">
+                                  <div className="flex items-start gap-2">
+                                    <MessageSquare className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                                    <p className="text-sm text-slate-700">
+                                      {entry.comments}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>

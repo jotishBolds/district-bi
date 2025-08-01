@@ -16,6 +16,7 @@ import {
   HelpCircle,
   ListChecks,
   BarChart3,
+  Building2,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -125,6 +126,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
     { name: "Applications", href: "/dashboard/applications", icon: FileText },
     { name: "User Management", href: "/admin/user-management", icon: Users },
     {
+      name: "Department Management",
+      href: "/admin/departments",
+      icon: Building2,
+    },
+    {
       name: "Frontdesk Management",
       href: "/admin/frontdesk-management",
       icon: Shield,
@@ -150,6 +156,18 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
     { name: "Help & Support", href: "/help", icon: HelpCircle },
   ];
 
+  const dispatchLinks = [
+    { name: "Dashboard", href: "/dashboard", icon: Home },
+    {
+      name: "Dispatch Management",
+      href: "/dashboard/dispatch",
+      icon: ClipboardList,
+    },
+    { name: "Applications", href: "/dashboard/applications", icon: FileText },
+    { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
+    { name: "Help & Support", href: "/help", icon: HelpCircle },
+  ];
+
   const getLinks = () => {
     switch (userRole) {
       case UserRole.FRONT_DESK:
@@ -157,6 +175,8 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:
         return adminLinks;
+      case UserRole.DISPATCH_HANDLER:
+        return dispatchLinks;
       case UserRole.DC:
         return dcLinks;
       default:
@@ -175,6 +195,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
     switch (userRole) {
       case UserRole.FRONT_DESK:
         return { text: "Front Desk", color: "bg-green-100 text-green-800" };
+      case UserRole.DISPATCH_HANDLER:
+        return {
+          text: "Dispatch Handler",
+          color: "bg-orange-100 text-orange-800",
+        };
       case UserRole.ADMIN:
         return { text: "Admin", color: "bg-red-100 text-red-800" };
       case UserRole.SUPER_ADMIN:

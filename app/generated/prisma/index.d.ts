@@ -44,6 +44,11 @@ export type ServiceCategory = $Result.DefaultSelection<Prisma.$ServiceCategoryPa
  */
 export type Section = $Result.DefaultSelection<Prisma.$SectionPayload>
 /**
+ * Model Department
+ * 
+ */
+export type Department = $Result.DefaultSelection<Prisma.$DepartmentPayload>
+/**
  * Model Application
  * 
  */
@@ -141,6 +146,7 @@ export namespace $Enums {
   RI_LEGAL: 'RI_LEGAL',
   RO: 'RO',
   DYDIR: 'DYDIR',
+  DISPATCH_HANDLER: 'DISPATCH_HANDLER',
   ADMIN: 'ADMIN',
   SUPER_ADMIN: 'SUPER_ADMIN'
 };
@@ -384,6 +390,16 @@ export class PrismaClient<
     * ```
     */
   get section(): Prisma.SectionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.department`: Exposes CRUD operations for the **Department** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Departments
+    * const departments = await prisma.department.findMany()
+    * ```
+    */
+  get department(): Prisma.DepartmentDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.application`: Exposes CRUD operations for the **Application** model.
@@ -970,6 +986,7 @@ export namespace Prisma {
     FrontdeskOfficer: 'FrontdeskOfficer',
     ServiceCategory: 'ServiceCategory',
     Section: 'Section',
+    Department: 'Department',
     Application: 'Application',
     ApplicationWorkflow: 'ApplicationWorkflow',
     ApplicationValidation: 'ApplicationValidation',
@@ -1002,7 +1019,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "application" | "applicationWorkflow" | "applicationValidation" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory"
+      modelProps: "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1447,6 +1464,80 @@ export namespace Prisma {
           count: {
             args: Prisma.SectionCountArgs<ExtArgs>
             result: $Utils.Optional<SectionCountAggregateOutputType> | number
+          }
+        }
+      }
+      Department: {
+        payload: Prisma.$DepartmentPayload<ExtArgs>
+        fields: Prisma.DepartmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepartmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepartmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          findFirst: {
+            args: Prisma.DepartmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepartmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          findMany: {
+            args: Prisma.DepartmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>[]
+          }
+          create: {
+            args: Prisma.DepartmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          createMany: {
+            args: Prisma.DepartmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DepartmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>[]
+          }
+          delete: {
+            args: Prisma.DepartmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          update: {
+            args: Prisma.DepartmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.DepartmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepartmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DepartmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.DepartmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepartmentPayload>
+          }
+          aggregate: {
+            args: Prisma.DepartmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepartment>
+          }
+          groupBy: {
+            args: Prisma.DepartmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepartmentCountArgs<ExtArgs>
+            result: $Utils.Optional<DepartmentCountAggregateOutputType> | number
           }
         }
       }
@@ -2576,6 +2667,7 @@ export namespace Prisma {
     frontdeskOfficer?: FrontdeskOfficerOmit
     serviceCategory?: ServiceCategoryOmit
     section?: SectionOmit
+    department?: DepartmentOmit
     application?: ApplicationOmit
     applicationWorkflow?: ApplicationWorkflowOmit
     applicationValidation?: ApplicationValidationOmit
@@ -2685,6 +2777,7 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     currentHolderFiles: number
+    dispatchedApplications: number
     workflowChanges: number
     validations: number
     verifiedDocuments: number
@@ -2703,6 +2796,7 @@ export namespace Prisma {
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     currentHolderFiles?: boolean | UserCountOutputTypeCountCurrentHolderFilesArgs
+    dispatchedApplications?: boolean | UserCountOutputTypeCountDispatchedApplicationsArgs
     workflowChanges?: boolean | UserCountOutputTypeCountWorkflowChangesArgs
     validations?: boolean | UserCountOutputTypeCountValidationsArgs
     verifiedDocuments?: boolean | UserCountOutputTypeCountVerifiedDocumentsArgs
@@ -2734,6 +2828,13 @@ export namespace Prisma {
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountCurrentHolderFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDispatchedApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ApplicationWhereInput
   }
 
@@ -2926,6 +3027,37 @@ export namespace Prisma {
    */
   export type SectionCountOutputTypeCountOfficersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OfficerProfileWhereInput
+  }
+
+
+  /**
+   * Count Type DepartmentCountOutputType
+   */
+
+  export type DepartmentCountOutputType = {
+    applications: number
+  }
+
+  export type DepartmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    applications?: boolean | DepartmentCountOutputTypeCountApplicationsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepartmentCountOutputType
+     */
+    select?: DepartmentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationWhereInput
   }
 
 
@@ -3268,6 +3400,7 @@ export namespace Prisma {
     citizenProfile?: boolean | User$citizenProfileArgs<ExtArgs>
     officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
     currentHolderFiles?: boolean | User$currentHolderFilesArgs<ExtArgs>
+    dispatchedApplications?: boolean | User$dispatchedApplicationsArgs<ExtArgs>
     workflowChanges?: boolean | User$workflowChangesArgs<ExtArgs>
     validations?: boolean | User$validationsArgs<ExtArgs>
     verifiedDocuments?: boolean | User$verifiedDocumentsArgs<ExtArgs>
@@ -3329,6 +3462,7 @@ export namespace Prisma {
     citizenProfile?: boolean | User$citizenProfileArgs<ExtArgs>
     officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
     currentHolderFiles?: boolean | User$currentHolderFilesArgs<ExtArgs>
+    dispatchedApplications?: boolean | User$dispatchedApplicationsArgs<ExtArgs>
     workflowChanges?: boolean | User$workflowChangesArgs<ExtArgs>
     validations?: boolean | User$validationsArgs<ExtArgs>
     verifiedDocuments?: boolean | User$verifiedDocumentsArgs<ExtArgs>
@@ -3354,6 +3488,7 @@ export namespace Prisma {
       citizenProfile: Prisma.$CitizenProfilePayload<ExtArgs> | null
       officerProfile: Prisma.$OfficerProfilePayload<ExtArgs> | null
       currentHolderFiles: Prisma.$ApplicationPayload<ExtArgs>[]
+      dispatchedApplications: Prisma.$ApplicationPayload<ExtArgs>[]
       workflowChanges: Prisma.$ApplicationWorkflowPayload<ExtArgs>[]
       validations: Prisma.$ApplicationValidationPayload<ExtArgs>[]
       verifiedDocuments: Prisma.$DocumentPayload<ExtArgs>[]
@@ -3777,6 +3912,7 @@ export namespace Prisma {
     citizenProfile<T extends User$citizenProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$citizenProfileArgs<ExtArgs>>): Prisma__CitizenProfileClient<$Result.GetResult<Prisma.$CitizenProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     officerProfile<T extends User$officerProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$officerProfileArgs<ExtArgs>>): Prisma__OfficerProfileClient<$Result.GetResult<Prisma.$OfficerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     currentHolderFiles<T extends User$currentHolderFilesArgs<ExtArgs> = {}>(args?: Subset<T, User$currentHolderFilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    dispatchedApplications<T extends User$dispatchedApplicationsArgs<ExtArgs> = {}>(args?: Subset<T, User$dispatchedApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workflowChanges<T extends User$workflowChangesArgs<ExtArgs> = {}>(args?: Subset<T, User$workflowChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationWorkflowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     validations<T extends User$validationsArgs<ExtArgs> = {}>(args?: Subset<T, User$validationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationValidationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     verifiedDocuments<T extends User$verifiedDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$verifiedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4259,6 +4395,30 @@ export namespace Prisma {
    * User.currentHolderFiles
    */
   export type User$currentHolderFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Application
+     */
+    omit?: ApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    where?: ApplicationWhereInput
+    orderBy?: ApplicationOrderByWithRelationInput | ApplicationOrderByWithRelationInput[]
+    cursor?: ApplicationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApplicationScalarFieldEnum | ApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * User.dispatchedApplications
+   */
+  export type User$dispatchedApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Application
      */
@@ -10197,6 +10357,1089 @@ export namespace Prisma {
 
 
   /**
+   * Model Department
+   */
+
+  export type AggregateDepartment = {
+    _count: DepartmentCountAggregateOutputType | null
+    _min: DepartmentMinAggregateOutputType | null
+    _max: DepartmentMaxAggregateOutputType | null
+  }
+
+  export type DepartmentMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepartmentCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DepartmentMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepartmentCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DepartmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Department to aggregate.
+     */
+    where?: DepartmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Departments to fetch.
+     */
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepartmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Departments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Departments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Departments
+    **/
+    _count?: true | DepartmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepartmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepartmentMaxAggregateInputType
+  }
+
+  export type GetDepartmentAggregateType<T extends DepartmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepartment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepartment[P]>
+      : GetScalarType<T[P], AggregateDepartment[P]>
+  }
+
+
+
+
+  export type DepartmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentWhereInput
+    orderBy?: DepartmentOrderByWithAggregationInput | DepartmentOrderByWithAggregationInput[]
+    by: DepartmentScalarFieldEnum[] | DepartmentScalarFieldEnum
+    having?: DepartmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepartmentCountAggregateInputType | true
+    _min?: DepartmentMinAggregateInputType
+    _max?: DepartmentMaxAggregateInputType
+  }
+
+  export type DepartmentGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: DepartmentCountAggregateOutputType | null
+    _min: DepartmentMinAggregateOutputType | null
+    _max: DepartmentMaxAggregateOutputType | null
+  }
+
+  type GetDepartmentGroupByPayload<T extends DepartmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepartmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepartmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepartmentGroupByOutputType[P]>
+            : GetScalarType<T[P], DepartmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepartmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    applications?: boolean | Department$applicationsArgs<ExtArgs>
+    _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["department"]>
+
+  export type DepartmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["department"]>
+
+  export type DepartmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["department"]>
+
+  export type DepartmentSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DepartmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["department"]>
+  export type DepartmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    applications?: boolean | Department$applicationsArgs<ExtArgs>
+    _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type DepartmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $DepartmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Department"
+    objects: {
+      applications: Prisma.$ApplicationPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["department"]>
+    composites: {}
+  }
+
+  type DepartmentGetPayload<S extends boolean | null | undefined | DepartmentDefaultArgs> = $Result.GetResult<Prisma.$DepartmentPayload, S>
+
+  type DepartmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepartmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepartmentCountAggregateInputType | true
+    }
+
+  export interface DepartmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Department'], meta: { name: 'Department' } }
+    /**
+     * Find zero or one Department that matches the filter.
+     * @param {DepartmentFindUniqueArgs} args - Arguments to find a Department
+     * @example
+     * // Get one Department
+     * const department = await prisma.department.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepartmentFindUniqueArgs>(args: SelectSubset<T, DepartmentFindUniqueArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Department that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepartmentFindUniqueOrThrowArgs} args - Arguments to find a Department
+     * @example
+     * // Get one Department
+     * const department = await prisma.department.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepartmentFindUniqueOrThrowArgs>(args: SelectSubset<T, DepartmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Department that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentFindFirstArgs} args - Arguments to find a Department
+     * @example
+     * // Get one Department
+     * const department = await prisma.department.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepartmentFindFirstArgs>(args?: SelectSubset<T, DepartmentFindFirstArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Department that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentFindFirstOrThrowArgs} args - Arguments to find a Department
+     * @example
+     * // Get one Department
+     * const department = await prisma.department.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepartmentFindFirstOrThrowArgs>(args?: SelectSubset<T, DepartmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Departments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Departments
+     * const departments = await prisma.department.findMany()
+     * 
+     * // Get first 10 Departments
+     * const departments = await prisma.department.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const departmentWithIdOnly = await prisma.department.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepartmentFindManyArgs>(args?: SelectSubset<T, DepartmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Department.
+     * @param {DepartmentCreateArgs} args - Arguments to create a Department.
+     * @example
+     * // Create one Department
+     * const Department = await prisma.department.create({
+     *   data: {
+     *     // ... data to create a Department
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepartmentCreateArgs>(args: SelectSubset<T, DepartmentCreateArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Departments.
+     * @param {DepartmentCreateManyArgs} args - Arguments to create many Departments.
+     * @example
+     * // Create many Departments
+     * const department = await prisma.department.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepartmentCreateManyArgs>(args?: SelectSubset<T, DepartmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Departments and returns the data saved in the database.
+     * @param {DepartmentCreateManyAndReturnArgs} args - Arguments to create many Departments.
+     * @example
+     * // Create many Departments
+     * const department = await prisma.department.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Departments and only return the `id`
+     * const departmentWithIdOnly = await prisma.department.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DepartmentCreateManyAndReturnArgs>(args?: SelectSubset<T, DepartmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Department.
+     * @param {DepartmentDeleteArgs} args - Arguments to delete one Department.
+     * @example
+     * // Delete one Department
+     * const Department = await prisma.department.delete({
+     *   where: {
+     *     // ... filter to delete one Department
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepartmentDeleteArgs>(args: SelectSubset<T, DepartmentDeleteArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Department.
+     * @param {DepartmentUpdateArgs} args - Arguments to update one Department.
+     * @example
+     * // Update one Department
+     * const department = await prisma.department.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepartmentUpdateArgs>(args: SelectSubset<T, DepartmentUpdateArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Departments.
+     * @param {DepartmentDeleteManyArgs} args - Arguments to filter Departments to delete.
+     * @example
+     * // Delete a few Departments
+     * const { count } = await prisma.department.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepartmentDeleteManyArgs>(args?: SelectSubset<T, DepartmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Departments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Departments
+     * const department = await prisma.department.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepartmentUpdateManyArgs>(args: SelectSubset<T, DepartmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Departments and returns the data updated in the database.
+     * @param {DepartmentUpdateManyAndReturnArgs} args - Arguments to update many Departments.
+     * @example
+     * // Update many Departments
+     * const department = await prisma.department.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Departments and only return the `id`
+     * const departmentWithIdOnly = await prisma.department.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DepartmentUpdateManyAndReturnArgs>(args: SelectSubset<T, DepartmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Department.
+     * @param {DepartmentUpsertArgs} args - Arguments to update or create a Department.
+     * @example
+     * // Update or create a Department
+     * const department = await prisma.department.upsert({
+     *   create: {
+     *     // ... data to create a Department
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Department we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepartmentUpsertArgs>(args: SelectSubset<T, DepartmentUpsertArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Departments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentCountArgs} args - Arguments to filter Departments to count.
+     * @example
+     * // Count the number of Departments
+     * const count = await prisma.department.count({
+     *   where: {
+     *     // ... the filter for the Departments we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepartmentCountArgs>(
+      args?: Subset<T, DepartmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepartmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Department.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepartmentAggregateArgs>(args: Subset<T, DepartmentAggregateArgs>): Prisma.PrismaPromise<GetDepartmentAggregateType<T>>
+
+    /**
+     * Group by Department.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepartmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepartmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepartmentGroupByArgs['orderBy'] }
+        : { orderBy?: DepartmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepartmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepartmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Department model
+   */
+  readonly fields: DepartmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Department.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepartmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    applications<T extends Department$applicationsArgs<ExtArgs> = {}>(args?: Subset<T, Department$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Department model
+   */
+  interface DepartmentFieldRefs {
+    readonly id: FieldRef<"Department", 'String'>
+    readonly name: FieldRef<"Department", 'String'>
+    readonly description: FieldRef<"Department", 'String'>
+    readonly isActive: FieldRef<"Department", 'Boolean'>
+    readonly createdAt: FieldRef<"Department", 'DateTime'>
+    readonly updatedAt: FieldRef<"Department", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Department findUnique
+   */
+  export type DepartmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Department to fetch.
+     */
+    where: DepartmentWhereUniqueInput
+  }
+
+  /**
+   * Department findUniqueOrThrow
+   */
+  export type DepartmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Department to fetch.
+     */
+    where: DepartmentWhereUniqueInput
+  }
+
+  /**
+   * Department findFirst
+   */
+  export type DepartmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Department to fetch.
+     */
+    where?: DepartmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Departments to fetch.
+     */
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Departments.
+     */
+    cursor?: DepartmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Departments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Departments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Departments.
+     */
+    distinct?: DepartmentScalarFieldEnum | DepartmentScalarFieldEnum[]
+  }
+
+  /**
+   * Department findFirstOrThrow
+   */
+  export type DepartmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Department to fetch.
+     */
+    where?: DepartmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Departments to fetch.
+     */
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Departments.
+     */
+    cursor?: DepartmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Departments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Departments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Departments.
+     */
+    distinct?: DepartmentScalarFieldEnum | DepartmentScalarFieldEnum[]
+  }
+
+  /**
+   * Department findMany
+   */
+  export type DepartmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter, which Departments to fetch.
+     */
+    where?: DepartmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Departments to fetch.
+     */
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Departments.
+     */
+    cursor?: DepartmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Departments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Departments.
+     */
+    skip?: number
+    distinct?: DepartmentScalarFieldEnum | DepartmentScalarFieldEnum[]
+  }
+
+  /**
+   * Department create
+   */
+  export type DepartmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Department.
+     */
+    data: XOR<DepartmentCreateInput, DepartmentUncheckedCreateInput>
+  }
+
+  /**
+   * Department createMany
+   */
+  export type DepartmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Departments.
+     */
+    data: DepartmentCreateManyInput | DepartmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Department createManyAndReturn
+   */
+  export type DepartmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Departments.
+     */
+    data: DepartmentCreateManyInput | DepartmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Department update
+   */
+  export type DepartmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Department.
+     */
+    data: XOR<DepartmentUpdateInput, DepartmentUncheckedUpdateInput>
+    /**
+     * Choose, which Department to update.
+     */
+    where: DepartmentWhereUniqueInput
+  }
+
+  /**
+   * Department updateMany
+   */
+  export type DepartmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Departments.
+     */
+    data: XOR<DepartmentUpdateManyMutationInput, DepartmentUncheckedUpdateManyInput>
+    /**
+     * Filter which Departments to update
+     */
+    where?: DepartmentWhereInput
+    /**
+     * Limit how many Departments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Department updateManyAndReturn
+   */
+  export type DepartmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * The data used to update Departments.
+     */
+    data: XOR<DepartmentUpdateManyMutationInput, DepartmentUncheckedUpdateManyInput>
+    /**
+     * Filter which Departments to update
+     */
+    where?: DepartmentWhereInput
+    /**
+     * Limit how many Departments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Department upsert
+   */
+  export type DepartmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Department to update in case it exists.
+     */
+    where: DepartmentWhereUniqueInput
+    /**
+     * In case the Department found by the `where` argument doesn't exist, create a new Department with this data.
+     */
+    create: XOR<DepartmentCreateInput, DepartmentUncheckedCreateInput>
+    /**
+     * In case the Department was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepartmentUpdateInput, DepartmentUncheckedUpdateInput>
+  }
+
+  /**
+   * Department delete
+   */
+  export type DepartmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    /**
+     * Filter which Department to delete.
+     */
+    where: DepartmentWhereUniqueInput
+  }
+
+  /**
+   * Department deleteMany
+   */
+  export type DepartmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Departments to delete
+     */
+    where?: DepartmentWhereInput
+    /**
+     * Limit how many Departments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Department.applications
+   */
+  export type Department$applicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Application
+     */
+    omit?: ApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    where?: ApplicationWhereInput
+    orderBy?: ApplicationOrderByWithRelationInput | ApplicationOrderByWithRelationInput[]
+    cursor?: ApplicationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApplicationScalarFieldEnum | ApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * Department without action
+   */
+  export type DepartmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Department
+     */
+    omit?: DepartmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Application
    */
 
@@ -10210,6 +11453,7 @@ export namespace Prisma {
     id: string | null
     rrNumber: string | null
     serviceCategoryId: string | null
+    departmentId: string | null
     subject: string | null
     citizenName: string | null
     citizenPhone: string | null
@@ -10222,6 +11466,9 @@ export namespace Prisma {
     submittedAt: Date | null
     validatedAt: Date | null
     completedAt: Date | null
+    isDispatched: boolean | null
+    dispatchedAt: Date | null
+    dispatchedById: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10230,6 +11477,7 @@ export namespace Prisma {
     id: string | null
     rrNumber: string | null
     serviceCategoryId: string | null
+    departmentId: string | null
     subject: string | null
     citizenName: string | null
     citizenPhone: string | null
@@ -10242,6 +11490,9 @@ export namespace Prisma {
     submittedAt: Date | null
     validatedAt: Date | null
     completedAt: Date | null
+    isDispatched: boolean | null
+    dispatchedAt: Date | null
+    dispatchedById: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10250,6 +11501,7 @@ export namespace Prisma {
     id: number
     rrNumber: number
     serviceCategoryId: number
+    departmentId: number
     subject: number
     citizenName: number
     citizenPhone: number
@@ -10262,6 +11514,9 @@ export namespace Prisma {
     submittedAt: number
     validatedAt: number
     completedAt: number
+    isDispatched: number
+    dispatchedAt: number
+    dispatchedById: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -10272,6 +11527,7 @@ export namespace Prisma {
     id?: true
     rrNumber?: true
     serviceCategoryId?: true
+    departmentId?: true
     subject?: true
     citizenName?: true
     citizenPhone?: true
@@ -10284,6 +11540,9 @@ export namespace Prisma {
     submittedAt?: true
     validatedAt?: true
     completedAt?: true
+    isDispatched?: true
+    dispatchedAt?: true
+    dispatchedById?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10292,6 +11551,7 @@ export namespace Prisma {
     id?: true
     rrNumber?: true
     serviceCategoryId?: true
+    departmentId?: true
     subject?: true
     citizenName?: true
     citizenPhone?: true
@@ -10304,6 +11564,9 @@ export namespace Prisma {
     submittedAt?: true
     validatedAt?: true
     completedAt?: true
+    isDispatched?: true
+    dispatchedAt?: true
+    dispatchedById?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10312,6 +11575,7 @@ export namespace Prisma {
     id?: true
     rrNumber?: true
     serviceCategoryId?: true
+    departmentId?: true
     subject?: true
     citizenName?: true
     citizenPhone?: true
@@ -10324,6 +11588,9 @@ export namespace Prisma {
     submittedAt?: true
     validatedAt?: true
     completedAt?: true
+    isDispatched?: true
+    dispatchedAt?: true
+    dispatchedById?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10405,6 +11672,7 @@ export namespace Prisma {
     id: string
     rrNumber: string | null
     serviceCategoryId: string
+    departmentId: string
     subject: string
     citizenName: string
     citizenPhone: string
@@ -10417,6 +11685,9 @@ export namespace Prisma {
     submittedAt: Date | null
     validatedAt: Date | null
     completedAt: Date | null
+    isDispatched: boolean
+    dispatchedAt: Date | null
+    dispatchedById: string | null
     createdAt: Date
     updatedAt: Date
     _count: ApplicationCountAggregateOutputType | null
@@ -10442,6 +11713,7 @@ export namespace Prisma {
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
+    departmentId?: boolean
     subject?: boolean
     citizenName?: boolean
     citizenPhone?: boolean
@@ -10454,10 +11726,15 @@ export namespace Prisma {
     submittedAt?: boolean
     validatedAt?: boolean
     completedAt?: boolean
+    isDispatched?: boolean
+    dispatchedAt?: boolean
+    dispatchedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
     workflow?: boolean | Application$workflowArgs<ExtArgs>
     validation?: boolean | Application$validationArgs<ExtArgs>
     officerAssignments?: boolean | Application$officerAssignmentsArgs<ExtArgs>
@@ -10474,6 +11751,7 @@ export namespace Prisma {
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
+    departmentId?: boolean
     subject?: boolean
     citizenName?: boolean
     citizenPhone?: boolean
@@ -10486,16 +11764,22 @@ export namespace Prisma {
     submittedAt?: boolean
     validatedAt?: boolean
     completedAt?: boolean
+    isDispatched?: boolean
+    dispatchedAt?: boolean
+    dispatchedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
+    departmentId?: boolean
     subject?: boolean
     citizenName?: boolean
     citizenPhone?: boolean
@@ -10508,16 +11792,22 @@ export namespace Prisma {
     submittedAt?: boolean
     validatedAt?: boolean
     completedAt?: boolean
+    isDispatched?: boolean
+    dispatchedAt?: boolean
+    dispatchedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectScalar = {
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
+    departmentId?: boolean
     subject?: boolean
     citizenName?: boolean
     citizenPhone?: boolean
@@ -10530,14 +11820,19 @@ export namespace Prisma {
     submittedAt?: boolean
     validatedAt?: boolean
     completedAt?: boolean
+    isDispatched?: boolean
+    dispatchedAt?: boolean
+    dispatchedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rrNumber" | "serviceCategoryId" | "subject" | "citizenName" | "citizenPhone" | "citizenEmail" | "citizenAddress" | "citizenGender" | "citizenAadhaar" | "status" | "currentHolderId" | "submittedAt" | "validatedAt" | "completedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rrNumber" | "serviceCategoryId" | "departmentId" | "subject" | "citizenName" | "citizenPhone" | "citizenEmail" | "citizenAddress" | "citizenGender" | "citizenAadhaar" | "status" | "currentHolderId" | "submittedAt" | "validatedAt" | "completedAt" | "isDispatched" | "dispatchedAt" | "dispatchedById" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
     workflow?: boolean | Application$workflowArgs<ExtArgs>
     validation?: boolean | Application$validationArgs<ExtArgs>
     officerAssignments?: boolean | Application$officerAssignmentsArgs<ExtArgs>
@@ -10551,18 +11846,24 @@ export namespace Prisma {
   }
   export type ApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
   }
   export type ApplicationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    department?: boolean | DepartmentDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
   }
 
   export type $ApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Application"
     objects: {
       serviceCategory: Prisma.$ServiceCategoryPayload<ExtArgs>
+      department: Prisma.$DepartmentPayload<ExtArgs>
       currentHolder: Prisma.$UserPayload<ExtArgs> | null
+      dispatchedBy: Prisma.$UserPayload<ExtArgs> | null
       workflow: Prisma.$ApplicationWorkflowPayload<ExtArgs>[]
       validation: Prisma.$ApplicationValidationPayload<ExtArgs> | null
       officerAssignments: Prisma.$OfficerAssignmentPayload<ExtArgs>[]
@@ -10577,6 +11878,7 @@ export namespace Prisma {
       id: string
       rrNumber: string | null
       serviceCategoryId: string
+      departmentId: string
       subject: string
       citizenName: string
       citizenPhone: string
@@ -10589,6 +11891,9 @@ export namespace Prisma {
       submittedAt: Date | null
       validatedAt: Date | null
       completedAt: Date | null
+      isDispatched: boolean
+      dispatchedAt: Date | null
+      dispatchedById: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["application"]>
@@ -10986,7 +12291,9 @@ export namespace Prisma {
   export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     serviceCategory<T extends ServiceCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategoryDefaultArgs<ExtArgs>>): Prisma__ServiceCategoryClient<$Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     currentHolder<T extends Application$currentHolderArgs<ExtArgs> = {}>(args?: Subset<T, Application$currentHolderArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    dispatchedBy<T extends Application$dispatchedByArgs<ExtArgs> = {}>(args?: Subset<T, Application$dispatchedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     workflow<T extends Application$workflowArgs<ExtArgs> = {}>(args?: Subset<T, Application$workflowArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationWorkflowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     validation<T extends Application$validationArgs<ExtArgs> = {}>(args?: Subset<T, Application$validationArgs<ExtArgs>>): Prisma__ApplicationValidationClient<$Result.GetResult<Prisma.$ApplicationValidationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     officerAssignments<T extends Application$officerAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Application$officerAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -11028,6 +12335,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Application", 'String'>
     readonly rrNumber: FieldRef<"Application", 'String'>
     readonly serviceCategoryId: FieldRef<"Application", 'String'>
+    readonly departmentId: FieldRef<"Application", 'String'>
     readonly subject: FieldRef<"Application", 'String'>
     readonly citizenName: FieldRef<"Application", 'String'>
     readonly citizenPhone: FieldRef<"Application", 'String'>
@@ -11040,6 +12348,9 @@ export namespace Prisma {
     readonly submittedAt: FieldRef<"Application", 'DateTime'>
     readonly validatedAt: FieldRef<"Application", 'DateTime'>
     readonly completedAt: FieldRef<"Application", 'DateTime'>
+    readonly isDispatched: FieldRef<"Application", 'Boolean'>
+    readonly dispatchedAt: FieldRef<"Application", 'DateTime'>
+    readonly dispatchedById: FieldRef<"Application", 'String'>
     readonly createdAt: FieldRef<"Application", 'DateTime'>
     readonly updatedAt: FieldRef<"Application", 'DateTime'>
   }
@@ -11441,6 +12752,25 @@ export namespace Prisma {
    * Application.currentHolder
    */
   export type Application$currentHolderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Application.dispatchedBy
+   */
+  export type Application$dispatchedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
@@ -26175,10 +27505,23 @@ export namespace Prisma {
   export type SectionScalarFieldEnum = (typeof SectionScalarFieldEnum)[keyof typeof SectionScalarFieldEnum]
 
 
+  export const DepartmentScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DepartmentScalarFieldEnum = (typeof DepartmentScalarFieldEnum)[keyof typeof DepartmentScalarFieldEnum]
+
+
   export const ApplicationScalarFieldEnum: {
     id: 'id',
     rrNumber: 'rrNumber',
     serviceCategoryId: 'serviceCategoryId',
+    departmentId: 'departmentId',
     subject: 'subject',
     citizenName: 'citizenName',
     citizenPhone: 'citizenPhone',
@@ -26191,6 +27534,9 @@ export namespace Prisma {
     submittedAt: 'submittedAt',
     validatedAt: 'validatedAt',
     completedAt: 'completedAt',
+    isDispatched: 'isDispatched',
+    dispatchedAt: 'dispatchedAt',
+    dispatchedById: 'dispatchedById',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -26584,6 +27930,7 @@ export namespace Prisma {
     citizenProfile?: XOR<CitizenProfileNullableScalarRelationFilter, CitizenProfileWhereInput> | null
     officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
     currentHolderFiles?: ApplicationListRelationFilter
+    dispatchedApplications?: ApplicationListRelationFilter
     workflowChanges?: ApplicationWorkflowListRelationFilter
     validations?: ApplicationValidationListRelationFilter
     verifiedDocuments?: DocumentListRelationFilter
@@ -26614,6 +27961,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileOrderByWithRelationInput
     officerProfile?: OfficerProfileOrderByWithRelationInput
     currentHolderFiles?: ApplicationOrderByRelationAggregateInput
+    dispatchedApplications?: ApplicationOrderByRelationAggregateInput
     workflowChanges?: ApplicationWorkflowOrderByRelationAggregateInput
     validations?: ApplicationValidationOrderByRelationAggregateInput
     verifiedDocuments?: DocumentOrderByRelationAggregateInput
@@ -26647,6 +27995,7 @@ export namespace Prisma {
     citizenProfile?: XOR<CitizenProfileNullableScalarRelationFilter, CitizenProfileWhereInput> | null
     officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
     currentHolderFiles?: ApplicationListRelationFilter
+    dispatchedApplications?: ApplicationListRelationFilter
     workflowChanges?: ApplicationWorkflowListRelationFilter
     validations?: ApplicationValidationListRelationFilter
     verifiedDocuments?: DocumentListRelationFilter
@@ -27034,6 +28383,66 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Section"> | Date | string
   }
 
+  export type DepartmentWhereInput = {
+    AND?: DepartmentWhereInput | DepartmentWhereInput[]
+    OR?: DepartmentWhereInput[]
+    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
+    id?: StringFilter<"Department"> | string
+    name?: StringFilter<"Department"> | string
+    description?: StringNullableFilter<"Department"> | string | null
+    isActive?: BoolFilter<"Department"> | boolean
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
+    applications?: ApplicationListRelationFilter
+  }
+
+  export type DepartmentOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    applications?: ApplicationOrderByRelationAggregateInput
+  }
+
+  export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: DepartmentWhereInput | DepartmentWhereInput[]
+    OR?: DepartmentWhereInput[]
+    NOT?: DepartmentWhereInput | DepartmentWhereInput[]
+    description?: StringNullableFilter<"Department"> | string | null
+    isActive?: BoolFilter<"Department"> | boolean
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
+    applications?: ApplicationListRelationFilter
+  }, "id" | "name">
+
+  export type DepartmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DepartmentCountOrderByAggregateInput
+    _max?: DepartmentMaxOrderByAggregateInput
+    _min?: DepartmentMinOrderByAggregateInput
+  }
+
+  export type DepartmentScalarWhereWithAggregatesInput = {
+    AND?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
+    OR?: DepartmentScalarWhereWithAggregatesInput[]
+    NOT?: DepartmentScalarWhereWithAggregatesInput | DepartmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Department"> | string
+    name?: StringWithAggregatesFilter<"Department"> | string
+    description?: StringNullableWithAggregatesFilter<"Department"> | string | null
+    isActive?: BoolWithAggregatesFilter<"Department"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
+  }
+
   export type ApplicationWhereInput = {
     AND?: ApplicationWhereInput | ApplicationWhereInput[]
     OR?: ApplicationWhereInput[]
@@ -27041,6 +28450,7 @@ export namespace Prisma {
     id?: StringFilter<"Application"> | string
     rrNumber?: StringNullableFilter<"Application"> | string | null
     serviceCategoryId?: StringFilter<"Application"> | string
+    departmentId?: StringFilter<"Application"> | string
     subject?: StringFilter<"Application"> | string
     citizenName?: StringFilter<"Application"> | string
     citizenPhone?: StringFilter<"Application"> | string
@@ -27053,10 +28463,15 @@ export namespace Prisma {
     submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     validatedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    isDispatched?: BoolFilter<"Application"> | boolean
+    dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    dispatchedById?: StringNullableFilter<"Application"> | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
     serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
     currentHolder?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    dispatchedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     workflow?: ApplicationWorkflowListRelationFilter
     validation?: XOR<ApplicationValidationNullableScalarRelationFilter, ApplicationValidationWhereInput> | null
     officerAssignments?: OfficerAssignmentListRelationFilter
@@ -27072,6 +28487,7 @@ export namespace Prisma {
     id?: SortOrder
     rrNumber?: SortOrderInput | SortOrder
     serviceCategoryId?: SortOrder
+    departmentId?: SortOrder
     subject?: SortOrder
     citizenName?: SortOrder
     citizenPhone?: SortOrder
@@ -27084,10 +28500,15 @@ export namespace Prisma {
     submittedAt?: SortOrderInput | SortOrder
     validatedAt?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
+    isDispatched?: SortOrder
+    dispatchedAt?: SortOrderInput | SortOrder
+    dispatchedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     serviceCategory?: ServiceCategoryOrderByWithRelationInput
+    department?: DepartmentOrderByWithRelationInput
     currentHolder?: UserOrderByWithRelationInput
+    dispatchedBy?: UserOrderByWithRelationInput
     workflow?: ApplicationWorkflowOrderByRelationAggregateInput
     validation?: ApplicationValidationOrderByWithRelationInput
     officerAssignments?: OfficerAssignmentOrderByRelationAggregateInput
@@ -27106,6 +28527,7 @@ export namespace Prisma {
     OR?: ApplicationWhereInput[]
     NOT?: ApplicationWhereInput | ApplicationWhereInput[]
     serviceCategoryId?: StringFilter<"Application"> | string
+    departmentId?: StringFilter<"Application"> | string
     subject?: StringFilter<"Application"> | string
     citizenName?: StringFilter<"Application"> | string
     citizenPhone?: StringFilter<"Application"> | string
@@ -27118,10 +28540,15 @@ export namespace Prisma {
     submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     validatedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    isDispatched?: BoolFilter<"Application"> | boolean
+    dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    dispatchedById?: StringNullableFilter<"Application"> | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
     serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
+    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
     currentHolder?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    dispatchedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     workflow?: ApplicationWorkflowListRelationFilter
     validation?: XOR<ApplicationValidationNullableScalarRelationFilter, ApplicationValidationWhereInput> | null
     officerAssignments?: OfficerAssignmentListRelationFilter
@@ -27137,6 +28564,7 @@ export namespace Prisma {
     id?: SortOrder
     rrNumber?: SortOrderInput | SortOrder
     serviceCategoryId?: SortOrder
+    departmentId?: SortOrder
     subject?: SortOrder
     citizenName?: SortOrder
     citizenPhone?: SortOrder
@@ -27149,6 +28577,9 @@ export namespace Prisma {
     submittedAt?: SortOrderInput | SortOrder
     validatedAt?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
+    isDispatched?: SortOrder
+    dispatchedAt?: SortOrderInput | SortOrder
+    dispatchedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ApplicationCountOrderByAggregateInput
@@ -27163,6 +28594,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Application"> | string
     rrNumber?: StringNullableWithAggregatesFilter<"Application"> | string | null
     serviceCategoryId?: StringWithAggregatesFilter<"Application"> | string
+    departmentId?: StringWithAggregatesFilter<"Application"> | string
     subject?: StringWithAggregatesFilter<"Application"> | string
     citizenName?: StringWithAggregatesFilter<"Application"> | string
     citizenPhone?: StringWithAggregatesFilter<"Application"> | string
@@ -27175,6 +28607,9 @@ export namespace Prisma {
     submittedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
     validatedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
+    isDispatched?: BoolWithAggregatesFilter<"Application"> | boolean
+    dispatchedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
+    dispatchedById?: StringNullableWithAggregatesFilter<"Application"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Application"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Application"> | Date | string
   }
@@ -28166,6 +29601,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -28196,6 +29632,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -28226,6 +29663,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -28256,6 +29694,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -28668,6 +30107,73 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DepartmentCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applications?: ApplicationCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applications?: ApplicationUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applications?: ApplicationUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applications?: ApplicationUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ApplicationCreateInput = {
     id?: string
     rrNumber?: string | null
@@ -28682,10 +30188,14 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -28701,6 +30211,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -28713,6 +30224,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -28740,10 +30254,14 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -28759,6 +30277,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -28771,6 +30290,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -28788,6 +30310,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -28800,6 +30323,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28818,6 +30344,8 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28826,6 +30354,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -28838,6 +30367,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -30411,6 +31943,33 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type DepartmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepartmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type EnumApplicationStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel>
     in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
@@ -30421,6 +31980,11 @@ export namespace Prisma {
   export type ServiceCategoryScalarRelationFilter = {
     is?: ServiceCategoryWhereInput
     isNot?: ServiceCategoryWhereInput
+  }
+
+  export type DepartmentScalarRelationFilter = {
+    is?: DepartmentWhereInput
+    isNot?: DepartmentWhereInput
   }
 
   export type UserNullableScalarRelationFilter = {
@@ -30437,6 +32001,7 @@ export namespace Prisma {
     id?: SortOrder
     rrNumber?: SortOrder
     serviceCategoryId?: SortOrder
+    departmentId?: SortOrder
     subject?: SortOrder
     citizenName?: SortOrder
     citizenPhone?: SortOrder
@@ -30449,6 +32014,9 @@ export namespace Prisma {
     submittedAt?: SortOrder
     validatedAt?: SortOrder
     completedAt?: SortOrder
+    isDispatched?: SortOrder
+    dispatchedAt?: SortOrder
+    dispatchedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -30457,6 +32025,7 @@ export namespace Prisma {
     id?: SortOrder
     rrNumber?: SortOrder
     serviceCategoryId?: SortOrder
+    departmentId?: SortOrder
     subject?: SortOrder
     citizenName?: SortOrder
     citizenPhone?: SortOrder
@@ -30469,6 +32038,9 @@ export namespace Prisma {
     submittedAt?: SortOrder
     validatedAt?: SortOrder
     completedAt?: SortOrder
+    isDispatched?: SortOrder
+    dispatchedAt?: SortOrder
+    dispatchedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -30477,6 +32049,7 @@ export namespace Prisma {
     id?: SortOrder
     rrNumber?: SortOrder
     serviceCategoryId?: SortOrder
+    departmentId?: SortOrder
     subject?: SortOrder
     citizenName?: SortOrder
     citizenPhone?: SortOrder
@@ -30489,6 +32062,9 @@ export namespace Prisma {
     submittedAt?: SortOrder
     validatedAt?: SortOrder
     completedAt?: SortOrder
+    isDispatched?: SortOrder
+    dispatchedAt?: SortOrder
+    dispatchedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -31125,6 +32701,13 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
+  export type ApplicationCreateNestedManyWithoutDispatchedByInput = {
+    create?: XOR<ApplicationCreateWithoutDispatchedByInput, ApplicationUncheckedCreateWithoutDispatchedByInput> | ApplicationCreateWithoutDispatchedByInput[] | ApplicationUncheckedCreateWithoutDispatchedByInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutDispatchedByInput | ApplicationCreateOrConnectWithoutDispatchedByInput[]
+    createMany?: ApplicationCreateManyDispatchedByInputEnvelope
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+  }
+
   export type ApplicationWorkflowCreateNestedManyWithoutChangedByInput = {
     create?: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput> | ApplicationWorkflowCreateWithoutChangedByInput[] | ApplicationWorkflowUncheckedCreateWithoutChangedByInput[]
     connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutChangedByInput | ApplicationWorkflowCreateOrConnectWithoutChangedByInput[]
@@ -31239,6 +32822,13 @@ export namespace Prisma {
     create?: XOR<ApplicationCreateWithoutCurrentHolderInput, ApplicationUncheckedCreateWithoutCurrentHolderInput> | ApplicationCreateWithoutCurrentHolderInput[] | ApplicationUncheckedCreateWithoutCurrentHolderInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutCurrentHolderInput | ApplicationCreateOrConnectWithoutCurrentHolderInput[]
     createMany?: ApplicationCreateManyCurrentHolderInputEnvelope
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+  }
+
+  export type ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput = {
+    create?: XOR<ApplicationCreateWithoutDispatchedByInput, ApplicationUncheckedCreateWithoutDispatchedByInput> | ApplicationCreateWithoutDispatchedByInput[] | ApplicationUncheckedCreateWithoutDispatchedByInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutDispatchedByInput | ApplicationCreateOrConnectWithoutDispatchedByInput[]
+    createMany?: ApplicationCreateManyDispatchedByInputEnvelope
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
@@ -31403,6 +32993,20 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
     update?: ApplicationUpdateWithWhereUniqueWithoutCurrentHolderInput | ApplicationUpdateWithWhereUniqueWithoutCurrentHolderInput[]
     updateMany?: ApplicationUpdateManyWithWhereWithoutCurrentHolderInput | ApplicationUpdateManyWithWhereWithoutCurrentHolderInput[]
+    deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+  }
+
+  export type ApplicationUpdateManyWithoutDispatchedByNestedInput = {
+    create?: XOR<ApplicationCreateWithoutDispatchedByInput, ApplicationUncheckedCreateWithoutDispatchedByInput> | ApplicationCreateWithoutDispatchedByInput[] | ApplicationUncheckedCreateWithoutDispatchedByInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutDispatchedByInput | ApplicationCreateOrConnectWithoutDispatchedByInput[]
+    upsert?: ApplicationUpsertWithWhereUniqueWithoutDispatchedByInput | ApplicationUpsertWithWhereUniqueWithoutDispatchedByInput[]
+    createMany?: ApplicationCreateManyDispatchedByInputEnvelope
+    set?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    disconnect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    delete?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    update?: ApplicationUpdateWithWhereUniqueWithoutDispatchedByInput | ApplicationUpdateWithWhereUniqueWithoutDispatchedByInput[]
+    updateMany?: ApplicationUpdateManyWithWhereWithoutDispatchedByInput | ApplicationUpdateManyWithWhereWithoutDispatchedByInput[]
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
@@ -31633,6 +33237,20 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
     update?: ApplicationUpdateWithWhereUniqueWithoutCurrentHolderInput | ApplicationUpdateWithWhereUniqueWithoutCurrentHolderInput[]
     updateMany?: ApplicationUpdateManyWithWhereWithoutCurrentHolderInput | ApplicationUpdateManyWithWhereWithoutCurrentHolderInput[]
+    deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+  }
+
+  export type ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput = {
+    create?: XOR<ApplicationCreateWithoutDispatchedByInput, ApplicationUncheckedCreateWithoutDispatchedByInput> | ApplicationCreateWithoutDispatchedByInput[] | ApplicationUncheckedCreateWithoutDispatchedByInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutDispatchedByInput | ApplicationCreateOrConnectWithoutDispatchedByInput[]
+    upsert?: ApplicationUpsertWithWhereUniqueWithoutDispatchedByInput | ApplicationUpsertWithWhereUniqueWithoutDispatchedByInput[]
+    createMany?: ApplicationCreateManyDispatchedByInputEnvelope
+    set?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    disconnect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    delete?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    update?: ApplicationUpdateWithWhereUniqueWithoutDispatchedByInput | ApplicationUpdateWithWhereUniqueWithoutDispatchedByInput[]
+    updateMany?: ApplicationUpdateManyWithWhereWithoutDispatchedByInput | ApplicationUpdateManyWithWhereWithoutDispatchedByInput[]
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
@@ -32040,15 +33658,69 @@ export namespace Prisma {
     deleteMany?: OfficerProfileScalarWhereInput | OfficerProfileScalarWhereInput[]
   }
 
+  export type ApplicationCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<ApplicationCreateWithoutDepartmentInput, ApplicationUncheckedCreateWithoutDepartmentInput> | ApplicationCreateWithoutDepartmentInput[] | ApplicationUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutDepartmentInput | ApplicationCreateOrConnectWithoutDepartmentInput[]
+    createMany?: ApplicationCreateManyDepartmentInputEnvelope
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+  }
+
+  export type ApplicationUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<ApplicationCreateWithoutDepartmentInput, ApplicationUncheckedCreateWithoutDepartmentInput> | ApplicationCreateWithoutDepartmentInput[] | ApplicationUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutDepartmentInput | ApplicationCreateOrConnectWithoutDepartmentInput[]
+    createMany?: ApplicationCreateManyDepartmentInputEnvelope
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+  }
+
+  export type ApplicationUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<ApplicationCreateWithoutDepartmentInput, ApplicationUncheckedCreateWithoutDepartmentInput> | ApplicationCreateWithoutDepartmentInput[] | ApplicationUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutDepartmentInput | ApplicationCreateOrConnectWithoutDepartmentInput[]
+    upsert?: ApplicationUpsertWithWhereUniqueWithoutDepartmentInput | ApplicationUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: ApplicationCreateManyDepartmentInputEnvelope
+    set?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    disconnect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    delete?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    update?: ApplicationUpdateWithWhereUniqueWithoutDepartmentInput | ApplicationUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: ApplicationUpdateManyWithWhereWithoutDepartmentInput | ApplicationUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+  }
+
+  export type ApplicationUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<ApplicationCreateWithoutDepartmentInput, ApplicationUncheckedCreateWithoutDepartmentInput> | ApplicationCreateWithoutDepartmentInput[] | ApplicationUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: ApplicationCreateOrConnectWithoutDepartmentInput | ApplicationCreateOrConnectWithoutDepartmentInput[]
+    upsert?: ApplicationUpsertWithWhereUniqueWithoutDepartmentInput | ApplicationUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: ApplicationCreateManyDepartmentInputEnvelope
+    set?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    disconnect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    delete?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+    update?: ApplicationUpdateWithWhereUniqueWithoutDepartmentInput | ApplicationUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: ApplicationUpdateManyWithWhereWithoutDepartmentInput | ApplicationUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+  }
+
   export type ServiceCategoryCreateNestedOneWithoutApplicationsInput = {
     create?: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
     connectOrCreate?: ServiceCategoryCreateOrConnectWithoutApplicationsInput
     connect?: ServiceCategoryWhereUniqueInput
   }
 
+  export type DepartmentCreateNestedOneWithoutApplicationsInput = {
+    create?: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutApplicationsInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutCurrentHolderFilesInput = {
     create?: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
     connectOrCreate?: UserCreateOrConnectWithoutCurrentHolderFilesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutDispatchedApplicationsInput = {
+    create?: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDispatchedApplicationsInput
     connect?: UserWhereUniqueInput
   }
 
@@ -32188,6 +33860,14 @@ export namespace Prisma {
     update?: XOR<XOR<ServiceCategoryUpdateToOneWithWhereWithoutApplicationsInput, ServiceCategoryUpdateWithoutApplicationsInput>, ServiceCategoryUncheckedUpdateWithoutApplicationsInput>
   }
 
+  export type DepartmentUpdateOneRequiredWithoutApplicationsNestedInput = {
+    create?: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutApplicationsInput
+    upsert?: DepartmentUpsertWithoutApplicationsInput
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutApplicationsInput, DepartmentUpdateWithoutApplicationsInput>, DepartmentUncheckedUpdateWithoutApplicationsInput>
+  }
+
   export type UserUpdateOneWithoutCurrentHolderFilesNestedInput = {
     create?: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
     connectOrCreate?: UserCreateOrConnectWithoutCurrentHolderFilesInput
@@ -32196,6 +33876,16 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCurrentHolderFilesInput, UserUpdateWithoutCurrentHolderFilesInput>, UserUncheckedUpdateWithoutCurrentHolderFilesInput>
+  }
+
+  export type UserUpdateOneWithoutDispatchedApplicationsNestedInput = {
+    create?: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDispatchedApplicationsInput
+    upsert?: UserUpsertWithoutDispatchedApplicationsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDispatchedApplicationsInput, UserUpdateWithoutDispatchedApplicationsInput>, UserUncheckedUpdateWithoutDispatchedApplicationsInput>
   }
 
   export type ApplicationWorkflowUpdateManyWithoutApplicationNestedInput = {
@@ -33145,9 +34835,13 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -33163,6 +34857,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -33174,6 +34869,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -33194,6 +34892,80 @@ export namespace Prisma {
 
   export type ApplicationCreateManyCurrentHolderInputEnvelope = {
     data: ApplicationCreateManyCurrentHolderInput | ApplicationCreateManyCurrentHolderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ApplicationCreateWithoutDispatchedByInput = {
+    id?: string
+    rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
+    status?: $Enums.ApplicationStatus
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutDispatchedByInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    departmentId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
+    status?: $Enums.ApplicationStatus
+    currentHolderId?: string | null
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutDispatchedByInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutDispatchedByInput, ApplicationUncheckedCreateWithoutDispatchedByInput>
+  }
+
+  export type ApplicationCreateManyDispatchedByInputEnvelope = {
+    data: ApplicationCreateManyDispatchedByInput | ApplicationCreateManyDispatchedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -33730,6 +35502,7 @@ export namespace Prisma {
     id?: StringFilter<"Application"> | string
     rrNumber?: StringNullableFilter<"Application"> | string | null
     serviceCategoryId?: StringFilter<"Application"> | string
+    departmentId?: StringFilter<"Application"> | string
     subject?: StringFilter<"Application"> | string
     citizenName?: StringFilter<"Application"> | string
     citizenPhone?: StringFilter<"Application"> | string
@@ -33742,8 +35515,27 @@ export namespace Prisma {
     submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     validatedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    isDispatched?: BoolFilter<"Application"> | boolean
+    dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    dispatchedById?: StringNullableFilter<"Application"> | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
+  }
+
+  export type ApplicationUpsertWithWhereUniqueWithoutDispatchedByInput = {
+    where: ApplicationWhereUniqueInput
+    update: XOR<ApplicationUpdateWithoutDispatchedByInput, ApplicationUncheckedUpdateWithoutDispatchedByInput>
+    create: XOR<ApplicationCreateWithoutDispatchedByInput, ApplicationUncheckedCreateWithoutDispatchedByInput>
+  }
+
+  export type ApplicationUpdateWithWhereUniqueWithoutDispatchedByInput = {
+    where: ApplicationWhereUniqueInput
+    data: XOR<ApplicationUpdateWithoutDispatchedByInput, ApplicationUncheckedUpdateWithoutDispatchedByInput>
+  }
+
+  export type ApplicationUpdateManyWithWhereWithoutDispatchedByInput = {
+    where: ApplicationScalarWhereInput
+    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutDispatchedByInput>
   }
 
   export type ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput = {
@@ -34127,6 +35919,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -34156,6 +35949,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -34201,6 +35995,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -34230,6 +36025,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -34259,6 +36055,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -34288,6 +36085,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -34378,6 +36176,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -34407,6 +36206,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -34482,6 +36282,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -34511,6 +36312,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -34587,6 +36389,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -34616,6 +36419,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -34682,9 +36486,13 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -34699,6 +36507,7 @@ export namespace Prisma {
   export type ApplicationUncheckedCreateWithoutServiceCategoryInput = {
     id?: string
     rrNumber?: string | null
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -34711,6 +36520,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -34818,6 +36630,96 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"OfficerProfile"> | Date | string
   }
 
+  export type ApplicationCreateWithoutDepartmentInput = {
+    id?: string
+    rrNumber?: string | null
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
+    status?: $Enums.ApplicationStatus
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutDepartmentInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
+    status?: $Enums.ApplicationStatus
+    currentHolderId?: string | null
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutDepartmentInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutDepartmentInput, ApplicationUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type ApplicationCreateManyDepartmentInputEnvelope = {
+    data: ApplicationCreateManyDepartmentInput | ApplicationCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ApplicationUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: ApplicationWhereUniqueInput
+    update: XOR<ApplicationUpdateWithoutDepartmentInput, ApplicationUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<ApplicationCreateWithoutDepartmentInput, ApplicationUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type ApplicationUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: ApplicationWhereUniqueInput
+    data: XOR<ApplicationUpdateWithoutDepartmentInput, ApplicationUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type ApplicationUpdateManyWithWhereWithoutDepartmentInput = {
+    where: ApplicationScalarWhereInput
+    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
   export type ServiceCategoryCreateWithoutApplicationsInput = {
     id?: string
     name: string
@@ -34843,6 +36745,29 @@ export namespace Prisma {
     create: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
   }
 
+  export type DepartmentCreateWithoutApplicationsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentUncheckedCreateWithoutApplicationsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepartmentCreateOrConnectWithoutApplicationsInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
+  }
+
   export type UserCreateWithoutCurrentHolderFilesInput = {
     id?: string
     email: string
@@ -34856,6 +36781,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -34885,6 +36811,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -34904,6 +36831,71 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutCurrentHolderFilesInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
+  }
+
+  export type UserCreateWithoutDispatchedApplicationsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    level?: number | null
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+  }
+
+  export type UserUncheckedCreateWithoutDispatchedApplicationsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    level?: number | null
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+  }
+
+  export type UserCreateOrConnectWithoutDispatchedApplicationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
   }
 
   export type ApplicationWorkflowCreateWithoutApplicationInput = {
@@ -35218,6 +37210,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DepartmentUpsertWithoutApplicationsInput = {
+    update: XOR<DepartmentUpdateWithoutApplicationsInput, DepartmentUncheckedUpdateWithoutApplicationsInput>
+    create: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutApplicationsInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutApplicationsInput, DepartmentUncheckedUpdateWithoutApplicationsInput>
+  }
+
+  export type DepartmentUpdateWithoutApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentUncheckedUpdateWithoutApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserUpsertWithoutCurrentHolderFilesInput = {
     update: XOR<UserUpdateWithoutCurrentHolderFilesInput, UserUncheckedUpdateWithoutCurrentHolderFilesInput>
     create: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
@@ -35242,6 +37263,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -35271,6 +37293,78 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type UserUpsertWithoutDispatchedApplicationsInput = {
+    update: XOR<UserUpdateWithoutDispatchedApplicationsInput, UserUncheckedUpdateWithoutDispatchedApplicationsInput>
+    create: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDispatchedApplicationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDispatchedApplicationsInput, UserUncheckedUpdateWithoutDispatchedApplicationsInput>
+  }
+
+  export type UserUpdateWithoutDispatchedApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDispatchedApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -35460,10 +37554,14 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     documents?: DocumentCreateNestedManyWithoutApplicationInput
@@ -35478,6 +37576,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -35490,6 +37589,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
@@ -35521,6 +37623,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -35550,6 +37653,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -35595,10 +37699,14 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     documents?: DocumentUpdateManyWithoutApplicationNestedInput
@@ -35613,6 +37721,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -35625,6 +37734,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
@@ -35662,6 +37774,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -35691,6 +37804,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -35720,10 +37834,14 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     documents?: DocumentCreateNestedManyWithoutApplicationInput
@@ -35738,6 +37856,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -35750,6 +37869,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -35781,6 +37903,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -35810,6 +37933,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -35855,10 +37979,14 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     documents?: DocumentUpdateManyWithoutApplicationNestedInput
@@ -35873,6 +38001,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -35885,6 +38014,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -35922,6 +38054,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -35951,6 +38084,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -35980,10 +38114,14 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     documents?: DocumentCreateNestedManyWithoutApplicationInput
@@ -35998,6 +38136,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -36010,6 +38149,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -36041,6 +38183,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -36070,6 +38213,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -36104,6 +38248,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -36133,6 +38278,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -36178,10 +38324,14 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     documents?: DocumentUpdateManyWithoutApplicationNestedInput
@@ -36196,6 +38346,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -36208,6 +38359,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -36245,6 +38399,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -36274,6 +38429,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -36314,6 +38470,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -36343,6 +38500,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -36372,10 +38530,14 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -36390,6 +38552,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -36402,6 +38565,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -36433,6 +38599,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -36462,6 +38629,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -36496,6 +38664,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
@@ -36525,6 +38694,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
@@ -36570,10 +38740,14 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -36588,6 +38762,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -36600,6 +38775,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -36637,6 +38815,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -36666,6 +38845,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -36706,6 +38886,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
@@ -36735,6 +38916,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
@@ -36764,10 +38946,14 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -36782,6 +38968,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -36794,6 +38981,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -36825,6 +39015,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -36854,6 +39045,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -36899,10 +39091,14 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -36917,6 +39113,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -36929,6 +39126,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -36966,6 +39166,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -36995,6 +39196,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -37024,6 +39226,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -37053,6 +39256,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -37087,10 +39291,14 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -37105,6 +39313,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -37117,6 +39326,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -37159,6 +39371,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -37188,6 +39401,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -37228,10 +39442,14 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -37246,6 +39464,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -37258,6 +39477,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -37284,10 +39506,14 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -37302,6 +39528,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -37314,6 +39541,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -37345,6 +39575,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -37374,6 +39605,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -37419,10 +39651,14 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -37437,6 +39673,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -37449,6 +39686,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -37486,6 +39726,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -37515,6 +39756,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -37544,10 +39786,14 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -37562,6 +39808,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -37574,6 +39821,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -37605,6 +39855,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -37634,6 +39885,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -37668,6 +39920,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -37697,6 +39950,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -37742,10 +39996,14 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -37760,6 +40018,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -37772,6 +40031,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -37809,6 +40071,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -37838,6 +40101,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -37878,6 +40142,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -37907,6 +40172,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -37936,10 +40202,14 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    department: DepartmentCreateNestedOneWithoutApplicationsInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
@@ -37954,6 +40224,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -37966,6 +40237,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -37997,6 +40271,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -38026,6 +40301,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -38060,6 +40336,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
@@ -38089,6 +40366,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
     workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
@@ -38134,10 +40412,14 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -38152,6 +40434,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -38164,6 +40447,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -38201,6 +40487,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -38230,6 +40517,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -38270,6 +40558,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
@@ -38299,6 +40588,7 @@ export namespace Prisma {
     citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
     workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
@@ -38318,6 +40608,7 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -38329,6 +40620,32 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationCreateManyDispatchedByInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    departmentId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
+    status?: $Enums.ApplicationStatus
+    currentHolderId?: string | null
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -38498,9 +40815,13 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -38516,6 +40837,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -38527,6 +40849,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -38544,6 +40869,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -38555,6 +40881,96 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationUpdateWithoutDispatchedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutDispatchedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateManyWithoutDispatchedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39039,6 +41455,7 @@ export namespace Prisma {
   export type ApplicationCreateManyServiceCategoryInput = {
     id?: string
     rrNumber?: string | null
+    departmentId: string
     subject?: string
     citizenName: string
     citizenPhone: string
@@ -39051,6 +41468,9 @@ export namespace Prisma {
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39069,9 +41489,13 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
@@ -39086,6 +41510,7 @@ export namespace Prisma {
   export type ApplicationUncheckedUpdateWithoutServiceCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -39098,6 +41523,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -39114,6 +41542,7 @@ export namespace Prisma {
   export type ApplicationUncheckedUpdateManyWithoutServiceCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
@@ -39126,6 +41555,9 @@ export namespace Prisma {
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39176,6 +41608,116 @@ export namespace Prisma {
     department?: StringFieldUpdateOperationsInput | string
     officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationCreateManyDepartmentInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    subject?: string
+    citizenName: string
+    citizenPhone: string
+    citizenEmail?: string | null
+    citizenAddress: string
+    citizenGender?: string | null
+    citizenAadhaar?: string | null
+    status?: $Enums.ApplicationStatus
+    currentHolderId?: string | null
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    isDispatched?: boolean
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -33,27 +33,77 @@ export default async function DashboardPage() {
 
   const renderGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 18) return "Good afternoon";
-    return "Good evening";
+    const greeting =
+      hour < 12
+        ? "Good morning"
+        : hour < 18
+        ? "Good afternoon"
+        : "Good evening";
+
+    const userName = session.user?.fullName?.split(" ")[0] || "User";
+    const userRole = session.user?.role;
+    const designation = session.user?.designation;
+
+    // Add respectful titles based on role
+    let honorific = "";
+    if (designation) {
+      honorific = ` ${designation}`;
+    } else if (userRole) {
+      switch (userRole) {
+        case UserRole.DC:
+          honorific = " (District Collector)";
+          break;
+        case UserRole.ADC:
+        case UserRole.ADC_GTK:
+        case UserRole.ADC_HQ:
+          honorific = " (Additional District Collector)";
+          break;
+        case UserRole.SDM:
+        case UserRole.SDM_GTK:
+        case UserRole.SDM_HQ:
+          honorific = " (Sub-Divisional Magistrate)";
+          break;
+        case UserRole.ADMIN:
+        case UserRole.SUPER_ADMIN:
+          honorific = " (Administrator)";
+          break;
+        default:
+          if (isOfficerRole(userRole)) {
+            honorific = " (Officer)";
+          }
+          break;
+      }
+    }
+
+    return `${greeting}, ${userName} - ${honorific}`;
   };
 
   const renderRoleSpecificText = () => {
     const userRole = session.user?.role;
-    if (!userRole) return "Manage your dashboard";
+    if (!userRole)
+      return "Welcome to your dashboard. We are honored to have you here.";
 
     switch (userRole) {
+      case UserRole.DC:
+        return "Your esteemed leadership guides our district administration. Thank you for your service to the people.";
+      case UserRole.ADC:
+      case UserRole.ADC_GTK:
+      case UserRole.ADC_HQ:
+        return "Your valuable support in district administration is deeply appreciated. Thank you for your dedicated service.";
+      case UserRole.SDM:
+      case UserRole.SDM_GTK:
+      case UserRole.SDM_HQ:
+        return "Your important role in sub-divisional administration serves our community well. Thank you for your commitment.";
       case UserRole.FRONT_DESK:
-        return "Manage application validations and submissions";
+        return "You are the vital first point of contact for our citizens. Your dedication in validating applications is highly valued.";
       case UserRole.ADMIN:
       case UserRole.SUPER_ADMIN:
-        return "System administration and oversight";
+        return "Your expertise in system administration ensures smooth operations for all. Thank you for maintaining excellence.";
       default:
-        // Check if it's an officer role
         if (isOfficerRole(userRole)) {
-          return "Review and process assigned applications";
+          return "Your professional dedication in reviewing applications contributes significantly to efficient governance. Thank you for your service.";
         }
-        return "Manage your dashboard";
+        return "Welcome to your dashboard. We are honored to have you as part of our team.";
     }
   };
 
@@ -70,8 +120,7 @@ export default async function DashboardPage() {
                   <span>{today}</span>
                 </div>
                 <PageHeaderHeading className="text-2xl md:text-3xl text-emerald-900">
-                  {renderGreeting()},{" "}
-                  {(session && session.user?.fullName?.split(" ")[0]) || "User"}
+                  {renderGreeting()}
                 </PageHeaderHeading>
                 <PageHeaderDescription className="mt-2 text-emerald-800">
                   {renderRoleSpecificText()}

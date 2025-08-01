@@ -209,6 +209,14 @@ export const OFFICER_ROLE_MAPPINGS: Record<UserRole, OfficerRoleMapping> = {
     defaultSection: "Front Desk",
     userType: "Official",
   },
+  [UserRole.DISPATCH_HANDLER]: {
+    role: UserRole.DISPATCH_HANDLER,
+    level: 7, // Same as frontdesk level for support roles
+    fullName: "Dispatch Handler",
+    shortDesignation: "DH",
+    defaultSection: "Dispatch Section",
+    userType: "Official",
+  },
   [UserRole.ADMIN]: {
     role: UserRole.ADMIN,
     level: -1, // Special level for admin
@@ -274,6 +282,10 @@ export const DEFAULT_SECTIONS = [
   {
     name: "Front Desk",
     description: "Application reception and initial processing",
+  },
+  {
+    name: "Dispatch Section",
+    description: "Application dispatch and final delivery",
   },
   { name: "Administration", description: "System administration" },
   {

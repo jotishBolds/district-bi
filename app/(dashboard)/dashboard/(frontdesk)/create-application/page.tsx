@@ -59,6 +59,13 @@ interface ServiceCategory {
   isActive?: boolean;
 }
 
+interface Department {
+  id: string;
+  name: string;
+  description?: string;
+  isActive?: boolean;
+}
+
 interface Officer {
   id: string;
   email: string;
@@ -88,6 +95,7 @@ interface FrontdeskAssignment {
 // Create a simple application schema without conditional validation
 const baseApplicationSchema = z.object({
   serviceCategoryId: z.string().min(1, "Service category is required"),
+  departmentId: z.string().min(1, "Department is required"),
   subject: z.string().min(5, "Subject must be at least 5 characters"),
   citizenName: z.string().min(2, "Name must be at least 2 characters"),
   citizenPhone: z.string().min(10, "Phone number must be at least 10 digits"),
@@ -102,6 +110,7 @@ const baseApplicationSchema = z.object({
 
 type ApplicationFormData = {
   serviceCategoryId: string;
+  departmentId: string;
   subject: string;
   citizenName: string;
   citizenPhone: string;
@@ -118,13 +127,13 @@ type ApplicationFormData = {
 const getSteps = (isGeneralFrontdesk: boolean) => {
   if (isGeneralFrontdesk) {
     return [
-      { id: 1, name: "Service", icon: Settings },
+      { id: 1, name: "Service & Dept", icon: Settings },
       { id: 2, name: "Citizen Info", icon: User },
       { id: 3, name: "Documents", icon: FileText },
     ];
   }
   return [
-    { id: 1, name: "Service", icon: Settings },
+    { id: 1, name: "Service & Dept", icon: Settings },
     { id: 2, name: "Citizen Info", icon: User },
     { id: 3, name: "Documents", icon: FileText },
     { id: 4, name: "Assignment", icon: UserCheck },
@@ -137,6 +146,7 @@ export default function CreateApplicationPage() {
   const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>(
     []
   );
+  const [departments, setDepartments] = useState<Department[]>([]);
   const [officers, setOfficers] = useState<Officer[]>([]);
   const [frontdeskAssignments, setFrontdeskAssignments] = useState<
     FrontdeskAssignment[]
@@ -174,6 +184,7 @@ export default function CreateApplicationPage() {
     resolver: zodResolver(baseApplicationSchema),
     defaultValues: {
       serviceCategoryId: "",
+      departmentId: "",
       subject: "",
       citizenName: "",
       citizenPhone: "",
@@ -192,8 +203,12 @@ export default function CreateApplicationPage() {
   // Add step validation functions
   const validateStep = (step: number): boolean => {
     switch (step) {
-      case 1: // Service
-        return !!(watchedFields.serviceCategoryId && watchedFields.subject);
+      case 1: // Service & Department
+        return !!(
+          watchedFields.serviceCategoryId &&
+          watchedFields.departmentId &&
+          watchedFields.subject
+        );
       case 2: // Citizen Info
         return !!(
           watchedFields.citizenName &&
@@ -335,6 +350,7 @@ export default function CreateApplicationPage() {
     }
 
     fetchServiceCategories();
+    fetchDepartments();
     fetchOfficers();
     fetchFrontdeskAssignments();
   }, [session, status, router]);
@@ -407,6 +423,26 @@ export default function CreateApplicationPage() {
       setServiceCategories([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchDepartments = async () => {
+    try {
+      const response = await fetch("/api/admin/departments");
+      if (!response.ok) throw new Error("Failed to fetch departments");
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        setDepartments(
+          data.filter((dept: Department) => dept.isActive !== false)
+        );
+      } else {
+        setDepartments([]);
+      }
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+      toast.error("Failed to load departments");
+      setDepartments([]);
     }
   };
 
@@ -507,6 +543,7 @@ export default function CreateApplicationPage() {
     try {
       const applicationFormData = new FormData();
       applicationFormData.append("serviceCategoryId", data.serviceCategoryId);
+      applicationFormData.append("departmentId", data.departmentId);
       applicationFormData.append("subject", data.subject);
 
       // Only append officer ID if not general frontdesk
@@ -732,8 +769,8 @@ export default function CreateApplicationPage() {
                         Service Information
                       </CardTitle>
                       <CardDescription className="text-sm">
-                        Select the service category and provide a subject for
-                        this application
+                        Select the service category, department, and provide a
+                        subject for this application
                       </CardDescription>
                     </div>
                   </div>
@@ -772,6 +809,49 @@ export default function CreateApplicationPage() {
                             ))}
                           </SelectContent>
                         </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="departmentId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-gray-700">
+                          Department *
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="h-11">
+                              <SelectValue placeholder="Choose the relevant department" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {departments.map((department) => (
+                              <SelectItem
+                                key={department.id}
+                                value={department.id}
+                              >
+                                <div className="flex flex-col items-start">
+                                  <span>{department.name}</span>
+                                  {department.description && (
+                                    <span className="text-xs text-gray-500">
+                                      {department.description}
+                                    </span>
+                                  )}
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormDescription className="text-xs text-gray-500">
+                          Select the department that this application belongs to
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

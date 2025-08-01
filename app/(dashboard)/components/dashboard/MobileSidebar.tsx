@@ -18,6 +18,7 @@ import {
   HelpCircle,
   BarChart3,
   ListChecks,
+  Building2,
 } from "lucide-react";
 import {
   SheetContent,
@@ -37,10 +38,12 @@ interface MobileSidebarProps {
   userRole?: UserRole;
 }
 
+import { LucideIcon } from "lucide-react";
+
 interface SidebarLink {
   name: string;
   href: string;
-  icon: any;
+  icon: LucideIcon;
   badge?: number;
 }
 export default function MobileSidebar({ userRole }: MobileSidebarProps) {
@@ -89,17 +92,38 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
   const adminLinks: SidebarLink[] = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
     { name: "Applications", href: "/applications", icon: FileText },
-    { name: "User Management", href: "/admin/users", icon: Users },
+    { name: "User Management", href: "/admin/user-management", icon: Users },
+    {
+      name: "Department Management",
+      href: "/admin/departments",
+      icon: Building2,
+    },
     { name: "System Settings", href: "/admin/settings", icon: Settings },
     { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
     { name: "Help & Support", href: "/help", icon: HelpCircle },
   ];
+  const dispatchLinks: SidebarLink[] = [
+    { name: "Dashboard", href: "/dashboard", icon: Home },
+    {
+      name: "Dispatch Management",
+      href: "/dashboard/dispatch",
+      icon: ClipboardList,
+    },
+    { name: "Applications", href: "/dashboard/applications", icon: FileText },
+    { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
+    { name: "Help & Support", href: "/help", icon: HelpCircle },
+  ];
+
   const getLinks = () => {
     const userRole = session?.user?.role;
     if (!userRole) return citizenLinks;
 
     if (userRole === UserRole.DC) {
       return dcLinks;
+    }
+
+    if (userRole === UserRole.DISPATCH_HANDLER) {
+      return dispatchLinks;
     }
 
     if (
@@ -120,6 +144,7 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     if (!userRole) return "bg-blue-600";
 
     if (userRole === UserRole.FRONT_DESK) return "bg-green-600";
+    if (userRole === UserRole.DISPATCH_HANDLER) return "bg-yellow-600";
     if (userRole === UserRole.ADMIN || userRole === UserRole.SUPER_ADMIN)
       return "bg-red-600";
 

@@ -31,6 +31,9 @@ export const authOptions: AuthOptions = {
             },
             include: {
               officerProfile: {
+                select: { fullName: true, designation: true },
+              },
+              citizenProfile: {
                 select: { fullName: true },
               },
             },
@@ -52,7 +55,9 @@ export const authOptions: AuthOptions = {
             role: user.role,
             isActive: user.isActive,
             needsOtp: false,
-            fullName: user.officerProfile?.fullName,
+            fullName:
+              user.officerProfile?.fullName || user.citizenProfile?.fullName,
+            designation: user.officerProfile?.designation,
           };
         }
 
@@ -64,6 +69,14 @@ export const authOptions: AuthOptions = {
         const user = await prisma.user.findUnique({
           where: {
             email: credentials.email,
+          },
+          include: {
+            officerProfile: {
+              select: { fullName: true, designation: true },
+            },
+            citizenProfile: {
+              select: { fullName: true },
+            },
           },
         });
 
@@ -111,6 +124,9 @@ export const authOptions: AuthOptions = {
           role: user.role,
           isActive: user.isActive,
           needsOtp: true,
+          fullName:
+            user.officerProfile?.fullName || user.citizenProfile?.fullName,
+          designation: user.officerProfile?.designation,
         };
       },
     }),
@@ -129,6 +145,12 @@ export const authOptions: AuthOptions = {
         token.isActive = user.isActive;
         token.requiresOtp = user.needsOtp || false;
         token.fullName = user.fullName;
+        // Avoid 'any' by using a type guard
+        if (typeof user === "object" && "designation" in user) {
+          token.designation = (user as { designation?: string }).designation;
+        } else {
+          token.designation = undefined;
+        }
       }
       return token;
     },
@@ -139,6 +161,7 @@ export const authOptions: AuthOptions = {
         session.user.role = token.role as UserRole;
         session.user.isActive = token.isActive;
         session.user.fullName = token.fullName;
+        session.user.designation = token.designation;
         session.requiresOtp = token.requiresOtp;
       }
       return session;

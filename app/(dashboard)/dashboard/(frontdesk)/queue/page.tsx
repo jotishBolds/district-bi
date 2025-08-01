@@ -75,6 +75,11 @@ interface QueuedApplication {
   citizenAddress: string;
   submittedAt: string;
   createdAt: string;
+  department?: {
+    id: string;
+    name: string;
+    description?: string;
+  };
   serviceCategory: {
     name: string;
     slaDays: number;
@@ -580,6 +585,7 @@ export default function ApplicationQueuePage() {
                     <TableHead>RR Number</TableHead>
                     <TableHead>Subject</TableHead>
                     <TableHead>Citizen</TableHead>
+                    <TableHead>Department</TableHead>
                     <TableHead>Service Category</TableHead>
                     <TableHead>Documents</TableHead>
                     <TableHead>Submitted</TableHead>
@@ -615,6 +621,20 @@ export default function ApplicationQueuePage() {
                             </div>
                           )}
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        {application.department ? (
+                          <Badge
+                            variant="secondary"
+                            className="bg-blue-50 text-blue-700"
+                          >
+                            {application.department.name}
+                          </Badge>
+                        ) : (
+                          <span className="text-sm text-gray-400">
+                            Not assigned
+                          </span>
+                        )}
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">
@@ -699,6 +719,12 @@ export default function ApplicationQueuePage() {
                       <span className="font-medium">Citizen:</span>{" "}
                       {selectedApplication.citizenName}
                     </div>
+                    {selectedApplication.department && (
+                      <div>
+                        <span className="font-medium">Department:</span>{" "}
+                        {selectedApplication.department.name}
+                      </div>
+                    )}
                     <div>
                       <span className="font-medium">Service:</span>{" "}
                       {selectedApplication.serviceCategory.name}

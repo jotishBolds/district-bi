@@ -143,6 +143,11 @@ interface Application {
   validatedAt?: string;
   completedAt?: string;
   createdAt: string;
+  department?: {
+    id: string;
+    name: string;
+    description?: string;
+  };
   serviceCategory: ServiceCategory;
   currentHolder?: {
     id: string;
@@ -723,9 +728,19 @@ const OfficerDashboard = () => {
                     </h2>
                   )}
                   {/* Category - Second Line */}
-                  <p className="text-base sm:text-lg font-semibold text-gray-800 mb-3 break-words">
-                    {app.serviceCategory.name}
-                  </p>
+                  <div className="flex items-center flex-wrap gap-2 mb-3">
+                    <p className="text-base sm:text-lg font-semibold text-gray-800 break-words">
+                      {app.serviceCategory.name}
+                    </p>
+                    {app.department && (
+                      <>
+                        <span className="text-gray-400">•</span>
+                        <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                          {app.department.name}
+                        </span>
+                      </>
+                    )}
+                  </div>
                   {/* Name, Phone, Date in responsive layout */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 text-xs sm:text-sm">
                     <div className="flex items-center gap-1 sm:gap-2">

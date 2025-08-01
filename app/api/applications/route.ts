@@ -728,6 +728,7 @@ export async function POST(request: NextRequest) {
 
     // Extract form fields
     const serviceCategoryId = formData.get("serviceCategoryId") as string;
+    const departmentId = formData.get("departmentId") as string;
     const subject = formData.get("subject") as string;
     const preferredOfficerId = formData.get("preferredOfficerId") as string;
     const applicationDetails = formData.get("applicationDetails") as string;
@@ -802,6 +803,20 @@ export async function POST(request: NextRequest) {
         { error: "Invalid service category" },
         { status: 400 }
       );
+    }
+
+    // Verify department exists if provided
+    if (departmentId) {
+      const department = await prisma.department.findUnique({
+        where: { id: departmentId },
+      });
+
+      if (!department) {
+        return NextResponse.json(
+          { error: "Invalid department" },
+          { status: 400 }
+        );
+      }
     }
 
     // For specific frontdesk, verify officer exists and is available
@@ -908,6 +923,7 @@ export async function POST(request: NextRequest) {
       const application = await tx.application.create({
         data: {
           serviceCategoryId,
+          departmentId,
           subject,
           citizenName,
           citizenPhone,

@@ -574,6 +574,9 @@ export default function UserManagement() {
               <SelectItem value={UserRole.OS_COI_RC}>OS (COI & RC)</SelectItem>
               <SelectItem value={UserRole.OS_RC}>OS (Registration)</SelectItem>
               <SelectItem value={UserRole.RI_LEGAL}>RI (Legal)</SelectItem>
+              <SelectItem value={UserRole.DISPATCH_HANDLER}>
+                Dispatch Handler
+              </SelectItem>
               {/* Legacy roles for backward compatibility */}
               <SelectItem value={UserRole.ADC}>ADC (Legacy)</SelectItem>
               <SelectItem value={UserRole.RO}>RO (Legacy)</SelectItem>
@@ -824,7 +827,7 @@ export default function UserManagement() {
 
       {/* Create User Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent className="sm:max-w-md md:max-w-lg">
+        <DialogContent className="sm:max-w-md md:max-w-5xl">
           <DialogHeader>
             <DialogTitle>Create New User</DialogTitle>
             <DialogDescription>
@@ -897,7 +900,7 @@ export default function UserManagement() {
                             <SelectValue placeholder="Select a role" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="max-h-[300px] overflow-y-auto">
+                        <SelectContent className="max-h-[300px] overflow-y-auto ">
                           {/* Administrative Roles */}
                           <div className="px-2 py-1.5 text-sm font-semibold text-gray-900 bg-gray-50">
                             Administrative Roles
@@ -919,7 +922,7 @@ export default function UserManagement() {
                           {Object.entries(getRolesByLevel()).map(
                             ([level, roles]) => {
                               const levelNum = parseInt(level);
-                              if (levelNum < 0 || levelNum > 6) return null;
+                              if (levelNum < 0 || levelNum > 7) return null;
 
                               return (
                                 <div key={level}>
@@ -928,7 +931,9 @@ export default function UserManagement() {
                                     {levelNum === 0
                                       ? "Highest"
                                       : levelNum === 6
-                                      ? "Lowest"
+                                      ? "Standard"
+                                      : levelNum === 8
+                                      ? "Support"
                                       : `Priority ${levelNum}`}
                                     )
                                   </div>
@@ -1238,7 +1243,7 @@ export default function UserManagement() {
                           {Object.entries(getRolesByLevel()).map(
                             ([level, roles]) => {
                               const levelNum = parseInt(level);
-                              if (levelNum < 0 || levelNum > 6) return null;
+                              if (levelNum < 0 || levelNum > 7) return null;
 
                               return (
                                 <div key={level}>
@@ -1247,7 +1252,9 @@ export default function UserManagement() {
                                     {levelNum === 0
                                       ? "Highest"
                                       : levelNum === 6
-                                      ? "Lowest"
+                                      ? "Standard"
+                                      : levelNum === 8
+                                      ? "Support"
                                       : `Priority ${levelNum}`}
                                     )
                                   </div>

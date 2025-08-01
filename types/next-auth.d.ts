@@ -9,6 +9,7 @@ declare module "next-auth" {
     isActive: boolean;
     needsOtp: boolean;
     fullName?: string;
+    designation?: string;
   }
 
   interface Session {
@@ -18,6 +19,7 @@ declare module "next-auth" {
       role: UserRole;
       isActive: boolean;
       fullName?: string;
+      designation?: string;
     };
     requiresOtp: boolean;
   }
@@ -31,5 +33,6 @@ declare module "next-auth/jwt" {
     isActive: boolean;
     requiresOtp: boolean;
     fullName?: string;
+    designation?: string;
   }
 }

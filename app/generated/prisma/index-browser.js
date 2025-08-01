@@ -183,10 +183,20 @@ exports.Prisma.SectionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.DepartmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.ApplicationScalarFieldEnum = {
   id: 'id',
   rrNumber: 'rrNumber',
   serviceCategoryId: 'serviceCategoryId',
+  departmentId: 'departmentId',
   subject: 'subject',
   citizenName: 'citizenName',
   citizenPhone: 'citizenPhone',
@@ -199,6 +209,9 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   submittedAt: 'submittedAt',
   validatedAt: 'validatedAt',
   completedAt: 'completedAt',
+  isDispatched: 'isDispatched',
+  dispatchedAt: 'dispatchedAt',
+  dispatchedById: 'dispatchedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -399,6 +412,7 @@ exports.UserRole = exports.$Enums.UserRole = {
   RI_LEGAL: 'RI_LEGAL',
   RO: 'RO',
   DYDIR: 'DYDIR',
+  DISPATCH_HANDLER: 'DISPATCH_HANDLER',
   ADMIN: 'ADMIN',
   SUPER_ADMIN: 'SUPER_ADMIN'
 };
@@ -436,6 +450,7 @@ exports.Prisma.ModelName = {
   FrontdeskOfficer: 'FrontdeskOfficer',
   ServiceCategory: 'ServiceCategory',
   Section: 'Section',
+  Department: 'Department',
   Application: 'Application',
   ApplicationWorkflow: 'ApplicationWorkflow',
   ApplicationValidation: 'ApplicationValidation',
