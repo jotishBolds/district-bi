@@ -30,6 +30,11 @@ export async function GET(request: NextRequest) {
             fullName: true,
             designation: true,
             department: true,
+            user: {
+              select: {
+                role: true, // Include the officer's role
+              },
+            },
           },
         },
       },
@@ -41,7 +46,12 @@ export async function GET(request: NextRequest) {
       assignments: assignments.map((assignment) => ({
         id: assignment.id,
         officerId: assignment.officerId,
-        officer: assignment.officer,
+        officer: assignment.officer
+          ? {
+              ...assignment.officer,
+              role: assignment.officer.user?.role, // Include the officer's role
+            }
+          : null,
         createdAt: assignment.createdAt,
       })),
     });

@@ -126,12 +126,16 @@ export namespace $Enums {
   export const UserRole: {
   FRONT_DESK: 'FRONT_DESK',
   DC: 'DC',
+  ADC: 'ADC',
+  RO: 'RO',
+  SDM: 'SDM',
+  DYDIR: 'DYDIR',
+  ADMIN: 'ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN',
   ADC_GTK: 'ADC_GTK',
   ADC_HQ: 'ADC_HQ',
-  ADC: 'ADC',
   SDM_GTK: 'SDM_GTK',
   SDM_HQ: 'SDM_HQ',
-  SDM: 'SDM',
   AC: 'AC',
   DPO_DDMA: 'DPO_DDMA',
   DD_REV: 'DD_REV',
@@ -144,11 +148,7 @@ export namespace $Enums {
   OS_COI_RC: 'OS_COI_RC',
   OS_RC: 'OS_RC',
   RI_LEGAL: 'RI_LEGAL',
-  RO: 'RO',
-  DYDIR: 'DYDIR',
-  DISPATCH_HANDLER: 'DISPATCH_HANDLER',
-  ADMIN: 'ADMIN',
-  SUPER_ADMIN: 'SUPER_ADMIN'
+  DISPATCH_HANDLER: 'DISPATCH_HANDLER'
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -188,6 +188,14 @@ export const NotificationType: {
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
 
+
+export const ApplicationSource: {
+  PUBLIC: 'PUBLIC',
+  GOVERNMENT: 'GOVERNMENT'
+};
+
+export type ApplicationSource = (typeof ApplicationSource)[keyof typeof ApplicationSource]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -205,6 +213,10 @@ export const DocumentType: typeof $Enums.DocumentType
 export type NotificationType = $Enums.NotificationType
 
 export const NotificationType: typeof $Enums.NotificationType
+
+export type ApplicationSource = $Enums.ApplicationSource
+
+export const ApplicationSource: typeof $Enums.ApplicationSource
 
 /**
  * ##  Prisma Client ʲˢ
@@ -2776,39 +2788,39 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
+    auditLogs: number
+    validations: number
+    workflowChanges: number
     currentHolderFiles: number
     dispatchedApplications: number
-    workflowChanges: number
-    validations: number
-    verifiedDocuments: number
-    uploadedDocuments: number
-    assignmentsGiven: number
-    assignmentsReceived: number
     documentRequests: number
-    notifications: number
-    auditLogs: number
-    frontdeskAssignments: number
+    uploadedDocuments: number
+    verifiedDocuments: number
     forwardedFrom: number
     forwardedTo: number
+    frontdeskAssignments: number
+    notifications: number
+    assignmentsGiven: number
+    assignmentsReceived: number
     officerForwardedFrom: number
     officerForwardedTo: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+    validations?: boolean | UserCountOutputTypeCountValidationsArgs
+    workflowChanges?: boolean | UserCountOutputTypeCountWorkflowChangesArgs
     currentHolderFiles?: boolean | UserCountOutputTypeCountCurrentHolderFilesArgs
     dispatchedApplications?: boolean | UserCountOutputTypeCountDispatchedApplicationsArgs
-    workflowChanges?: boolean | UserCountOutputTypeCountWorkflowChangesArgs
-    validations?: boolean | UserCountOutputTypeCountValidationsArgs
-    verifiedDocuments?: boolean | UserCountOutputTypeCountVerifiedDocumentsArgs
-    uploadedDocuments?: boolean | UserCountOutputTypeCountUploadedDocumentsArgs
-    assignmentsGiven?: boolean | UserCountOutputTypeCountAssignmentsGivenArgs
-    assignmentsReceived?: boolean | UserCountOutputTypeCountAssignmentsReceivedArgs
     documentRequests?: boolean | UserCountOutputTypeCountDocumentRequestsArgs
-    notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
-    auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
-    frontdeskAssignments?: boolean | UserCountOutputTypeCountFrontdeskAssignmentsArgs
+    uploadedDocuments?: boolean | UserCountOutputTypeCountUploadedDocumentsArgs
+    verifiedDocuments?: boolean | UserCountOutputTypeCountVerifiedDocumentsArgs
     forwardedFrom?: boolean | UserCountOutputTypeCountForwardedFromArgs
     forwardedTo?: boolean | UserCountOutputTypeCountForwardedToArgs
+    frontdeskAssignments?: boolean | UserCountOutputTypeCountFrontdeskAssignmentsArgs
+    notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+    assignmentsGiven?: boolean | UserCountOutputTypeCountAssignmentsGivenArgs
+    assignmentsReceived?: boolean | UserCountOutputTypeCountAssignmentsReceivedArgs
     officerForwardedFrom?: boolean | UserCountOutputTypeCountOfficerForwardedFromArgs
     officerForwardedTo?: boolean | UserCountOutputTypeCountOfficerForwardedToArgs
   }
@@ -2822,6 +2834,27 @@ export namespace Prisma {
      * Select specific fields to fetch from the UserCountOutputType
      */
     select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationAuditLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountValidationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationValidationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountWorkflowChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationWorkflowWhereInput
   }
 
   /**
@@ -2841,22 +2874,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountWorkflowChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicationWorkflowWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountValidationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicationValidationWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountVerifiedDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DocumentWhereInput
+  export type UserCountOutputTypeCountDocumentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentRequestWhereInput
   }
 
   /**
@@ -2869,43 +2888,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountAssignmentsGivenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: OfficerAssignmentWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountAssignmentsReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: OfficerAssignmentWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountDocumentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DocumentRequestWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: NotificationWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicationAuditLogWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountFrontdeskAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FrontdeskOfficerWhereInput
+  export type UserCountOutputTypeCountVerifiedDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentWhereInput
   }
 
   /**
@@ -2920,6 +2904,34 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountForwardedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FrontdeskForwardingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFrontdeskAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FrontdeskOfficerWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAssignmentsGivenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfficerAssignmentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAssignmentsReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfficerAssignmentWhereInput
   }
 
   /**
@@ -3066,24 +3078,24 @@ export namespace Prisma {
    */
 
   export type ApplicationCountOutputType = {
-    workflow: number
-    officerAssignments: number
-    documents: number
-    documentRequests: number
-    notifications: number
     auditLogs: number
+    workflow: number
+    documentRequests: number
+    documents: number
     frontdeskForwardings: number
+    notifications: number
+    officerAssignments: number
     officerForwardings: number
   }
 
   export type ApplicationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    workflow?: boolean | ApplicationCountOutputTypeCountWorkflowArgs
-    officerAssignments?: boolean | ApplicationCountOutputTypeCountOfficerAssignmentsArgs
-    documents?: boolean | ApplicationCountOutputTypeCountDocumentsArgs
-    documentRequests?: boolean | ApplicationCountOutputTypeCountDocumentRequestsArgs
-    notifications?: boolean | ApplicationCountOutputTypeCountNotificationsArgs
     auditLogs?: boolean | ApplicationCountOutputTypeCountAuditLogsArgs
+    workflow?: boolean | ApplicationCountOutputTypeCountWorkflowArgs
+    documentRequests?: boolean | ApplicationCountOutputTypeCountDocumentRequestsArgs
+    documents?: boolean | ApplicationCountOutputTypeCountDocumentsArgs
     frontdeskForwardings?: boolean | ApplicationCountOutputTypeCountFrontdeskForwardingsArgs
+    notifications?: boolean | ApplicationCountOutputTypeCountNotificationsArgs
+    officerAssignments?: boolean | ApplicationCountOutputTypeCountOfficerAssignmentsArgs
     officerForwardings?: boolean | ApplicationCountOutputTypeCountOfficerForwardingsArgs
   }
 
@@ -3101,22 +3113,15 @@ export namespace Prisma {
   /**
    * ApplicationCountOutputType without action
    */
+  export type ApplicationCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationAuditLogWhereInput
+  }
+
+  /**
+   * ApplicationCountOutputType without action
+   */
   export type ApplicationCountOutputTypeCountWorkflowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ApplicationWorkflowWhereInput
-  }
-
-  /**
-   * ApplicationCountOutputType without action
-   */
-  export type ApplicationCountOutputTypeCountOfficerAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: OfficerAssignmentWhereInput
-  }
-
-  /**
-   * ApplicationCountOutputType without action
-   */
-  export type ApplicationCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: DocumentWhereInput
   }
 
   /**
@@ -3129,15 +3134,8 @@ export namespace Prisma {
   /**
    * ApplicationCountOutputType without action
    */
-  export type ApplicationCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: NotificationWhereInput
-  }
-
-  /**
-   * ApplicationCountOutputType without action
-   */
-  export type ApplicationCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicationAuditLogWhereInput
+  export type ApplicationCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentWhereInput
   }
 
   /**
@@ -3145,6 +3143,20 @@ export namespace Prisma {
    */
   export type ApplicationCountOutputTypeCountFrontdeskForwardingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FrontdeskForwardingWhereInput
+  }
+
+  /**
+   * ApplicationCountOutputType without action
+   */
+  export type ApplicationCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+  }
+
+  /**
+   * ApplicationCountOutputType without action
+   */
+  export type ApplicationCountOutputTypeCountOfficerAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfficerAssignmentWhereInput
   }
 
   /**
@@ -3185,11 +3197,11 @@ export namespace Prisma {
     phone: string | null
     passwordHash: string | null
     role: $Enums.UserRole | null
-    level: number | null
     isActive: boolean | null
     lastLoginAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    level: number | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -3198,11 +3210,11 @@ export namespace Prisma {
     phone: string | null
     passwordHash: string | null
     role: $Enums.UserRole | null
-    level: number | null
     isActive: boolean | null
     lastLoginAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    level: number | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -3211,11 +3223,11 @@ export namespace Prisma {
     phone: number
     passwordHash: number
     role: number
-    level: number
     isActive: number
     lastLoginAt: number
     createdAt: number
     updatedAt: number
+    level: number
     _all: number
   }
 
@@ -3234,11 +3246,11 @@ export namespace Prisma {
     phone?: true
     passwordHash?: true
     role?: true
-    level?: true
     isActive?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
+    level?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -3247,11 +3259,11 @@ export namespace Prisma {
     phone?: true
     passwordHash?: true
     role?: true
-    level?: true
     isActive?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
+    level?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -3260,11 +3272,11 @@ export namespace Prisma {
     phone?: true
     passwordHash?: true
     role?: true
-    level?: true
     isActive?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
+    level?: true
     _all?: true
   }
 
@@ -3360,11 +3372,11 @@ export namespace Prisma {
     phone: string | null
     passwordHash: string | null
     role: $Enums.UserRole
-    level: number | null
     isActive: boolean
     lastLoginAt: Date | null
     createdAt: Date
     updatedAt: Date
+    level: number | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -3392,29 +3404,29 @@ export namespace Prisma {
     phone?: boolean
     passwordHash?: boolean
     role?: boolean
-    level?: boolean
     isActive?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    citizenProfile?: boolean | User$citizenProfileArgs<ExtArgs>
-    officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
+    level?: boolean
+    auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
+    validations?: boolean | User$validationsArgs<ExtArgs>
+    workflowChanges?: boolean | User$workflowChangesArgs<ExtArgs>
     currentHolderFiles?: boolean | User$currentHolderFilesArgs<ExtArgs>
     dispatchedApplications?: boolean | User$dispatchedApplicationsArgs<ExtArgs>
-    workflowChanges?: boolean | User$workflowChangesArgs<ExtArgs>
-    validations?: boolean | User$validationsArgs<ExtArgs>
-    verifiedDocuments?: boolean | User$verifiedDocumentsArgs<ExtArgs>
-    uploadedDocuments?: boolean | User$uploadedDocumentsArgs<ExtArgs>
-    assignmentsGiven?: boolean | User$assignmentsGivenArgs<ExtArgs>
-    assignmentsReceived?: boolean | User$assignmentsReceivedArgs<ExtArgs>
+    citizenProfile?: boolean | User$citizenProfileArgs<ExtArgs>
     documentRequests?: boolean | User$documentRequestsArgs<ExtArgs>
-    notifications?: boolean | User$notificationsArgs<ExtArgs>
-    auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
-    frontdeskAssignments?: boolean | User$frontdeskAssignmentsArgs<ExtArgs>
+    uploadedDocuments?: boolean | User$uploadedDocumentsArgs<ExtArgs>
+    verifiedDocuments?: boolean | User$verifiedDocumentsArgs<ExtArgs>
     forwardedFrom?: boolean | User$forwardedFromArgs<ExtArgs>
     forwardedTo?: boolean | User$forwardedToArgs<ExtArgs>
+    frontdeskAssignments?: boolean | User$frontdeskAssignmentsArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
+    assignmentsGiven?: boolean | User$assignmentsGivenArgs<ExtArgs>
+    assignmentsReceived?: boolean | User$assignmentsReceivedArgs<ExtArgs>
     officerForwardedFrom?: boolean | User$officerForwardedFromArgs<ExtArgs>
     officerForwardedTo?: boolean | User$officerForwardedToArgs<ExtArgs>
+    officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3424,11 +3436,11 @@ export namespace Prisma {
     phone?: boolean
     passwordHash?: boolean
     role?: boolean
-    level?: boolean
     isActive?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    level?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3437,11 +3449,11 @@ export namespace Prisma {
     phone?: boolean
     passwordHash?: boolean
     role?: boolean
-    level?: boolean
     isActive?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    level?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -3450,33 +3462,33 @@ export namespace Prisma {
     phone?: boolean
     passwordHash?: boolean
     role?: boolean
-    level?: boolean
     isActive?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    level?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "passwordHash" | "role" | "level" | "isActive" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "passwordHash" | "role" | "isActive" | "lastLoginAt" | "createdAt" | "updatedAt" | "level", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    citizenProfile?: boolean | User$citizenProfileArgs<ExtArgs>
-    officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
+    auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
+    validations?: boolean | User$validationsArgs<ExtArgs>
+    workflowChanges?: boolean | User$workflowChangesArgs<ExtArgs>
     currentHolderFiles?: boolean | User$currentHolderFilesArgs<ExtArgs>
     dispatchedApplications?: boolean | User$dispatchedApplicationsArgs<ExtArgs>
-    workflowChanges?: boolean | User$workflowChangesArgs<ExtArgs>
-    validations?: boolean | User$validationsArgs<ExtArgs>
-    verifiedDocuments?: boolean | User$verifiedDocumentsArgs<ExtArgs>
-    uploadedDocuments?: boolean | User$uploadedDocumentsArgs<ExtArgs>
-    assignmentsGiven?: boolean | User$assignmentsGivenArgs<ExtArgs>
-    assignmentsReceived?: boolean | User$assignmentsReceivedArgs<ExtArgs>
+    citizenProfile?: boolean | User$citizenProfileArgs<ExtArgs>
     documentRequests?: boolean | User$documentRequestsArgs<ExtArgs>
-    notifications?: boolean | User$notificationsArgs<ExtArgs>
-    auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
-    frontdeskAssignments?: boolean | User$frontdeskAssignmentsArgs<ExtArgs>
+    uploadedDocuments?: boolean | User$uploadedDocumentsArgs<ExtArgs>
+    verifiedDocuments?: boolean | User$verifiedDocumentsArgs<ExtArgs>
     forwardedFrom?: boolean | User$forwardedFromArgs<ExtArgs>
     forwardedTo?: boolean | User$forwardedToArgs<ExtArgs>
+    frontdeskAssignments?: boolean | User$frontdeskAssignmentsArgs<ExtArgs>
+    notifications?: boolean | User$notificationsArgs<ExtArgs>
+    assignmentsGiven?: boolean | User$assignmentsGivenArgs<ExtArgs>
+    assignmentsReceived?: boolean | User$assignmentsReceivedArgs<ExtArgs>
     officerForwardedFrom?: boolean | User$officerForwardedFromArgs<ExtArgs>
     officerForwardedTo?: boolean | User$officerForwardedToArgs<ExtArgs>
+    officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3485,24 +3497,24 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      citizenProfile: Prisma.$CitizenProfilePayload<ExtArgs> | null
-      officerProfile: Prisma.$OfficerProfilePayload<ExtArgs> | null
+      auditLogs: Prisma.$ApplicationAuditLogPayload<ExtArgs>[]
+      validations: Prisma.$ApplicationValidationPayload<ExtArgs>[]
+      workflowChanges: Prisma.$ApplicationWorkflowPayload<ExtArgs>[]
       currentHolderFiles: Prisma.$ApplicationPayload<ExtArgs>[]
       dispatchedApplications: Prisma.$ApplicationPayload<ExtArgs>[]
-      workflowChanges: Prisma.$ApplicationWorkflowPayload<ExtArgs>[]
-      validations: Prisma.$ApplicationValidationPayload<ExtArgs>[]
-      verifiedDocuments: Prisma.$DocumentPayload<ExtArgs>[]
-      uploadedDocuments: Prisma.$DocumentPayload<ExtArgs>[]
-      assignmentsGiven: Prisma.$OfficerAssignmentPayload<ExtArgs>[]
-      assignmentsReceived: Prisma.$OfficerAssignmentPayload<ExtArgs>[]
+      citizenProfile: Prisma.$CitizenProfilePayload<ExtArgs> | null
       documentRequests: Prisma.$DocumentRequestPayload<ExtArgs>[]
-      notifications: Prisma.$NotificationPayload<ExtArgs>[]
-      auditLogs: Prisma.$ApplicationAuditLogPayload<ExtArgs>[]
-      frontdeskAssignments: Prisma.$FrontdeskOfficerPayload<ExtArgs>[]
+      uploadedDocuments: Prisma.$DocumentPayload<ExtArgs>[]
+      verifiedDocuments: Prisma.$DocumentPayload<ExtArgs>[]
       forwardedFrom: Prisma.$FrontdeskForwardingPayload<ExtArgs>[]
       forwardedTo: Prisma.$FrontdeskForwardingPayload<ExtArgs>[]
+      frontdeskAssignments: Prisma.$FrontdeskOfficerPayload<ExtArgs>[]
+      notifications: Prisma.$NotificationPayload<ExtArgs>[]
+      assignmentsGiven: Prisma.$OfficerAssignmentPayload<ExtArgs>[]
+      assignmentsReceived: Prisma.$OfficerAssignmentPayload<ExtArgs>[]
       officerForwardedFrom: Prisma.$OfficerForwardingHistoryPayload<ExtArgs>[]
       officerForwardedTo: Prisma.$OfficerForwardingHistoryPayload<ExtArgs>[]
+      officerProfile: Prisma.$OfficerProfilePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3510,11 +3522,11 @@ export namespace Prisma {
       phone: string | null
       passwordHash: string | null
       role: $Enums.UserRole
-      level: number | null
       isActive: boolean
       lastLoginAt: Date | null
       createdAt: Date
       updatedAt: Date
+      level: number | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -3909,24 +3921,24 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    citizenProfile<T extends User$citizenProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$citizenProfileArgs<ExtArgs>>): Prisma__CitizenProfileClient<$Result.GetResult<Prisma.$CitizenProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    officerProfile<T extends User$officerProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$officerProfileArgs<ExtArgs>>): Prisma__OfficerProfileClient<$Result.GetResult<Prisma.$OfficerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    auditLogs<T extends User$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    validations<T extends User$validationsArgs<ExtArgs> = {}>(args?: Subset<T, User$validationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationValidationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    workflowChanges<T extends User$workflowChangesArgs<ExtArgs> = {}>(args?: Subset<T, User$workflowChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationWorkflowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     currentHolderFiles<T extends User$currentHolderFilesArgs<ExtArgs> = {}>(args?: Subset<T, User$currentHolderFilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dispatchedApplications<T extends User$dispatchedApplicationsArgs<ExtArgs> = {}>(args?: Subset<T, User$dispatchedApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    workflowChanges<T extends User$workflowChangesArgs<ExtArgs> = {}>(args?: Subset<T, User$workflowChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationWorkflowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    validations<T extends User$validationsArgs<ExtArgs> = {}>(args?: Subset<T, User$validationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationValidationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    verifiedDocuments<T extends User$verifiedDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$verifiedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    uploadedDocuments<T extends User$uploadedDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$uploadedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    assignmentsGiven<T extends User$assignmentsGivenArgs<ExtArgs> = {}>(args?: Subset<T, User$assignmentsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    assignmentsReceived<T extends User$assignmentsReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$assignmentsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    citizenProfile<T extends User$citizenProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$citizenProfileArgs<ExtArgs>>): Prisma__CitizenProfileClient<$Result.GetResult<Prisma.$CitizenProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     documentRequests<T extends User$documentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$documentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    auditLogs<T extends User$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    frontdeskAssignments<T extends User$frontdeskAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$frontdeskAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    uploadedDocuments<T extends User$uploadedDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$uploadedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    verifiedDocuments<T extends User$verifiedDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$verifiedDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     forwardedFrom<T extends User$forwardedFromArgs<ExtArgs> = {}>(args?: Subset<T, User$forwardedFromArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     forwardedTo<T extends User$forwardedToArgs<ExtArgs> = {}>(args?: Subset<T, User$forwardedToArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    frontdeskAssignments<T extends User$frontdeskAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$frontdeskAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignmentsGiven<T extends User$assignmentsGivenArgs<ExtArgs> = {}>(args?: Subset<T, User$assignmentsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignmentsReceived<T extends User$assignmentsReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$assignmentsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     officerForwardedFrom<T extends User$officerForwardedFromArgs<ExtArgs> = {}>(args?: Subset<T, User$officerForwardedFromArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     officerForwardedTo<T extends User$officerForwardedToArgs<ExtArgs> = {}>(args?: Subset<T, User$officerForwardedToArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    officerProfile<T extends User$officerProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$officerProfileArgs<ExtArgs>>): Prisma__OfficerProfileClient<$Result.GetResult<Prisma.$OfficerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3961,11 +3973,11 @@ export namespace Prisma {
     readonly phone: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'UserRole'>
-    readonly level: FieldRef<"User", 'Int'>
     readonly isActive: FieldRef<"User", 'Boolean'>
     readonly lastLoginAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly level: FieldRef<"User", 'Int'>
   }
     
 
@@ -4354,41 +4366,75 @@ export namespace Prisma {
   }
 
   /**
-   * User.citizenProfile
+   * User.auditLogs
    */
-  export type User$citizenProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$auditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the CitizenProfile
+     * Select specific fields to fetch from the ApplicationAuditLog
      */
-    select?: CitizenProfileSelect<ExtArgs> | null
+    select?: ApplicationAuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the CitizenProfile
+     * Omit specific fields from the ApplicationAuditLog
      */
-    omit?: CitizenProfileOmit<ExtArgs> | null
+    omit?: ApplicationAuditLogOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: CitizenProfileInclude<ExtArgs> | null
-    where?: CitizenProfileWhereInput
+    include?: ApplicationAuditLogInclude<ExtArgs> | null
+    where?: ApplicationAuditLogWhereInput
+    orderBy?: ApplicationAuditLogOrderByWithRelationInput | ApplicationAuditLogOrderByWithRelationInput[]
+    cursor?: ApplicationAuditLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApplicationAuditLogScalarFieldEnum | ApplicationAuditLogScalarFieldEnum[]
   }
 
   /**
-   * User.officerProfile
+   * User.validations
    */
-  export type User$officerProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$validationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the OfficerProfile
+     * Select specific fields to fetch from the ApplicationValidation
      */
-    select?: OfficerProfileSelect<ExtArgs> | null
+    select?: ApplicationValidationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the OfficerProfile
+     * Omit specific fields from the ApplicationValidation
      */
-    omit?: OfficerProfileOmit<ExtArgs> | null
+    omit?: ApplicationValidationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: OfficerProfileInclude<ExtArgs> | null
-    where?: OfficerProfileWhereInput
+    include?: ApplicationValidationInclude<ExtArgs> | null
+    where?: ApplicationValidationWhereInput
+    orderBy?: ApplicationValidationOrderByWithRelationInput | ApplicationValidationOrderByWithRelationInput[]
+    cursor?: ApplicationValidationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApplicationValidationScalarFieldEnum | ApplicationValidationScalarFieldEnum[]
+  }
+
+  /**
+   * User.workflowChanges
+   */
+  export type User$workflowChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApplicationWorkflow
+     */
+    select?: ApplicationWorkflowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApplicationWorkflow
+     */
+    omit?: ApplicationWorkflowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationWorkflowInclude<ExtArgs> | null
+    where?: ApplicationWorkflowWhereInput
+    orderBy?: ApplicationWorkflowOrderByWithRelationInput | ApplicationWorkflowOrderByWithRelationInput[]
+    cursor?: ApplicationWorkflowWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApplicationWorkflowScalarFieldEnum | ApplicationWorkflowScalarFieldEnum[]
   }
 
   /**
@@ -4440,147 +4486,22 @@ export namespace Prisma {
   }
 
   /**
-   * User.workflowChanges
+   * User.citizenProfile
    */
-  export type User$workflowChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$citizenProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ApplicationWorkflow
+     * Select specific fields to fetch from the CitizenProfile
      */
-    select?: ApplicationWorkflowSelect<ExtArgs> | null
+    select?: CitizenProfileSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ApplicationWorkflow
+     * Omit specific fields from the CitizenProfile
      */
-    omit?: ApplicationWorkflowOmit<ExtArgs> | null
+    omit?: CitizenProfileOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ApplicationWorkflowInclude<ExtArgs> | null
-    where?: ApplicationWorkflowWhereInput
-    orderBy?: ApplicationWorkflowOrderByWithRelationInput | ApplicationWorkflowOrderByWithRelationInput[]
-    cursor?: ApplicationWorkflowWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ApplicationWorkflowScalarFieldEnum | ApplicationWorkflowScalarFieldEnum[]
-  }
-
-  /**
-   * User.validations
-   */
-  export type User$validationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ApplicationValidation
-     */
-    select?: ApplicationValidationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ApplicationValidation
-     */
-    omit?: ApplicationValidationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ApplicationValidationInclude<ExtArgs> | null
-    where?: ApplicationValidationWhereInput
-    orderBy?: ApplicationValidationOrderByWithRelationInput | ApplicationValidationOrderByWithRelationInput[]
-    cursor?: ApplicationValidationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ApplicationValidationScalarFieldEnum | ApplicationValidationScalarFieldEnum[]
-  }
-
-  /**
-   * User.verifiedDocuments
-   */
-  export type User$verifiedDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Document
-     */
-    select?: DocumentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Document
-     */
-    omit?: DocumentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DocumentInclude<ExtArgs> | null
-    where?: DocumentWhereInput
-    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
-    cursor?: DocumentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
-  }
-
-  /**
-   * User.uploadedDocuments
-   */
-  export type User$uploadedDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Document
-     */
-    select?: DocumentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Document
-     */
-    omit?: DocumentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: DocumentInclude<ExtArgs> | null
-    where?: DocumentWhereInput
-    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
-    cursor?: DocumentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
-  }
-
-  /**
-   * User.assignmentsGiven
-   */
-  export type User$assignmentsGivenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OfficerAssignment
-     */
-    select?: OfficerAssignmentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OfficerAssignment
-     */
-    omit?: OfficerAssignmentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OfficerAssignmentInclude<ExtArgs> | null
-    where?: OfficerAssignmentWhereInput
-    orderBy?: OfficerAssignmentOrderByWithRelationInput | OfficerAssignmentOrderByWithRelationInput[]
-    cursor?: OfficerAssignmentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: OfficerAssignmentScalarFieldEnum | OfficerAssignmentScalarFieldEnum[]
-  }
-
-  /**
-   * User.assignmentsReceived
-   */
-  export type User$assignmentsReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the OfficerAssignment
-     */
-    select?: OfficerAssignmentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the OfficerAssignment
-     */
-    omit?: OfficerAssignmentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: OfficerAssignmentInclude<ExtArgs> | null
-    where?: OfficerAssignmentWhereInput
-    orderBy?: OfficerAssignmentOrderByWithRelationInput | OfficerAssignmentOrderByWithRelationInput[]
-    cursor?: OfficerAssignmentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: OfficerAssignmentScalarFieldEnum | OfficerAssignmentScalarFieldEnum[]
+    include?: CitizenProfileInclude<ExtArgs> | null
+    where?: CitizenProfileWhereInput
   }
 
   /**
@@ -4608,75 +4529,51 @@ export namespace Prisma {
   }
 
   /**
-   * User.notifications
+   * User.uploadedDocuments
    */
-  export type User$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$uploadedDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Notification
+     * Select specific fields to fetch from the Document
      */
-    select?: NotificationSelect<ExtArgs> | null
+    select?: DocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Notification
+     * Omit specific fields from the Document
      */
-    omit?: NotificationOmit<ExtArgs> | null
+    omit?: DocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: NotificationInclude<ExtArgs> | null
-    where?: NotificationWhereInput
-    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
-    cursor?: NotificationWhereUniqueInput
+    include?: DocumentInclude<ExtArgs> | null
+    where?: DocumentWhereInput
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    cursor?: DocumentWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
   }
 
   /**
-   * User.auditLogs
+   * User.verifiedDocuments
    */
-  export type User$auditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$verifiedDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ApplicationAuditLog
+     * Select specific fields to fetch from the Document
      */
-    select?: ApplicationAuditLogSelect<ExtArgs> | null
+    select?: DocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ApplicationAuditLog
+     * Omit specific fields from the Document
      */
-    omit?: ApplicationAuditLogOmit<ExtArgs> | null
+    omit?: DocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ApplicationAuditLogInclude<ExtArgs> | null
-    where?: ApplicationAuditLogWhereInput
-    orderBy?: ApplicationAuditLogOrderByWithRelationInput | ApplicationAuditLogOrderByWithRelationInput[]
-    cursor?: ApplicationAuditLogWhereUniqueInput
+    include?: DocumentInclude<ExtArgs> | null
+    where?: DocumentWhereInput
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    cursor?: DocumentWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ApplicationAuditLogScalarFieldEnum | ApplicationAuditLogScalarFieldEnum[]
-  }
-
-  /**
-   * User.frontdeskAssignments
-   */
-  export type User$frontdeskAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FrontdeskOfficer
-     */
-    select?: FrontdeskOfficerSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the FrontdeskOfficer
-     */
-    omit?: FrontdeskOfficerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FrontdeskOfficerInclude<ExtArgs> | null
-    where?: FrontdeskOfficerWhereInput
-    orderBy?: FrontdeskOfficerOrderByWithRelationInput | FrontdeskOfficerOrderByWithRelationInput[]
-    cursor?: FrontdeskOfficerWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FrontdeskOfficerScalarFieldEnum | FrontdeskOfficerScalarFieldEnum[]
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
   }
 
   /**
@@ -4728,6 +4625,102 @@ export namespace Prisma {
   }
 
   /**
+   * User.frontdeskAssignments
+   */
+  export type User$frontdeskAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FrontdeskOfficer
+     */
+    select?: FrontdeskOfficerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FrontdeskOfficer
+     */
+    omit?: FrontdeskOfficerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FrontdeskOfficerInclude<ExtArgs> | null
+    where?: FrontdeskOfficerWhereInput
+    orderBy?: FrontdeskOfficerOrderByWithRelationInput | FrontdeskOfficerOrderByWithRelationInput[]
+    cursor?: FrontdeskOfficerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FrontdeskOfficerScalarFieldEnum | FrontdeskOfficerScalarFieldEnum[]
+  }
+
+  /**
+   * User.notifications
+   */
+  export type User$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * User.assignmentsGiven
+   */
+  export type User$assignmentsGivenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerAssignment
+     */
+    select?: OfficerAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerAssignment
+     */
+    omit?: OfficerAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerAssignmentInclude<ExtArgs> | null
+    where?: OfficerAssignmentWhereInput
+    orderBy?: OfficerAssignmentOrderByWithRelationInput | OfficerAssignmentOrderByWithRelationInput[]
+    cursor?: OfficerAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfficerAssignmentScalarFieldEnum | OfficerAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * User.assignmentsReceived
+   */
+  export type User$assignmentsReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerAssignment
+     */
+    select?: OfficerAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerAssignment
+     */
+    omit?: OfficerAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerAssignmentInclude<ExtArgs> | null
+    where?: OfficerAssignmentWhereInput
+    orderBy?: OfficerAssignmentOrderByWithRelationInput | OfficerAssignmentOrderByWithRelationInput[]
+    cursor?: OfficerAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfficerAssignmentScalarFieldEnum | OfficerAssignmentScalarFieldEnum[]
+  }
+
+  /**
    * User.officerForwardedFrom
    */
   export type User$officerForwardedFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4773,6 +4766,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OfficerForwardingHistoryScalarFieldEnum | OfficerForwardingHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * User.officerProfile
+   */
+  export type User$officerProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerProfile
+     */
+    select?: OfficerProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerProfile
+     */
+    omit?: OfficerProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerProfileInclude<ExtArgs> | null
+    where?: OfficerProfileWhereInput
   }
 
   /**
@@ -5908,10 +5920,10 @@ export namespace Prisma {
     designation: string | null
     department: string | null
     officeLocation: string | null
-    sectionId: string | null
     isAvailable: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    sectionId: string | null
   }
 
   export type OfficerProfileMaxAggregateOutputType = {
@@ -5921,10 +5933,10 @@ export namespace Prisma {
     designation: string | null
     department: string | null
     officeLocation: string | null
-    sectionId: string | null
     isAvailable: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    sectionId: string | null
   }
 
   export type OfficerProfileCountAggregateOutputType = {
@@ -5934,10 +5946,10 @@ export namespace Prisma {
     designation: number
     department: number
     officeLocation: number
-    sectionId: number
     isAvailable: number
     createdAt: number
     updatedAt: number
+    sectionId: number
     _all: number
   }
 
@@ -5949,10 +5961,10 @@ export namespace Prisma {
     designation?: true
     department?: true
     officeLocation?: true
-    sectionId?: true
     isAvailable?: true
     createdAt?: true
     updatedAt?: true
+    sectionId?: true
   }
 
   export type OfficerProfileMaxAggregateInputType = {
@@ -5962,10 +5974,10 @@ export namespace Prisma {
     designation?: true
     department?: true
     officeLocation?: true
-    sectionId?: true
     isAvailable?: true
     createdAt?: true
     updatedAt?: true
+    sectionId?: true
   }
 
   export type OfficerProfileCountAggregateInputType = {
@@ -5975,10 +5987,10 @@ export namespace Prisma {
     designation?: true
     department?: true
     officeLocation?: true
-    sectionId?: true
     isAvailable?: true
     createdAt?: true
     updatedAt?: true
+    sectionId?: true
     _all?: true
   }
 
@@ -6061,10 +6073,10 @@ export namespace Prisma {
     designation: string
     department: string
     officeLocation: string | null
-    sectionId: string | null
     isAvailable: boolean
     createdAt: Date
     updatedAt: Date
+    sectionId: string | null
     _count: OfficerProfileCountAggregateOutputType | null
     _min: OfficerProfileMinAggregateOutputType | null
     _max: OfficerProfileMaxAggregateOutputType | null
@@ -6091,13 +6103,13 @@ export namespace Prisma {
     designation?: boolean
     department?: boolean
     officeLocation?: boolean
-    sectionId?: boolean
     isAvailable?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    section?: boolean | OfficerProfile$sectionArgs<ExtArgs>
+    sectionId?: boolean
     frontdeskUsers?: boolean | OfficerProfile$frontdeskUsersArgs<ExtArgs>
+    section?: boolean | OfficerProfile$sectionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | OfficerProfileCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["officerProfile"]>
 
@@ -6108,12 +6120,12 @@ export namespace Prisma {
     designation?: boolean
     department?: boolean
     officeLocation?: boolean
-    sectionId?: boolean
     isAvailable?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    sectionId?: boolean
     section?: boolean | OfficerProfile$sectionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["officerProfile"]>
 
   export type OfficerProfileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6123,12 +6135,12 @@ export namespace Prisma {
     designation?: boolean
     department?: boolean
     officeLocation?: boolean
-    sectionId?: boolean
     isAvailable?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    sectionId?: boolean
     section?: boolean | OfficerProfile$sectionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["officerProfile"]>
 
   export type OfficerProfileSelectScalar = {
@@ -6138,34 +6150,34 @@ export namespace Prisma {
     designation?: boolean
     department?: boolean
     officeLocation?: boolean
-    sectionId?: boolean
     isAvailable?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    sectionId?: boolean
   }
 
-  export type OfficerProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "designation" | "department" | "officeLocation" | "sectionId" | "isAvailable" | "createdAt" | "updatedAt", ExtArgs["result"]["officerProfile"]>
+  export type OfficerProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "designation" | "department" | "officeLocation" | "isAvailable" | "createdAt" | "updatedAt" | "sectionId", ExtArgs["result"]["officerProfile"]>
   export type OfficerProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-    section?: boolean | OfficerProfile$sectionArgs<ExtArgs>
     frontdeskUsers?: boolean | OfficerProfile$frontdeskUsersArgs<ExtArgs>
+    section?: boolean | OfficerProfile$sectionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | OfficerProfileCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OfficerProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     section?: boolean | OfficerProfile$sectionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type OfficerProfileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     section?: boolean | OfficerProfile$sectionArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $OfficerProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "OfficerProfile"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-      section: Prisma.$SectionPayload<ExtArgs> | null
       frontdeskUsers: Prisma.$FrontdeskOfficerPayload<ExtArgs>[]
+      section: Prisma.$SectionPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6174,10 +6186,10 @@ export namespace Prisma {
       designation: string
       department: string
       officeLocation: string | null
-      sectionId: string | null
       isAvailable: boolean
       createdAt: Date
       updatedAt: Date
+      sectionId: string | null
     }, ExtArgs["result"]["officerProfile"]>
     composites: {}
   }
@@ -6572,9 +6584,9 @@ export namespace Prisma {
    */
   export interface Prisma__OfficerProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    section<T extends OfficerProfile$sectionArgs<ExtArgs> = {}>(args?: Subset<T, OfficerProfile$sectionArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     frontdeskUsers<T extends OfficerProfile$frontdeskUsersArgs<ExtArgs> = {}>(args?: Subset<T, OfficerProfile$frontdeskUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskOfficerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    section<T extends OfficerProfile$sectionArgs<ExtArgs> = {}>(args?: Subset<T, OfficerProfile$sectionArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6610,10 +6622,10 @@ export namespace Prisma {
     readonly designation: FieldRef<"OfficerProfile", 'String'>
     readonly department: FieldRef<"OfficerProfile", 'String'>
     readonly officeLocation: FieldRef<"OfficerProfile", 'String'>
-    readonly sectionId: FieldRef<"OfficerProfile", 'String'>
     readonly isAvailable: FieldRef<"OfficerProfile", 'Boolean'>
     readonly createdAt: FieldRef<"OfficerProfile", 'DateTime'>
     readonly updatedAt: FieldRef<"OfficerProfile", 'DateTime'>
+    readonly sectionId: FieldRef<"OfficerProfile", 'String'>
   }
     
 
@@ -7010,25 +7022,6 @@ export namespace Prisma {
   }
 
   /**
-   * OfficerProfile.section
-   */
-  export type OfficerProfile$sectionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Section
-     */
-    select?: SectionSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Section
-     */
-    omit?: SectionOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SectionInclude<ExtArgs> | null
-    where?: SectionWhereInput
-  }
-
-  /**
    * OfficerProfile.frontdeskUsers
    */
   export type OfficerProfile$frontdeskUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7050,6 +7043,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FrontdeskOfficerScalarFieldEnum | FrontdeskOfficerScalarFieldEnum[]
+  }
+
+  /**
+   * OfficerProfile.section
+   */
+  export type OfficerProfile$sectionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Section
+     */
+    select?: SectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Section
+     */
+    omit?: SectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SectionInclude<ExtArgs> | null
+    where?: SectionWhereInput
   }
 
   /**
@@ -8149,25 +8161,14 @@ export namespace Prisma {
 
   export type AggregateServiceCategory = {
     _count: ServiceCategoryCountAggregateOutputType | null
-    _avg: ServiceCategoryAvgAggregateOutputType | null
-    _sum: ServiceCategorySumAggregateOutputType | null
     _min: ServiceCategoryMinAggregateOutputType | null
     _max: ServiceCategoryMaxAggregateOutputType | null
-  }
-
-  export type ServiceCategoryAvgAggregateOutputType = {
-    slaDays: number | null
-  }
-
-  export type ServiceCategorySumAggregateOutputType = {
-    slaDays: number | null
   }
 
   export type ServiceCategoryMinAggregateOutputType = {
     id: string | null
     name: string | null
     description: string | null
-    slaDays: number | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -8177,7 +8178,6 @@ export namespace Prisma {
     id: string | null
     name: string | null
     description: string | null
-    slaDays: number | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -8187,7 +8187,6 @@ export namespace Prisma {
     id: number
     name: number
     description: number
-    slaDays: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -8195,19 +8194,10 @@ export namespace Prisma {
   }
 
 
-  export type ServiceCategoryAvgAggregateInputType = {
-    slaDays?: true
-  }
-
-  export type ServiceCategorySumAggregateInputType = {
-    slaDays?: true
-  }
-
   export type ServiceCategoryMinAggregateInputType = {
     id?: true
     name?: true
     description?: true
-    slaDays?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -8217,7 +8207,6 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
-    slaDays?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -8227,7 +8216,6 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
-    slaDays?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -8272,18 +8260,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: ServiceCategoryAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ServiceCategorySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: ServiceCategoryMinAggregateInputType
@@ -8314,8 +8290,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ServiceCategoryCountAggregateInputType | true
-    _avg?: ServiceCategoryAvgAggregateInputType
-    _sum?: ServiceCategorySumAggregateInputType
     _min?: ServiceCategoryMinAggregateInputType
     _max?: ServiceCategoryMaxAggregateInputType
   }
@@ -8324,13 +8298,10 @@ export namespace Prisma {
     id: string
     name: string
     description: string | null
-    slaDays: number
     isActive: boolean
     createdAt: Date
     updatedAt: Date
     _count: ServiceCategoryCountAggregateOutputType | null
-    _avg: ServiceCategoryAvgAggregateOutputType | null
-    _sum: ServiceCategorySumAggregateOutputType | null
     _min: ServiceCategoryMinAggregateOutputType | null
     _max: ServiceCategoryMaxAggregateOutputType | null
   }
@@ -8353,7 +8324,6 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    slaDays?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8365,7 +8335,6 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    slaDays?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8375,7 +8344,6 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    slaDays?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -8385,13 +8353,12 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
-    slaDays?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ServiceCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "slaDays" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["serviceCategory"]>
+  export type ServiceCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["serviceCategory"]>
   export type ServiceCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applications?: boolean | ServiceCategory$applicationsArgs<ExtArgs>
     _count?: boolean | ServiceCategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -8408,7 +8375,6 @@ export namespace Prisma {
       id: string
       name: string
       description: string | null
-      slaDays: number
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -8839,7 +8805,6 @@ export namespace Prisma {
     readonly id: FieldRef<"ServiceCategory", 'String'>
     readonly name: FieldRef<"ServiceCategory", 'String'>
     readonly description: FieldRef<"ServiceCategory", 'String'>
-    readonly slaDays: FieldRef<"ServiceCategory", 'Int'>
     readonly isActive: FieldRef<"ServiceCategory", 'Boolean'>
     readonly createdAt: FieldRef<"ServiceCategory", 'DateTime'>
     readonly updatedAt: FieldRef<"ServiceCategory", 'DateTime'>
@@ -11453,72 +11418,75 @@ export namespace Prisma {
     id: string | null
     rrNumber: string | null
     serviceCategoryId: string | null
-    departmentId: string | null
-    subject: string | null
-    citizenName: string | null
-    citizenPhone: string | null
-    citizenEmail: string | null
-    citizenAddress: string | null
-    citizenGender: string | null
-    citizenAadhaar: string | null
     status: $Enums.ApplicationStatus | null
     currentHolderId: string | null
     submittedAt: Date | null
     validatedAt: Date | null
     completedAt: Date | null
-    isDispatched: boolean | null
-    dispatchedAt: Date | null
-    dispatchedById: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    citizenAadhaar: string | null
+    citizenAddress: string | null
+    citizenEmail: string | null
+    citizenGender: string | null
+    citizenName: string | null
+    citizenPhone: string | null
+    subject: string | null
+    departmentId: string | null
+    applicationSource: $Enums.ApplicationSource | null
+    dispatchedAt: Date | null
+    dispatchedById: string | null
+    isDispatched: boolean | null
   }
 
   export type ApplicationMaxAggregateOutputType = {
     id: string | null
     rrNumber: string | null
     serviceCategoryId: string | null
-    departmentId: string | null
-    subject: string | null
-    citizenName: string | null
-    citizenPhone: string | null
-    citizenEmail: string | null
-    citizenAddress: string | null
-    citizenGender: string | null
-    citizenAadhaar: string | null
     status: $Enums.ApplicationStatus | null
     currentHolderId: string | null
     submittedAt: Date | null
     validatedAt: Date | null
     completedAt: Date | null
-    isDispatched: boolean | null
-    dispatchedAt: Date | null
-    dispatchedById: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    citizenAadhaar: string | null
+    citizenAddress: string | null
+    citizenEmail: string | null
+    citizenGender: string | null
+    citizenName: string | null
+    citizenPhone: string | null
+    subject: string | null
+    departmentId: string | null
+    applicationSource: $Enums.ApplicationSource | null
+    dispatchedAt: Date | null
+    dispatchedById: string | null
+    isDispatched: boolean | null
   }
 
   export type ApplicationCountAggregateOutputType = {
     id: number
     rrNumber: number
     serviceCategoryId: number
-    departmentId: number
-    subject: number
-    citizenName: number
-    citizenPhone: number
-    citizenEmail: number
-    citizenAddress: number
-    citizenGender: number
-    citizenAadhaar: number
     status: number
     currentHolderId: number
     submittedAt: number
     validatedAt: number
     completedAt: number
-    isDispatched: number
-    dispatchedAt: number
-    dispatchedById: number
     createdAt: number
     updatedAt: number
+    citizenAadhaar: number
+    citizenAddress: number
+    citizenEmail: number
+    citizenGender: number
+    citizenName: number
+    citizenPhone: number
+    subject: number
+    departmentId: number
+    applicationSource: number
+    dispatchedAt: number
+    dispatchedById: number
+    isDispatched: number
     _all: number
   }
 
@@ -11527,72 +11495,75 @@ export namespace Prisma {
     id?: true
     rrNumber?: true
     serviceCategoryId?: true
-    departmentId?: true
-    subject?: true
-    citizenName?: true
-    citizenPhone?: true
-    citizenEmail?: true
-    citizenAddress?: true
-    citizenGender?: true
-    citizenAadhaar?: true
     status?: true
     currentHolderId?: true
     submittedAt?: true
     validatedAt?: true
     completedAt?: true
-    isDispatched?: true
-    dispatchedAt?: true
-    dispatchedById?: true
     createdAt?: true
     updatedAt?: true
+    citizenAadhaar?: true
+    citizenAddress?: true
+    citizenEmail?: true
+    citizenGender?: true
+    citizenName?: true
+    citizenPhone?: true
+    subject?: true
+    departmentId?: true
+    applicationSource?: true
+    dispatchedAt?: true
+    dispatchedById?: true
+    isDispatched?: true
   }
 
   export type ApplicationMaxAggregateInputType = {
     id?: true
     rrNumber?: true
     serviceCategoryId?: true
-    departmentId?: true
-    subject?: true
-    citizenName?: true
-    citizenPhone?: true
-    citizenEmail?: true
-    citizenAddress?: true
-    citizenGender?: true
-    citizenAadhaar?: true
     status?: true
     currentHolderId?: true
     submittedAt?: true
     validatedAt?: true
     completedAt?: true
-    isDispatched?: true
-    dispatchedAt?: true
-    dispatchedById?: true
     createdAt?: true
     updatedAt?: true
+    citizenAadhaar?: true
+    citizenAddress?: true
+    citizenEmail?: true
+    citizenGender?: true
+    citizenName?: true
+    citizenPhone?: true
+    subject?: true
+    departmentId?: true
+    applicationSource?: true
+    dispatchedAt?: true
+    dispatchedById?: true
+    isDispatched?: true
   }
 
   export type ApplicationCountAggregateInputType = {
     id?: true
     rrNumber?: true
     serviceCategoryId?: true
-    departmentId?: true
-    subject?: true
-    citizenName?: true
-    citizenPhone?: true
-    citizenEmail?: true
-    citizenAddress?: true
-    citizenGender?: true
-    citizenAadhaar?: true
     status?: true
     currentHolderId?: true
     submittedAt?: true
     validatedAt?: true
     completedAt?: true
-    isDispatched?: true
-    dispatchedAt?: true
-    dispatchedById?: true
     createdAt?: true
     updatedAt?: true
+    citizenAadhaar?: true
+    citizenAddress?: true
+    citizenEmail?: true
+    citizenGender?: true
+    citizenName?: true
+    citizenPhone?: true
+    subject?: true
+    departmentId?: true
+    applicationSource?: true
+    dispatchedAt?: true
+    dispatchedById?: true
+    isDispatched?: true
     _all?: true
   }
 
@@ -11672,24 +11643,25 @@ export namespace Prisma {
     id: string
     rrNumber: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail: string | null
-    citizenAddress: string
-    citizenGender: string | null
-    citizenAadhaar: string | null
     status: $Enums.ApplicationStatus
     currentHolderId: string | null
     submittedAt: Date | null
     validatedAt: Date | null
     completedAt: Date | null
-    isDispatched: boolean
-    dispatchedAt: Date | null
-    dispatchedById: string | null
     createdAt: Date
     updatedAt: Date
+    citizenAadhaar: string | null
+    citizenAddress: string
+    citizenEmail: string | null
+    citizenGender: string | null
+    citizenName: string
+    citizenPhone: string
+    subject: string
+    departmentId: string | null
+    applicationSource: $Enums.ApplicationSource
+    dispatchedAt: Date | null
+    dispatchedById: string | null
+    isDispatched: boolean
     _count: ApplicationCountAggregateOutputType | null
     _min: ApplicationMinAggregateOutputType | null
     _max: ApplicationMaxAggregateOutputType | null
@@ -11713,36 +11685,37 @@ export namespace Prisma {
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
-    departmentId?: boolean
-    subject?: boolean
-    citizenName?: boolean
-    citizenPhone?: boolean
-    citizenEmail?: boolean
-    citizenAddress?: boolean
-    citizenGender?: boolean
-    citizenAadhaar?: boolean
     status?: boolean
     currentHolderId?: boolean
     submittedAt?: boolean
     validatedAt?: boolean
     completedAt?: boolean
-    isDispatched?: boolean
-    dispatchedAt?: boolean
-    dispatchedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    department?: boolean | DepartmentDefaultArgs<ExtArgs>
-    currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
-    dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
-    workflow?: boolean | Application$workflowArgs<ExtArgs>
-    validation?: boolean | Application$validationArgs<ExtArgs>
-    officerAssignments?: boolean | Application$officerAssignmentsArgs<ExtArgs>
-    documents?: boolean | Application$documentsArgs<ExtArgs>
-    documentRequests?: boolean | Application$documentRequestsArgs<ExtArgs>
-    notifications?: boolean | Application$notificationsArgs<ExtArgs>
+    citizenAadhaar?: boolean
+    citizenAddress?: boolean
+    citizenEmail?: boolean
+    citizenGender?: boolean
+    citizenName?: boolean
+    citizenPhone?: boolean
+    subject?: boolean
+    departmentId?: boolean
+    applicationSource?: boolean
+    dispatchedAt?: boolean
+    dispatchedById?: boolean
+    isDispatched?: boolean
     auditLogs?: boolean | Application$auditLogsArgs<ExtArgs>
+    validation?: boolean | Application$validationArgs<ExtArgs>
+    workflow?: boolean | Application$workflowArgs<ExtArgs>
+    currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    department?: boolean | Application$departmentArgs<ExtArgs>
+    dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
+    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    documentRequests?: boolean | Application$documentRequestsArgs<ExtArgs>
+    documents?: boolean | Application$documentsArgs<ExtArgs>
     frontdeskForwardings?: boolean | Application$frontdeskForwardingsArgs<ExtArgs>
+    notifications?: boolean | Application$notificationsArgs<ExtArgs>
+    officerAssignments?: boolean | Application$officerAssignmentsArgs<ExtArgs>
     officerForwardings?: boolean | Application$officerForwardingsArgs<ExtArgs>
     _count?: boolean | ApplicationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
@@ -11751,151 +11724,155 @@ export namespace Prisma {
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
-    departmentId?: boolean
-    subject?: boolean
-    citizenName?: boolean
-    citizenPhone?: boolean
-    citizenEmail?: boolean
-    citizenAddress?: boolean
-    citizenGender?: boolean
-    citizenAadhaar?: boolean
     status?: boolean
     currentHolderId?: boolean
     submittedAt?: boolean
     validatedAt?: boolean
     completedAt?: boolean
-    isDispatched?: boolean
-    dispatchedAt?: boolean
-    dispatchedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    citizenAadhaar?: boolean
+    citizenAddress?: boolean
+    citizenEmail?: boolean
+    citizenGender?: boolean
+    citizenName?: boolean
+    citizenPhone?: boolean
+    subject?: boolean
+    departmentId?: boolean
+    applicationSource?: boolean
+    dispatchedAt?: boolean
+    dispatchedById?: boolean
+    isDispatched?: boolean
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    department?: boolean | Application$departmentArgs<ExtArgs>
     dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
+    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
-    departmentId?: boolean
-    subject?: boolean
-    citizenName?: boolean
-    citizenPhone?: boolean
-    citizenEmail?: boolean
-    citizenAddress?: boolean
-    citizenGender?: boolean
-    citizenAadhaar?: boolean
     status?: boolean
     currentHolderId?: boolean
     submittedAt?: boolean
     validatedAt?: boolean
     completedAt?: boolean
-    isDispatched?: boolean
-    dispatchedAt?: boolean
-    dispatchedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    department?: boolean | DepartmentDefaultArgs<ExtArgs>
+    citizenAadhaar?: boolean
+    citizenAddress?: boolean
+    citizenEmail?: boolean
+    citizenGender?: boolean
+    citizenName?: boolean
+    citizenPhone?: boolean
+    subject?: boolean
+    departmentId?: boolean
+    applicationSource?: boolean
+    dispatchedAt?: boolean
+    dispatchedById?: boolean
+    isDispatched?: boolean
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    department?: boolean | Application$departmentArgs<ExtArgs>
     dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
+    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
   export type ApplicationSelectScalar = {
     id?: boolean
     rrNumber?: boolean
     serviceCategoryId?: boolean
-    departmentId?: boolean
-    subject?: boolean
-    citizenName?: boolean
-    citizenPhone?: boolean
-    citizenEmail?: boolean
-    citizenAddress?: boolean
-    citizenGender?: boolean
-    citizenAadhaar?: boolean
     status?: boolean
     currentHolderId?: boolean
     submittedAt?: boolean
     validatedAt?: boolean
     completedAt?: boolean
-    isDispatched?: boolean
-    dispatchedAt?: boolean
-    dispatchedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    citizenAadhaar?: boolean
+    citizenAddress?: boolean
+    citizenEmail?: boolean
+    citizenGender?: boolean
+    citizenName?: boolean
+    citizenPhone?: boolean
+    subject?: boolean
+    departmentId?: boolean
+    applicationSource?: boolean
+    dispatchedAt?: boolean
+    dispatchedById?: boolean
+    isDispatched?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rrNumber" | "serviceCategoryId" | "departmentId" | "subject" | "citizenName" | "citizenPhone" | "citizenEmail" | "citizenAddress" | "citizenGender" | "citizenAadhaar" | "status" | "currentHolderId" | "submittedAt" | "validatedAt" | "completedAt" | "isDispatched" | "dispatchedAt" | "dispatchedById" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rrNumber" | "serviceCategoryId" | "status" | "currentHolderId" | "submittedAt" | "validatedAt" | "completedAt" | "createdAt" | "updatedAt" | "citizenAadhaar" | "citizenAddress" | "citizenEmail" | "citizenGender" | "citizenName" | "citizenPhone" | "subject" | "departmentId" | "applicationSource" | "dispatchedAt" | "dispatchedById" | "isDispatched", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    department?: boolean | DepartmentDefaultArgs<ExtArgs>
-    currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
-    dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
-    workflow?: boolean | Application$workflowArgs<ExtArgs>
-    validation?: boolean | Application$validationArgs<ExtArgs>
-    officerAssignments?: boolean | Application$officerAssignmentsArgs<ExtArgs>
-    documents?: boolean | Application$documentsArgs<ExtArgs>
-    documentRequests?: boolean | Application$documentRequestsArgs<ExtArgs>
-    notifications?: boolean | Application$notificationsArgs<ExtArgs>
     auditLogs?: boolean | Application$auditLogsArgs<ExtArgs>
+    validation?: boolean | Application$validationArgs<ExtArgs>
+    workflow?: boolean | Application$workflowArgs<ExtArgs>
+    currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    department?: boolean | Application$departmentArgs<ExtArgs>
+    dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
+    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    documentRequests?: boolean | Application$documentRequestsArgs<ExtArgs>
+    documents?: boolean | Application$documentsArgs<ExtArgs>
     frontdeskForwardings?: boolean | Application$frontdeskForwardingsArgs<ExtArgs>
+    notifications?: boolean | Application$notificationsArgs<ExtArgs>
+    officerAssignments?: boolean | Application$officerAssignmentsArgs<ExtArgs>
     officerForwardings?: boolean | Application$officerForwardingsArgs<ExtArgs>
     _count?: boolean | ApplicationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    department?: boolean | DepartmentDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    department?: boolean | Application$departmentArgs<ExtArgs>
     dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
+    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
   }
   export type ApplicationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
-    department?: boolean | DepartmentDefaultArgs<ExtArgs>
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
+    department?: boolean | Application$departmentArgs<ExtArgs>
     dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
+    serviceCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
   }
 
   export type $ApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Application"
     objects: {
-      serviceCategory: Prisma.$ServiceCategoryPayload<ExtArgs>
-      department: Prisma.$DepartmentPayload<ExtArgs>
-      currentHolder: Prisma.$UserPayload<ExtArgs> | null
-      dispatchedBy: Prisma.$UserPayload<ExtArgs> | null
-      workflow: Prisma.$ApplicationWorkflowPayload<ExtArgs>[]
-      validation: Prisma.$ApplicationValidationPayload<ExtArgs> | null
-      officerAssignments: Prisma.$OfficerAssignmentPayload<ExtArgs>[]
-      documents: Prisma.$DocumentPayload<ExtArgs>[]
-      documentRequests: Prisma.$DocumentRequestPayload<ExtArgs>[]
-      notifications: Prisma.$NotificationPayload<ExtArgs>[]
       auditLogs: Prisma.$ApplicationAuditLogPayload<ExtArgs>[]
+      validation: Prisma.$ApplicationValidationPayload<ExtArgs> | null
+      workflow: Prisma.$ApplicationWorkflowPayload<ExtArgs>[]
+      currentHolder: Prisma.$UserPayload<ExtArgs> | null
+      department: Prisma.$DepartmentPayload<ExtArgs> | null
+      dispatchedBy: Prisma.$UserPayload<ExtArgs> | null
+      serviceCategory: Prisma.$ServiceCategoryPayload<ExtArgs>
+      documentRequests: Prisma.$DocumentRequestPayload<ExtArgs>[]
+      documents: Prisma.$DocumentPayload<ExtArgs>[]
       frontdeskForwardings: Prisma.$FrontdeskForwardingPayload<ExtArgs>[]
+      notifications: Prisma.$NotificationPayload<ExtArgs>[]
+      officerAssignments: Prisma.$OfficerAssignmentPayload<ExtArgs>[]
       officerForwardings: Prisma.$OfficerForwardingHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       rrNumber: string | null
       serviceCategoryId: string
-      departmentId: string
-      subject: string
-      citizenName: string
-      citizenPhone: string
-      citizenEmail: string | null
-      citizenAddress: string
-      citizenGender: string | null
-      citizenAadhaar: string | null
       status: $Enums.ApplicationStatus
       currentHolderId: string | null
       submittedAt: Date | null
       validatedAt: Date | null
       completedAt: Date | null
-      isDispatched: boolean
-      dispatchedAt: Date | null
-      dispatchedById: string | null
       createdAt: Date
       updatedAt: Date
+      citizenAadhaar: string | null
+      citizenAddress: string
+      citizenEmail: string | null
+      citizenGender: string | null
+      citizenName: string
+      citizenPhone: string
+      subject: string
+      departmentId: string | null
+      applicationSource: $Enums.ApplicationSource
+      dispatchedAt: Date | null
+      dispatchedById: string | null
+      isDispatched: boolean
     }, ExtArgs["result"]["application"]>
     composites: {}
   }
@@ -12290,18 +12267,18 @@ export namespace Prisma {
    */
   export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    serviceCategory<T extends ServiceCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategoryDefaultArgs<ExtArgs>>): Prisma__ServiceCategoryClient<$Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    department<T extends DepartmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepartmentDefaultArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    currentHolder<T extends Application$currentHolderArgs<ExtArgs> = {}>(args?: Subset<T, Application$currentHolderArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    dispatchedBy<T extends Application$dispatchedByArgs<ExtArgs> = {}>(args?: Subset<T, Application$dispatchedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    workflow<T extends Application$workflowArgs<ExtArgs> = {}>(args?: Subset<T, Application$workflowArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationWorkflowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    validation<T extends Application$validationArgs<ExtArgs> = {}>(args?: Subset<T, Application$validationArgs<ExtArgs>>): Prisma__ApplicationValidationClient<$Result.GetResult<Prisma.$ApplicationValidationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    officerAssignments<T extends Application$officerAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Application$officerAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    documents<T extends Application$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Application$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    documentRequests<T extends Application$documentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Application$documentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    notifications<T extends Application$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Application$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends Application$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Application$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    validation<T extends Application$validationArgs<ExtArgs> = {}>(args?: Subset<T, Application$validationArgs<ExtArgs>>): Prisma__ApplicationValidationClient<$Result.GetResult<Prisma.$ApplicationValidationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    workflow<T extends Application$workflowArgs<ExtArgs> = {}>(args?: Subset<T, Application$workflowArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationWorkflowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    currentHolder<T extends Application$currentHolderArgs<ExtArgs> = {}>(args?: Subset<T, Application$currentHolderArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    department<T extends Application$departmentArgs<ExtArgs> = {}>(args?: Subset<T, Application$departmentArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    dispatchedBy<T extends Application$dispatchedByArgs<ExtArgs> = {}>(args?: Subset<T, Application$dispatchedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    serviceCategory<T extends ServiceCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategoryDefaultArgs<ExtArgs>>): Prisma__ServiceCategoryClient<$Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    documentRequests<T extends Application$documentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Application$documentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    documents<T extends Application$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Application$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     frontdeskForwardings<T extends Application$frontdeskForwardingsArgs<ExtArgs> = {}>(args?: Subset<T, Application$frontdeskForwardingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FrontdeskForwardingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notifications<T extends Application$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Application$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    officerAssignments<T extends Application$officerAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Application$officerAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     officerForwardings<T extends Application$officerForwardingsArgs<ExtArgs> = {}>(args?: Subset<T, Application$officerForwardingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -12335,24 +12312,25 @@ export namespace Prisma {
     readonly id: FieldRef<"Application", 'String'>
     readonly rrNumber: FieldRef<"Application", 'String'>
     readonly serviceCategoryId: FieldRef<"Application", 'String'>
-    readonly departmentId: FieldRef<"Application", 'String'>
-    readonly subject: FieldRef<"Application", 'String'>
-    readonly citizenName: FieldRef<"Application", 'String'>
-    readonly citizenPhone: FieldRef<"Application", 'String'>
-    readonly citizenEmail: FieldRef<"Application", 'String'>
-    readonly citizenAddress: FieldRef<"Application", 'String'>
-    readonly citizenGender: FieldRef<"Application", 'String'>
-    readonly citizenAadhaar: FieldRef<"Application", 'String'>
     readonly status: FieldRef<"Application", 'ApplicationStatus'>
     readonly currentHolderId: FieldRef<"Application", 'String'>
     readonly submittedAt: FieldRef<"Application", 'DateTime'>
     readonly validatedAt: FieldRef<"Application", 'DateTime'>
     readonly completedAt: FieldRef<"Application", 'DateTime'>
-    readonly isDispatched: FieldRef<"Application", 'Boolean'>
-    readonly dispatchedAt: FieldRef<"Application", 'DateTime'>
-    readonly dispatchedById: FieldRef<"Application", 'String'>
     readonly createdAt: FieldRef<"Application", 'DateTime'>
     readonly updatedAt: FieldRef<"Application", 'DateTime'>
+    readonly citizenAadhaar: FieldRef<"Application", 'String'>
+    readonly citizenAddress: FieldRef<"Application", 'String'>
+    readonly citizenEmail: FieldRef<"Application", 'String'>
+    readonly citizenGender: FieldRef<"Application", 'String'>
+    readonly citizenName: FieldRef<"Application", 'String'>
+    readonly citizenPhone: FieldRef<"Application", 'String'>
+    readonly subject: FieldRef<"Application", 'String'>
+    readonly departmentId: FieldRef<"Application", 'String'>
+    readonly applicationSource: FieldRef<"Application", 'ApplicationSource'>
+    readonly dispatchedAt: FieldRef<"Application", 'DateTime'>
+    readonly dispatchedById: FieldRef<"Application", 'String'>
+    readonly isDispatched: FieldRef<"Application", 'Boolean'>
   }
     
 
@@ -12749,41 +12727,46 @@ export namespace Prisma {
   }
 
   /**
-   * Application.currentHolder
+   * Application.auditLogs
    */
-  export type Application$currentHolderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Application$auditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the User
+     * Select specific fields to fetch from the ApplicationAuditLog
      */
-    select?: UserSelect<ExtArgs> | null
+    select?: ApplicationAuditLogSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
+     * Omit specific fields from the ApplicationAuditLog
      */
-    omit?: UserOmit<ExtArgs> | null
+    omit?: ApplicationAuditLogOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
+    include?: ApplicationAuditLogInclude<ExtArgs> | null
+    where?: ApplicationAuditLogWhereInput
+    orderBy?: ApplicationAuditLogOrderByWithRelationInput | ApplicationAuditLogOrderByWithRelationInput[]
+    cursor?: ApplicationAuditLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApplicationAuditLogScalarFieldEnum | ApplicationAuditLogScalarFieldEnum[]
   }
 
   /**
-   * Application.dispatchedBy
+   * Application.validation
    */
-  export type Application$dispatchedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Application$validationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the User
+     * Select specific fields to fetch from the ApplicationValidation
      */
-    select?: UserSelect<ExtArgs> | null
+    select?: ApplicationValidationSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
+     * Omit specific fields from the ApplicationValidation
      */
-    omit?: UserOmit<ExtArgs> | null
+    omit?: ApplicationValidationOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
+    include?: ApplicationValidationInclude<ExtArgs> | null
+    where?: ApplicationValidationWhereInput
   }
 
   /**
@@ -12811,70 +12794,60 @@ export namespace Prisma {
   }
 
   /**
-   * Application.validation
+   * Application.currentHolder
    */
-  export type Application$validationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Application$currentHolderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ApplicationValidation
+     * Select specific fields to fetch from the User
      */
-    select?: ApplicationValidationSelect<ExtArgs> | null
+    select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ApplicationValidation
+     * Omit specific fields from the User
      */
-    omit?: ApplicationValidationOmit<ExtArgs> | null
+    omit?: UserOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ApplicationValidationInclude<ExtArgs> | null
-    where?: ApplicationValidationWhereInput
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
-   * Application.officerAssignments
+   * Application.department
    */
-  export type Application$officerAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Application$departmentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the OfficerAssignment
+     * Select specific fields to fetch from the Department
      */
-    select?: OfficerAssignmentSelect<ExtArgs> | null
+    select?: DepartmentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the OfficerAssignment
+     * Omit specific fields from the Department
      */
-    omit?: OfficerAssignmentOmit<ExtArgs> | null
+    omit?: DepartmentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: OfficerAssignmentInclude<ExtArgs> | null
-    where?: OfficerAssignmentWhereInput
-    orderBy?: OfficerAssignmentOrderByWithRelationInput | OfficerAssignmentOrderByWithRelationInput[]
-    cursor?: OfficerAssignmentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: OfficerAssignmentScalarFieldEnum | OfficerAssignmentScalarFieldEnum[]
+    include?: DepartmentInclude<ExtArgs> | null
+    where?: DepartmentWhereInput
   }
 
   /**
-   * Application.documents
+   * Application.dispatchedBy
    */
-  export type Application$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Application$dispatchedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Document
+     * Select specific fields to fetch from the User
      */
-    select?: DocumentSelect<ExtArgs> | null
+    select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Document
+     * Omit specific fields from the User
      */
-    omit?: DocumentOmit<ExtArgs> | null
+    omit?: UserOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: DocumentInclude<ExtArgs> | null
-    where?: DocumentWhereInput
-    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
-    cursor?: DocumentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -12902,51 +12875,27 @@ export namespace Prisma {
   }
 
   /**
-   * Application.notifications
+   * Application.documents
    */
-  export type Application$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Application$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Notification
+     * Select specific fields to fetch from the Document
      */
-    select?: NotificationSelect<ExtArgs> | null
+    select?: DocumentSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Notification
+     * Omit specific fields from the Document
      */
-    omit?: NotificationOmit<ExtArgs> | null
+    omit?: DocumentOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: NotificationInclude<ExtArgs> | null
-    where?: NotificationWhereInput
-    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
-    cursor?: NotificationWhereUniqueInput
+    include?: DocumentInclude<ExtArgs> | null
+    where?: DocumentWhereInput
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    cursor?: DocumentWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
-  }
-
-  /**
-   * Application.auditLogs
-   */
-  export type Application$auditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ApplicationAuditLog
-     */
-    select?: ApplicationAuditLogSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ApplicationAuditLog
-     */
-    omit?: ApplicationAuditLogOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ApplicationAuditLogInclude<ExtArgs> | null
-    where?: ApplicationAuditLogWhereInput
-    orderBy?: ApplicationAuditLogOrderByWithRelationInput | ApplicationAuditLogOrderByWithRelationInput[]
-    cursor?: ApplicationAuditLogWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ApplicationAuditLogScalarFieldEnum | ApplicationAuditLogScalarFieldEnum[]
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
   }
 
   /**
@@ -12971,6 +12920,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FrontdeskForwardingScalarFieldEnum | FrontdeskForwardingScalarFieldEnum[]
+  }
+
+  /**
+   * Application.notifications
+   */
+  export type Application$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Application.officerAssignments
+   */
+  export type Application$officerAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfficerAssignment
+     */
+    select?: OfficerAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfficerAssignment
+     */
+    omit?: OfficerAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfficerAssignmentInclude<ExtArgs> | null
+    where?: OfficerAssignmentWhereInput
+    orderBy?: OfficerAssignmentOrderByWithRelationInput | OfficerAssignmentOrderByWithRelationInput[]
+    cursor?: OfficerAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfficerAssignmentScalarFieldEnum | OfficerAssignmentScalarFieldEnum[]
   }
 
   /**
@@ -18892,8 +18889,8 @@ export namespace Prisma {
     isRead?: boolean
     readAt?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     application?: boolean | Notification$applicationArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["notification"]>
 
   export type NotificationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -18906,8 +18903,8 @@ export namespace Prisma {
     isRead?: boolean
     readAt?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     application?: boolean | Notification$applicationArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["notification"]>
 
   export type NotificationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -18920,8 +18917,8 @@ export namespace Prisma {
     isRead?: boolean
     readAt?: boolean
     createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     application?: boolean | Notification$applicationArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["notification"]>
 
   export type NotificationSelectScalar = {
@@ -18938,23 +18935,23 @@ export namespace Prisma {
 
   export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "notificationType" | "applicationId" | "title" | "message" | "isRead" | "readAt" | "createdAt", ExtArgs["result"]["notification"]>
   export type NotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     application?: boolean | Notification$applicationArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type NotificationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     application?: boolean | Notification$applicationArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type NotificationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     application?: boolean | Notification$applicationArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $NotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Notification"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       application: Prisma.$ApplicationPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19360,8 +19357,8 @@ export namespace Prisma {
    */
   export interface Prisma__NotificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     application<T extends Notification$applicationArgs<ExtArgs> = {}>(args?: Subset<T, Notification$applicationArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -26266,8 +26263,8 @@ export namespace Prisma {
     priority: number | null
     isActive: boolean | null
     createdAt: Date | null
-    forwardedAt: Date | null
     completedAt: Date | null
+    forwardedAt: Date | null
   }
 
   export type OfficerForwardingHistoryMaxAggregateOutputType = {
@@ -26279,8 +26276,8 @@ export namespace Prisma {
     priority: number | null
     isActive: boolean | null
     createdAt: Date | null
-    forwardedAt: Date | null
     completedAt: Date | null
+    forwardedAt: Date | null
   }
 
   export type OfficerForwardingHistoryCountAggregateOutputType = {
@@ -26292,8 +26289,8 @@ export namespace Prisma {
     priority: number
     isActive: number
     createdAt: number
-    forwardedAt: number
     completedAt: number
+    forwardedAt: number
     _all: number
   }
 
@@ -26315,8 +26312,8 @@ export namespace Prisma {
     priority?: true
     isActive?: true
     createdAt?: true
-    forwardedAt?: true
     completedAt?: true
+    forwardedAt?: true
   }
 
   export type OfficerForwardingHistoryMaxAggregateInputType = {
@@ -26328,8 +26325,8 @@ export namespace Prisma {
     priority?: true
     isActive?: true
     createdAt?: true
-    forwardedAt?: true
     completedAt?: true
+    forwardedAt?: true
   }
 
   export type OfficerForwardingHistoryCountAggregateInputType = {
@@ -26341,8 +26338,8 @@ export namespace Prisma {
     priority?: true
     isActive?: true
     createdAt?: true
-    forwardedAt?: true
     completedAt?: true
+    forwardedAt?: true
     _all?: true
   }
 
@@ -26441,8 +26438,8 @@ export namespace Prisma {
     priority: number
     isActive: boolean
     createdAt: Date
-    forwardedAt: Date
     completedAt: Date | null
+    forwardedAt: Date
     _count: OfficerForwardingHistoryCountAggregateOutputType | null
     _avg: OfficerForwardingHistoryAvgAggregateOutputType | null
     _sum: OfficerForwardingHistorySumAggregateOutputType | null
@@ -26473,8 +26470,8 @@ export namespace Prisma {
     priority?: boolean
     isActive?: boolean
     createdAt?: boolean
-    forwardedAt?: boolean
     completedAt?: boolean
+    forwardedAt?: boolean
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
     fromOfficer?: boolean | UserDefaultArgs<ExtArgs>
     toOfficer?: boolean | UserDefaultArgs<ExtArgs>
@@ -26489,8 +26486,8 @@ export namespace Prisma {
     priority?: boolean
     isActive?: boolean
     createdAt?: boolean
-    forwardedAt?: boolean
     completedAt?: boolean
+    forwardedAt?: boolean
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
     fromOfficer?: boolean | UserDefaultArgs<ExtArgs>
     toOfficer?: boolean | UserDefaultArgs<ExtArgs>
@@ -26505,8 +26502,8 @@ export namespace Prisma {
     priority?: boolean
     isActive?: boolean
     createdAt?: boolean
-    forwardedAt?: boolean
     completedAt?: boolean
+    forwardedAt?: boolean
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
     fromOfficer?: boolean | UserDefaultArgs<ExtArgs>
     toOfficer?: boolean | UserDefaultArgs<ExtArgs>
@@ -26521,11 +26518,11 @@ export namespace Prisma {
     priority?: boolean
     isActive?: boolean
     createdAt?: boolean
-    forwardedAt?: boolean
     completedAt?: boolean
+    forwardedAt?: boolean
   }
 
-  export type OfficerForwardingHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationId" | "fromOfficerId" | "toOfficerId" | "instructions" | "priority" | "isActive" | "createdAt" | "forwardedAt" | "completedAt", ExtArgs["result"]["officerForwardingHistory"]>
+  export type OfficerForwardingHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationId" | "fromOfficerId" | "toOfficerId" | "instructions" | "priority" | "isActive" | "createdAt" | "completedAt" | "forwardedAt", ExtArgs["result"]["officerForwardingHistory"]>
   export type OfficerForwardingHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     application?: boolean | ApplicationDefaultArgs<ExtArgs>
     fromOfficer?: boolean | UserDefaultArgs<ExtArgs>
@@ -26558,8 +26555,8 @@ export namespace Prisma {
       priority: number
       isActive: boolean
       createdAt: Date
-      forwardedAt: Date
       completedAt: Date | null
+      forwardedAt: Date
     }, ExtArgs["result"]["officerForwardingHistory"]>
     composites: {}
   }
@@ -26994,8 +26991,8 @@ export namespace Prisma {
     readonly priority: FieldRef<"OfficerForwardingHistory", 'Int'>
     readonly isActive: FieldRef<"OfficerForwardingHistory", 'Boolean'>
     readonly createdAt: FieldRef<"OfficerForwardingHistory", 'DateTime'>
-    readonly forwardedAt: FieldRef<"OfficerForwardingHistory", 'DateTime'>
     readonly completedAt: FieldRef<"OfficerForwardingHistory", 'DateTime'>
+    readonly forwardedAt: FieldRef<"OfficerForwardingHistory", 'DateTime'>
   }
     
 
@@ -27430,11 +27427,11 @@ export namespace Prisma {
     phone: 'phone',
     passwordHash: 'passwordHash',
     role: 'role',
-    level: 'level',
     isActive: 'isActive',
     lastLoginAt: 'lastLoginAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    level: 'level'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -27461,10 +27458,10 @@ export namespace Prisma {
     designation: 'designation',
     department: 'department',
     officeLocation: 'officeLocation',
-    sectionId: 'sectionId',
     isAvailable: 'isAvailable',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    sectionId: 'sectionId'
   };
 
   export type OfficerProfileScalarFieldEnum = (typeof OfficerProfileScalarFieldEnum)[keyof typeof OfficerProfileScalarFieldEnum]
@@ -27484,7 +27481,6 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
-    slaDays: 'slaDays',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -27521,24 +27517,25 @@ export namespace Prisma {
     id: 'id',
     rrNumber: 'rrNumber',
     serviceCategoryId: 'serviceCategoryId',
-    departmentId: 'departmentId',
-    subject: 'subject',
-    citizenName: 'citizenName',
-    citizenPhone: 'citizenPhone',
-    citizenEmail: 'citizenEmail',
-    citizenAddress: 'citizenAddress',
-    citizenGender: 'citizenGender',
-    citizenAadhaar: 'citizenAadhaar',
     status: 'status',
     currentHolderId: 'currentHolderId',
     submittedAt: 'submittedAt',
     validatedAt: 'validatedAt',
     completedAt: 'completedAt',
-    isDispatched: 'isDispatched',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    citizenAadhaar: 'citizenAadhaar',
+    citizenAddress: 'citizenAddress',
+    citizenEmail: 'citizenEmail',
+    citizenGender: 'citizenGender',
+    citizenName: 'citizenName',
+    citizenPhone: 'citizenPhone',
+    subject: 'subject',
+    departmentId: 'departmentId',
+    applicationSource: 'applicationSource',
     dispatchedAt: 'dispatchedAt',
     dispatchedById: 'dispatchedById',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    isDispatched: 'isDispatched'
   };
 
   export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
@@ -27724,8 +27721,8 @@ export namespace Prisma {
     priority: 'priority',
     isActive: 'isActive',
     createdAt: 'createdAt',
-    forwardedAt: 'forwardedAt',
-    completedAt: 'completedAt'
+    completedAt: 'completedAt',
+    forwardedAt: 'forwardedAt'
   };
 
   export type OfficerForwardingHistoryScalarFieldEnum = (typeof OfficerForwardingHistoryScalarFieldEnum)[keyof typeof OfficerForwardingHistoryScalarFieldEnum]
@@ -27806,20 +27803,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -27841,6 +27824,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'ApplicationStatus'
    */
   export type EnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus'>
@@ -27851,6 +27848,20 @@ export namespace Prisma {
    * Reference to a field of type 'ApplicationStatus[]'
    */
   export type ListEnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApplicationSource'
+   */
+  export type EnumApplicationSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationSource'>
+    
+
+
+  /**
+   * Reference to a field of type 'ApplicationSource[]'
+   */
+  export type ListEnumApplicationSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationSource[]'>
     
 
 
@@ -27922,29 +27933,29 @@ export namespace Prisma {
     phone?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    level?: IntNullableFilter<"User"> | number | null
     isActive?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    citizenProfile?: XOR<CitizenProfileNullableScalarRelationFilter, CitizenProfileWhereInput> | null
-    officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
+    level?: IntNullableFilter<"User"> | number | null
+    auditLogs?: ApplicationAuditLogListRelationFilter
+    validations?: ApplicationValidationListRelationFilter
+    workflowChanges?: ApplicationWorkflowListRelationFilter
     currentHolderFiles?: ApplicationListRelationFilter
     dispatchedApplications?: ApplicationListRelationFilter
-    workflowChanges?: ApplicationWorkflowListRelationFilter
-    validations?: ApplicationValidationListRelationFilter
-    verifiedDocuments?: DocumentListRelationFilter
-    uploadedDocuments?: DocumentListRelationFilter
-    assignmentsGiven?: OfficerAssignmentListRelationFilter
-    assignmentsReceived?: OfficerAssignmentListRelationFilter
+    citizenProfile?: XOR<CitizenProfileNullableScalarRelationFilter, CitizenProfileWhereInput> | null
     documentRequests?: DocumentRequestListRelationFilter
-    notifications?: NotificationListRelationFilter
-    auditLogs?: ApplicationAuditLogListRelationFilter
-    frontdeskAssignments?: FrontdeskOfficerListRelationFilter
+    uploadedDocuments?: DocumentListRelationFilter
+    verifiedDocuments?: DocumentListRelationFilter
     forwardedFrom?: FrontdeskForwardingListRelationFilter
     forwardedTo?: FrontdeskForwardingListRelationFilter
+    frontdeskAssignments?: FrontdeskOfficerListRelationFilter
+    notifications?: NotificationListRelationFilter
+    assignmentsGiven?: OfficerAssignmentListRelationFilter
+    assignmentsReceived?: OfficerAssignmentListRelationFilter
     officerForwardedFrom?: OfficerForwardingHistoryListRelationFilter
     officerForwardedTo?: OfficerForwardingHistoryListRelationFilter
+    officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -27953,29 +27964,29 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
     role?: SortOrder
-    level?: SortOrderInput | SortOrder
     isActive?: SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    citizenProfile?: CitizenProfileOrderByWithRelationInput
-    officerProfile?: OfficerProfileOrderByWithRelationInput
+    level?: SortOrderInput | SortOrder
+    auditLogs?: ApplicationAuditLogOrderByRelationAggregateInput
+    validations?: ApplicationValidationOrderByRelationAggregateInput
+    workflowChanges?: ApplicationWorkflowOrderByRelationAggregateInput
     currentHolderFiles?: ApplicationOrderByRelationAggregateInput
     dispatchedApplications?: ApplicationOrderByRelationAggregateInput
-    workflowChanges?: ApplicationWorkflowOrderByRelationAggregateInput
-    validations?: ApplicationValidationOrderByRelationAggregateInput
-    verifiedDocuments?: DocumentOrderByRelationAggregateInput
-    uploadedDocuments?: DocumentOrderByRelationAggregateInput
-    assignmentsGiven?: OfficerAssignmentOrderByRelationAggregateInput
-    assignmentsReceived?: OfficerAssignmentOrderByRelationAggregateInput
+    citizenProfile?: CitizenProfileOrderByWithRelationInput
     documentRequests?: DocumentRequestOrderByRelationAggregateInput
-    notifications?: NotificationOrderByRelationAggregateInput
-    auditLogs?: ApplicationAuditLogOrderByRelationAggregateInput
-    frontdeskAssignments?: FrontdeskOfficerOrderByRelationAggregateInput
+    uploadedDocuments?: DocumentOrderByRelationAggregateInput
+    verifiedDocuments?: DocumentOrderByRelationAggregateInput
     forwardedFrom?: FrontdeskForwardingOrderByRelationAggregateInput
     forwardedTo?: FrontdeskForwardingOrderByRelationAggregateInput
+    frontdeskAssignments?: FrontdeskOfficerOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
+    assignmentsGiven?: OfficerAssignmentOrderByRelationAggregateInput
+    assignmentsReceived?: OfficerAssignmentOrderByRelationAggregateInput
     officerForwardedFrom?: OfficerForwardingHistoryOrderByRelationAggregateInput
     officerForwardedTo?: OfficerForwardingHistoryOrderByRelationAggregateInput
+    officerProfile?: OfficerProfileOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -27987,29 +27998,29 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     passwordHash?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    level?: IntNullableFilter<"User"> | number | null
     isActive?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    citizenProfile?: XOR<CitizenProfileNullableScalarRelationFilter, CitizenProfileWhereInput> | null
-    officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
+    level?: IntNullableFilter<"User"> | number | null
+    auditLogs?: ApplicationAuditLogListRelationFilter
+    validations?: ApplicationValidationListRelationFilter
+    workflowChanges?: ApplicationWorkflowListRelationFilter
     currentHolderFiles?: ApplicationListRelationFilter
     dispatchedApplications?: ApplicationListRelationFilter
-    workflowChanges?: ApplicationWorkflowListRelationFilter
-    validations?: ApplicationValidationListRelationFilter
-    verifiedDocuments?: DocumentListRelationFilter
-    uploadedDocuments?: DocumentListRelationFilter
-    assignmentsGiven?: OfficerAssignmentListRelationFilter
-    assignmentsReceived?: OfficerAssignmentListRelationFilter
+    citizenProfile?: XOR<CitizenProfileNullableScalarRelationFilter, CitizenProfileWhereInput> | null
     documentRequests?: DocumentRequestListRelationFilter
-    notifications?: NotificationListRelationFilter
-    auditLogs?: ApplicationAuditLogListRelationFilter
-    frontdeskAssignments?: FrontdeskOfficerListRelationFilter
+    uploadedDocuments?: DocumentListRelationFilter
+    verifiedDocuments?: DocumentListRelationFilter
     forwardedFrom?: FrontdeskForwardingListRelationFilter
     forwardedTo?: FrontdeskForwardingListRelationFilter
+    frontdeskAssignments?: FrontdeskOfficerListRelationFilter
+    notifications?: NotificationListRelationFilter
+    assignmentsGiven?: OfficerAssignmentListRelationFilter
+    assignmentsReceived?: OfficerAssignmentListRelationFilter
     officerForwardedFrom?: OfficerForwardingHistoryListRelationFilter
     officerForwardedTo?: OfficerForwardingHistoryListRelationFilter
+    officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -28018,11 +28029,11 @@ export namespace Prisma {
     phone?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
     role?: SortOrder
-    level?: SortOrderInput | SortOrder
     isActive?: SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    level?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -28039,11 +28050,11 @@ export namespace Prisma {
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
-    level?: IntNullableWithAggregatesFilter<"User"> | number | null
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    level?: IntNullableWithAggregatesFilter<"User"> | number | null
   }
 
   export type CitizenProfileWhereInput = {
@@ -28126,13 +28137,13 @@ export namespace Prisma {
     designation?: StringFilter<"OfficerProfile"> | string
     department?: StringFilter<"OfficerProfile"> | string
     officeLocation?: StringNullableFilter<"OfficerProfile"> | string | null
-    sectionId?: StringNullableFilter<"OfficerProfile"> | string | null
     isAvailable?: BoolFilter<"OfficerProfile"> | boolean
     createdAt?: DateTimeFilter<"OfficerProfile"> | Date | string
     updatedAt?: DateTimeFilter<"OfficerProfile"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    section?: XOR<SectionNullableScalarRelationFilter, SectionWhereInput> | null
+    sectionId?: StringNullableFilter<"OfficerProfile"> | string | null
     frontdeskUsers?: FrontdeskOfficerListRelationFilter
+    section?: XOR<SectionNullableScalarRelationFilter, SectionWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type OfficerProfileOrderByWithRelationInput = {
@@ -28142,13 +28153,13 @@ export namespace Prisma {
     designation?: SortOrder
     department?: SortOrder
     officeLocation?: SortOrderInput | SortOrder
-    sectionId?: SortOrderInput | SortOrder
     isAvailable?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
-    section?: SectionOrderByWithRelationInput
+    sectionId?: SortOrderInput | SortOrder
     frontdeskUsers?: FrontdeskOfficerOrderByRelationAggregateInput
+    section?: SectionOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type OfficerProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -28161,13 +28172,13 @@ export namespace Prisma {
     designation?: StringFilter<"OfficerProfile"> | string
     department?: StringFilter<"OfficerProfile"> | string
     officeLocation?: StringNullableFilter<"OfficerProfile"> | string | null
-    sectionId?: StringNullableFilter<"OfficerProfile"> | string | null
     isAvailable?: BoolFilter<"OfficerProfile"> | boolean
     createdAt?: DateTimeFilter<"OfficerProfile"> | Date | string
     updatedAt?: DateTimeFilter<"OfficerProfile"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    section?: XOR<SectionNullableScalarRelationFilter, SectionWhereInput> | null
+    sectionId?: StringNullableFilter<"OfficerProfile"> | string | null
     frontdeskUsers?: FrontdeskOfficerListRelationFilter
+    section?: XOR<SectionNullableScalarRelationFilter, SectionWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "userId">
 
   export type OfficerProfileOrderByWithAggregationInput = {
@@ -28177,10 +28188,10 @@ export namespace Prisma {
     designation?: SortOrder
     department?: SortOrder
     officeLocation?: SortOrderInput | SortOrder
-    sectionId?: SortOrderInput | SortOrder
     isAvailable?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    sectionId?: SortOrderInput | SortOrder
     _count?: OfficerProfileCountOrderByAggregateInput
     _max?: OfficerProfileMaxOrderByAggregateInput
     _min?: OfficerProfileMinOrderByAggregateInput
@@ -28196,10 +28207,10 @@ export namespace Prisma {
     designation?: StringWithAggregatesFilter<"OfficerProfile"> | string
     department?: StringWithAggregatesFilter<"OfficerProfile"> | string
     officeLocation?: StringNullableWithAggregatesFilter<"OfficerProfile"> | string | null
-    sectionId?: StringNullableWithAggregatesFilter<"OfficerProfile"> | string | null
     isAvailable?: BoolWithAggregatesFilter<"OfficerProfile"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"OfficerProfile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"OfficerProfile"> | Date | string
+    sectionId?: StringNullableWithAggregatesFilter<"OfficerProfile"> | string | null
   }
 
   export type FrontdeskOfficerWhereInput = {
@@ -28263,7 +28274,6 @@ export namespace Prisma {
     id?: StringFilter<"ServiceCategory"> | string
     name?: StringFilter<"ServiceCategory"> | string
     description?: StringNullableFilter<"ServiceCategory"> | string | null
-    slaDays?: IntFilter<"ServiceCategory"> | number
     isActive?: BoolFilter<"ServiceCategory"> | boolean
     createdAt?: DateTimeFilter<"ServiceCategory"> | Date | string
     updatedAt?: DateTimeFilter<"ServiceCategory"> | Date | string
@@ -28274,7 +28284,6 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
-    slaDays?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28288,7 +28297,6 @@ export namespace Prisma {
     OR?: ServiceCategoryWhereInput[]
     NOT?: ServiceCategoryWhereInput | ServiceCategoryWhereInput[]
     description?: StringNullableFilter<"ServiceCategory"> | string | null
-    slaDays?: IntFilter<"ServiceCategory"> | number
     isActive?: BoolFilter<"ServiceCategory"> | boolean
     createdAt?: DateTimeFilter<"ServiceCategory"> | Date | string
     updatedAt?: DateTimeFilter<"ServiceCategory"> | Date | string
@@ -28299,15 +28307,12 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
-    slaDays?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ServiceCategoryCountOrderByAggregateInput
-    _avg?: ServiceCategoryAvgOrderByAggregateInput
     _max?: ServiceCategoryMaxOrderByAggregateInput
     _min?: ServiceCategoryMinOrderByAggregateInput
-    _sum?: ServiceCategorySumOrderByAggregateInput
   }
 
   export type ServiceCategoryScalarWhereWithAggregatesInput = {
@@ -28317,7 +28322,6 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ServiceCategory"> | string
     name?: StringWithAggregatesFilter<"ServiceCategory"> | string
     description?: StringNullableWithAggregatesFilter<"ServiceCategory"> | string | null
-    slaDays?: IntWithAggregatesFilter<"ServiceCategory"> | number
     isActive?: BoolWithAggregatesFilter<"ServiceCategory"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ServiceCategory"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ServiceCategory"> | Date | string
@@ -28450,36 +28454,37 @@ export namespace Prisma {
     id?: StringFilter<"Application"> | string
     rrNumber?: StringNullableFilter<"Application"> | string | null
     serviceCategoryId?: StringFilter<"Application"> | string
-    departmentId?: StringFilter<"Application"> | string
-    subject?: StringFilter<"Application"> | string
-    citizenName?: StringFilter<"Application"> | string
-    citizenPhone?: StringFilter<"Application"> | string
-    citizenEmail?: StringNullableFilter<"Application"> | string | null
-    citizenAddress?: StringFilter<"Application"> | string
-    citizenGender?: StringNullableFilter<"Application"> | string | null
-    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
     status?: EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
     currentHolderId?: StringNullableFilter<"Application"> | string | null
     submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     validatedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    isDispatched?: BoolFilter<"Application"> | boolean
-    dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    dispatchedById?: StringNullableFilter<"Application"> | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
-    serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
-    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
-    currentHolder?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    dispatchedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    workflow?: ApplicationWorkflowListRelationFilter
-    validation?: XOR<ApplicationValidationNullableScalarRelationFilter, ApplicationValidationWhereInput> | null
-    officerAssignments?: OfficerAssignmentListRelationFilter
-    documents?: DocumentListRelationFilter
-    documentRequests?: DocumentRequestListRelationFilter
-    notifications?: NotificationListRelationFilter
+    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
+    citizenAddress?: StringFilter<"Application"> | string
+    citizenEmail?: StringNullableFilter<"Application"> | string | null
+    citizenGender?: StringNullableFilter<"Application"> | string | null
+    citizenName?: StringFilter<"Application"> | string
+    citizenPhone?: StringFilter<"Application"> | string
+    subject?: StringFilter<"Application"> | string
+    departmentId?: StringNullableFilter<"Application"> | string | null
+    applicationSource?: EnumApplicationSourceFilter<"Application"> | $Enums.ApplicationSource
+    dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    dispatchedById?: StringNullableFilter<"Application"> | string | null
+    isDispatched?: BoolFilter<"Application"> | boolean
     auditLogs?: ApplicationAuditLogListRelationFilter
+    validation?: XOR<ApplicationValidationNullableScalarRelationFilter, ApplicationValidationWhereInput> | null
+    workflow?: ApplicationWorkflowListRelationFilter
+    currentHolder?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    department?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
+    dispatchedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
+    documentRequests?: DocumentRequestListRelationFilter
+    documents?: DocumentListRelationFilter
     frontdeskForwardings?: FrontdeskForwardingListRelationFilter
+    notifications?: NotificationListRelationFilter
+    officerAssignments?: OfficerAssignmentListRelationFilter
     officerForwardings?: OfficerForwardingHistoryListRelationFilter
   }
 
@@ -28487,36 +28492,37 @@ export namespace Prisma {
     id?: SortOrder
     rrNumber?: SortOrderInput | SortOrder
     serviceCategoryId?: SortOrder
-    departmentId?: SortOrder
-    subject?: SortOrder
-    citizenName?: SortOrder
-    citizenPhone?: SortOrder
-    citizenEmail?: SortOrderInput | SortOrder
-    citizenAddress?: SortOrder
-    citizenGender?: SortOrderInput | SortOrder
-    citizenAadhaar?: SortOrderInput | SortOrder
     status?: SortOrder
     currentHolderId?: SortOrderInput | SortOrder
     submittedAt?: SortOrderInput | SortOrder
     validatedAt?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
-    isDispatched?: SortOrder
-    dispatchedAt?: SortOrderInput | SortOrder
-    dispatchedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    serviceCategory?: ServiceCategoryOrderByWithRelationInput
-    department?: DepartmentOrderByWithRelationInput
-    currentHolder?: UserOrderByWithRelationInput
-    dispatchedBy?: UserOrderByWithRelationInput
-    workflow?: ApplicationWorkflowOrderByRelationAggregateInput
-    validation?: ApplicationValidationOrderByWithRelationInput
-    officerAssignments?: OfficerAssignmentOrderByRelationAggregateInput
-    documents?: DocumentOrderByRelationAggregateInput
-    documentRequests?: DocumentRequestOrderByRelationAggregateInput
-    notifications?: NotificationOrderByRelationAggregateInput
+    citizenAadhaar?: SortOrderInput | SortOrder
+    citizenAddress?: SortOrder
+    citizenEmail?: SortOrderInput | SortOrder
+    citizenGender?: SortOrderInput | SortOrder
+    citizenName?: SortOrder
+    citizenPhone?: SortOrder
+    subject?: SortOrder
+    departmentId?: SortOrderInput | SortOrder
+    applicationSource?: SortOrder
+    dispatchedAt?: SortOrderInput | SortOrder
+    dispatchedById?: SortOrderInput | SortOrder
+    isDispatched?: SortOrder
     auditLogs?: ApplicationAuditLogOrderByRelationAggregateInput
+    validation?: ApplicationValidationOrderByWithRelationInput
+    workflow?: ApplicationWorkflowOrderByRelationAggregateInput
+    currentHolder?: UserOrderByWithRelationInput
+    department?: DepartmentOrderByWithRelationInput
+    dispatchedBy?: UserOrderByWithRelationInput
+    serviceCategory?: ServiceCategoryOrderByWithRelationInput
+    documentRequests?: DocumentRequestOrderByRelationAggregateInput
+    documents?: DocumentOrderByRelationAggregateInput
     frontdeskForwardings?: FrontdeskForwardingOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
+    officerAssignments?: OfficerAssignmentOrderByRelationAggregateInput
     officerForwardings?: OfficerForwardingHistoryOrderByRelationAggregateInput
   }
 
@@ -28527,36 +28533,37 @@ export namespace Prisma {
     OR?: ApplicationWhereInput[]
     NOT?: ApplicationWhereInput | ApplicationWhereInput[]
     serviceCategoryId?: StringFilter<"Application"> | string
-    departmentId?: StringFilter<"Application"> | string
-    subject?: StringFilter<"Application"> | string
-    citizenName?: StringFilter<"Application"> | string
-    citizenPhone?: StringFilter<"Application"> | string
-    citizenEmail?: StringNullableFilter<"Application"> | string | null
-    citizenAddress?: StringFilter<"Application"> | string
-    citizenGender?: StringNullableFilter<"Application"> | string | null
-    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
     status?: EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
     currentHolderId?: StringNullableFilter<"Application"> | string | null
     submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     validatedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    isDispatched?: BoolFilter<"Application"> | boolean
-    dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    dispatchedById?: StringNullableFilter<"Application"> | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
-    serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
-    department?: XOR<DepartmentScalarRelationFilter, DepartmentWhereInput>
-    currentHolder?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    dispatchedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    workflow?: ApplicationWorkflowListRelationFilter
-    validation?: XOR<ApplicationValidationNullableScalarRelationFilter, ApplicationValidationWhereInput> | null
-    officerAssignments?: OfficerAssignmentListRelationFilter
-    documents?: DocumentListRelationFilter
-    documentRequests?: DocumentRequestListRelationFilter
-    notifications?: NotificationListRelationFilter
+    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
+    citizenAddress?: StringFilter<"Application"> | string
+    citizenEmail?: StringNullableFilter<"Application"> | string | null
+    citizenGender?: StringNullableFilter<"Application"> | string | null
+    citizenName?: StringFilter<"Application"> | string
+    citizenPhone?: StringFilter<"Application"> | string
+    subject?: StringFilter<"Application"> | string
+    departmentId?: StringNullableFilter<"Application"> | string | null
+    applicationSource?: EnumApplicationSourceFilter<"Application"> | $Enums.ApplicationSource
+    dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    dispatchedById?: StringNullableFilter<"Application"> | string | null
+    isDispatched?: BoolFilter<"Application"> | boolean
     auditLogs?: ApplicationAuditLogListRelationFilter
+    validation?: XOR<ApplicationValidationNullableScalarRelationFilter, ApplicationValidationWhereInput> | null
+    workflow?: ApplicationWorkflowListRelationFilter
+    currentHolder?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    department?: XOR<DepartmentNullableScalarRelationFilter, DepartmentWhereInput> | null
+    dispatchedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    serviceCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
+    documentRequests?: DocumentRequestListRelationFilter
+    documents?: DocumentListRelationFilter
     frontdeskForwardings?: FrontdeskForwardingListRelationFilter
+    notifications?: NotificationListRelationFilter
+    officerAssignments?: OfficerAssignmentListRelationFilter
     officerForwardings?: OfficerForwardingHistoryListRelationFilter
   }, "id" | "rrNumber">
 
@@ -28564,24 +28571,25 @@ export namespace Prisma {
     id?: SortOrder
     rrNumber?: SortOrderInput | SortOrder
     serviceCategoryId?: SortOrder
-    departmentId?: SortOrder
-    subject?: SortOrder
-    citizenName?: SortOrder
-    citizenPhone?: SortOrder
-    citizenEmail?: SortOrderInput | SortOrder
-    citizenAddress?: SortOrder
-    citizenGender?: SortOrderInput | SortOrder
-    citizenAadhaar?: SortOrderInput | SortOrder
     status?: SortOrder
     currentHolderId?: SortOrderInput | SortOrder
     submittedAt?: SortOrderInput | SortOrder
     validatedAt?: SortOrderInput | SortOrder
     completedAt?: SortOrderInput | SortOrder
-    isDispatched?: SortOrder
-    dispatchedAt?: SortOrderInput | SortOrder
-    dispatchedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    citizenAadhaar?: SortOrderInput | SortOrder
+    citizenAddress?: SortOrder
+    citizenEmail?: SortOrderInput | SortOrder
+    citizenGender?: SortOrderInput | SortOrder
+    citizenName?: SortOrder
+    citizenPhone?: SortOrder
+    subject?: SortOrder
+    departmentId?: SortOrderInput | SortOrder
+    applicationSource?: SortOrder
+    dispatchedAt?: SortOrderInput | SortOrder
+    dispatchedById?: SortOrderInput | SortOrder
+    isDispatched?: SortOrder
     _count?: ApplicationCountOrderByAggregateInput
     _max?: ApplicationMaxOrderByAggregateInput
     _min?: ApplicationMinOrderByAggregateInput
@@ -28594,24 +28602,25 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Application"> | string
     rrNumber?: StringNullableWithAggregatesFilter<"Application"> | string | null
     serviceCategoryId?: StringWithAggregatesFilter<"Application"> | string
-    departmentId?: StringWithAggregatesFilter<"Application"> | string
-    subject?: StringWithAggregatesFilter<"Application"> | string
-    citizenName?: StringWithAggregatesFilter<"Application"> | string
-    citizenPhone?: StringWithAggregatesFilter<"Application"> | string
-    citizenEmail?: StringNullableWithAggregatesFilter<"Application"> | string | null
-    citizenAddress?: StringWithAggregatesFilter<"Application"> | string
-    citizenGender?: StringNullableWithAggregatesFilter<"Application"> | string | null
-    citizenAadhaar?: StringNullableWithAggregatesFilter<"Application"> | string | null
     status?: EnumApplicationStatusWithAggregatesFilter<"Application"> | $Enums.ApplicationStatus
     currentHolderId?: StringNullableWithAggregatesFilter<"Application"> | string | null
     submittedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
     validatedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
     completedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
-    isDispatched?: BoolWithAggregatesFilter<"Application"> | boolean
-    dispatchedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
-    dispatchedById?: StringNullableWithAggregatesFilter<"Application"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Application"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Application"> | Date | string
+    citizenAadhaar?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    citizenAddress?: StringWithAggregatesFilter<"Application"> | string
+    citizenEmail?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    citizenGender?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    citizenName?: StringWithAggregatesFilter<"Application"> | string
+    citizenPhone?: StringWithAggregatesFilter<"Application"> | string
+    subject?: StringWithAggregatesFilter<"Application"> | string
+    departmentId?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    applicationSource?: EnumApplicationSourceWithAggregatesFilter<"Application"> | $Enums.ApplicationSource
+    dispatchedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
+    dispatchedById?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    isDispatched?: BoolWithAggregatesFilter<"Application"> | boolean
   }
 
   export type ApplicationWorkflowWhereInput = {
@@ -29022,8 +29031,8 @@ export namespace Prisma {
     isRead?: BoolFilter<"Notification"> | boolean
     readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
     createdAt?: DateTimeFilter<"Notification"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     application?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type NotificationOrderByWithRelationInput = {
@@ -29036,8 +29045,8 @@ export namespace Prisma {
     isRead?: SortOrder
     readAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    user?: UserOrderByWithRelationInput
     application?: ApplicationOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type NotificationWhereUniqueInput = Prisma.AtLeast<{
@@ -29053,8 +29062,8 @@ export namespace Prisma {
     isRead?: BoolFilter<"Notification"> | boolean
     readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
     createdAt?: DateTimeFilter<"Notification"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     application?: XOR<ApplicationNullableScalarRelationFilter, ApplicationWhereInput> | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
   export type NotificationOrderByWithAggregationInput = {
@@ -29511,8 +29520,8 @@ export namespace Prisma {
     priority?: IntFilter<"OfficerForwardingHistory"> | number
     isActive?: BoolFilter<"OfficerForwardingHistory"> | boolean
     createdAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
-    forwardedAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
     completedAt?: DateTimeNullableFilter<"OfficerForwardingHistory"> | Date | string | null
+    forwardedAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
     application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
     fromOfficer?: XOR<UserScalarRelationFilter, UserWhereInput>
     toOfficer?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -29527,8 +29536,8 @@ export namespace Prisma {
     priority?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
-    forwardedAt?: SortOrder
     completedAt?: SortOrderInput | SortOrder
+    forwardedAt?: SortOrder
     application?: ApplicationOrderByWithRelationInput
     fromOfficer?: UserOrderByWithRelationInput
     toOfficer?: UserOrderByWithRelationInput
@@ -29546,8 +29555,8 @@ export namespace Prisma {
     priority?: IntFilter<"OfficerForwardingHistory"> | number
     isActive?: BoolFilter<"OfficerForwardingHistory"> | boolean
     createdAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
-    forwardedAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
     completedAt?: DateTimeNullableFilter<"OfficerForwardingHistory"> | Date | string | null
+    forwardedAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
     application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
     fromOfficer?: XOR<UserScalarRelationFilter, UserWhereInput>
     toOfficer?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -29562,8 +29571,8 @@ export namespace Prisma {
     priority?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
-    forwardedAt?: SortOrder
     completedAt?: SortOrderInput | SortOrder
+    forwardedAt?: SortOrder
     _count?: OfficerForwardingHistoryCountOrderByAggregateInput
     _avg?: OfficerForwardingHistoryAvgOrderByAggregateInput
     _max?: OfficerForwardingHistoryMaxOrderByAggregateInput
@@ -29583,8 +29592,8 @@ export namespace Prisma {
     priority?: IntWithAggregatesFilter<"OfficerForwardingHistory"> | number
     isActive?: BoolWithAggregatesFilter<"OfficerForwardingHistory"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"OfficerForwardingHistory"> | Date | string
-    forwardedAt?: DateTimeWithAggregatesFilter<"OfficerForwardingHistory"> | Date | string
     completedAt?: DateTimeNullableWithAggregatesFilter<"OfficerForwardingHistory"> | Date | string | null
+    forwardedAt?: DateTimeWithAggregatesFilter<"OfficerForwardingHistory"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -29593,29 +29602,29 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -29624,29 +29633,29 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -29655,29 +29664,29 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -29686,29 +29695,29 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -29717,11 +29726,11 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    level?: number | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -29730,11 +29739,11 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -29743,11 +29752,11 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CitizenProfileCreateInput = {
@@ -29835,9 +29844,9 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutOfficerProfileInput
-    section?: SectionCreateNestedOneWithoutOfficersInput
     frontdeskUsers?: FrontdeskOfficerCreateNestedManyWithoutOfficerInput
+    section?: SectionCreateNestedOneWithoutOfficersInput
+    user: UserCreateNestedOneWithoutOfficerProfileInput
   }
 
   export type OfficerProfileUncheckedCreateInput = {
@@ -29847,10 +29856,10 @@ export namespace Prisma {
     designation: string
     department: string
     officeLocation?: string | null
-    sectionId?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    sectionId?: string | null
     frontdeskUsers?: FrontdeskOfficerUncheckedCreateNestedManyWithoutOfficerInput
   }
 
@@ -29863,9 +29872,9 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutOfficerProfileNestedInput
-    section?: SectionUpdateOneWithoutOfficersNestedInput
     frontdeskUsers?: FrontdeskOfficerUpdateManyWithoutOfficerNestedInput
+    section?: SectionUpdateOneWithoutOfficersNestedInput
+    user?: UserUpdateOneRequiredWithoutOfficerProfileNestedInput
   }
 
   export type OfficerProfileUncheckedUpdateInput = {
@@ -29875,10 +29884,10 @@ export namespace Prisma {
     designation?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
     officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
-    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     frontdeskUsers?: FrontdeskOfficerUncheckedUpdateManyWithoutOfficerNestedInput
   }
 
@@ -29889,10 +29898,10 @@ export namespace Prisma {
     designation: string
     department: string
     officeLocation?: string | null
-    sectionId?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    sectionId?: string | null
   }
 
   export type OfficerProfileUpdateManyMutationInput = {
@@ -29913,10 +29922,10 @@ export namespace Prisma {
     designation?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
     officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
-    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FrontdeskOfficerCreateInput = {
@@ -29970,7 +29979,6 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    slaDays: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29981,7 +29989,6 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    slaDays: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29992,7 +29999,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slaDays?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30003,7 +30009,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slaDays?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30014,7 +30019,6 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
-    slaDays: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30024,7 +30028,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slaDays?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30034,7 +30037,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    slaDays?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30177,33 +30179,34 @@ export namespace Prisma {
   export type ApplicationCreateInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
@@ -30211,65 +30214,67 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
@@ -30277,32 +30282,33 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
@@ -30310,68 +30316,71 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
   }
 
   export type ApplicationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ApplicationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ApplicationWorkflowCreateInput = {
@@ -30783,8 +30792,8 @@ export namespace Prisma {
     isRead?: boolean
     readAt?: Date | string | null
     createdAt?: Date | string
-    user: UserCreateNestedOneWithoutNotificationsInput
     application?: ApplicationCreateNestedOneWithoutNotificationsInput
+    user: UserCreateNestedOneWithoutNotificationsInput
   }
 
   export type NotificationUncheckedCreateInput = {
@@ -30807,8 +30816,8 @@ export namespace Prisma {
     isRead?: BoolFieldUpdateOperationsInput | boolean
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
     application?: ApplicationUpdateOneWithoutNotificationsNestedInput
+    user?: UserUpdateOneRequiredWithoutNotificationsNestedInput
   }
 
   export type NotificationUncheckedUpdateInput = {
@@ -31306,8 +31315,8 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
     application: ApplicationCreateNestedOneWithoutOfficerForwardingsInput
     fromOfficer: UserCreateNestedOneWithoutOfficerForwardedFromInput
     toOfficer: UserCreateNestedOneWithoutOfficerForwardedToInput
@@ -31322,8 +31331,8 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
   }
 
   export type OfficerForwardingHistoryUpdateInput = {
@@ -31332,8 +31341,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     application?: ApplicationUpdateOneRequiredWithoutOfficerForwardingsNestedInput
     fromOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedFromNestedInput
     toOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedToNestedInput
@@ -31348,8 +31357,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OfficerForwardingHistoryCreateManyInput = {
@@ -31361,8 +31370,8 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
   }
 
   export type OfficerForwardingHistoryUpdateManyMutationInput = {
@@ -31371,8 +31380,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OfficerForwardingHistoryUncheckedUpdateManyInput = {
@@ -31384,8 +31393,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -31425,17 +31434,6 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -31463,56 +31461,15 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type CitizenProfileNullableScalarRelationFilter = {
-    is?: CitizenProfileWhereInput | null
-    isNot?: CitizenProfileWhereInput | null
-  }
-
-  export type OfficerProfileNullableScalarRelationFilter = {
-    is?: OfficerProfileWhereInput | null
-    isNot?: OfficerProfileWhereInput | null
-  }
-
-  export type ApplicationListRelationFilter = {
-    every?: ApplicationWhereInput
-    some?: ApplicationWhereInput
-    none?: ApplicationWhereInput
-  }
-
-  export type ApplicationWorkflowListRelationFilter = {
-    every?: ApplicationWorkflowWhereInput
-    some?: ApplicationWorkflowWhereInput
-    none?: ApplicationWorkflowWhereInput
-  }
-
-  export type ApplicationValidationListRelationFilter = {
-    every?: ApplicationValidationWhereInput
-    some?: ApplicationValidationWhereInput
-    none?: ApplicationValidationWhereInput
-  }
-
-  export type DocumentListRelationFilter = {
-    every?: DocumentWhereInput
-    some?: DocumentWhereInput
-    none?: DocumentWhereInput
-  }
-
-  export type OfficerAssignmentListRelationFilter = {
-    every?: OfficerAssignmentWhereInput
-    some?: OfficerAssignmentWhereInput
-    none?: OfficerAssignmentWhereInput
-  }
-
-  export type DocumentRequestListRelationFilter = {
-    every?: DocumentRequestWhereInput
-    some?: DocumentRequestWhereInput
-    none?: DocumentRequestWhereInput
-  }
-
-  export type NotificationListRelationFilter = {
-    every?: NotificationWhereInput
-    some?: NotificationWhereInput
-    none?: NotificationWhereInput
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type ApplicationAuditLogListRelationFilter = {
@@ -31521,10 +31478,39 @@ export namespace Prisma {
     none?: ApplicationAuditLogWhereInput
   }
 
-  export type FrontdeskOfficerListRelationFilter = {
-    every?: FrontdeskOfficerWhereInput
-    some?: FrontdeskOfficerWhereInput
-    none?: FrontdeskOfficerWhereInput
+  export type ApplicationValidationListRelationFilter = {
+    every?: ApplicationValidationWhereInput
+    some?: ApplicationValidationWhereInput
+    none?: ApplicationValidationWhereInput
+  }
+
+  export type ApplicationWorkflowListRelationFilter = {
+    every?: ApplicationWorkflowWhereInput
+    some?: ApplicationWorkflowWhereInput
+    none?: ApplicationWorkflowWhereInput
+  }
+
+  export type ApplicationListRelationFilter = {
+    every?: ApplicationWhereInput
+    some?: ApplicationWhereInput
+    none?: ApplicationWhereInput
+  }
+
+  export type CitizenProfileNullableScalarRelationFilter = {
+    is?: CitizenProfileWhereInput | null
+    isNot?: CitizenProfileWhereInput | null
+  }
+
+  export type DocumentRequestListRelationFilter = {
+    every?: DocumentRequestWhereInput
+    some?: DocumentRequestWhereInput
+    none?: DocumentRequestWhereInput
+  }
+
+  export type DocumentListRelationFilter = {
+    every?: DocumentWhereInput
+    some?: DocumentWhereInput
+    none?: DocumentWhereInput
   }
 
   export type FrontdeskForwardingListRelationFilter = {
@@ -31533,10 +31519,33 @@ export namespace Prisma {
     none?: FrontdeskForwardingWhereInput
   }
 
+  export type FrontdeskOfficerListRelationFilter = {
+    every?: FrontdeskOfficerWhereInput
+    some?: FrontdeskOfficerWhereInput
+    none?: FrontdeskOfficerWhereInput
+  }
+
+  export type NotificationListRelationFilter = {
+    every?: NotificationWhereInput
+    some?: NotificationWhereInput
+    none?: NotificationWhereInput
+  }
+
+  export type OfficerAssignmentListRelationFilter = {
+    every?: OfficerAssignmentWhereInput
+    some?: OfficerAssignmentWhereInput
+    none?: OfficerAssignmentWhereInput
+  }
+
   export type OfficerForwardingHistoryListRelationFilter = {
     every?: OfficerForwardingHistoryWhereInput
     some?: OfficerForwardingHistoryWhereInput
     none?: OfficerForwardingHistoryWhereInput
+  }
+
+  export type OfficerProfileNullableScalarRelationFilter = {
+    is?: OfficerProfileWhereInput | null
+    isNot?: OfficerProfileWhereInput | null
   }
 
   export type SortOrderInput = {
@@ -31544,11 +31553,7 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type ApplicationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ApplicationWorkflowOrderByRelationAggregateInput = {
+  export type ApplicationAuditLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31556,11 +31561,11 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type DocumentOrderByRelationAggregateInput = {
+  export type ApplicationWorkflowOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type OfficerAssignmentOrderByRelationAggregateInput = {
+  export type ApplicationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31568,11 +31573,11 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type NotificationOrderByRelationAggregateInput = {
+  export type DocumentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type ApplicationAuditLogOrderByRelationAggregateInput = {
+  export type FrontdeskForwardingOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31580,7 +31585,11 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type FrontdeskForwardingOrderByRelationAggregateInput = {
+  export type NotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OfficerAssignmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31594,11 +31603,11 @@ export namespace Prisma {
     phone?: SortOrder
     passwordHash?: SortOrder
     role?: SortOrder
-    level?: SortOrder
     isActive?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    level?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -31611,11 +31620,11 @@ export namespace Prisma {
     phone?: SortOrder
     passwordHash?: SortOrder
     role?: SortOrder
-    level?: SortOrder
     isActive?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    level?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -31624,11 +31633,11 @@ export namespace Prisma {
     phone?: SortOrder
     passwordHash?: SortOrder
     role?: SortOrder
-    level?: SortOrder
     isActive?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    level?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -31681,22 +31690,6 @@ export namespace Prisma {
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
   }
 
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -31731,6 +31724,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -31783,10 +31792,10 @@ export namespace Prisma {
     designation?: SortOrder
     department?: SortOrder
     officeLocation?: SortOrder
-    sectionId?: SortOrder
     isAvailable?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    sectionId?: SortOrder
   }
 
   export type OfficerProfileMaxOrderByAggregateInput = {
@@ -31796,10 +31805,10 @@ export namespace Prisma {
     designation?: SortOrder
     department?: SortOrder
     officeLocation?: SortOrder
-    sectionId?: SortOrder
     isAvailable?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    sectionId?: SortOrder
   }
 
   export type OfficerProfileMinOrderByAggregateInput = {
@@ -31809,10 +31818,10 @@ export namespace Prisma {
     designation?: SortOrder
     department?: SortOrder
     officeLocation?: SortOrder
-    sectionId?: SortOrder
     isAvailable?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    sectionId?: SortOrder
   }
 
   export type FrontdeskOfficerFrontdeskUserIdOfficerIdCompoundUniqueInput = {
@@ -31841,36 +31850,19 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type ServiceCategoryCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    slaDays?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type ServiceCategoryAvgOrderByAggregateInput = {
-    slaDays?: SortOrder
   }
 
   export type ServiceCategoryMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    slaDays?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -31880,30 +31872,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
-    slaDays?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type ServiceCategorySumOrderByAggregateInput = {
-    slaDays?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type OfficerProfileListRelationFilter = {
@@ -31977,19 +31948,11 @@ export namespace Prisma {
     not?: NestedEnumApplicationStatusFilter<$PrismaModel> | $Enums.ApplicationStatus
   }
 
-  export type ServiceCategoryScalarRelationFilter = {
-    is?: ServiceCategoryWhereInput
-    isNot?: ServiceCategoryWhereInput
-  }
-
-  export type DepartmentScalarRelationFilter = {
-    is?: DepartmentWhereInput
-    isNot?: DepartmentWhereInput
-  }
-
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
+  export type EnumApplicationSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationSource | EnumApplicationSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.ApplicationSource[] | ListEnumApplicationSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApplicationSource[] | ListEnumApplicationSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumApplicationSourceFilter<$PrismaModel> | $Enums.ApplicationSource
   }
 
   export type ApplicationValidationNullableScalarRelationFilter = {
@@ -31997,76 +31960,94 @@ export namespace Prisma {
     isNot?: ApplicationValidationWhereInput | null
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type DepartmentNullableScalarRelationFilter = {
+    is?: DepartmentWhereInput | null
+    isNot?: DepartmentWhereInput | null
+  }
+
+  export type ServiceCategoryScalarRelationFilter = {
+    is?: ServiceCategoryWhereInput
+    isNot?: ServiceCategoryWhereInput
+  }
+
   export type ApplicationCountOrderByAggregateInput = {
     id?: SortOrder
     rrNumber?: SortOrder
     serviceCategoryId?: SortOrder
-    departmentId?: SortOrder
-    subject?: SortOrder
-    citizenName?: SortOrder
-    citizenPhone?: SortOrder
-    citizenEmail?: SortOrder
-    citizenAddress?: SortOrder
-    citizenGender?: SortOrder
-    citizenAadhaar?: SortOrder
     status?: SortOrder
     currentHolderId?: SortOrder
     submittedAt?: SortOrder
     validatedAt?: SortOrder
     completedAt?: SortOrder
-    isDispatched?: SortOrder
-    dispatchedAt?: SortOrder
-    dispatchedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    citizenAadhaar?: SortOrder
+    citizenAddress?: SortOrder
+    citizenEmail?: SortOrder
+    citizenGender?: SortOrder
+    citizenName?: SortOrder
+    citizenPhone?: SortOrder
+    subject?: SortOrder
+    departmentId?: SortOrder
+    applicationSource?: SortOrder
+    dispatchedAt?: SortOrder
+    dispatchedById?: SortOrder
+    isDispatched?: SortOrder
   }
 
   export type ApplicationMaxOrderByAggregateInput = {
     id?: SortOrder
     rrNumber?: SortOrder
     serviceCategoryId?: SortOrder
-    departmentId?: SortOrder
-    subject?: SortOrder
-    citizenName?: SortOrder
-    citizenPhone?: SortOrder
-    citizenEmail?: SortOrder
-    citizenAddress?: SortOrder
-    citizenGender?: SortOrder
-    citizenAadhaar?: SortOrder
     status?: SortOrder
     currentHolderId?: SortOrder
     submittedAt?: SortOrder
     validatedAt?: SortOrder
     completedAt?: SortOrder
-    isDispatched?: SortOrder
-    dispatchedAt?: SortOrder
-    dispatchedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    citizenAadhaar?: SortOrder
+    citizenAddress?: SortOrder
+    citizenEmail?: SortOrder
+    citizenGender?: SortOrder
+    citizenName?: SortOrder
+    citizenPhone?: SortOrder
+    subject?: SortOrder
+    departmentId?: SortOrder
+    applicationSource?: SortOrder
+    dispatchedAt?: SortOrder
+    dispatchedById?: SortOrder
+    isDispatched?: SortOrder
   }
 
   export type ApplicationMinOrderByAggregateInput = {
     id?: SortOrder
     rrNumber?: SortOrder
     serviceCategoryId?: SortOrder
-    departmentId?: SortOrder
-    subject?: SortOrder
-    citizenName?: SortOrder
-    citizenPhone?: SortOrder
-    citizenEmail?: SortOrder
-    citizenAddress?: SortOrder
-    citizenGender?: SortOrder
-    citizenAadhaar?: SortOrder
     status?: SortOrder
     currentHolderId?: SortOrder
     submittedAt?: SortOrder
     validatedAt?: SortOrder
     completedAt?: SortOrder
-    isDispatched?: SortOrder
-    dispatchedAt?: SortOrder
-    dispatchedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    citizenAadhaar?: SortOrder
+    citizenAddress?: SortOrder
+    citizenEmail?: SortOrder
+    citizenGender?: SortOrder
+    citizenName?: SortOrder
+    citizenPhone?: SortOrder
+    subject?: SortOrder
+    departmentId?: SortOrder
+    applicationSource?: SortOrder
+    dispatchedAt?: SortOrder
+    dispatchedById?: SortOrder
+    isDispatched?: SortOrder
   }
 
   export type EnumApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -32077,6 +32058,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumApplicationStatusFilter<$PrismaModel>
     _max?: NestedEnumApplicationStatusFilter<$PrismaModel>
+  }
+
+  export type EnumApplicationSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationSource | EnumApplicationSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.ApplicationSource[] | ListEnumApplicationSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApplicationSource[] | ListEnumApplicationSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumApplicationSourceWithAggregatesFilter<$PrismaModel> | $Enums.ApplicationSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApplicationSourceFilter<$PrismaModel>
+    _max?: NestedEnumApplicationSourceFilter<$PrismaModel>
   }
 
   export type EnumApplicationStatusNullableFilter<$PrismaModel = never> = {
@@ -32164,6 +32155,17 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type OfficerAssignmentCountOrderByAggregateInput = {
     id?: SortOrder
     applicationId?: SortOrder
@@ -32203,6 +32205,22 @@ export namespace Prisma {
 
   export type OfficerAssignmentSumOrderByAggregateInput = {
     priority?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumDocumentTypeFilter<$PrismaModel = never> = {
@@ -32644,8 +32662,8 @@ export namespace Prisma {
     priority?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
-    forwardedAt?: SortOrder
     completedAt?: SortOrder
+    forwardedAt?: SortOrder
   }
 
   export type OfficerForwardingHistoryAvgOrderByAggregateInput = {
@@ -32661,8 +32679,8 @@ export namespace Prisma {
     priority?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
-    forwardedAt?: SortOrder
     completedAt?: SortOrder
+    forwardedAt?: SortOrder
   }
 
   export type OfficerForwardingHistoryMinOrderByAggregateInput = {
@@ -32674,24 +32692,33 @@ export namespace Prisma {
     priority?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
-    forwardedAt?: SortOrder
     completedAt?: SortOrder
+    forwardedAt?: SortOrder
   }
 
   export type OfficerForwardingHistorySumOrderByAggregateInput = {
     priority?: SortOrder
   }
 
-  export type CitizenProfileCreateNestedOneWithoutUserInput = {
-    create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
-    connect?: CitizenProfileWhereUniqueInput
+  export type ApplicationAuditLogCreateNestedManyWithoutPerformedByInput = {
+    create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
+    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
+    createMany?: ApplicationAuditLogCreateManyPerformedByInputEnvelope
+    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
   }
 
-  export type OfficerProfileCreateNestedOneWithoutUserInput = {
-    create?: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: OfficerProfileCreateOrConnectWithoutUserInput
-    connect?: OfficerProfileWhereUniqueInput
+  export type ApplicationValidationCreateNestedManyWithoutValidatedByInput = {
+    create?: XOR<ApplicationValidationCreateWithoutValidatedByInput, ApplicationValidationUncheckedCreateWithoutValidatedByInput> | ApplicationValidationCreateWithoutValidatedByInput[] | ApplicationValidationUncheckedCreateWithoutValidatedByInput[]
+    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutValidatedByInput | ApplicationValidationCreateOrConnectWithoutValidatedByInput[]
+    createMany?: ApplicationValidationCreateManyValidatedByInputEnvelope
+    connect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
+  }
+
+  export type ApplicationWorkflowCreateNestedManyWithoutChangedByInput = {
+    create?: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput> | ApplicationWorkflowCreateWithoutChangedByInput[] | ApplicationWorkflowUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutChangedByInput | ApplicationWorkflowCreateOrConnectWithoutChangedByInput[]
+    createMany?: ApplicationWorkflowCreateManyChangedByInputEnvelope
+    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
   }
 
   export type ApplicationCreateNestedManyWithoutCurrentHolderInput = {
@@ -32708,46 +32735,10 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
-  export type ApplicationWorkflowCreateNestedManyWithoutChangedByInput = {
-    create?: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput> | ApplicationWorkflowCreateWithoutChangedByInput[] | ApplicationWorkflowUncheckedCreateWithoutChangedByInput[]
-    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutChangedByInput | ApplicationWorkflowCreateOrConnectWithoutChangedByInput[]
-    createMany?: ApplicationWorkflowCreateManyChangedByInputEnvelope
-    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-  }
-
-  export type ApplicationValidationCreateNestedManyWithoutValidatedByInput = {
-    create?: XOR<ApplicationValidationCreateWithoutValidatedByInput, ApplicationValidationUncheckedCreateWithoutValidatedByInput> | ApplicationValidationCreateWithoutValidatedByInput[] | ApplicationValidationUncheckedCreateWithoutValidatedByInput[]
-    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutValidatedByInput | ApplicationValidationCreateOrConnectWithoutValidatedByInput[]
-    createMany?: ApplicationValidationCreateManyValidatedByInputEnvelope
-    connect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
-  }
-
-  export type DocumentCreateNestedManyWithoutVerifiedByInput = {
-    create?: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput> | DocumentCreateWithoutVerifiedByInput[] | DocumentUncheckedCreateWithoutVerifiedByInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutVerifiedByInput | DocumentCreateOrConnectWithoutVerifiedByInput[]
-    createMany?: DocumentCreateManyVerifiedByInputEnvelope
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-  }
-
-  export type DocumentCreateNestedManyWithoutUploadedByInput = {
-    create?: XOR<DocumentCreateWithoutUploadedByInput, DocumentUncheckedCreateWithoutUploadedByInput> | DocumentCreateWithoutUploadedByInput[] | DocumentUncheckedCreateWithoutUploadedByInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutUploadedByInput | DocumentCreateOrConnectWithoutUploadedByInput[]
-    createMany?: DocumentCreateManyUploadedByInputEnvelope
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-  }
-
-  export type OfficerAssignmentCreateNestedManyWithoutAssignedByInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput> | OfficerAssignmentCreateWithoutAssignedByInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedByInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedByInput | OfficerAssignmentCreateOrConnectWithoutAssignedByInput[]
-    createMany?: OfficerAssignmentCreateManyAssignedByInputEnvelope
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-  }
-
-  export type OfficerAssignmentCreateNestedManyWithoutAssignedToInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput> | OfficerAssignmentCreateWithoutAssignedToInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedToInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedToInput | OfficerAssignmentCreateOrConnectWithoutAssignedToInput[]
-    createMany?: OfficerAssignmentCreateManyAssignedToInputEnvelope
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+  export type CitizenProfileCreateNestedOneWithoutUserInput = {
+    create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
+    connect?: CitizenProfileWhereUniqueInput
   }
 
   export type DocumentRequestCreateNestedManyWithoutRequestedByInput = {
@@ -32757,25 +32748,18 @@ export namespace Prisma {
     connect?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
   }
 
-  export type NotificationCreateNestedManyWithoutUserInput = {
-    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
-    createMany?: NotificationCreateManyUserInputEnvelope
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  export type DocumentCreateNestedManyWithoutUploadedByInput = {
+    create?: XOR<DocumentCreateWithoutUploadedByInput, DocumentUncheckedCreateWithoutUploadedByInput> | DocumentCreateWithoutUploadedByInput[] | DocumentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutUploadedByInput | DocumentCreateOrConnectWithoutUploadedByInput[]
+    createMany?: DocumentCreateManyUploadedByInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
-  export type ApplicationAuditLogCreateNestedManyWithoutPerformedByInput = {
-    create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
-    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
-    createMany?: ApplicationAuditLogCreateManyPerformedByInputEnvelope
-    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-  }
-
-  export type FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput = {
-    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
-    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
-    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
-    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+  export type DocumentCreateNestedManyWithoutVerifiedByInput = {
+    create?: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput> | DocumentCreateWithoutVerifiedByInput[] | DocumentUncheckedCreateWithoutVerifiedByInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutVerifiedByInput | DocumentCreateOrConnectWithoutVerifiedByInput[]
+    createMany?: DocumentCreateManyVerifiedByInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
   export type FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput = {
@@ -32792,6 +32776,34 @@ export namespace Prisma {
     connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
   }
 
+  export type FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
+    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+  }
+
+  export type NotificationCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type OfficerAssignmentCreateNestedManyWithoutAssignedByInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput> | OfficerAssignmentCreateWithoutAssignedByInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedByInput | OfficerAssignmentCreateOrConnectWithoutAssignedByInput[]
+    createMany?: OfficerAssignmentCreateManyAssignedByInputEnvelope
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+  }
+
+  export type OfficerAssignmentCreateNestedManyWithoutAssignedToInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput> | OfficerAssignmentCreateWithoutAssignedToInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedToInput | OfficerAssignmentCreateOrConnectWithoutAssignedToInput[]
+    createMany?: OfficerAssignmentCreateManyAssignedToInputEnvelope
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+  }
+
   export type OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput = {
     create?: XOR<OfficerForwardingHistoryCreateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput> | OfficerForwardingHistoryCreateWithoutFromOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput[]
     connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput[]
@@ -32806,16 +32818,31 @@ export namespace Prisma {
     connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
   }
 
-  export type CitizenProfileUncheckedCreateNestedOneWithoutUserInput = {
-    create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
-    connect?: CitizenProfileWhereUniqueInput
-  }
-
-  export type OfficerProfileUncheckedCreateNestedOneWithoutUserInput = {
+  export type OfficerProfileCreateNestedOneWithoutUserInput = {
     create?: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: OfficerProfileCreateOrConnectWithoutUserInput
     connect?: OfficerProfileWhereUniqueInput
+  }
+
+  export type ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput = {
+    create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
+    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
+    createMany?: ApplicationAuditLogCreateManyPerformedByInputEnvelope
+    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+  }
+
+  export type ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput = {
+    create?: XOR<ApplicationValidationCreateWithoutValidatedByInput, ApplicationValidationUncheckedCreateWithoutValidatedByInput> | ApplicationValidationCreateWithoutValidatedByInput[] | ApplicationValidationUncheckedCreateWithoutValidatedByInput[]
+    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutValidatedByInput | ApplicationValidationCreateOrConnectWithoutValidatedByInput[]
+    createMany?: ApplicationValidationCreateManyValidatedByInputEnvelope
+    connect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
+  }
+
+  export type ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput = {
+    create?: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput> | ApplicationWorkflowCreateWithoutChangedByInput[] | ApplicationWorkflowUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutChangedByInput | ApplicationWorkflowCreateOrConnectWithoutChangedByInput[]
+    createMany?: ApplicationWorkflowCreateManyChangedByInputEnvelope
+    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
   }
 
   export type ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput = {
@@ -32832,46 +32859,10 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
-  export type ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput = {
-    create?: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput> | ApplicationWorkflowCreateWithoutChangedByInput[] | ApplicationWorkflowUncheckedCreateWithoutChangedByInput[]
-    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutChangedByInput | ApplicationWorkflowCreateOrConnectWithoutChangedByInput[]
-    createMany?: ApplicationWorkflowCreateManyChangedByInputEnvelope
-    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-  }
-
-  export type ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput = {
-    create?: XOR<ApplicationValidationCreateWithoutValidatedByInput, ApplicationValidationUncheckedCreateWithoutValidatedByInput> | ApplicationValidationCreateWithoutValidatedByInput[] | ApplicationValidationUncheckedCreateWithoutValidatedByInput[]
-    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutValidatedByInput | ApplicationValidationCreateOrConnectWithoutValidatedByInput[]
-    createMany?: ApplicationValidationCreateManyValidatedByInputEnvelope
-    connect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
-  }
-
-  export type DocumentUncheckedCreateNestedManyWithoutVerifiedByInput = {
-    create?: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput> | DocumentCreateWithoutVerifiedByInput[] | DocumentUncheckedCreateWithoutVerifiedByInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutVerifiedByInput | DocumentCreateOrConnectWithoutVerifiedByInput[]
-    createMany?: DocumentCreateManyVerifiedByInputEnvelope
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-  }
-
-  export type DocumentUncheckedCreateNestedManyWithoutUploadedByInput = {
-    create?: XOR<DocumentCreateWithoutUploadedByInput, DocumentUncheckedCreateWithoutUploadedByInput> | DocumentCreateWithoutUploadedByInput[] | DocumentUncheckedCreateWithoutUploadedByInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutUploadedByInput | DocumentCreateOrConnectWithoutUploadedByInput[]
-    createMany?: DocumentCreateManyUploadedByInputEnvelope
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-  }
-
-  export type OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput> | OfficerAssignmentCreateWithoutAssignedByInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedByInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedByInput | OfficerAssignmentCreateOrConnectWithoutAssignedByInput[]
-    createMany?: OfficerAssignmentCreateManyAssignedByInputEnvelope
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-  }
-
-  export type OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput> | OfficerAssignmentCreateWithoutAssignedToInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedToInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedToInput | OfficerAssignmentCreateOrConnectWithoutAssignedToInput[]
-    createMany?: OfficerAssignmentCreateManyAssignedToInputEnvelope
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+  export type CitizenProfileUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
+    connect?: CitizenProfileWhereUniqueInput
   }
 
   export type DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput = {
@@ -32881,25 +32872,18 @@ export namespace Prisma {
     connect?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
   }
 
-  export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
-    createMany?: NotificationCreateManyUserInputEnvelope
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  export type DocumentUncheckedCreateNestedManyWithoutUploadedByInput = {
+    create?: XOR<DocumentCreateWithoutUploadedByInput, DocumentUncheckedCreateWithoutUploadedByInput> | DocumentCreateWithoutUploadedByInput[] | DocumentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutUploadedByInput | DocumentCreateOrConnectWithoutUploadedByInput[]
+    createMany?: DocumentCreateManyUploadedByInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
-  export type ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput = {
-    create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
-    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
-    createMany?: ApplicationAuditLogCreateManyPerformedByInputEnvelope
-    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-  }
-
-  export type FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput = {
-    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
-    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
-    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
-    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+  export type DocumentUncheckedCreateNestedManyWithoutVerifiedByInput = {
+    create?: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput> | DocumentCreateWithoutVerifiedByInput[] | DocumentUncheckedCreateWithoutVerifiedByInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutVerifiedByInput | DocumentCreateOrConnectWithoutVerifiedByInput[]
+    createMany?: DocumentCreateManyVerifiedByInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
   export type FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput = {
@@ -32916,6 +32900,34 @@ export namespace Prisma {
     connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
   }
 
+  export type FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
+    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput> | OfficerAssignmentCreateWithoutAssignedByInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedByInput | OfficerAssignmentCreateOrConnectWithoutAssignedByInput[]
+    createMany?: OfficerAssignmentCreateManyAssignedByInputEnvelope
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+  }
+
+  export type OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput> | OfficerAssignmentCreateWithoutAssignedToInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedToInput | OfficerAssignmentCreateOrConnectWithoutAssignedToInput[]
+    createMany?: OfficerAssignmentCreateManyAssignedToInputEnvelope
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+  }
+
   export type OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput = {
     create?: XOR<OfficerForwardingHistoryCreateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput> | OfficerForwardingHistoryCreateWithoutFromOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput[]
     connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput[]
@@ -32930,6 +32942,12 @@ export namespace Prisma {
     connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
   }
 
+  export type OfficerProfileUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: OfficerProfileCreateOrConnectWithoutUserInput
+    connect?: OfficerProfileWhereUniqueInput
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -32940,14 +32958,6 @@ export namespace Prisma {
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
     set?: $Enums.UserRole
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -32962,24 +32972,54 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type CitizenProfileUpdateOneWithoutUserNestedInput = {
-    create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
-    upsert?: CitizenProfileUpsertWithoutUserInput
-    disconnect?: CitizenProfileWhereInput | boolean
-    delete?: CitizenProfileWhereInput | boolean
-    connect?: CitizenProfileWhereUniqueInput
-    update?: XOR<XOR<CitizenProfileUpdateToOneWithWhereWithoutUserInput, CitizenProfileUpdateWithoutUserInput>, CitizenProfileUncheckedUpdateWithoutUserInput>
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
-  export type OfficerProfileUpdateOneWithoutUserNestedInput = {
-    create?: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: OfficerProfileCreateOrConnectWithoutUserInput
-    upsert?: OfficerProfileUpsertWithoutUserInput
-    disconnect?: OfficerProfileWhereInput | boolean
-    delete?: OfficerProfileWhereInput | boolean
-    connect?: OfficerProfileWhereUniqueInput
-    update?: XOR<XOR<OfficerProfileUpdateToOneWithWhereWithoutUserInput, OfficerProfileUpdateWithoutUserInput>, OfficerProfileUncheckedUpdateWithoutUserInput>
+  export type ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput = {
+    create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
+    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
+    upsert?: ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput | ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput[]
+    createMany?: ApplicationAuditLogCreateManyPerformedByInputEnvelope
+    set?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    disconnect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    delete?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    update?: ApplicationAuditLogUpdateWithWhereUniqueWithoutPerformedByInput | ApplicationAuditLogUpdateWithWhereUniqueWithoutPerformedByInput[]
+    updateMany?: ApplicationAuditLogUpdateManyWithWhereWithoutPerformedByInput | ApplicationAuditLogUpdateManyWithWhereWithoutPerformedByInput[]
+    deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
+  }
+
+  export type ApplicationValidationUpdateManyWithoutValidatedByNestedInput = {
+    create?: XOR<ApplicationValidationCreateWithoutValidatedByInput, ApplicationValidationUncheckedCreateWithoutValidatedByInput> | ApplicationValidationCreateWithoutValidatedByInput[] | ApplicationValidationUncheckedCreateWithoutValidatedByInput[]
+    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutValidatedByInput | ApplicationValidationCreateOrConnectWithoutValidatedByInput[]
+    upsert?: ApplicationValidationUpsertWithWhereUniqueWithoutValidatedByInput | ApplicationValidationUpsertWithWhereUniqueWithoutValidatedByInput[]
+    createMany?: ApplicationValidationCreateManyValidatedByInputEnvelope
+    set?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
+    disconnect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
+    delete?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
+    connect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
+    update?: ApplicationValidationUpdateWithWhereUniqueWithoutValidatedByInput | ApplicationValidationUpdateWithWhereUniqueWithoutValidatedByInput[]
+    updateMany?: ApplicationValidationUpdateManyWithWhereWithoutValidatedByInput | ApplicationValidationUpdateManyWithWhereWithoutValidatedByInput[]
+    deleteMany?: ApplicationValidationScalarWhereInput | ApplicationValidationScalarWhereInput[]
+  }
+
+  export type ApplicationWorkflowUpdateManyWithoutChangedByNestedInput = {
+    create?: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput> | ApplicationWorkflowCreateWithoutChangedByInput[] | ApplicationWorkflowUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutChangedByInput | ApplicationWorkflowCreateOrConnectWithoutChangedByInput[]
+    upsert?: ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput | ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput[]
+    createMany?: ApplicationWorkflowCreateManyChangedByInputEnvelope
+    set?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    disconnect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    delete?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    update?: ApplicationWorkflowUpdateWithWhereUniqueWithoutChangedByInput | ApplicationWorkflowUpdateWithWhereUniqueWithoutChangedByInput[]
+    updateMany?: ApplicationWorkflowUpdateManyWithWhereWithoutChangedByInput | ApplicationWorkflowUpdateManyWithWhereWithoutChangedByInput[]
+    deleteMany?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
   }
 
   export type ApplicationUpdateManyWithoutCurrentHolderNestedInput = {
@@ -33010,88 +33050,14 @@ export namespace Prisma {
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
-  export type ApplicationWorkflowUpdateManyWithoutChangedByNestedInput = {
-    create?: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput> | ApplicationWorkflowCreateWithoutChangedByInput[] | ApplicationWorkflowUncheckedCreateWithoutChangedByInput[]
-    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutChangedByInput | ApplicationWorkflowCreateOrConnectWithoutChangedByInput[]
-    upsert?: ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput | ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput[]
-    createMany?: ApplicationWorkflowCreateManyChangedByInputEnvelope
-    set?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    disconnect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    delete?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    update?: ApplicationWorkflowUpdateWithWhereUniqueWithoutChangedByInput | ApplicationWorkflowUpdateWithWhereUniqueWithoutChangedByInput[]
-    updateMany?: ApplicationWorkflowUpdateManyWithWhereWithoutChangedByInput | ApplicationWorkflowUpdateManyWithWhereWithoutChangedByInput[]
-    deleteMany?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
-  }
-
-  export type ApplicationValidationUpdateManyWithoutValidatedByNestedInput = {
-    create?: XOR<ApplicationValidationCreateWithoutValidatedByInput, ApplicationValidationUncheckedCreateWithoutValidatedByInput> | ApplicationValidationCreateWithoutValidatedByInput[] | ApplicationValidationUncheckedCreateWithoutValidatedByInput[]
-    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutValidatedByInput | ApplicationValidationCreateOrConnectWithoutValidatedByInput[]
-    upsert?: ApplicationValidationUpsertWithWhereUniqueWithoutValidatedByInput | ApplicationValidationUpsertWithWhereUniqueWithoutValidatedByInput[]
-    createMany?: ApplicationValidationCreateManyValidatedByInputEnvelope
-    set?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
-    disconnect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
-    delete?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
-    connect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
-    update?: ApplicationValidationUpdateWithWhereUniqueWithoutValidatedByInput | ApplicationValidationUpdateWithWhereUniqueWithoutValidatedByInput[]
-    updateMany?: ApplicationValidationUpdateManyWithWhereWithoutValidatedByInput | ApplicationValidationUpdateManyWithWhereWithoutValidatedByInput[]
-    deleteMany?: ApplicationValidationScalarWhereInput | ApplicationValidationScalarWhereInput[]
-  }
-
-  export type DocumentUpdateManyWithoutVerifiedByNestedInput = {
-    create?: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput> | DocumentCreateWithoutVerifiedByInput[] | DocumentUncheckedCreateWithoutVerifiedByInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutVerifiedByInput | DocumentCreateOrConnectWithoutVerifiedByInput[]
-    upsert?: DocumentUpsertWithWhereUniqueWithoutVerifiedByInput | DocumentUpsertWithWhereUniqueWithoutVerifiedByInput[]
-    createMany?: DocumentCreateManyVerifiedByInputEnvelope
-    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    update?: DocumentUpdateWithWhereUniqueWithoutVerifiedByInput | DocumentUpdateWithWhereUniqueWithoutVerifiedByInput[]
-    updateMany?: DocumentUpdateManyWithWhereWithoutVerifiedByInput | DocumentUpdateManyWithWhereWithoutVerifiedByInput[]
-    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
-  }
-
-  export type DocumentUpdateManyWithoutUploadedByNestedInput = {
-    create?: XOR<DocumentCreateWithoutUploadedByInput, DocumentUncheckedCreateWithoutUploadedByInput> | DocumentCreateWithoutUploadedByInput[] | DocumentUncheckedCreateWithoutUploadedByInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutUploadedByInput | DocumentCreateOrConnectWithoutUploadedByInput[]
-    upsert?: DocumentUpsertWithWhereUniqueWithoutUploadedByInput | DocumentUpsertWithWhereUniqueWithoutUploadedByInput[]
-    createMany?: DocumentCreateManyUploadedByInputEnvelope
-    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    update?: DocumentUpdateWithWhereUniqueWithoutUploadedByInput | DocumentUpdateWithWhereUniqueWithoutUploadedByInput[]
-    updateMany?: DocumentUpdateManyWithWhereWithoutUploadedByInput | DocumentUpdateManyWithWhereWithoutUploadedByInput[]
-    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
-  }
-
-  export type OfficerAssignmentUpdateManyWithoutAssignedByNestedInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput> | OfficerAssignmentCreateWithoutAssignedByInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedByInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedByInput | OfficerAssignmentCreateOrConnectWithoutAssignedByInput[]
-    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedByInput | OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedByInput[]
-    createMany?: OfficerAssignmentCreateManyAssignedByInputEnvelope
-    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedByInput | OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedByInput[]
-    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutAssignedByInput | OfficerAssignmentUpdateManyWithWhereWithoutAssignedByInput[]
-    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
-  }
-
-  export type OfficerAssignmentUpdateManyWithoutAssignedToNestedInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput> | OfficerAssignmentCreateWithoutAssignedToInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedToInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedToInput | OfficerAssignmentCreateOrConnectWithoutAssignedToInput[]
-    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedToInput | OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedToInput[]
-    createMany?: OfficerAssignmentCreateManyAssignedToInputEnvelope
-    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedToInput | OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedToInput[]
-    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutAssignedToInput | OfficerAssignmentUpdateManyWithWhereWithoutAssignedToInput[]
-    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
+  export type CitizenProfileUpdateOneWithoutUserNestedInput = {
+    create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
+    upsert?: CitizenProfileUpsertWithoutUserInput
+    disconnect?: CitizenProfileWhereInput | boolean
+    delete?: CitizenProfileWhereInput | boolean
+    connect?: CitizenProfileWhereUniqueInput
+    update?: XOR<XOR<CitizenProfileUpdateToOneWithWhereWithoutUserInput, CitizenProfileUpdateWithoutUserInput>, CitizenProfileUncheckedUpdateWithoutUserInput>
   }
 
   export type DocumentRequestUpdateManyWithoutRequestedByNestedInput = {
@@ -33108,46 +33074,32 @@ export namespace Prisma {
     deleteMany?: DocumentRequestScalarWhereInput | DocumentRequestScalarWhereInput[]
   }
 
-  export type NotificationUpdateManyWithoutUserNestedInput = {
-    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
-    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: NotificationCreateManyUserInputEnvelope
-    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  export type DocumentUpdateManyWithoutUploadedByNestedInput = {
+    create?: XOR<DocumentCreateWithoutUploadedByInput, DocumentUncheckedCreateWithoutUploadedByInput> | DocumentCreateWithoutUploadedByInput[] | DocumentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutUploadedByInput | DocumentCreateOrConnectWithoutUploadedByInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutUploadedByInput | DocumentUpsertWithWhereUniqueWithoutUploadedByInput[]
+    createMany?: DocumentCreateManyUploadedByInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutUploadedByInput | DocumentUpdateWithWhereUniqueWithoutUploadedByInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutUploadedByInput | DocumentUpdateManyWithWhereWithoutUploadedByInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
-  export type ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput = {
-    create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
-    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
-    upsert?: ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput | ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput[]
-    createMany?: ApplicationAuditLogCreateManyPerformedByInputEnvelope
-    set?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    disconnect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    delete?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    update?: ApplicationAuditLogUpdateWithWhereUniqueWithoutPerformedByInput | ApplicationAuditLogUpdateWithWhereUniqueWithoutPerformedByInput[]
-    updateMany?: ApplicationAuditLogUpdateManyWithWhereWithoutPerformedByInput | ApplicationAuditLogUpdateManyWithWhereWithoutPerformedByInput[]
-    deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
-  }
-
-  export type FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput = {
-    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
-    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
-    upsert?: FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput[]
-    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
-    set?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
-    disconnect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
-    delete?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
-    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
-    update?: FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput[]
-    updateMany?: FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput | FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput[]
-    deleteMany?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+  export type DocumentUpdateManyWithoutVerifiedByNestedInput = {
+    create?: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput> | DocumentCreateWithoutVerifiedByInput[] | DocumentUncheckedCreateWithoutVerifiedByInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutVerifiedByInput | DocumentCreateOrConnectWithoutVerifiedByInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutVerifiedByInput | DocumentUpsertWithWhereUniqueWithoutVerifiedByInput[]
+    createMany?: DocumentCreateManyVerifiedByInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutVerifiedByInput | DocumentUpdateWithWhereUniqueWithoutVerifiedByInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutVerifiedByInput | DocumentUpdateManyWithWhereWithoutVerifiedByInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
   export type FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput = {
@@ -33178,6 +33130,62 @@ export namespace Prisma {
     deleteMany?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
   }
 
+  export type FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
+    upsert?: FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput[]
+    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
+    set?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    disconnect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    delete?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    update?: FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput[]
+    updateMany?: FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput | FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput[]
+    deleteMany?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+  }
+
+  export type NotificationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type OfficerAssignmentUpdateManyWithoutAssignedByNestedInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput> | OfficerAssignmentCreateWithoutAssignedByInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedByInput | OfficerAssignmentCreateOrConnectWithoutAssignedByInput[]
+    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedByInput | OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedByInput[]
+    createMany?: OfficerAssignmentCreateManyAssignedByInputEnvelope
+    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedByInput | OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedByInput[]
+    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutAssignedByInput | OfficerAssignmentUpdateManyWithWhereWithoutAssignedByInput[]
+    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
+  }
+
+  export type OfficerAssignmentUpdateManyWithoutAssignedToNestedInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput> | OfficerAssignmentCreateWithoutAssignedToInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedToInput | OfficerAssignmentCreateOrConnectWithoutAssignedToInput[]
+    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedToInput | OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedToInput[]
+    createMany?: OfficerAssignmentCreateManyAssignedToInputEnvelope
+    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedToInput | OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedToInput[]
+    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutAssignedToInput | OfficerAssignmentUpdateManyWithWhereWithoutAssignedToInput[]
+    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
+  }
+
   export type OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput = {
     create?: XOR<OfficerForwardingHistoryCreateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput> | OfficerForwardingHistoryCreateWithoutFromOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput[]
     connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput[]
@@ -33206,17 +33214,7 @@ export namespace Prisma {
     deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
   }
 
-  export type CitizenProfileUncheckedUpdateOneWithoutUserNestedInput = {
-    create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
-    connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
-    upsert?: CitizenProfileUpsertWithoutUserInput
-    disconnect?: CitizenProfileWhereInput | boolean
-    delete?: CitizenProfileWhereInput | boolean
-    connect?: CitizenProfileWhereUniqueInput
-    update?: XOR<XOR<CitizenProfileUpdateToOneWithWhereWithoutUserInput, CitizenProfileUpdateWithoutUserInput>, CitizenProfileUncheckedUpdateWithoutUserInput>
-  }
-
-  export type OfficerProfileUncheckedUpdateOneWithoutUserNestedInput = {
+  export type OfficerProfileUpdateOneWithoutUserNestedInput = {
     create?: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: OfficerProfileCreateOrConnectWithoutUserInput
     upsert?: OfficerProfileUpsertWithoutUserInput
@@ -33224,6 +33222,48 @@ export namespace Prisma {
     delete?: OfficerProfileWhereInput | boolean
     connect?: OfficerProfileWhereUniqueInput
     update?: XOR<XOR<OfficerProfileUpdateToOneWithWhereWithoutUserInput, OfficerProfileUpdateWithoutUserInput>, OfficerProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput = {
+    create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
+    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
+    upsert?: ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput | ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput[]
+    createMany?: ApplicationAuditLogCreateManyPerformedByInputEnvelope
+    set?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    disconnect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    delete?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    update?: ApplicationAuditLogUpdateWithWhereUniqueWithoutPerformedByInput | ApplicationAuditLogUpdateWithWhereUniqueWithoutPerformedByInput[]
+    updateMany?: ApplicationAuditLogUpdateManyWithWhereWithoutPerformedByInput | ApplicationAuditLogUpdateManyWithWhereWithoutPerformedByInput[]
+    deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
+  }
+
+  export type ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput = {
+    create?: XOR<ApplicationValidationCreateWithoutValidatedByInput, ApplicationValidationUncheckedCreateWithoutValidatedByInput> | ApplicationValidationCreateWithoutValidatedByInput[] | ApplicationValidationUncheckedCreateWithoutValidatedByInput[]
+    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutValidatedByInput | ApplicationValidationCreateOrConnectWithoutValidatedByInput[]
+    upsert?: ApplicationValidationUpsertWithWhereUniqueWithoutValidatedByInput | ApplicationValidationUpsertWithWhereUniqueWithoutValidatedByInput[]
+    createMany?: ApplicationValidationCreateManyValidatedByInputEnvelope
+    set?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
+    disconnect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
+    delete?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
+    connect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
+    update?: ApplicationValidationUpdateWithWhereUniqueWithoutValidatedByInput | ApplicationValidationUpdateWithWhereUniqueWithoutValidatedByInput[]
+    updateMany?: ApplicationValidationUpdateManyWithWhereWithoutValidatedByInput | ApplicationValidationUpdateManyWithWhereWithoutValidatedByInput[]
+    deleteMany?: ApplicationValidationScalarWhereInput | ApplicationValidationScalarWhereInput[]
+  }
+
+  export type ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput = {
+    create?: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput> | ApplicationWorkflowCreateWithoutChangedByInput[] | ApplicationWorkflowUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutChangedByInput | ApplicationWorkflowCreateOrConnectWithoutChangedByInput[]
+    upsert?: ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput | ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput[]
+    createMany?: ApplicationWorkflowCreateManyChangedByInputEnvelope
+    set?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    disconnect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    delete?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    update?: ApplicationWorkflowUpdateWithWhereUniqueWithoutChangedByInput | ApplicationWorkflowUpdateWithWhereUniqueWithoutChangedByInput[]
+    updateMany?: ApplicationWorkflowUpdateManyWithWhereWithoutChangedByInput | ApplicationWorkflowUpdateManyWithWhereWithoutChangedByInput[]
+    deleteMany?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
   }
 
   export type ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput = {
@@ -33254,88 +33294,14 @@ export namespace Prisma {
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
-  export type ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput = {
-    create?: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput> | ApplicationWorkflowCreateWithoutChangedByInput[] | ApplicationWorkflowUncheckedCreateWithoutChangedByInput[]
-    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutChangedByInput | ApplicationWorkflowCreateOrConnectWithoutChangedByInput[]
-    upsert?: ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput | ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput[]
-    createMany?: ApplicationWorkflowCreateManyChangedByInputEnvelope
-    set?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    disconnect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    delete?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    update?: ApplicationWorkflowUpdateWithWhereUniqueWithoutChangedByInput | ApplicationWorkflowUpdateWithWhereUniqueWithoutChangedByInput[]
-    updateMany?: ApplicationWorkflowUpdateManyWithWhereWithoutChangedByInput | ApplicationWorkflowUpdateManyWithWhereWithoutChangedByInput[]
-    deleteMany?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
-  }
-
-  export type ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput = {
-    create?: XOR<ApplicationValidationCreateWithoutValidatedByInput, ApplicationValidationUncheckedCreateWithoutValidatedByInput> | ApplicationValidationCreateWithoutValidatedByInput[] | ApplicationValidationUncheckedCreateWithoutValidatedByInput[]
-    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutValidatedByInput | ApplicationValidationCreateOrConnectWithoutValidatedByInput[]
-    upsert?: ApplicationValidationUpsertWithWhereUniqueWithoutValidatedByInput | ApplicationValidationUpsertWithWhereUniqueWithoutValidatedByInput[]
-    createMany?: ApplicationValidationCreateManyValidatedByInputEnvelope
-    set?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
-    disconnect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
-    delete?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
-    connect?: ApplicationValidationWhereUniqueInput | ApplicationValidationWhereUniqueInput[]
-    update?: ApplicationValidationUpdateWithWhereUniqueWithoutValidatedByInput | ApplicationValidationUpdateWithWhereUniqueWithoutValidatedByInput[]
-    updateMany?: ApplicationValidationUpdateManyWithWhereWithoutValidatedByInput | ApplicationValidationUpdateManyWithWhereWithoutValidatedByInput[]
-    deleteMany?: ApplicationValidationScalarWhereInput | ApplicationValidationScalarWhereInput[]
-  }
-
-  export type DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput = {
-    create?: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput> | DocumentCreateWithoutVerifiedByInput[] | DocumentUncheckedCreateWithoutVerifiedByInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutVerifiedByInput | DocumentCreateOrConnectWithoutVerifiedByInput[]
-    upsert?: DocumentUpsertWithWhereUniqueWithoutVerifiedByInput | DocumentUpsertWithWhereUniqueWithoutVerifiedByInput[]
-    createMany?: DocumentCreateManyVerifiedByInputEnvelope
-    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    update?: DocumentUpdateWithWhereUniqueWithoutVerifiedByInput | DocumentUpdateWithWhereUniqueWithoutVerifiedByInput[]
-    updateMany?: DocumentUpdateManyWithWhereWithoutVerifiedByInput | DocumentUpdateManyWithWhereWithoutVerifiedByInput[]
-    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
-  }
-
-  export type DocumentUncheckedUpdateManyWithoutUploadedByNestedInput = {
-    create?: XOR<DocumentCreateWithoutUploadedByInput, DocumentUncheckedCreateWithoutUploadedByInput> | DocumentCreateWithoutUploadedByInput[] | DocumentUncheckedCreateWithoutUploadedByInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutUploadedByInput | DocumentCreateOrConnectWithoutUploadedByInput[]
-    upsert?: DocumentUpsertWithWhereUniqueWithoutUploadedByInput | DocumentUpsertWithWhereUniqueWithoutUploadedByInput[]
-    createMany?: DocumentCreateManyUploadedByInputEnvelope
-    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    update?: DocumentUpdateWithWhereUniqueWithoutUploadedByInput | DocumentUpdateWithWhereUniqueWithoutUploadedByInput[]
-    updateMany?: DocumentUpdateManyWithWhereWithoutUploadedByInput | DocumentUpdateManyWithWhereWithoutUploadedByInput[]
-    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
-  }
-
-  export type OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput> | OfficerAssignmentCreateWithoutAssignedByInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedByInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedByInput | OfficerAssignmentCreateOrConnectWithoutAssignedByInput[]
-    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedByInput | OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedByInput[]
-    createMany?: OfficerAssignmentCreateManyAssignedByInputEnvelope
-    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedByInput | OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedByInput[]
-    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutAssignedByInput | OfficerAssignmentUpdateManyWithWhereWithoutAssignedByInput[]
-    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
-  }
-
-  export type OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput> | OfficerAssignmentCreateWithoutAssignedToInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedToInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedToInput | OfficerAssignmentCreateOrConnectWithoutAssignedToInput[]
-    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedToInput | OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedToInput[]
-    createMany?: OfficerAssignmentCreateManyAssignedToInputEnvelope
-    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedToInput | OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedToInput[]
-    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutAssignedToInput | OfficerAssignmentUpdateManyWithWhereWithoutAssignedToInput[]
-    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
+  export type CitizenProfileUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: CitizenProfileCreateOrConnectWithoutUserInput
+    upsert?: CitizenProfileUpsertWithoutUserInput
+    disconnect?: CitizenProfileWhereInput | boolean
+    delete?: CitizenProfileWhereInput | boolean
+    connect?: CitizenProfileWhereUniqueInput
+    update?: XOR<XOR<CitizenProfileUpdateToOneWithWhereWithoutUserInput, CitizenProfileUpdateWithoutUserInput>, CitizenProfileUncheckedUpdateWithoutUserInput>
   }
 
   export type DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput = {
@@ -33352,46 +33318,32 @@ export namespace Prisma {
     deleteMany?: DocumentRequestScalarWhereInput | DocumentRequestScalarWhereInput[]
   }
 
-  export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
-    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: NotificationCreateManyUserInputEnvelope
-    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  export type DocumentUncheckedUpdateManyWithoutUploadedByNestedInput = {
+    create?: XOR<DocumentCreateWithoutUploadedByInput, DocumentUncheckedCreateWithoutUploadedByInput> | DocumentCreateWithoutUploadedByInput[] | DocumentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutUploadedByInput | DocumentCreateOrConnectWithoutUploadedByInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutUploadedByInput | DocumentUpsertWithWhereUniqueWithoutUploadedByInput[]
+    createMany?: DocumentCreateManyUploadedByInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutUploadedByInput | DocumentUpdateWithWhereUniqueWithoutUploadedByInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutUploadedByInput | DocumentUpdateManyWithWhereWithoutUploadedByInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
-  export type ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput = {
-    create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
-    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
-    upsert?: ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput | ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput[]
-    createMany?: ApplicationAuditLogCreateManyPerformedByInputEnvelope
-    set?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    disconnect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    delete?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    update?: ApplicationAuditLogUpdateWithWhereUniqueWithoutPerformedByInput | ApplicationAuditLogUpdateWithWhereUniqueWithoutPerformedByInput[]
-    updateMany?: ApplicationAuditLogUpdateManyWithWhereWithoutPerformedByInput | ApplicationAuditLogUpdateManyWithWhereWithoutPerformedByInput[]
-    deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
-  }
-
-  export type FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput = {
-    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
-    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
-    upsert?: FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput[]
-    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
-    set?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
-    disconnect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
-    delete?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
-    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
-    update?: FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput[]
-    updateMany?: FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput | FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput[]
-    deleteMany?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+  export type DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput = {
+    create?: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput> | DocumentCreateWithoutVerifiedByInput[] | DocumentUncheckedCreateWithoutVerifiedByInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutVerifiedByInput | DocumentCreateOrConnectWithoutVerifiedByInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutVerifiedByInput | DocumentUpsertWithWhereUniqueWithoutVerifiedByInput[]
+    createMany?: DocumentCreateManyVerifiedByInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutVerifiedByInput | DocumentUpdateWithWhereUniqueWithoutVerifiedByInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutVerifiedByInput | DocumentUpdateManyWithWhereWithoutVerifiedByInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
   export type FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput = {
@@ -33422,6 +33374,62 @@ export namespace Prisma {
     deleteMany?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
   }
 
+  export type FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput> | FrontdeskOfficerCreateWithoutFrontdeskUserInput[] | FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput | FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput[]
+    upsert?: FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput[]
+    createMany?: FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope
+    set?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    disconnect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    delete?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+    update?: FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput | FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput[]
+    updateMany?: FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput | FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput[]
+    deleteMany?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutUserInput | NotificationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: NotificationCreateManyUserInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutUserInput | NotificationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutUserInput | NotificationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput> | OfficerAssignmentCreateWithoutAssignedByInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedByInput | OfficerAssignmentCreateOrConnectWithoutAssignedByInput[]
+    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedByInput | OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedByInput[]
+    createMany?: OfficerAssignmentCreateManyAssignedByInputEnvelope
+    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedByInput | OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedByInput[]
+    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutAssignedByInput | OfficerAssignmentUpdateManyWithWhereWithoutAssignedByInput[]
+    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
+  }
+
+  export type OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput> | OfficerAssignmentCreateWithoutAssignedToInput[] | OfficerAssignmentUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutAssignedToInput | OfficerAssignmentCreateOrConnectWithoutAssignedToInput[]
+    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedToInput | OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedToInput[]
+    createMany?: OfficerAssignmentCreateManyAssignedToInputEnvelope
+    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedToInput | OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedToInput[]
+    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutAssignedToInput | OfficerAssignmentUpdateManyWithWhereWithoutAssignedToInput[]
+    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
+  }
+
   export type OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput = {
     create?: XOR<OfficerForwardingHistoryCreateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput> | OfficerForwardingHistoryCreateWithoutFromOfficerInput[] | OfficerForwardingHistoryUncheckedCreateWithoutFromOfficerInput[]
     connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput | OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput[]
@@ -33450,6 +33458,16 @@ export namespace Prisma {
     deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
   }
 
+  export type OfficerProfileUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
+    connectOrCreate?: OfficerProfileCreateOrConnectWithoutUserInput
+    upsert?: OfficerProfileUpsertWithoutUserInput
+    disconnect?: OfficerProfileWhereInput | boolean
+    delete?: OfficerProfileWhereInput | boolean
+    connect?: OfficerProfileWhereUniqueInput
+    update?: XOR<XOR<OfficerProfileUpdateToOneWithWhereWithoutUserInput, OfficerProfileUpdateWithoutUserInput>, OfficerProfileUncheckedUpdateWithoutUserInput>
+  }
+
   export type UserCreateNestedOneWithoutCitizenProfileInput = {
     create?: XOR<UserCreateWithoutCitizenProfileInput, UserUncheckedCreateWithoutCitizenProfileInput>
     connectOrCreate?: UserCreateOrConnectWithoutCitizenProfileInput
@@ -33464,10 +33482,11 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCitizenProfileInput, UserUpdateWithoutCitizenProfileInput>, UserUncheckedUpdateWithoutCitizenProfileInput>
   }
 
-  export type UserCreateNestedOneWithoutOfficerProfileInput = {
-    create?: XOR<UserCreateWithoutOfficerProfileInput, UserUncheckedCreateWithoutOfficerProfileInput>
-    connectOrCreate?: UserCreateOrConnectWithoutOfficerProfileInput
-    connect?: UserWhereUniqueInput
+  export type FrontdeskOfficerCreateNestedManyWithoutOfficerInput = {
+    create?: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput> | FrontdeskOfficerCreateWithoutOfficerInput[] | FrontdeskOfficerUncheckedCreateWithoutOfficerInput[]
+    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutOfficerInput | FrontdeskOfficerCreateOrConnectWithoutOfficerInput[]
+    createMany?: FrontdeskOfficerCreateManyOfficerInputEnvelope
+    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
   }
 
   export type SectionCreateNestedOneWithoutOfficersInput = {
@@ -33476,11 +33495,10 @@ export namespace Prisma {
     connect?: SectionWhereUniqueInput
   }
 
-  export type FrontdeskOfficerCreateNestedManyWithoutOfficerInput = {
-    create?: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput> | FrontdeskOfficerCreateWithoutOfficerInput[] | FrontdeskOfficerUncheckedCreateWithoutOfficerInput[]
-    connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutOfficerInput | FrontdeskOfficerCreateOrConnectWithoutOfficerInput[]
-    createMany?: FrontdeskOfficerCreateManyOfficerInputEnvelope
-    connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
+  export type UserCreateNestedOneWithoutOfficerProfileInput = {
+    create?: XOR<UserCreateWithoutOfficerProfileInput, UserUncheckedCreateWithoutOfficerProfileInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOfficerProfileInput
+    connect?: UserWhereUniqueInput
   }
 
   export type FrontdeskOfficerUncheckedCreateNestedManyWithoutOfficerInput = {
@@ -33488,24 +33506,6 @@ export namespace Prisma {
     connectOrCreate?: FrontdeskOfficerCreateOrConnectWithoutOfficerInput | FrontdeskOfficerCreateOrConnectWithoutOfficerInput[]
     createMany?: FrontdeskOfficerCreateManyOfficerInputEnvelope
     connect?: FrontdeskOfficerWhereUniqueInput | FrontdeskOfficerWhereUniqueInput[]
-  }
-
-  export type UserUpdateOneRequiredWithoutOfficerProfileNestedInput = {
-    create?: XOR<UserCreateWithoutOfficerProfileInput, UserUncheckedCreateWithoutOfficerProfileInput>
-    connectOrCreate?: UserCreateOrConnectWithoutOfficerProfileInput
-    upsert?: UserUpsertWithoutOfficerProfileInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOfficerProfileInput, UserUpdateWithoutOfficerProfileInput>, UserUncheckedUpdateWithoutOfficerProfileInput>
-  }
-
-  export type SectionUpdateOneWithoutOfficersNestedInput = {
-    create?: XOR<SectionCreateWithoutOfficersInput, SectionUncheckedCreateWithoutOfficersInput>
-    connectOrCreate?: SectionCreateOrConnectWithoutOfficersInput
-    upsert?: SectionUpsertWithoutOfficersInput
-    disconnect?: SectionWhereInput | boolean
-    delete?: SectionWhereInput | boolean
-    connect?: SectionWhereUniqueInput
-    update?: XOR<XOR<SectionUpdateToOneWithWhereWithoutOfficersInput, SectionUpdateWithoutOfficersInput>, SectionUncheckedUpdateWithoutOfficersInput>
   }
 
   export type FrontdeskOfficerUpdateManyWithoutOfficerNestedInput = {
@@ -33520,6 +33520,24 @@ export namespace Prisma {
     update?: FrontdeskOfficerUpdateWithWhereUniqueWithoutOfficerInput | FrontdeskOfficerUpdateWithWhereUniqueWithoutOfficerInput[]
     updateMany?: FrontdeskOfficerUpdateManyWithWhereWithoutOfficerInput | FrontdeskOfficerUpdateManyWithWhereWithoutOfficerInput[]
     deleteMany?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+  }
+
+  export type SectionUpdateOneWithoutOfficersNestedInput = {
+    create?: XOR<SectionCreateWithoutOfficersInput, SectionUncheckedCreateWithoutOfficersInput>
+    connectOrCreate?: SectionCreateOrConnectWithoutOfficersInput
+    upsert?: SectionUpsertWithoutOfficersInput
+    disconnect?: SectionWhereInput | boolean
+    delete?: SectionWhereInput | boolean
+    connect?: SectionWhereUniqueInput
+    update?: XOR<XOR<SectionUpdateToOneWithWhereWithoutOfficersInput, SectionUpdateWithoutOfficersInput>, SectionUncheckedUpdateWithoutOfficersInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutOfficerProfileNestedInput = {
+    create?: XOR<UserCreateWithoutOfficerProfileInput, UserUncheckedCreateWithoutOfficerProfileInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOfficerProfileInput
+    upsert?: UserUpsertWithoutOfficerProfileInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOfficerProfileInput, UserUpdateWithoutOfficerProfileInput>, UserUncheckedUpdateWithoutOfficerProfileInput>
   }
 
   export type FrontdeskOfficerUncheckedUpdateManyWithoutOfficerNestedInput = {
@@ -33578,14 +33596,6 @@ export namespace Prisma {
     connectOrCreate?: ApplicationCreateOrConnectWithoutServiceCategoryInput | ApplicationCreateOrConnectWithoutServiceCategoryInput[]
     createMany?: ApplicationCreateManyServiceCategoryInputEnvelope
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type ApplicationUpdateManyWithoutServiceCategoryNestedInput = {
@@ -33700,28 +33710,17 @@ export namespace Prisma {
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
-  export type ServiceCategoryCreateNestedOneWithoutApplicationsInput = {
-    create?: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
-    connectOrCreate?: ServiceCategoryCreateOrConnectWithoutApplicationsInput
-    connect?: ServiceCategoryWhereUniqueInput
+  export type ApplicationAuditLogCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<ApplicationAuditLogCreateWithoutApplicationInput, ApplicationAuditLogUncheckedCreateWithoutApplicationInput> | ApplicationAuditLogCreateWithoutApplicationInput[] | ApplicationAuditLogUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutApplicationInput | ApplicationAuditLogCreateOrConnectWithoutApplicationInput[]
+    createMany?: ApplicationAuditLogCreateManyApplicationInputEnvelope
+    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
   }
 
-  export type DepartmentCreateNestedOneWithoutApplicationsInput = {
-    create?: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
-    connectOrCreate?: DepartmentCreateOrConnectWithoutApplicationsInput
-    connect?: DepartmentWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutCurrentHolderFilesInput = {
-    create?: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCurrentHolderFilesInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutDispatchedApplicationsInput = {
-    create?: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutDispatchedApplicationsInput
-    connect?: UserWhereUniqueInput
+  export type ApplicationValidationCreateNestedOneWithoutApplicationInput = {
+    create?: XOR<ApplicationValidationCreateWithoutApplicationInput, ApplicationValidationUncheckedCreateWithoutApplicationInput>
+    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutApplicationInput
+    connect?: ApplicationValidationWhereUniqueInput
   }
 
   export type ApplicationWorkflowCreateNestedManyWithoutApplicationInput = {
@@ -33731,24 +33730,28 @@ export namespace Prisma {
     connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
   }
 
-  export type ApplicationValidationCreateNestedOneWithoutApplicationInput = {
-    create?: XOR<ApplicationValidationCreateWithoutApplicationInput, ApplicationValidationUncheckedCreateWithoutApplicationInput>
-    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutApplicationInput
-    connect?: ApplicationValidationWhereUniqueInput
+  export type UserCreateNestedOneWithoutCurrentHolderFilesInput = {
+    create?: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCurrentHolderFilesInput
+    connect?: UserWhereUniqueInput
   }
 
-  export type OfficerAssignmentCreateNestedManyWithoutApplicationInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput> | OfficerAssignmentCreateWithoutApplicationInput[] | OfficerAssignmentUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutApplicationInput | OfficerAssignmentCreateOrConnectWithoutApplicationInput[]
-    createMany?: OfficerAssignmentCreateManyApplicationInputEnvelope
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+  export type DepartmentCreateNestedOneWithoutApplicationsInput = {
+    create?: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutApplicationsInput
+    connect?: DepartmentWhereUniqueInput
   }
 
-  export type DocumentCreateNestedManyWithoutApplicationInput = {
-    create?: XOR<DocumentCreateWithoutApplicationInput, DocumentUncheckedCreateWithoutApplicationInput> | DocumentCreateWithoutApplicationInput[] | DocumentUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutApplicationInput | DocumentCreateOrConnectWithoutApplicationInput[]
-    createMany?: DocumentCreateManyApplicationInputEnvelope
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+  export type UserCreateNestedOneWithoutDispatchedApplicationsInput = {
+    create?: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDispatchedApplicationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ServiceCategoryCreateNestedOneWithoutApplicationsInput = {
+    create?: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: ServiceCategoryCreateOrConnectWithoutApplicationsInput
+    connect?: ServiceCategoryWhereUniqueInput
   }
 
   export type DocumentRequestCreateNestedManyWithoutApplicationInput = {
@@ -33758,18 +33761,11 @@ export namespace Prisma {
     connect?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
   }
 
-  export type NotificationCreateNestedManyWithoutApplicationInput = {
-    create?: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput> | NotificationCreateWithoutApplicationInput[] | NotificationUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutApplicationInput | NotificationCreateOrConnectWithoutApplicationInput[]
-    createMany?: NotificationCreateManyApplicationInputEnvelope
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-  }
-
-  export type ApplicationAuditLogCreateNestedManyWithoutApplicationInput = {
-    create?: XOR<ApplicationAuditLogCreateWithoutApplicationInput, ApplicationAuditLogUncheckedCreateWithoutApplicationInput> | ApplicationAuditLogCreateWithoutApplicationInput[] | ApplicationAuditLogUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutApplicationInput | ApplicationAuditLogCreateOrConnectWithoutApplicationInput[]
-    createMany?: ApplicationAuditLogCreateManyApplicationInputEnvelope
-    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+  export type DocumentCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<DocumentCreateWithoutApplicationInput, DocumentUncheckedCreateWithoutApplicationInput> | DocumentCreateWithoutApplicationInput[] | DocumentUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutApplicationInput | DocumentCreateOrConnectWithoutApplicationInput[]
+    createMany?: DocumentCreateManyApplicationInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
   export type FrontdeskForwardingCreateNestedManyWithoutApplicationInput = {
@@ -33779,52 +33775,25 @@ export namespace Prisma {
     connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
   }
 
-  export type OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput = {
-    create?: XOR<OfficerForwardingHistoryCreateWithoutApplicationInput, OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput> | OfficerForwardingHistoryCreateWithoutApplicationInput[] | OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput | OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput[]
-    createMany?: OfficerForwardingHistoryCreateManyApplicationInputEnvelope
-    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+  export type NotificationCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput> | NotificationCreateWithoutApplicationInput[] | NotificationUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutApplicationInput | NotificationCreateOrConnectWithoutApplicationInput[]
+    createMany?: NotificationCreateManyApplicationInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
-  export type ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput = {
-    create?: XOR<ApplicationWorkflowCreateWithoutApplicationInput, ApplicationWorkflowUncheckedCreateWithoutApplicationInput> | ApplicationWorkflowCreateWithoutApplicationInput[] | ApplicationWorkflowUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutApplicationInput | ApplicationWorkflowCreateOrConnectWithoutApplicationInput[]
-    createMany?: ApplicationWorkflowCreateManyApplicationInputEnvelope
-    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-  }
-
-  export type ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput = {
-    create?: XOR<ApplicationValidationCreateWithoutApplicationInput, ApplicationValidationUncheckedCreateWithoutApplicationInput>
-    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutApplicationInput
-    connect?: ApplicationValidationWhereUniqueInput
-  }
-
-  export type OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput = {
+  export type OfficerAssignmentCreateNestedManyWithoutApplicationInput = {
     create?: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput> | OfficerAssignmentCreateWithoutApplicationInput[] | OfficerAssignmentUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutApplicationInput | OfficerAssignmentCreateOrConnectWithoutApplicationInput[]
     createMany?: OfficerAssignmentCreateManyApplicationInputEnvelope
     connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
   }
 
-  export type DocumentUncheckedCreateNestedManyWithoutApplicationInput = {
-    create?: XOR<DocumentCreateWithoutApplicationInput, DocumentUncheckedCreateWithoutApplicationInput> | DocumentCreateWithoutApplicationInput[] | DocumentUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutApplicationInput | DocumentCreateOrConnectWithoutApplicationInput[]
-    createMany?: DocumentCreateManyApplicationInputEnvelope
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-  }
-
-  export type DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput = {
-    create?: XOR<DocumentRequestCreateWithoutApplicationInput, DocumentRequestUncheckedCreateWithoutApplicationInput> | DocumentRequestCreateWithoutApplicationInput[] | DocumentRequestUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: DocumentRequestCreateOrConnectWithoutApplicationInput | DocumentRequestCreateOrConnectWithoutApplicationInput[]
-    createMany?: DocumentRequestCreateManyApplicationInputEnvelope
-    connect?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
-  }
-
-  export type NotificationUncheckedCreateNestedManyWithoutApplicationInput = {
-    create?: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput> | NotificationCreateWithoutApplicationInput[] | NotificationUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutApplicationInput | NotificationCreateOrConnectWithoutApplicationInput[]
-    createMany?: NotificationCreateManyApplicationInputEnvelope
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  export type OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<OfficerForwardingHistoryCreateWithoutApplicationInput, OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput> | OfficerForwardingHistoryCreateWithoutApplicationInput[] | OfficerForwardingHistoryUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput | OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput[]
+    createMany?: OfficerForwardingHistoryCreateManyApplicationInputEnvelope
+    connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
   }
 
   export type ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput = {
@@ -33834,11 +33803,52 @@ export namespace Prisma {
     connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
   }
 
+  export type ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput = {
+    create?: XOR<ApplicationValidationCreateWithoutApplicationInput, ApplicationValidationUncheckedCreateWithoutApplicationInput>
+    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutApplicationInput
+    connect?: ApplicationValidationWhereUniqueInput
+  }
+
+  export type ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<ApplicationWorkflowCreateWithoutApplicationInput, ApplicationWorkflowUncheckedCreateWithoutApplicationInput> | ApplicationWorkflowCreateWithoutApplicationInput[] | ApplicationWorkflowUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutApplicationInput | ApplicationWorkflowCreateOrConnectWithoutApplicationInput[]
+    createMany?: ApplicationWorkflowCreateManyApplicationInputEnvelope
+    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+  }
+
+  export type DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<DocumentRequestCreateWithoutApplicationInput, DocumentRequestUncheckedCreateWithoutApplicationInput> | DocumentRequestCreateWithoutApplicationInput[] | DocumentRequestUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: DocumentRequestCreateOrConnectWithoutApplicationInput | DocumentRequestCreateOrConnectWithoutApplicationInput[]
+    createMany?: DocumentRequestCreateManyApplicationInputEnvelope
+    connect?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
+  }
+
+  export type DocumentUncheckedCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<DocumentCreateWithoutApplicationInput, DocumentUncheckedCreateWithoutApplicationInput> | DocumentCreateWithoutApplicationInput[] | DocumentUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutApplicationInput | DocumentCreateOrConnectWithoutApplicationInput[]
+    createMany?: DocumentCreateManyApplicationInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+  }
+
   export type FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput = {
     create?: XOR<FrontdeskForwardingCreateWithoutApplicationInput, FrontdeskForwardingUncheckedCreateWithoutApplicationInput> | FrontdeskForwardingCreateWithoutApplicationInput[] | FrontdeskForwardingUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutApplicationInput | FrontdeskForwardingCreateOrConnectWithoutApplicationInput[]
     createMany?: FrontdeskForwardingCreateManyApplicationInputEnvelope
     connect?: FrontdeskForwardingWhereUniqueInput | FrontdeskForwardingWhereUniqueInput[]
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput> | NotificationCreateWithoutApplicationInput[] | NotificationUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutApplicationInput | NotificationCreateOrConnectWithoutApplicationInput[]
+    createMany?: NotificationCreateManyApplicationInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput> | OfficerAssignmentCreateWithoutApplicationInput[] | OfficerAssignmentUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutApplicationInput | OfficerAssignmentCreateOrConnectWithoutApplicationInput[]
+    createMany?: OfficerAssignmentCreateManyApplicationInputEnvelope
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
   }
 
   export type OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput = {
@@ -33852,120 +33862,8 @@ export namespace Prisma {
     set?: $Enums.ApplicationStatus
   }
 
-  export type ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput = {
-    create?: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
-    connectOrCreate?: ServiceCategoryCreateOrConnectWithoutApplicationsInput
-    upsert?: ServiceCategoryUpsertWithoutApplicationsInput
-    connect?: ServiceCategoryWhereUniqueInput
-    update?: XOR<XOR<ServiceCategoryUpdateToOneWithWhereWithoutApplicationsInput, ServiceCategoryUpdateWithoutApplicationsInput>, ServiceCategoryUncheckedUpdateWithoutApplicationsInput>
-  }
-
-  export type DepartmentUpdateOneRequiredWithoutApplicationsNestedInput = {
-    create?: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
-    connectOrCreate?: DepartmentCreateOrConnectWithoutApplicationsInput
-    upsert?: DepartmentUpsertWithoutApplicationsInput
-    connect?: DepartmentWhereUniqueInput
-    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutApplicationsInput, DepartmentUpdateWithoutApplicationsInput>, DepartmentUncheckedUpdateWithoutApplicationsInput>
-  }
-
-  export type UserUpdateOneWithoutCurrentHolderFilesNestedInput = {
-    create?: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCurrentHolderFilesInput
-    upsert?: UserUpsertWithoutCurrentHolderFilesInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCurrentHolderFilesInput, UserUpdateWithoutCurrentHolderFilesInput>, UserUncheckedUpdateWithoutCurrentHolderFilesInput>
-  }
-
-  export type UserUpdateOneWithoutDispatchedApplicationsNestedInput = {
-    create?: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutDispatchedApplicationsInput
-    upsert?: UserUpsertWithoutDispatchedApplicationsInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDispatchedApplicationsInput, UserUpdateWithoutDispatchedApplicationsInput>, UserUncheckedUpdateWithoutDispatchedApplicationsInput>
-  }
-
-  export type ApplicationWorkflowUpdateManyWithoutApplicationNestedInput = {
-    create?: XOR<ApplicationWorkflowCreateWithoutApplicationInput, ApplicationWorkflowUncheckedCreateWithoutApplicationInput> | ApplicationWorkflowCreateWithoutApplicationInput[] | ApplicationWorkflowUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutApplicationInput | ApplicationWorkflowCreateOrConnectWithoutApplicationInput[]
-    upsert?: ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput | ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput[]
-    createMany?: ApplicationWorkflowCreateManyApplicationInputEnvelope
-    set?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    disconnect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    delete?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    update?: ApplicationWorkflowUpdateWithWhereUniqueWithoutApplicationInput | ApplicationWorkflowUpdateWithWhereUniqueWithoutApplicationInput[]
-    updateMany?: ApplicationWorkflowUpdateManyWithWhereWithoutApplicationInput | ApplicationWorkflowUpdateManyWithWhereWithoutApplicationInput[]
-    deleteMany?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
-  }
-
-  export type ApplicationValidationUpdateOneWithoutApplicationNestedInput = {
-    create?: XOR<ApplicationValidationCreateWithoutApplicationInput, ApplicationValidationUncheckedCreateWithoutApplicationInput>
-    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutApplicationInput
-    upsert?: ApplicationValidationUpsertWithoutApplicationInput
-    disconnect?: ApplicationValidationWhereInput | boolean
-    delete?: ApplicationValidationWhereInput | boolean
-    connect?: ApplicationValidationWhereUniqueInput
-    update?: XOR<XOR<ApplicationValidationUpdateToOneWithWhereWithoutApplicationInput, ApplicationValidationUpdateWithoutApplicationInput>, ApplicationValidationUncheckedUpdateWithoutApplicationInput>
-  }
-
-  export type OfficerAssignmentUpdateManyWithoutApplicationNestedInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput> | OfficerAssignmentCreateWithoutApplicationInput[] | OfficerAssignmentUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutApplicationInput | OfficerAssignmentCreateOrConnectWithoutApplicationInput[]
-    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutApplicationInput | OfficerAssignmentUpsertWithWhereUniqueWithoutApplicationInput[]
-    createMany?: OfficerAssignmentCreateManyApplicationInputEnvelope
-    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutApplicationInput | OfficerAssignmentUpdateWithWhereUniqueWithoutApplicationInput[]
-    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutApplicationInput | OfficerAssignmentUpdateManyWithWhereWithoutApplicationInput[]
-    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
-  }
-
-  export type DocumentUpdateManyWithoutApplicationNestedInput = {
-    create?: XOR<DocumentCreateWithoutApplicationInput, DocumentUncheckedCreateWithoutApplicationInput> | DocumentCreateWithoutApplicationInput[] | DocumentUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutApplicationInput | DocumentCreateOrConnectWithoutApplicationInput[]
-    upsert?: DocumentUpsertWithWhereUniqueWithoutApplicationInput | DocumentUpsertWithWhereUniqueWithoutApplicationInput[]
-    createMany?: DocumentCreateManyApplicationInputEnvelope
-    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    update?: DocumentUpdateWithWhereUniqueWithoutApplicationInput | DocumentUpdateWithWhereUniqueWithoutApplicationInput[]
-    updateMany?: DocumentUpdateManyWithWhereWithoutApplicationInput | DocumentUpdateManyWithWhereWithoutApplicationInput[]
-    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
-  }
-
-  export type DocumentRequestUpdateManyWithoutApplicationNestedInput = {
-    create?: XOR<DocumentRequestCreateWithoutApplicationInput, DocumentRequestUncheckedCreateWithoutApplicationInput> | DocumentRequestCreateWithoutApplicationInput[] | DocumentRequestUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: DocumentRequestCreateOrConnectWithoutApplicationInput | DocumentRequestCreateOrConnectWithoutApplicationInput[]
-    upsert?: DocumentRequestUpsertWithWhereUniqueWithoutApplicationInput | DocumentRequestUpsertWithWhereUniqueWithoutApplicationInput[]
-    createMany?: DocumentRequestCreateManyApplicationInputEnvelope
-    set?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
-    disconnect?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
-    delete?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
-    connect?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
-    update?: DocumentRequestUpdateWithWhereUniqueWithoutApplicationInput | DocumentRequestUpdateWithWhereUniqueWithoutApplicationInput[]
-    updateMany?: DocumentRequestUpdateManyWithWhereWithoutApplicationInput | DocumentRequestUpdateManyWithWhereWithoutApplicationInput[]
-    deleteMany?: DocumentRequestScalarWhereInput | DocumentRequestScalarWhereInput[]
-  }
-
-  export type NotificationUpdateManyWithoutApplicationNestedInput = {
-    create?: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput> | NotificationCreateWithoutApplicationInput[] | NotificationUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutApplicationInput | NotificationCreateOrConnectWithoutApplicationInput[]
-    upsert?: NotificationUpsertWithWhereUniqueWithoutApplicationInput | NotificationUpsertWithWhereUniqueWithoutApplicationInput[]
-    createMany?: NotificationCreateManyApplicationInputEnvelope
-    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    update?: NotificationUpdateWithWhereUniqueWithoutApplicationInput | NotificationUpdateWithWhereUniqueWithoutApplicationInput[]
-    updateMany?: NotificationUpdateManyWithWhereWithoutApplicationInput | NotificationUpdateManyWithWhereWithoutApplicationInput[]
-    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  export type EnumApplicationSourceFieldUpdateOperationsInput = {
+    set?: $Enums.ApplicationSource
   }
 
   export type ApplicationAuditLogUpdateManyWithoutApplicationNestedInput = {
@@ -33982,6 +33880,96 @@ export namespace Prisma {
     deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
   }
 
+  export type ApplicationValidationUpdateOneWithoutApplicationNestedInput = {
+    create?: XOR<ApplicationValidationCreateWithoutApplicationInput, ApplicationValidationUncheckedCreateWithoutApplicationInput>
+    connectOrCreate?: ApplicationValidationCreateOrConnectWithoutApplicationInput
+    upsert?: ApplicationValidationUpsertWithoutApplicationInput
+    disconnect?: ApplicationValidationWhereInput | boolean
+    delete?: ApplicationValidationWhereInput | boolean
+    connect?: ApplicationValidationWhereUniqueInput
+    update?: XOR<XOR<ApplicationValidationUpdateToOneWithWhereWithoutApplicationInput, ApplicationValidationUpdateWithoutApplicationInput>, ApplicationValidationUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type ApplicationWorkflowUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<ApplicationWorkflowCreateWithoutApplicationInput, ApplicationWorkflowUncheckedCreateWithoutApplicationInput> | ApplicationWorkflowCreateWithoutApplicationInput[] | ApplicationWorkflowUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutApplicationInput | ApplicationWorkflowCreateOrConnectWithoutApplicationInput[]
+    upsert?: ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput | ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: ApplicationWorkflowCreateManyApplicationInputEnvelope
+    set?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    disconnect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    delete?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    update?: ApplicationWorkflowUpdateWithWhereUniqueWithoutApplicationInput | ApplicationWorkflowUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: ApplicationWorkflowUpdateManyWithWhereWithoutApplicationInput | ApplicationWorkflowUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
+  }
+
+  export type UserUpdateOneWithoutCurrentHolderFilesNestedInput = {
+    create?: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCurrentHolderFilesInput
+    upsert?: UserUpsertWithoutCurrentHolderFilesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCurrentHolderFilesInput, UserUpdateWithoutCurrentHolderFilesInput>, UserUncheckedUpdateWithoutCurrentHolderFilesInput>
+  }
+
+  export type DepartmentUpdateOneWithoutApplicationsNestedInput = {
+    create?: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutApplicationsInput
+    upsert?: DepartmentUpsertWithoutApplicationsInput
+    disconnect?: DepartmentWhereInput | boolean
+    delete?: DepartmentWhereInput | boolean
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutApplicationsInput, DepartmentUpdateWithoutApplicationsInput>, DepartmentUncheckedUpdateWithoutApplicationsInput>
+  }
+
+  export type UserUpdateOneWithoutDispatchedApplicationsNestedInput = {
+    create?: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDispatchedApplicationsInput
+    upsert?: UserUpsertWithoutDispatchedApplicationsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDispatchedApplicationsInput, UserUpdateWithoutDispatchedApplicationsInput>, UserUncheckedUpdateWithoutDispatchedApplicationsInput>
+  }
+
+  export type ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput = {
+    create?: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
+    connectOrCreate?: ServiceCategoryCreateOrConnectWithoutApplicationsInput
+    upsert?: ServiceCategoryUpsertWithoutApplicationsInput
+    connect?: ServiceCategoryWhereUniqueInput
+    update?: XOR<XOR<ServiceCategoryUpdateToOneWithWhereWithoutApplicationsInput, ServiceCategoryUpdateWithoutApplicationsInput>, ServiceCategoryUncheckedUpdateWithoutApplicationsInput>
+  }
+
+  export type DocumentRequestUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<DocumentRequestCreateWithoutApplicationInput, DocumentRequestUncheckedCreateWithoutApplicationInput> | DocumentRequestCreateWithoutApplicationInput[] | DocumentRequestUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: DocumentRequestCreateOrConnectWithoutApplicationInput | DocumentRequestCreateOrConnectWithoutApplicationInput[]
+    upsert?: DocumentRequestUpsertWithWhereUniqueWithoutApplicationInput | DocumentRequestUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: DocumentRequestCreateManyApplicationInputEnvelope
+    set?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
+    disconnect?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
+    delete?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
+    connect?: DocumentRequestWhereUniqueInput | DocumentRequestWhereUniqueInput[]
+    update?: DocumentRequestUpdateWithWhereUniqueWithoutApplicationInput | DocumentRequestUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: DocumentRequestUpdateManyWithWhereWithoutApplicationInput | DocumentRequestUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: DocumentRequestScalarWhereInput | DocumentRequestScalarWhereInput[]
+  }
+
+  export type DocumentUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<DocumentCreateWithoutApplicationInput, DocumentUncheckedCreateWithoutApplicationInput> | DocumentCreateWithoutApplicationInput[] | DocumentUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutApplicationInput | DocumentCreateOrConnectWithoutApplicationInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutApplicationInput | DocumentUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: DocumentCreateManyApplicationInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutApplicationInput | DocumentUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutApplicationInput | DocumentUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+  }
+
   export type FrontdeskForwardingUpdateManyWithoutApplicationNestedInput = {
     create?: XOR<FrontdeskForwardingCreateWithoutApplicationInput, FrontdeskForwardingUncheckedCreateWithoutApplicationInput> | FrontdeskForwardingCreateWithoutApplicationInput[] | FrontdeskForwardingUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: FrontdeskForwardingCreateOrConnectWithoutApplicationInput | FrontdeskForwardingCreateOrConnectWithoutApplicationInput[]
@@ -33994,6 +33982,34 @@ export namespace Prisma {
     update?: FrontdeskForwardingUpdateWithWhereUniqueWithoutApplicationInput | FrontdeskForwardingUpdateWithWhereUniqueWithoutApplicationInput[]
     updateMany?: FrontdeskForwardingUpdateManyWithWhereWithoutApplicationInput | FrontdeskForwardingUpdateManyWithWhereWithoutApplicationInput[]
     deleteMany?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
+  }
+
+  export type NotificationUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput> | NotificationCreateWithoutApplicationInput[] | NotificationUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutApplicationInput | NotificationCreateOrConnectWithoutApplicationInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutApplicationInput | NotificationUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: NotificationCreateManyApplicationInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutApplicationInput | NotificationUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutApplicationInput | NotificationUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type OfficerAssignmentUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput> | OfficerAssignmentCreateWithoutApplicationInput[] | OfficerAssignmentUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutApplicationInput | OfficerAssignmentCreateOrConnectWithoutApplicationInput[]
+    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutApplicationInput | OfficerAssignmentUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: OfficerAssignmentCreateManyApplicationInputEnvelope
+    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutApplicationInput | OfficerAssignmentUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutApplicationInput | OfficerAssignmentUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
   }
 
   export type OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput = {
@@ -34010,18 +34026,18 @@ export namespace Prisma {
     deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
   }
 
-  export type ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput = {
-    create?: XOR<ApplicationWorkflowCreateWithoutApplicationInput, ApplicationWorkflowUncheckedCreateWithoutApplicationInput> | ApplicationWorkflowCreateWithoutApplicationInput[] | ApplicationWorkflowUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutApplicationInput | ApplicationWorkflowCreateOrConnectWithoutApplicationInput[]
-    upsert?: ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput | ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput[]
-    createMany?: ApplicationWorkflowCreateManyApplicationInputEnvelope
-    set?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    disconnect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    delete?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
-    update?: ApplicationWorkflowUpdateWithWhereUniqueWithoutApplicationInput | ApplicationWorkflowUpdateWithWhereUniqueWithoutApplicationInput[]
-    updateMany?: ApplicationWorkflowUpdateManyWithWhereWithoutApplicationInput | ApplicationWorkflowUpdateManyWithWhereWithoutApplicationInput[]
-    deleteMany?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
+  export type ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<ApplicationAuditLogCreateWithoutApplicationInput, ApplicationAuditLogUncheckedCreateWithoutApplicationInput> | ApplicationAuditLogCreateWithoutApplicationInput[] | ApplicationAuditLogUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutApplicationInput | ApplicationAuditLogCreateOrConnectWithoutApplicationInput[]
+    upsert?: ApplicationAuditLogUpsertWithWhereUniqueWithoutApplicationInput | ApplicationAuditLogUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: ApplicationAuditLogCreateManyApplicationInputEnvelope
+    set?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    disconnect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    delete?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
+    update?: ApplicationAuditLogUpdateWithWhereUniqueWithoutApplicationInput | ApplicationAuditLogUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: ApplicationAuditLogUpdateManyWithWhereWithoutApplicationInput | ApplicationAuditLogUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
   }
 
   export type ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput = {
@@ -34034,32 +34050,18 @@ export namespace Prisma {
     update?: XOR<XOR<ApplicationValidationUpdateToOneWithWhereWithoutApplicationInput, ApplicationValidationUpdateWithoutApplicationInput>, ApplicationValidationUncheckedUpdateWithoutApplicationInput>
   }
 
-  export type OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput = {
-    create?: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput> | OfficerAssignmentCreateWithoutApplicationInput[] | OfficerAssignmentUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutApplicationInput | OfficerAssignmentCreateOrConnectWithoutApplicationInput[]
-    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutApplicationInput | OfficerAssignmentUpsertWithWhereUniqueWithoutApplicationInput[]
-    createMany?: OfficerAssignmentCreateManyApplicationInputEnvelope
-    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
-    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutApplicationInput | OfficerAssignmentUpdateWithWhereUniqueWithoutApplicationInput[]
-    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutApplicationInput | OfficerAssignmentUpdateManyWithWhereWithoutApplicationInput[]
-    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
-  }
-
-  export type DocumentUncheckedUpdateManyWithoutApplicationNestedInput = {
-    create?: XOR<DocumentCreateWithoutApplicationInput, DocumentUncheckedCreateWithoutApplicationInput> | DocumentCreateWithoutApplicationInput[] | DocumentUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: DocumentCreateOrConnectWithoutApplicationInput | DocumentCreateOrConnectWithoutApplicationInput[]
-    upsert?: DocumentUpsertWithWhereUniqueWithoutApplicationInput | DocumentUpsertWithWhereUniqueWithoutApplicationInput[]
-    createMany?: DocumentCreateManyApplicationInputEnvelope
-    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
-    update?: DocumentUpdateWithWhereUniqueWithoutApplicationInput | DocumentUpdateWithWhereUniqueWithoutApplicationInput[]
-    updateMany?: DocumentUpdateManyWithWhereWithoutApplicationInput | DocumentUpdateManyWithWhereWithoutApplicationInput[]
-    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+  export type ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<ApplicationWorkflowCreateWithoutApplicationInput, ApplicationWorkflowUncheckedCreateWithoutApplicationInput> | ApplicationWorkflowCreateWithoutApplicationInput[] | ApplicationWorkflowUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: ApplicationWorkflowCreateOrConnectWithoutApplicationInput | ApplicationWorkflowCreateOrConnectWithoutApplicationInput[]
+    upsert?: ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput | ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: ApplicationWorkflowCreateManyApplicationInputEnvelope
+    set?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    disconnect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    delete?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    connect?: ApplicationWorkflowWhereUniqueInput | ApplicationWorkflowWhereUniqueInput[]
+    update?: ApplicationWorkflowUpdateWithWhereUniqueWithoutApplicationInput | ApplicationWorkflowUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: ApplicationWorkflowUpdateManyWithWhereWithoutApplicationInput | ApplicationWorkflowUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
   }
 
   export type DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput = {
@@ -34076,32 +34078,18 @@ export namespace Prisma {
     deleteMany?: DocumentRequestScalarWhereInput | DocumentRequestScalarWhereInput[]
   }
 
-  export type NotificationUncheckedUpdateManyWithoutApplicationNestedInput = {
-    create?: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput> | NotificationCreateWithoutApplicationInput[] | NotificationUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: NotificationCreateOrConnectWithoutApplicationInput | NotificationCreateOrConnectWithoutApplicationInput[]
-    upsert?: NotificationUpsertWithWhereUniqueWithoutApplicationInput | NotificationUpsertWithWhereUniqueWithoutApplicationInput[]
-    createMany?: NotificationCreateManyApplicationInputEnvelope
-    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
-    update?: NotificationUpdateWithWhereUniqueWithoutApplicationInput | NotificationUpdateWithWhereUniqueWithoutApplicationInput[]
-    updateMany?: NotificationUpdateManyWithWhereWithoutApplicationInput | NotificationUpdateManyWithWhereWithoutApplicationInput[]
-    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
-  }
-
-  export type ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput = {
-    create?: XOR<ApplicationAuditLogCreateWithoutApplicationInput, ApplicationAuditLogUncheckedCreateWithoutApplicationInput> | ApplicationAuditLogCreateWithoutApplicationInput[] | ApplicationAuditLogUncheckedCreateWithoutApplicationInput[]
-    connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutApplicationInput | ApplicationAuditLogCreateOrConnectWithoutApplicationInput[]
-    upsert?: ApplicationAuditLogUpsertWithWhereUniqueWithoutApplicationInput | ApplicationAuditLogUpsertWithWhereUniqueWithoutApplicationInput[]
-    createMany?: ApplicationAuditLogCreateManyApplicationInputEnvelope
-    set?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    disconnect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    delete?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    connect?: ApplicationAuditLogWhereUniqueInput | ApplicationAuditLogWhereUniqueInput[]
-    update?: ApplicationAuditLogUpdateWithWhereUniqueWithoutApplicationInput | ApplicationAuditLogUpdateWithWhereUniqueWithoutApplicationInput[]
-    updateMany?: ApplicationAuditLogUpdateManyWithWhereWithoutApplicationInput | ApplicationAuditLogUpdateManyWithWhereWithoutApplicationInput[]
-    deleteMany?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
+  export type DocumentUncheckedUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<DocumentCreateWithoutApplicationInput, DocumentUncheckedCreateWithoutApplicationInput> | DocumentCreateWithoutApplicationInput[] | DocumentUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutApplicationInput | DocumentCreateOrConnectWithoutApplicationInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutApplicationInput | DocumentUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: DocumentCreateManyApplicationInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutApplicationInput | DocumentUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutApplicationInput | DocumentUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
   export type FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput = {
@@ -34116,6 +34104,34 @@ export namespace Prisma {
     update?: FrontdeskForwardingUpdateWithWhereUniqueWithoutApplicationInput | FrontdeskForwardingUpdateWithWhereUniqueWithoutApplicationInput[]
     updateMany?: FrontdeskForwardingUpdateManyWithWhereWithoutApplicationInput | FrontdeskForwardingUpdateManyWithWhereWithoutApplicationInput[]
     deleteMany?: FrontdeskForwardingScalarWhereInput | FrontdeskForwardingScalarWhereInput[]
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput> | NotificationCreateWithoutApplicationInput[] | NotificationUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutApplicationInput | NotificationCreateOrConnectWithoutApplicationInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutApplicationInput | NotificationUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: NotificationCreateManyApplicationInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutApplicationInput | NotificationUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutApplicationInput | NotificationUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput> | OfficerAssignmentCreateWithoutApplicationInput[] | OfficerAssignmentUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: OfficerAssignmentCreateOrConnectWithoutApplicationInput | OfficerAssignmentCreateOrConnectWithoutApplicationInput[]
+    upsert?: OfficerAssignmentUpsertWithWhereUniqueWithoutApplicationInput | OfficerAssignmentUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: OfficerAssignmentCreateManyApplicationInputEnvelope
+    set?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    disconnect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    delete?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    connect?: OfficerAssignmentWhereUniqueInput | OfficerAssignmentWhereUniqueInput[]
+    update?: OfficerAssignmentUpdateWithWhereUniqueWithoutApplicationInput | OfficerAssignmentUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: OfficerAssignmentUpdateManyWithWhereWithoutApplicationInput | OfficerAssignmentUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
   }
 
   export type OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput = {
@@ -34208,6 +34224,14 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutAssignmentsReceivedInput, UserUncheckedCreateWithoutAssignmentsReceivedInput>
     connectOrCreate?: UserCreateOrConnectWithoutAssignmentsReceivedInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type ApplicationUpdateOneRequiredWithoutOfficerAssignmentsNestedInput = {
@@ -34310,28 +34334,20 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDocumentRequestsInput, UserUpdateWithoutDocumentRequestsInput>, UserUncheckedUpdateWithoutDocumentRequestsInput>
   }
 
-  export type UserCreateNestedOneWithoutNotificationsInput = {
-    create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type ApplicationCreateNestedOneWithoutNotificationsInput = {
     create?: XOR<ApplicationCreateWithoutNotificationsInput, ApplicationUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: ApplicationCreateOrConnectWithoutNotificationsInput
     connect?: ApplicationWhereUniqueInput
   }
 
-  export type EnumNotificationTypeFieldUpdateOperationsInput = {
-    set?: $Enums.NotificationType
-  }
-
-  export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+  export type UserCreateNestedOneWithoutNotificationsInput = {
     create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
-    upsert?: UserUpsertWithoutNotificationsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type EnumNotificationTypeFieldUpdateOperationsInput = {
+    set?: $Enums.NotificationType
   }
 
   export type ApplicationUpdateOneWithoutNotificationsNestedInput = {
@@ -34342,6 +34358,14 @@ export namespace Prisma {
     delete?: ApplicationWhereInput | boolean
     connect?: ApplicationWhereUniqueInput
     update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutNotificationsInput, ApplicationUpdateWithoutNotificationsInput>, ApplicationUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+    create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
+    upsert?: UserUpsertWithoutNotificationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
   }
 
   export type ApplicationCreateNestedOneWithoutAuditLogsInput = {
@@ -34491,17 +34515,6 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -34527,6 +34540,17 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -34584,33 +34608,6 @@ export namespace Prisma {
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -34647,6 +34644,84 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumApplicationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApplicationStatusFilter<$PrismaModel> | $Enums.ApplicationStatus
+  }
+
+  export type NestedEnumApplicationSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationSource | EnumApplicationSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.ApplicationSource[] | ListEnumApplicationSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApplicationSource[] | ListEnumApplicationSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumApplicationSourceFilter<$PrismaModel> | $Enums.ApplicationSource
+  }
+
+  export type NestedEnumApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumApplicationStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApplicationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApplicationStatusFilter<$PrismaModel>
+    _max?: NestedEnumApplicationStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumApplicationSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationSource | EnumApplicationSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.ApplicationSource[] | ListEnumApplicationSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ApplicationSource[] | ListEnumApplicationSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumApplicationSourceWithAggregatesFilter<$PrismaModel> | $Enums.ApplicationSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumApplicationSourceFilter<$PrismaModel>
+    _max?: NestedEnumApplicationSourceFilter<$PrismaModel>
+  }
+
+  export type NestedEnumApplicationStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumApplicationStatusNullableFilter<$PrismaModel> | $Enums.ApplicationStatus | null
+  }
+
+  export type NestedEnumApplicationStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumApplicationStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.ApplicationStatus | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumApplicationStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumApplicationStatusNullableFilter<$PrismaModel>
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -34672,40 +34747,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type NestedEnumApplicationStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumApplicationStatusFilter<$PrismaModel> | $Enums.ApplicationStatus
-  }
-
-  export type NestedEnumApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumApplicationStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApplicationStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumApplicationStatusFilter<$PrismaModel>
-    _max?: NestedEnumApplicationStatusFilter<$PrismaModel>
-  }
-
-  export type NestedEnumApplicationStatusNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel> | null
-    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumApplicationStatusNullableFilter<$PrismaModel> | $Enums.ApplicationStatus | null
-  }
-
-  export type NestedEnumApplicationStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ApplicationStatus | EnumApplicationStatusFieldRefInput<$PrismaModel> | null
-    in?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.ApplicationStatus[] | ListEnumApplicationStatusFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumApplicationStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.ApplicationStatus | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumApplicationStatusNullableFilter<$PrismaModel>
-    _max?: NestedEnumApplicationStatusNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumDocumentTypeFilter<$PrismaModel = never> = {
@@ -34765,235 +34806,33 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type CitizenProfileCreateWithoutUserInput = {
+  export type ApplicationAuditLogCreateWithoutPerformedByInput = {
     id?: string
-    fullName: string
-    phone: string
-    address: string
-    aadhaarNumber?: string | null
+    action: string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutAuditLogsInput
   }
 
-  export type CitizenProfileUncheckedCreateWithoutUserInput = {
-    id?: string
-    fullName: string
-    phone: string
-    address: string
-    aadhaarNumber?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CitizenProfileCreateOrConnectWithoutUserInput = {
-    where: CitizenProfileWhereUniqueInput
-    create: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
-  }
-
-  export type OfficerProfileCreateWithoutUserInput = {
-    id?: string
-    fullName: string
-    designation: string
-    department: string
-    officeLocation?: string | null
-    isAvailable?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    section?: SectionCreateNestedOneWithoutOfficersInput
-    frontdeskUsers?: FrontdeskOfficerCreateNestedManyWithoutOfficerInput
-  }
-
-  export type OfficerProfileUncheckedCreateWithoutUserInput = {
-    id?: string
-    fullName: string
-    designation: string
-    department: string
-    officeLocation?: string | null
-    sectionId?: string | null
-    isAvailable?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    frontdeskUsers?: FrontdeskOfficerUncheckedCreateNestedManyWithoutOfficerInput
-  }
-
-  export type OfficerProfileCreateOrConnectWithoutUserInput = {
-    where: OfficerProfileWhereUniqueInput
-    create: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
-  }
-
-  export type ApplicationCreateWithoutCurrentHolderInput = {
-    id?: string
-    rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
-    status?: $Enums.ApplicationStatus
-    submittedAt?: Date | string | null
-    validatedAt?: Date | string | null
-    completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
-    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
-    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
-  }
-
-  export type ApplicationUncheckedCreateWithoutCurrentHolderInput = {
-    id?: string
-    rrNumber?: string | null
-    serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
-    status?: $Enums.ApplicationStatus
-    submittedAt?: Date | string | null
-    validatedAt?: Date | string | null
-    completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
-    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
-    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
-  }
-
-  export type ApplicationCreateOrConnectWithoutCurrentHolderInput = {
-    where: ApplicationWhereUniqueInput
-    create: XOR<ApplicationCreateWithoutCurrentHolderInput, ApplicationUncheckedCreateWithoutCurrentHolderInput>
-  }
-
-  export type ApplicationCreateManyCurrentHolderInputEnvelope = {
-    data: ApplicationCreateManyCurrentHolderInput | ApplicationCreateManyCurrentHolderInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ApplicationCreateWithoutDispatchedByInput = {
-    id?: string
-    rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
-    status?: $Enums.ApplicationStatus
-    submittedAt?: Date | string | null
-    validatedAt?: Date | string | null
-    completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
-    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
-    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
-  }
-
-  export type ApplicationUncheckedCreateWithoutDispatchedByInput = {
-    id?: string
-    rrNumber?: string | null
-    serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
-    status?: $Enums.ApplicationStatus
-    currentHolderId?: string | null
-    submittedAt?: Date | string | null
-    validatedAt?: Date | string | null
-    completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
-    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
-    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
-  }
-
-  export type ApplicationCreateOrConnectWithoutDispatchedByInput = {
-    where: ApplicationWhereUniqueInput
-    create: XOR<ApplicationCreateWithoutDispatchedByInput, ApplicationUncheckedCreateWithoutDispatchedByInput>
-  }
-
-  export type ApplicationCreateManyDispatchedByInputEnvelope = {
-    data: ApplicationCreateManyDispatchedByInput | ApplicationCreateManyDispatchedByInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ApplicationWorkflowCreateWithoutChangedByInput = {
-    id?: string
-    fromStatus?: $Enums.ApplicationStatus | null
-    toStatus: $Enums.ApplicationStatus
-    comments?: string | null
-    createdAt?: Date | string
-    application: ApplicationCreateNestedOneWithoutWorkflowInput
-  }
-
-  export type ApplicationWorkflowUncheckedCreateWithoutChangedByInput = {
+  export type ApplicationAuditLogUncheckedCreateWithoutPerformedByInput = {
     id?: string
     applicationId: string
-    fromStatus?: $Enums.ApplicationStatus | null
-    toStatus: $Enums.ApplicationStatus
-    comments?: string | null
+    action: string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
     createdAt?: Date | string
   }
 
-  export type ApplicationWorkflowCreateOrConnectWithoutChangedByInput = {
-    where: ApplicationWorkflowWhereUniqueInput
-    create: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput>
+  export type ApplicationAuditLogCreateOrConnectWithoutPerformedByInput = {
+    where: ApplicationAuditLogWhereUniqueInput
+    create: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput>
   }
 
-  export type ApplicationWorkflowCreateManyChangedByInputEnvelope = {
-    data: ApplicationWorkflowCreateManyChangedByInput | ApplicationWorkflowCreateManyChangedByInput[]
+  export type ApplicationAuditLogCreateManyPerformedByInputEnvelope = {
+    data: ApplicationAuditLogCreateManyPerformedByInput | ApplicationAuditLogCreateManyPerformedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -35027,41 +34866,240 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type DocumentCreateWithoutVerifiedByInput = {
+  export type ApplicationWorkflowCreateWithoutChangedByInput = {
     id?: string
-    documentType: $Enums.DocumentType
-    fileName: string
-    filePath: string
-    fileSize: number
-    isVerified?: boolean
-    verificationNotes?: string | null
+    fromStatus?: $Enums.ApplicationStatus | null
+    toStatus: $Enums.ApplicationStatus
+    comments?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
-    application: ApplicationCreateNestedOneWithoutDocumentsInput
-    uploadedBy: UserCreateNestedOneWithoutUploadedDocumentsInput
+    application: ApplicationCreateNestedOneWithoutWorkflowInput
   }
 
-  export type DocumentUncheckedCreateWithoutVerifiedByInput = {
+  export type ApplicationWorkflowUncheckedCreateWithoutChangedByInput = {
+    id?: string
+    applicationId: string
+    fromStatus?: $Enums.ApplicationStatus | null
+    toStatus: $Enums.ApplicationStatus
+    comments?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ApplicationWorkflowCreateOrConnectWithoutChangedByInput = {
+    where: ApplicationWorkflowWhereUniqueInput
+    create: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput>
+  }
+
+  export type ApplicationWorkflowCreateManyChangedByInputEnvelope = {
+    data: ApplicationWorkflowCreateManyChangedByInput | ApplicationWorkflowCreateManyChangedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ApplicationCreateWithoutCurrentHolderInput = {
+    id?: string
+    rrNumber?: string | null
+    status?: $Enums.ApplicationStatus
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutCurrentHolderInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    status?: $Enums.ApplicationStatus
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutCurrentHolderInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutCurrentHolderInput, ApplicationUncheckedCreateWithoutCurrentHolderInput>
+  }
+
+  export type ApplicationCreateManyCurrentHolderInputEnvelope = {
+    data: ApplicationCreateManyCurrentHolderInput | ApplicationCreateManyCurrentHolderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ApplicationCreateWithoutDispatchedByInput = {
+    id?: string
+    rrNumber?: string | null
+    status?: $Enums.ApplicationStatus
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutDispatchedByInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    status?: $Enums.ApplicationStatus
+    currentHolderId?: string | null
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutDispatchedByInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutDispatchedByInput, ApplicationUncheckedCreateWithoutDispatchedByInput>
+  }
+
+  export type ApplicationCreateManyDispatchedByInputEnvelope = {
+    data: ApplicationCreateManyDispatchedByInput | ApplicationCreateManyDispatchedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CitizenProfileCreateWithoutUserInput = {
+    id?: string
+    fullName: string
+    phone: string
+    address: string
+    aadhaarNumber?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CitizenProfileUncheckedCreateWithoutUserInput = {
+    id?: string
+    fullName: string
+    phone: string
+    address: string
+    aadhaarNumber?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CitizenProfileCreateOrConnectWithoutUserInput = {
+    where: CitizenProfileWhereUniqueInput
+    create: XOR<CitizenProfileCreateWithoutUserInput, CitizenProfileUncheckedCreateWithoutUserInput>
+  }
+
+  export type DocumentRequestCreateWithoutRequestedByInput = {
+    id?: string
+    documentType: $Enums.DocumentType
+    reason?: string | null
+    dueDate?: Date | string | null
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutDocumentRequestsInput
+  }
+
+  export type DocumentRequestUncheckedCreateWithoutRequestedByInput = {
     id?: string
     applicationId: string
     documentType: $Enums.DocumentType
-    fileName: string
-    filePath: string
-    fileSize: number
-    uploadedById: string
-    isVerified?: boolean
-    verificationNotes?: string | null
+    reason?: string | null
+    dueDate?: Date | string | null
+    isCompleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type DocumentCreateOrConnectWithoutVerifiedByInput = {
-    where: DocumentWhereUniqueInput
-    create: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput>
+  export type DocumentRequestCreateOrConnectWithoutRequestedByInput = {
+    where: DocumentRequestWhereUniqueInput
+    create: XOR<DocumentRequestCreateWithoutRequestedByInput, DocumentRequestUncheckedCreateWithoutRequestedByInput>
   }
 
-  export type DocumentCreateManyVerifiedByInputEnvelope = {
-    data: DocumentCreateManyVerifiedByInput | DocumentCreateManyVerifiedByInput[]
+  export type DocumentRequestCreateManyRequestedByInputEnvelope = {
+    data: DocumentRequestCreateManyRequestedByInput | DocumentRequestCreateManyRequestedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -35103,179 +35141,41 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type OfficerAssignmentCreateWithoutAssignedByInput = {
-    id?: string
-    expectedCompletionDate?: Date | string | null
-    priority?: number
-    instructions?: string | null
-    createdAt?: Date | string
-    application: ApplicationCreateNestedOneWithoutOfficerAssignmentsInput
-    assignedTo: UserCreateNestedOneWithoutAssignmentsReceivedInput
-  }
-
-  export type OfficerAssignmentUncheckedCreateWithoutAssignedByInput = {
-    id?: string
-    applicationId: string
-    assignedToId: string
-    expectedCompletionDate?: Date | string | null
-    priority?: number
-    instructions?: string | null
-    createdAt?: Date | string
-  }
-
-  export type OfficerAssignmentCreateOrConnectWithoutAssignedByInput = {
-    where: OfficerAssignmentWhereUniqueInput
-    create: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput>
-  }
-
-  export type OfficerAssignmentCreateManyAssignedByInputEnvelope = {
-    data: OfficerAssignmentCreateManyAssignedByInput | OfficerAssignmentCreateManyAssignedByInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type OfficerAssignmentCreateWithoutAssignedToInput = {
-    id?: string
-    expectedCompletionDate?: Date | string | null
-    priority?: number
-    instructions?: string | null
-    createdAt?: Date | string
-    application: ApplicationCreateNestedOneWithoutOfficerAssignmentsInput
-    assignedBy: UserCreateNestedOneWithoutAssignmentsGivenInput
-  }
-
-  export type OfficerAssignmentUncheckedCreateWithoutAssignedToInput = {
-    id?: string
-    applicationId: string
-    assignedById: string
-    expectedCompletionDate?: Date | string | null
-    priority?: number
-    instructions?: string | null
-    createdAt?: Date | string
-  }
-
-  export type OfficerAssignmentCreateOrConnectWithoutAssignedToInput = {
-    where: OfficerAssignmentWhereUniqueInput
-    create: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput>
-  }
-
-  export type OfficerAssignmentCreateManyAssignedToInputEnvelope = {
-    data: OfficerAssignmentCreateManyAssignedToInput | OfficerAssignmentCreateManyAssignedToInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type DocumentRequestCreateWithoutRequestedByInput = {
+  export type DocumentCreateWithoutVerifiedByInput = {
     id?: string
     documentType: $Enums.DocumentType
-    reason?: string | null
-    dueDate?: Date | string | null
-    isCompleted?: boolean
+    fileName: string
+    filePath: string
+    fileSize: number
+    isVerified?: boolean
+    verificationNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    application: ApplicationCreateNestedOneWithoutDocumentRequestsInput
+    application: ApplicationCreateNestedOneWithoutDocumentsInput
+    uploadedBy: UserCreateNestedOneWithoutUploadedDocumentsInput
   }
 
-  export type DocumentRequestUncheckedCreateWithoutRequestedByInput = {
+  export type DocumentUncheckedCreateWithoutVerifiedByInput = {
     id?: string
     applicationId: string
     documentType: $Enums.DocumentType
-    reason?: string | null
-    dueDate?: Date | string | null
-    isCompleted?: boolean
+    fileName: string
+    filePath: string
+    fileSize: number
+    uploadedById: string
+    isVerified?: boolean
+    verificationNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type DocumentRequestCreateOrConnectWithoutRequestedByInput = {
-    where: DocumentRequestWhereUniqueInput
-    create: XOR<DocumentRequestCreateWithoutRequestedByInput, DocumentRequestUncheckedCreateWithoutRequestedByInput>
+  export type DocumentCreateOrConnectWithoutVerifiedByInput = {
+    where: DocumentWhereUniqueInput
+    create: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput>
   }
 
-  export type DocumentRequestCreateManyRequestedByInputEnvelope = {
-    data: DocumentRequestCreateManyRequestedByInput | DocumentRequestCreateManyRequestedByInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type NotificationCreateWithoutUserInput = {
-    id?: string
-    notificationType: $Enums.NotificationType
-    title: string
-    message: string
-    isRead?: boolean
-    readAt?: Date | string | null
-    createdAt?: Date | string
-    application?: ApplicationCreateNestedOneWithoutNotificationsInput
-  }
-
-  export type NotificationUncheckedCreateWithoutUserInput = {
-    id?: string
-    notificationType: $Enums.NotificationType
-    applicationId?: string | null
-    title: string
-    message: string
-    isRead?: boolean
-    readAt?: Date | string | null
-    createdAt?: Date | string
-  }
-
-  export type NotificationCreateOrConnectWithoutUserInput = {
-    where: NotificationWhereUniqueInput
-    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
-  }
-
-  export type NotificationCreateManyUserInputEnvelope = {
-    data: NotificationCreateManyUserInput | NotificationCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ApplicationAuditLogCreateWithoutPerformedByInput = {
-    id?: string
-    action: string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: string | null
-    createdAt?: Date | string
-    application: ApplicationCreateNestedOneWithoutAuditLogsInput
-  }
-
-  export type ApplicationAuditLogUncheckedCreateWithoutPerformedByInput = {
-    id?: string
-    applicationId: string
-    action: string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: string | null
-    createdAt?: Date | string
-  }
-
-  export type ApplicationAuditLogCreateOrConnectWithoutPerformedByInput = {
-    where: ApplicationAuditLogWhereUniqueInput
-    create: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput>
-  }
-
-  export type ApplicationAuditLogCreateManyPerformedByInputEnvelope = {
-    data: ApplicationAuditLogCreateManyPerformedByInput | ApplicationAuditLogCreateManyPerformedByInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type FrontdeskOfficerCreateWithoutFrontdeskUserInput = {
-    id?: string
-    createdAt?: Date | string
-    officer?: OfficerProfileCreateNestedOneWithoutFrontdeskUsersInput
-  }
-
-  export type FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput = {
-    id?: string
-    officerId?: string | null
-    createdAt?: Date | string
-  }
-
-  export type FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput = {
-    where: FrontdeskOfficerWhereUniqueInput
-    create: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput>
-  }
-
-  export type FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope = {
-    data: FrontdeskOfficerCreateManyFrontdeskUserInput | FrontdeskOfficerCreateManyFrontdeskUserInput[]
+  export type DocumentCreateManyVerifiedByInputEnvelope = {
+    data: DocumentCreateManyVerifiedByInput | DocumentCreateManyVerifiedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -35343,14 +35243,128 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FrontdeskOfficerCreateWithoutFrontdeskUserInput = {
+    id?: string
+    createdAt?: Date | string
+    officer?: OfficerProfileCreateNestedOneWithoutFrontdeskUsersInput
+  }
+
+  export type FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput = {
+    id?: string
+    officerId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FrontdeskOfficerCreateOrConnectWithoutFrontdeskUserInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    create: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput>
+  }
+
+  export type FrontdeskOfficerCreateManyFrontdeskUserInputEnvelope = {
+    data: FrontdeskOfficerCreateManyFrontdeskUserInput | FrontdeskOfficerCreateManyFrontdeskUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type NotificationCreateWithoutUserInput = {
+    id?: string
+    notificationType: $Enums.NotificationType
+    title: string
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    createdAt?: Date | string
+    application?: ApplicationCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type NotificationUncheckedCreateWithoutUserInput = {
+    id?: string
+    notificationType: $Enums.NotificationType
+    applicationId?: string | null
+    title: string
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateOrConnectWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationCreateManyUserInputEnvelope = {
+    data: NotificationCreateManyUserInput | NotificationCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OfficerAssignmentCreateWithoutAssignedByInput = {
+    id?: string
+    expectedCompletionDate?: Date | string | null
+    priority?: number
+    instructions?: string | null
+    createdAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutOfficerAssignmentsInput
+    assignedTo: UserCreateNestedOneWithoutAssignmentsReceivedInput
+  }
+
+  export type OfficerAssignmentUncheckedCreateWithoutAssignedByInput = {
+    id?: string
+    applicationId: string
+    assignedToId: string
+    expectedCompletionDate?: Date | string | null
+    priority?: number
+    instructions?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OfficerAssignmentCreateOrConnectWithoutAssignedByInput = {
+    where: OfficerAssignmentWhereUniqueInput
+    create: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput>
+  }
+
+  export type OfficerAssignmentCreateManyAssignedByInputEnvelope = {
+    data: OfficerAssignmentCreateManyAssignedByInput | OfficerAssignmentCreateManyAssignedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OfficerAssignmentCreateWithoutAssignedToInput = {
+    id?: string
+    expectedCompletionDate?: Date | string | null
+    priority?: number
+    instructions?: string | null
+    createdAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutOfficerAssignmentsInput
+    assignedBy: UserCreateNestedOneWithoutAssignmentsGivenInput
+  }
+
+  export type OfficerAssignmentUncheckedCreateWithoutAssignedToInput = {
+    id?: string
+    applicationId: string
+    assignedById: string
+    expectedCompletionDate?: Date | string | null
+    priority?: number
+    instructions?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OfficerAssignmentCreateOrConnectWithoutAssignedToInput = {
+    where: OfficerAssignmentWhereUniqueInput
+    create: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput>
+  }
+
+  export type OfficerAssignmentCreateManyAssignedToInputEnvelope = {
+    data: OfficerAssignmentCreateManyAssignedToInput | OfficerAssignmentCreateManyAssignedToInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OfficerForwardingHistoryCreateWithoutFromOfficerInput = {
     id?: string
     instructions?: string | null
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
     application: ApplicationCreateNestedOneWithoutOfficerForwardingsInput
     toOfficer: UserCreateNestedOneWithoutOfficerForwardedToInput
   }
@@ -35363,8 +35377,8 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
   }
 
   export type OfficerForwardingHistoryCreateOrConnectWithoutFromOfficerInput = {
@@ -35383,8 +35397,8 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
     application: ApplicationCreateNestedOneWithoutOfficerForwardingsInput
     fromOfficer: UserCreateNestedOneWithoutOfficerForwardedFromInput
   }
@@ -35397,8 +35411,8 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
   }
 
   export type OfficerForwardingHistoryCreateOrConnectWithoutToOfficerInput = {
@@ -35409,6 +35423,186 @@ export namespace Prisma {
   export type OfficerForwardingHistoryCreateManyToOfficerInputEnvelope = {
     data: OfficerForwardingHistoryCreateManyToOfficerInput | OfficerForwardingHistoryCreateManyToOfficerInput[]
     skipDuplicates?: boolean
+  }
+
+  export type OfficerProfileCreateWithoutUserInput = {
+    id?: string
+    fullName: string
+    designation: string
+    department: string
+    officeLocation?: string | null
+    isAvailable?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    frontdeskUsers?: FrontdeskOfficerCreateNestedManyWithoutOfficerInput
+    section?: SectionCreateNestedOneWithoutOfficersInput
+  }
+
+  export type OfficerProfileUncheckedCreateWithoutUserInput = {
+    id?: string
+    fullName: string
+    designation: string
+    department: string
+    officeLocation?: string | null
+    isAvailable?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sectionId?: string | null
+    frontdeskUsers?: FrontdeskOfficerUncheckedCreateNestedManyWithoutOfficerInput
+  }
+
+  export type OfficerProfileCreateOrConnectWithoutUserInput = {
+    where: OfficerProfileWhereUniqueInput
+    create: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
+  }
+
+  export type ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput = {
+    where: ApplicationAuditLogWhereUniqueInput
+    update: XOR<ApplicationAuditLogUpdateWithoutPerformedByInput, ApplicationAuditLogUncheckedUpdateWithoutPerformedByInput>
+    create: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput>
+  }
+
+  export type ApplicationAuditLogUpdateWithWhereUniqueWithoutPerformedByInput = {
+    where: ApplicationAuditLogWhereUniqueInput
+    data: XOR<ApplicationAuditLogUpdateWithoutPerformedByInput, ApplicationAuditLogUncheckedUpdateWithoutPerformedByInput>
+  }
+
+  export type ApplicationAuditLogUpdateManyWithWhereWithoutPerformedByInput = {
+    where: ApplicationAuditLogScalarWhereInput
+    data: XOR<ApplicationAuditLogUpdateManyMutationInput, ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByInput>
+  }
+
+  export type ApplicationAuditLogScalarWhereInput = {
+    AND?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
+    OR?: ApplicationAuditLogScalarWhereInput[]
+    NOT?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
+    id?: StringFilter<"ApplicationAuditLog"> | string
+    applicationId?: StringFilter<"ApplicationAuditLog"> | string
+    action?: StringFilter<"ApplicationAuditLog"> | string
+    performedById?: StringFilter<"ApplicationAuditLog"> | string
+    oldValues?: JsonNullableFilter<"ApplicationAuditLog">
+    newValues?: JsonNullableFilter<"ApplicationAuditLog">
+    ipAddress?: StringNullableFilter<"ApplicationAuditLog"> | string | null
+    createdAt?: DateTimeFilter<"ApplicationAuditLog"> | Date | string
+  }
+
+  export type ApplicationValidationUpsertWithWhereUniqueWithoutValidatedByInput = {
+    where: ApplicationValidationWhereUniqueInput
+    update: XOR<ApplicationValidationUpdateWithoutValidatedByInput, ApplicationValidationUncheckedUpdateWithoutValidatedByInput>
+    create: XOR<ApplicationValidationCreateWithoutValidatedByInput, ApplicationValidationUncheckedCreateWithoutValidatedByInput>
+  }
+
+  export type ApplicationValidationUpdateWithWhereUniqueWithoutValidatedByInput = {
+    where: ApplicationValidationWhereUniqueInput
+    data: XOR<ApplicationValidationUpdateWithoutValidatedByInput, ApplicationValidationUncheckedUpdateWithoutValidatedByInput>
+  }
+
+  export type ApplicationValidationUpdateManyWithWhereWithoutValidatedByInput = {
+    where: ApplicationValidationScalarWhereInput
+    data: XOR<ApplicationValidationUpdateManyMutationInput, ApplicationValidationUncheckedUpdateManyWithoutValidatedByInput>
+  }
+
+  export type ApplicationValidationScalarWhereInput = {
+    AND?: ApplicationValidationScalarWhereInput | ApplicationValidationScalarWhereInput[]
+    OR?: ApplicationValidationScalarWhereInput[]
+    NOT?: ApplicationValidationScalarWhereInput | ApplicationValidationScalarWhereInput[]
+    id?: StringFilter<"ApplicationValidation"> | string
+    applicationId?: StringFilter<"ApplicationValidation"> | string
+    validatedById?: StringFilter<"ApplicationValidation"> | string
+    rrNumber?: StringFilter<"ApplicationValidation"> | string
+    isDocumentsComplete?: BoolFilter<"ApplicationValidation"> | boolean
+    isEligibilityVerified?: BoolFilter<"ApplicationValidation"> | boolean
+    validationNotes?: StringNullableFilter<"ApplicationValidation"> | string | null
+    createdAt?: DateTimeFilter<"ApplicationValidation"> | Date | string
+  }
+
+  export type ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput = {
+    where: ApplicationWorkflowWhereUniqueInput
+    update: XOR<ApplicationWorkflowUpdateWithoutChangedByInput, ApplicationWorkflowUncheckedUpdateWithoutChangedByInput>
+    create: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput>
+  }
+
+  export type ApplicationWorkflowUpdateWithWhereUniqueWithoutChangedByInput = {
+    where: ApplicationWorkflowWhereUniqueInput
+    data: XOR<ApplicationWorkflowUpdateWithoutChangedByInput, ApplicationWorkflowUncheckedUpdateWithoutChangedByInput>
+  }
+
+  export type ApplicationWorkflowUpdateManyWithWhereWithoutChangedByInput = {
+    where: ApplicationWorkflowScalarWhereInput
+    data: XOR<ApplicationWorkflowUpdateManyMutationInput, ApplicationWorkflowUncheckedUpdateManyWithoutChangedByInput>
+  }
+
+  export type ApplicationWorkflowScalarWhereInput = {
+    AND?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
+    OR?: ApplicationWorkflowScalarWhereInput[]
+    NOT?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
+    id?: StringFilter<"ApplicationWorkflow"> | string
+    applicationId?: StringFilter<"ApplicationWorkflow"> | string
+    fromStatus?: EnumApplicationStatusNullableFilter<"ApplicationWorkflow"> | $Enums.ApplicationStatus | null
+    toStatus?: EnumApplicationStatusFilter<"ApplicationWorkflow"> | $Enums.ApplicationStatus
+    changedById?: StringFilter<"ApplicationWorkflow"> | string
+    comments?: StringNullableFilter<"ApplicationWorkflow"> | string | null
+    createdAt?: DateTimeFilter<"ApplicationWorkflow"> | Date | string
+  }
+
+  export type ApplicationUpsertWithWhereUniqueWithoutCurrentHolderInput = {
+    where: ApplicationWhereUniqueInput
+    update: XOR<ApplicationUpdateWithoutCurrentHolderInput, ApplicationUncheckedUpdateWithoutCurrentHolderInput>
+    create: XOR<ApplicationCreateWithoutCurrentHolderInput, ApplicationUncheckedCreateWithoutCurrentHolderInput>
+  }
+
+  export type ApplicationUpdateWithWhereUniqueWithoutCurrentHolderInput = {
+    where: ApplicationWhereUniqueInput
+    data: XOR<ApplicationUpdateWithoutCurrentHolderInput, ApplicationUncheckedUpdateWithoutCurrentHolderInput>
+  }
+
+  export type ApplicationUpdateManyWithWhereWithoutCurrentHolderInput = {
+    where: ApplicationScalarWhereInput
+    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutCurrentHolderInput>
+  }
+
+  export type ApplicationScalarWhereInput = {
+    AND?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+    OR?: ApplicationScalarWhereInput[]
+    NOT?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+    id?: StringFilter<"Application"> | string
+    rrNumber?: StringNullableFilter<"Application"> | string | null
+    serviceCategoryId?: StringFilter<"Application"> | string
+    status?: EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
+    currentHolderId?: StringNullableFilter<"Application"> | string | null
+    submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    validatedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    createdAt?: DateTimeFilter<"Application"> | Date | string
+    updatedAt?: DateTimeFilter<"Application"> | Date | string
+    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
+    citizenAddress?: StringFilter<"Application"> | string
+    citizenEmail?: StringNullableFilter<"Application"> | string | null
+    citizenGender?: StringNullableFilter<"Application"> | string | null
+    citizenName?: StringFilter<"Application"> | string
+    citizenPhone?: StringFilter<"Application"> | string
+    subject?: StringFilter<"Application"> | string
+    departmentId?: StringNullableFilter<"Application"> | string | null
+    applicationSource?: EnumApplicationSourceFilter<"Application"> | $Enums.ApplicationSource
+    dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
+    dispatchedById?: StringNullableFilter<"Application"> | string | null
+    isDispatched?: BoolFilter<"Application"> | boolean
+  }
+
+  export type ApplicationUpsertWithWhereUniqueWithoutDispatchedByInput = {
+    where: ApplicationWhereUniqueInput
+    update: XOR<ApplicationUpdateWithoutDispatchedByInput, ApplicationUncheckedUpdateWithoutDispatchedByInput>
+    create: XOR<ApplicationCreateWithoutDispatchedByInput, ApplicationUncheckedCreateWithoutDispatchedByInput>
+  }
+
+  export type ApplicationUpdateWithWhereUniqueWithoutDispatchedByInput = {
+    where: ApplicationWhereUniqueInput
+    data: XOR<ApplicationUpdateWithoutDispatchedByInput, ApplicationUncheckedUpdateWithoutDispatchedByInput>
+  }
+
+  export type ApplicationUpdateManyWithWhereWithoutDispatchedByInput = {
+    where: ApplicationScalarWhereInput
+    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutDispatchedByInput>
   }
 
   export type CitizenProfileUpsertWithoutUserInput = {
@@ -35442,257 +35636,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type OfficerProfileUpsertWithoutUserInput = {
-    update: XOR<OfficerProfileUpdateWithoutUserInput, OfficerProfileUncheckedUpdateWithoutUserInput>
-    create: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
-    where?: OfficerProfileWhereInput
-  }
-
-  export type OfficerProfileUpdateToOneWithWhereWithoutUserInput = {
-    where?: OfficerProfileWhereInput
-    data: XOR<OfficerProfileUpdateWithoutUserInput, OfficerProfileUncheckedUpdateWithoutUserInput>
-  }
-
-  export type OfficerProfileUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    designation?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
-    isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    section?: SectionUpdateOneWithoutOfficersNestedInput
-    frontdeskUsers?: FrontdeskOfficerUpdateManyWithoutOfficerNestedInput
-  }
-
-  export type OfficerProfileUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    fullName?: StringFieldUpdateOperationsInput | string
-    designation?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
-    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
-    isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    frontdeskUsers?: FrontdeskOfficerUncheckedUpdateManyWithoutOfficerNestedInput
-  }
-
-  export type ApplicationUpsertWithWhereUniqueWithoutCurrentHolderInput = {
-    where: ApplicationWhereUniqueInput
-    update: XOR<ApplicationUpdateWithoutCurrentHolderInput, ApplicationUncheckedUpdateWithoutCurrentHolderInput>
-    create: XOR<ApplicationCreateWithoutCurrentHolderInput, ApplicationUncheckedCreateWithoutCurrentHolderInput>
-  }
-
-  export type ApplicationUpdateWithWhereUniqueWithoutCurrentHolderInput = {
-    where: ApplicationWhereUniqueInput
-    data: XOR<ApplicationUpdateWithoutCurrentHolderInput, ApplicationUncheckedUpdateWithoutCurrentHolderInput>
-  }
-
-  export type ApplicationUpdateManyWithWhereWithoutCurrentHolderInput = {
-    where: ApplicationScalarWhereInput
-    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutCurrentHolderInput>
-  }
-
-  export type ApplicationScalarWhereInput = {
-    AND?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
-    OR?: ApplicationScalarWhereInput[]
-    NOT?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
-    id?: StringFilter<"Application"> | string
-    rrNumber?: StringNullableFilter<"Application"> | string | null
-    serviceCategoryId?: StringFilter<"Application"> | string
-    departmentId?: StringFilter<"Application"> | string
-    subject?: StringFilter<"Application"> | string
-    citizenName?: StringFilter<"Application"> | string
-    citizenPhone?: StringFilter<"Application"> | string
-    citizenEmail?: StringNullableFilter<"Application"> | string | null
-    citizenAddress?: StringFilter<"Application"> | string
-    citizenGender?: StringNullableFilter<"Application"> | string | null
-    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
-    status?: EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
-    currentHolderId?: StringNullableFilter<"Application"> | string | null
-    submittedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    validatedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    isDispatched?: BoolFilter<"Application"> | boolean
-    dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
-    dispatchedById?: StringNullableFilter<"Application"> | string | null
-    createdAt?: DateTimeFilter<"Application"> | Date | string
-    updatedAt?: DateTimeFilter<"Application"> | Date | string
-  }
-
-  export type ApplicationUpsertWithWhereUniqueWithoutDispatchedByInput = {
-    where: ApplicationWhereUniqueInput
-    update: XOR<ApplicationUpdateWithoutDispatchedByInput, ApplicationUncheckedUpdateWithoutDispatchedByInput>
-    create: XOR<ApplicationCreateWithoutDispatchedByInput, ApplicationUncheckedCreateWithoutDispatchedByInput>
-  }
-
-  export type ApplicationUpdateWithWhereUniqueWithoutDispatchedByInput = {
-    where: ApplicationWhereUniqueInput
-    data: XOR<ApplicationUpdateWithoutDispatchedByInput, ApplicationUncheckedUpdateWithoutDispatchedByInput>
-  }
-
-  export type ApplicationUpdateManyWithWhereWithoutDispatchedByInput = {
-    where: ApplicationScalarWhereInput
-    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutDispatchedByInput>
-  }
-
-  export type ApplicationWorkflowUpsertWithWhereUniqueWithoutChangedByInput = {
-    where: ApplicationWorkflowWhereUniqueInput
-    update: XOR<ApplicationWorkflowUpdateWithoutChangedByInput, ApplicationWorkflowUncheckedUpdateWithoutChangedByInput>
-    create: XOR<ApplicationWorkflowCreateWithoutChangedByInput, ApplicationWorkflowUncheckedCreateWithoutChangedByInput>
-  }
-
-  export type ApplicationWorkflowUpdateWithWhereUniqueWithoutChangedByInput = {
-    where: ApplicationWorkflowWhereUniqueInput
-    data: XOR<ApplicationWorkflowUpdateWithoutChangedByInput, ApplicationWorkflowUncheckedUpdateWithoutChangedByInput>
-  }
-
-  export type ApplicationWorkflowUpdateManyWithWhereWithoutChangedByInput = {
-    where: ApplicationWorkflowScalarWhereInput
-    data: XOR<ApplicationWorkflowUpdateManyMutationInput, ApplicationWorkflowUncheckedUpdateManyWithoutChangedByInput>
-  }
-
-  export type ApplicationWorkflowScalarWhereInput = {
-    AND?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
-    OR?: ApplicationWorkflowScalarWhereInput[]
-    NOT?: ApplicationWorkflowScalarWhereInput | ApplicationWorkflowScalarWhereInput[]
-    id?: StringFilter<"ApplicationWorkflow"> | string
-    applicationId?: StringFilter<"ApplicationWorkflow"> | string
-    fromStatus?: EnumApplicationStatusNullableFilter<"ApplicationWorkflow"> | $Enums.ApplicationStatus | null
-    toStatus?: EnumApplicationStatusFilter<"ApplicationWorkflow"> | $Enums.ApplicationStatus
-    changedById?: StringFilter<"ApplicationWorkflow"> | string
-    comments?: StringNullableFilter<"ApplicationWorkflow"> | string | null
-    createdAt?: DateTimeFilter<"ApplicationWorkflow"> | Date | string
-  }
-
-  export type ApplicationValidationUpsertWithWhereUniqueWithoutValidatedByInput = {
-    where: ApplicationValidationWhereUniqueInput
-    update: XOR<ApplicationValidationUpdateWithoutValidatedByInput, ApplicationValidationUncheckedUpdateWithoutValidatedByInput>
-    create: XOR<ApplicationValidationCreateWithoutValidatedByInput, ApplicationValidationUncheckedCreateWithoutValidatedByInput>
-  }
-
-  export type ApplicationValidationUpdateWithWhereUniqueWithoutValidatedByInput = {
-    where: ApplicationValidationWhereUniqueInput
-    data: XOR<ApplicationValidationUpdateWithoutValidatedByInput, ApplicationValidationUncheckedUpdateWithoutValidatedByInput>
-  }
-
-  export type ApplicationValidationUpdateManyWithWhereWithoutValidatedByInput = {
-    where: ApplicationValidationScalarWhereInput
-    data: XOR<ApplicationValidationUpdateManyMutationInput, ApplicationValidationUncheckedUpdateManyWithoutValidatedByInput>
-  }
-
-  export type ApplicationValidationScalarWhereInput = {
-    AND?: ApplicationValidationScalarWhereInput | ApplicationValidationScalarWhereInput[]
-    OR?: ApplicationValidationScalarWhereInput[]
-    NOT?: ApplicationValidationScalarWhereInput | ApplicationValidationScalarWhereInput[]
-    id?: StringFilter<"ApplicationValidation"> | string
-    applicationId?: StringFilter<"ApplicationValidation"> | string
-    validatedById?: StringFilter<"ApplicationValidation"> | string
-    rrNumber?: StringFilter<"ApplicationValidation"> | string
-    isDocumentsComplete?: BoolFilter<"ApplicationValidation"> | boolean
-    isEligibilityVerified?: BoolFilter<"ApplicationValidation"> | boolean
-    validationNotes?: StringNullableFilter<"ApplicationValidation"> | string | null
-    createdAt?: DateTimeFilter<"ApplicationValidation"> | Date | string
-  }
-
-  export type DocumentUpsertWithWhereUniqueWithoutVerifiedByInput = {
-    where: DocumentWhereUniqueInput
-    update: XOR<DocumentUpdateWithoutVerifiedByInput, DocumentUncheckedUpdateWithoutVerifiedByInput>
-    create: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput>
-  }
-
-  export type DocumentUpdateWithWhereUniqueWithoutVerifiedByInput = {
-    where: DocumentWhereUniqueInput
-    data: XOR<DocumentUpdateWithoutVerifiedByInput, DocumentUncheckedUpdateWithoutVerifiedByInput>
-  }
-
-  export type DocumentUpdateManyWithWhereWithoutVerifiedByInput = {
-    where: DocumentScalarWhereInput
-    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutVerifiedByInput>
-  }
-
-  export type DocumentScalarWhereInput = {
-    AND?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
-    OR?: DocumentScalarWhereInput[]
-    NOT?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
-    id?: StringFilter<"Document"> | string
-    applicationId?: StringFilter<"Document"> | string
-    documentType?: EnumDocumentTypeFilter<"Document"> | $Enums.DocumentType
-    fileName?: StringFilter<"Document"> | string
-    filePath?: StringFilter<"Document"> | string
-    fileSize?: IntFilter<"Document"> | number
-    uploadedById?: StringFilter<"Document"> | string
-    isVerified?: BoolFilter<"Document"> | boolean
-    verifiedById?: StringNullableFilter<"Document"> | string | null
-    verificationNotes?: StringNullableFilter<"Document"> | string | null
-    createdAt?: DateTimeFilter<"Document"> | Date | string
-    updatedAt?: DateTimeFilter<"Document"> | Date | string
-  }
-
-  export type DocumentUpsertWithWhereUniqueWithoutUploadedByInput = {
-    where: DocumentWhereUniqueInput
-    update: XOR<DocumentUpdateWithoutUploadedByInput, DocumentUncheckedUpdateWithoutUploadedByInput>
-    create: XOR<DocumentCreateWithoutUploadedByInput, DocumentUncheckedCreateWithoutUploadedByInput>
-  }
-
-  export type DocumentUpdateWithWhereUniqueWithoutUploadedByInput = {
-    where: DocumentWhereUniqueInput
-    data: XOR<DocumentUpdateWithoutUploadedByInput, DocumentUncheckedUpdateWithoutUploadedByInput>
-  }
-
-  export type DocumentUpdateManyWithWhereWithoutUploadedByInput = {
-    where: DocumentScalarWhereInput
-    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutUploadedByInput>
-  }
-
-  export type OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedByInput = {
-    where: OfficerAssignmentWhereUniqueInput
-    update: XOR<OfficerAssignmentUpdateWithoutAssignedByInput, OfficerAssignmentUncheckedUpdateWithoutAssignedByInput>
-    create: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput>
-  }
-
-  export type OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedByInput = {
-    where: OfficerAssignmentWhereUniqueInput
-    data: XOR<OfficerAssignmentUpdateWithoutAssignedByInput, OfficerAssignmentUncheckedUpdateWithoutAssignedByInput>
-  }
-
-  export type OfficerAssignmentUpdateManyWithWhereWithoutAssignedByInput = {
-    where: OfficerAssignmentScalarWhereInput
-    data: XOR<OfficerAssignmentUpdateManyMutationInput, OfficerAssignmentUncheckedUpdateManyWithoutAssignedByInput>
-  }
-
-  export type OfficerAssignmentScalarWhereInput = {
-    AND?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
-    OR?: OfficerAssignmentScalarWhereInput[]
-    NOT?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
-    id?: StringFilter<"OfficerAssignment"> | string
-    applicationId?: StringFilter<"OfficerAssignment"> | string
-    assignedById?: StringFilter<"OfficerAssignment"> | string
-    assignedToId?: StringFilter<"OfficerAssignment"> | string
-    expectedCompletionDate?: DateTimeNullableFilter<"OfficerAssignment"> | Date | string | null
-    priority?: IntFilter<"OfficerAssignment"> | number
-    instructions?: StringNullableFilter<"OfficerAssignment"> | string | null
-    createdAt?: DateTimeFilter<"OfficerAssignment"> | Date | string
-  }
-
-  export type OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedToInput = {
-    where: OfficerAssignmentWhereUniqueInput
-    update: XOR<OfficerAssignmentUpdateWithoutAssignedToInput, OfficerAssignmentUncheckedUpdateWithoutAssignedToInput>
-    create: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput>
-  }
-
-  export type OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedToInput = {
-    where: OfficerAssignmentWhereUniqueInput
-    data: XOR<OfficerAssignmentUpdateWithoutAssignedToInput, OfficerAssignmentUncheckedUpdateWithoutAssignedToInput>
-  }
-
-  export type OfficerAssignmentUpdateManyWithWhereWithoutAssignedToInput = {
-    where: OfficerAssignmentScalarWhereInput
-    data: XOR<OfficerAssignmentUpdateManyMutationInput, OfficerAssignmentUncheckedUpdateManyWithoutAssignedToInput>
-  }
-
   export type DocumentRequestUpsertWithWhereUniqueWithoutRequestedByInput = {
     where: DocumentRequestWhereUniqueInput
     update: XOR<DocumentRequestUpdateWithoutRequestedByInput, DocumentRequestUncheckedUpdateWithoutRequestedByInput>
@@ -35724,91 +35667,54 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"DocumentRequest"> | Date | string
   }
 
-  export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
-    where: NotificationWhereUniqueInput
-    update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
-    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  export type DocumentUpsertWithWhereUniqueWithoutUploadedByInput = {
+    where: DocumentWhereUniqueInput
+    update: XOR<DocumentUpdateWithoutUploadedByInput, DocumentUncheckedUpdateWithoutUploadedByInput>
+    create: XOR<DocumentCreateWithoutUploadedByInput, DocumentUncheckedCreateWithoutUploadedByInput>
   }
 
-  export type NotificationUpdateWithWhereUniqueWithoutUserInput = {
-    where: NotificationWhereUniqueInput
-    data: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+  export type DocumentUpdateWithWhereUniqueWithoutUploadedByInput = {
+    where: DocumentWhereUniqueInput
+    data: XOR<DocumentUpdateWithoutUploadedByInput, DocumentUncheckedUpdateWithoutUploadedByInput>
   }
 
-  export type NotificationUpdateManyWithWhereWithoutUserInput = {
-    where: NotificationScalarWhereInput
-    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutUserInput>
+  export type DocumentUpdateManyWithWhereWithoutUploadedByInput = {
+    where: DocumentScalarWhereInput
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutUploadedByInput>
   }
 
-  export type NotificationScalarWhereInput = {
-    AND?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
-    OR?: NotificationScalarWhereInput[]
-    NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
-    id?: StringFilter<"Notification"> | string
-    userId?: StringFilter<"Notification"> | string
-    notificationType?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
-    applicationId?: StringNullableFilter<"Notification"> | string | null
-    title?: StringFilter<"Notification"> | string
-    message?: StringFilter<"Notification"> | string
-    isRead?: BoolFilter<"Notification"> | boolean
-    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
-    createdAt?: DateTimeFilter<"Notification"> | Date | string
+  export type DocumentScalarWhereInput = {
+    AND?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+    OR?: DocumentScalarWhereInput[]
+    NOT?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+    id?: StringFilter<"Document"> | string
+    applicationId?: StringFilter<"Document"> | string
+    documentType?: EnumDocumentTypeFilter<"Document"> | $Enums.DocumentType
+    fileName?: StringFilter<"Document"> | string
+    filePath?: StringFilter<"Document"> | string
+    fileSize?: IntFilter<"Document"> | number
+    uploadedById?: StringFilter<"Document"> | string
+    isVerified?: BoolFilter<"Document"> | boolean
+    verifiedById?: StringNullableFilter<"Document"> | string | null
+    verificationNotes?: StringNullableFilter<"Document"> | string | null
+    createdAt?: DateTimeFilter<"Document"> | Date | string
+    updatedAt?: DateTimeFilter<"Document"> | Date | string
   }
 
-  export type ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput = {
-    where: ApplicationAuditLogWhereUniqueInput
-    update: XOR<ApplicationAuditLogUpdateWithoutPerformedByInput, ApplicationAuditLogUncheckedUpdateWithoutPerformedByInput>
-    create: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput>
+  export type DocumentUpsertWithWhereUniqueWithoutVerifiedByInput = {
+    where: DocumentWhereUniqueInput
+    update: XOR<DocumentUpdateWithoutVerifiedByInput, DocumentUncheckedUpdateWithoutVerifiedByInput>
+    create: XOR<DocumentCreateWithoutVerifiedByInput, DocumentUncheckedCreateWithoutVerifiedByInput>
   }
 
-  export type ApplicationAuditLogUpdateWithWhereUniqueWithoutPerformedByInput = {
-    where: ApplicationAuditLogWhereUniqueInput
-    data: XOR<ApplicationAuditLogUpdateWithoutPerformedByInput, ApplicationAuditLogUncheckedUpdateWithoutPerformedByInput>
+  export type DocumentUpdateWithWhereUniqueWithoutVerifiedByInput = {
+    where: DocumentWhereUniqueInput
+    data: XOR<DocumentUpdateWithoutVerifiedByInput, DocumentUncheckedUpdateWithoutVerifiedByInput>
   }
 
-  export type ApplicationAuditLogUpdateManyWithWhereWithoutPerformedByInput = {
-    where: ApplicationAuditLogScalarWhereInput
-    data: XOR<ApplicationAuditLogUpdateManyMutationInput, ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByInput>
-  }
-
-  export type ApplicationAuditLogScalarWhereInput = {
-    AND?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
-    OR?: ApplicationAuditLogScalarWhereInput[]
-    NOT?: ApplicationAuditLogScalarWhereInput | ApplicationAuditLogScalarWhereInput[]
-    id?: StringFilter<"ApplicationAuditLog"> | string
-    applicationId?: StringFilter<"ApplicationAuditLog"> | string
-    action?: StringFilter<"ApplicationAuditLog"> | string
-    performedById?: StringFilter<"ApplicationAuditLog"> | string
-    oldValues?: JsonNullableFilter<"ApplicationAuditLog">
-    newValues?: JsonNullableFilter<"ApplicationAuditLog">
-    ipAddress?: StringNullableFilter<"ApplicationAuditLog"> | string | null
-    createdAt?: DateTimeFilter<"ApplicationAuditLog"> | Date | string
-  }
-
-  export type FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput = {
-    where: FrontdeskOfficerWhereUniqueInput
-    update: XOR<FrontdeskOfficerUpdateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedUpdateWithoutFrontdeskUserInput>
-    create: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput>
-  }
-
-  export type FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput = {
-    where: FrontdeskOfficerWhereUniqueInput
-    data: XOR<FrontdeskOfficerUpdateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedUpdateWithoutFrontdeskUserInput>
-  }
-
-  export type FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput = {
-    where: FrontdeskOfficerScalarWhereInput
-    data: XOR<FrontdeskOfficerUpdateManyMutationInput, FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserInput>
-  }
-
-  export type FrontdeskOfficerScalarWhereInput = {
-    AND?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
-    OR?: FrontdeskOfficerScalarWhereInput[]
-    NOT?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
-    id?: StringFilter<"FrontdeskOfficer"> | string
-    frontdeskUserId?: StringFilter<"FrontdeskOfficer"> | string
-    officerId?: StringNullableFilter<"FrontdeskOfficer"> | string | null
-    createdAt?: DateTimeFilter<"FrontdeskOfficer"> | Date | string
+  export type DocumentUpdateManyWithWhereWithoutVerifiedByInput = {
+    where: DocumentScalarWhereInput
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutVerifiedByInput>
   }
 
   export type FrontdeskForwardingUpsertWithWhereUniqueWithoutFromFrontdeskInput = {
@@ -35858,6 +35764,109 @@ export namespace Prisma {
     data: XOR<FrontdeskForwardingUpdateManyMutationInput, FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskInput>
   }
 
+  export type FrontdeskOfficerUpsertWithWhereUniqueWithoutFrontdeskUserInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    update: XOR<FrontdeskOfficerUpdateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedUpdateWithoutFrontdeskUserInput>
+    create: XOR<FrontdeskOfficerCreateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedCreateWithoutFrontdeskUserInput>
+  }
+
+  export type FrontdeskOfficerUpdateWithWhereUniqueWithoutFrontdeskUserInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    data: XOR<FrontdeskOfficerUpdateWithoutFrontdeskUserInput, FrontdeskOfficerUncheckedUpdateWithoutFrontdeskUserInput>
+  }
+
+  export type FrontdeskOfficerUpdateManyWithWhereWithoutFrontdeskUserInput = {
+    where: FrontdeskOfficerScalarWhereInput
+    data: XOR<FrontdeskOfficerUpdateManyMutationInput, FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserInput>
+  }
+
+  export type FrontdeskOfficerScalarWhereInput = {
+    AND?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+    OR?: FrontdeskOfficerScalarWhereInput[]
+    NOT?: FrontdeskOfficerScalarWhereInput | FrontdeskOfficerScalarWhereInput[]
+    id?: StringFilter<"FrontdeskOfficer"> | string
+    frontdeskUserId?: StringFilter<"FrontdeskOfficer"> | string
+    officerId?: StringNullableFilter<"FrontdeskOfficer"> | string | null
+    createdAt?: DateTimeFilter<"FrontdeskOfficer"> | Date | string
+  }
+
+  export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+    create: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutUserInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutUserInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type NotificationScalarWhereInput = {
+    AND?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    OR?: NotificationScalarWhereInput[]
+    NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    id?: StringFilter<"Notification"> | string
+    userId?: StringFilter<"Notification"> | string
+    notificationType?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
+    applicationId?: StringNullableFilter<"Notification"> | string | null
+    title?: StringFilter<"Notification"> | string
+    message?: StringFilter<"Notification"> | string
+    isRead?: BoolFilter<"Notification"> | boolean
+    readAt?: DateTimeNullableFilter<"Notification"> | Date | string | null
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+  }
+
+  export type OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedByInput = {
+    where: OfficerAssignmentWhereUniqueInput
+    update: XOR<OfficerAssignmentUpdateWithoutAssignedByInput, OfficerAssignmentUncheckedUpdateWithoutAssignedByInput>
+    create: XOR<OfficerAssignmentCreateWithoutAssignedByInput, OfficerAssignmentUncheckedCreateWithoutAssignedByInput>
+  }
+
+  export type OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedByInput = {
+    where: OfficerAssignmentWhereUniqueInput
+    data: XOR<OfficerAssignmentUpdateWithoutAssignedByInput, OfficerAssignmentUncheckedUpdateWithoutAssignedByInput>
+  }
+
+  export type OfficerAssignmentUpdateManyWithWhereWithoutAssignedByInput = {
+    where: OfficerAssignmentScalarWhereInput
+    data: XOR<OfficerAssignmentUpdateManyMutationInput, OfficerAssignmentUncheckedUpdateManyWithoutAssignedByInput>
+  }
+
+  export type OfficerAssignmentScalarWhereInput = {
+    AND?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
+    OR?: OfficerAssignmentScalarWhereInput[]
+    NOT?: OfficerAssignmentScalarWhereInput | OfficerAssignmentScalarWhereInput[]
+    id?: StringFilter<"OfficerAssignment"> | string
+    applicationId?: StringFilter<"OfficerAssignment"> | string
+    assignedById?: StringFilter<"OfficerAssignment"> | string
+    assignedToId?: StringFilter<"OfficerAssignment"> | string
+    expectedCompletionDate?: DateTimeNullableFilter<"OfficerAssignment"> | Date | string | null
+    priority?: IntFilter<"OfficerAssignment"> | number
+    instructions?: StringNullableFilter<"OfficerAssignment"> | string | null
+    createdAt?: DateTimeFilter<"OfficerAssignment"> | Date | string
+  }
+
+  export type OfficerAssignmentUpsertWithWhereUniqueWithoutAssignedToInput = {
+    where: OfficerAssignmentWhereUniqueInput
+    update: XOR<OfficerAssignmentUpdateWithoutAssignedToInput, OfficerAssignmentUncheckedUpdateWithoutAssignedToInput>
+    create: XOR<OfficerAssignmentCreateWithoutAssignedToInput, OfficerAssignmentUncheckedCreateWithoutAssignedToInput>
+  }
+
+  export type OfficerAssignmentUpdateWithWhereUniqueWithoutAssignedToInput = {
+    where: OfficerAssignmentWhereUniqueInput
+    data: XOR<OfficerAssignmentUpdateWithoutAssignedToInput, OfficerAssignmentUncheckedUpdateWithoutAssignedToInput>
+  }
+
+  export type OfficerAssignmentUpdateManyWithWhereWithoutAssignedToInput = {
+    where: OfficerAssignmentScalarWhereInput
+    data: XOR<OfficerAssignmentUpdateManyMutationInput, OfficerAssignmentUncheckedUpdateManyWithoutAssignedToInput>
+  }
+
   export type OfficerForwardingHistoryUpsertWithWhereUniqueWithoutFromOfficerInput = {
     where: OfficerForwardingHistoryWhereUniqueInput
     update: XOR<OfficerForwardingHistoryUpdateWithoutFromOfficerInput, OfficerForwardingHistoryUncheckedUpdateWithoutFromOfficerInput>
@@ -35886,8 +35895,8 @@ export namespace Prisma {
     priority?: IntFilter<"OfficerForwardingHistory"> | number
     isActive?: BoolFilter<"OfficerForwardingHistory"> | boolean
     createdAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
-    forwardedAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
     completedAt?: DateTimeNullableFilter<"OfficerForwardingHistory"> | Date | string | null
+    forwardedAt?: DateTimeFilter<"OfficerForwardingHistory"> | Date | string
   }
 
   export type OfficerForwardingHistoryUpsertWithWhereUniqueWithoutToOfficerInput = {
@@ -35906,34 +35915,71 @@ export namespace Prisma {
     data: XOR<OfficerForwardingHistoryUpdateManyMutationInput, OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerInput>
   }
 
+  export type OfficerProfileUpsertWithoutUserInput = {
+    update: XOR<OfficerProfileUpdateWithoutUserInput, OfficerProfileUncheckedUpdateWithoutUserInput>
+    create: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
+    where?: OfficerProfileWhereInput
+  }
+
+  export type OfficerProfileUpdateToOneWithWhereWithoutUserInput = {
+    where?: OfficerProfileWhereInput
+    data: XOR<OfficerProfileUpdateWithoutUserInput, OfficerProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type OfficerProfileUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    designation?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    frontdeskUsers?: FrontdeskOfficerUpdateManyWithoutOfficerNestedInput
+    section?: SectionUpdateOneWithoutOfficersNestedInput
+  }
+
+  export type OfficerProfileUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    designation?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
+    frontdeskUsers?: FrontdeskOfficerUncheckedUpdateManyWithoutOfficerNestedInput
+  }
+
   export type UserCreateWithoutCitizenProfileInput = {
     id?: string
     email: string
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCitizenProfileInput = {
@@ -35942,28 +35988,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCitizenProfileInput = {
@@ -35988,28 +36034,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCitizenProfileInput = {
@@ -36018,93 +36064,50 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
-  export type UserCreateWithoutOfficerProfileInput = {
+  export type FrontdeskOfficerCreateWithoutOfficerInput = {
     id?: string
-    email: string
-    phone?: string | null
-    passwordHash?: string | null
-    role?: $Enums.UserRole
-    level?: number | null
-    isActive?: boolean
-    lastLoginAt?: Date | string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
-    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
-    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
-    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
-    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
-    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    frontdeskUser: UserCreateNestedOneWithoutFrontdeskAssignmentsInput
   }
 
-  export type UserUncheckedCreateWithoutOfficerProfileInput = {
+  export type FrontdeskOfficerUncheckedCreateWithoutOfficerInput = {
     id?: string
-    email: string
-    phone?: string | null
-    passwordHash?: string | null
-    role?: $Enums.UserRole
-    level?: number | null
-    isActive?: boolean
-    lastLoginAt?: Date | string | null
+    frontdeskUserId: string
     createdAt?: Date | string
-    updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
-    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
-    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
-    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
-    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
-    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
-  export type UserCreateOrConnectWithoutOfficerProfileInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutOfficerProfileInput, UserUncheckedCreateWithoutOfficerProfileInput>
+  export type FrontdeskOfficerCreateOrConnectWithoutOfficerInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    create: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput>
+  }
+
+  export type FrontdeskOfficerCreateManyOfficerInputEnvelope = {
+    data: FrontdeskOfficerCreateManyOfficerInput | FrontdeskOfficerCreateManyOfficerInput[]
+    skipDuplicates?: boolean
   }
 
   export type SectionCreateWithoutOfficersInput = {
@@ -36130,97 +36133,85 @@ export namespace Prisma {
     create: XOR<SectionCreateWithoutOfficersInput, SectionUncheckedCreateWithoutOfficersInput>
   }
 
-  export type FrontdeskOfficerCreateWithoutOfficerInput = {
+  export type UserCreateWithoutOfficerProfileInput = {
     id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
-    frontdeskUser: UserCreateNestedOneWithoutFrontdeskAssignmentsInput
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
   }
 
-  export type FrontdeskOfficerUncheckedCreateWithoutOfficerInput = {
+  export type UserUncheckedCreateWithoutOfficerProfileInput = {
     id?: string
-    frontdeskUserId: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
   }
 
-  export type FrontdeskOfficerCreateOrConnectWithoutOfficerInput = {
+  export type UserCreateOrConnectWithoutOfficerProfileInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOfficerProfileInput, UserUncheckedCreateWithoutOfficerProfileInput>
+  }
+
+  export type FrontdeskOfficerUpsertWithWhereUniqueWithoutOfficerInput = {
     where: FrontdeskOfficerWhereUniqueInput
+    update: XOR<FrontdeskOfficerUpdateWithoutOfficerInput, FrontdeskOfficerUncheckedUpdateWithoutOfficerInput>
     create: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput>
   }
 
-  export type FrontdeskOfficerCreateManyOfficerInputEnvelope = {
-    data: FrontdeskOfficerCreateManyOfficerInput | FrontdeskOfficerCreateManyOfficerInput[]
-    skipDuplicates?: boolean
+  export type FrontdeskOfficerUpdateWithWhereUniqueWithoutOfficerInput = {
+    where: FrontdeskOfficerWhereUniqueInput
+    data: XOR<FrontdeskOfficerUpdateWithoutOfficerInput, FrontdeskOfficerUncheckedUpdateWithoutOfficerInput>
   }
 
-  export type UserUpsertWithoutOfficerProfileInput = {
-    update: XOR<UserUpdateWithoutOfficerProfileInput, UserUncheckedUpdateWithoutOfficerProfileInput>
-    create: XOR<UserCreateWithoutOfficerProfileInput, UserUncheckedCreateWithoutOfficerProfileInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutOfficerProfileInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutOfficerProfileInput, UserUncheckedUpdateWithoutOfficerProfileInput>
-  }
-
-  export type UserUpdateWithoutOfficerProfileInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
-    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
-    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
-    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
-    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
-    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutOfficerProfileInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
-    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
-    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
-    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
-    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
-    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+  export type FrontdeskOfficerUpdateManyWithWhereWithoutOfficerInput = {
+    where: FrontdeskOfficerScalarWhereInput
+    data: XOR<FrontdeskOfficerUpdateManyMutationInput, FrontdeskOfficerUncheckedUpdateManyWithoutOfficerInput>
   }
 
   export type SectionUpsertWithoutOfficersInput = {
@@ -36252,20 +36243,75 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FrontdeskOfficerUpsertWithWhereUniqueWithoutOfficerInput = {
-    where: FrontdeskOfficerWhereUniqueInput
-    update: XOR<FrontdeskOfficerUpdateWithoutOfficerInput, FrontdeskOfficerUncheckedUpdateWithoutOfficerInput>
-    create: XOR<FrontdeskOfficerCreateWithoutOfficerInput, FrontdeskOfficerUncheckedCreateWithoutOfficerInput>
+  export type UserUpsertWithoutOfficerProfileInput = {
+    update: XOR<UserUpdateWithoutOfficerProfileInput, UserUncheckedUpdateWithoutOfficerProfileInput>
+    create: XOR<UserCreateWithoutOfficerProfileInput, UserUncheckedCreateWithoutOfficerProfileInput>
+    where?: UserWhereInput
   }
 
-  export type FrontdeskOfficerUpdateWithWhereUniqueWithoutOfficerInput = {
-    where: FrontdeskOfficerWhereUniqueInput
-    data: XOR<FrontdeskOfficerUpdateWithoutOfficerInput, FrontdeskOfficerUncheckedUpdateWithoutOfficerInput>
+  export type UserUpdateToOneWithWhereWithoutOfficerProfileInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOfficerProfileInput, UserUncheckedUpdateWithoutOfficerProfileInput>
   }
 
-  export type FrontdeskOfficerUpdateManyWithWhereWithoutOfficerInput = {
-    where: FrontdeskOfficerScalarWhereInput
-    data: XOR<FrontdeskOfficerUpdateManyMutationInput, FrontdeskOfficerUncheckedUpdateManyWithoutOfficerInput>
+  export type UserUpdateWithoutOfficerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOfficerProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
   }
 
   export type UserCreateWithoutFrontdeskAssignmentsInput = {
@@ -36274,28 +36320,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFrontdeskAssignmentsInput = {
@@ -36304,28 +36350,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFrontdeskAssignmentsInput = {
@@ -36342,8 +36388,8 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutOfficerProfileInput
     section?: SectionCreateNestedOneWithoutOfficersInput
+    user: UserCreateNestedOneWithoutOfficerProfileInput
   }
 
   export type OfficerProfileUncheckedCreateWithoutFrontdeskUsersInput = {
@@ -36353,10 +36399,10 @@ export namespace Prisma {
     designation: string
     department: string
     officeLocation?: string | null
-    sectionId?: string | null
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    sectionId?: string | null
   }
 
   export type OfficerProfileCreateOrConnectWithoutFrontdeskUsersInput = {
@@ -36381,28 +36427,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFrontdeskAssignmentsInput = {
@@ -36411,28 +36457,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type OfficerProfileUpsertWithoutFrontdeskUsersInput = {
@@ -36455,8 +36501,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutOfficerProfileNestedInput
     section?: SectionUpdateOneWithoutOfficersNestedInput
+    user?: UserUpdateOneRequiredWithoutOfficerProfileNestedInput
   }
 
   export type OfficerProfileUncheckedUpdateWithoutFrontdeskUsersInput = {
@@ -36466,73 +36512,75 @@ export namespace Prisma {
     designation?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
     officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
-    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sectionId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicationCreateWithoutServiceCategoryInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutServiceCategoryInput = {
     id?: string
     rrNumber?: string | null
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
@@ -36571,8 +36619,8 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutOfficerProfileInput
     frontdeskUsers?: FrontdeskOfficerCreateNestedManyWithoutOfficerInput
+    user: UserCreateNestedOneWithoutOfficerProfileInput
   }
 
   export type OfficerProfileUncheckedCreateWithoutSectionInput = {
@@ -36624,41 +36672,42 @@ export namespace Prisma {
     designation?: StringFilter<"OfficerProfile"> | string
     department?: StringFilter<"OfficerProfile"> | string
     officeLocation?: StringNullableFilter<"OfficerProfile"> | string | null
-    sectionId?: StringNullableFilter<"OfficerProfile"> | string | null
     isAvailable?: BoolFilter<"OfficerProfile"> | boolean
     createdAt?: DateTimeFilter<"OfficerProfile"> | Date | string
     updatedAt?: DateTimeFilter<"OfficerProfile"> | Date | string
+    sectionId?: StringNullableFilter<"OfficerProfile"> | string | null
   }
 
   export type ApplicationCreateWithoutDepartmentInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
     dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
@@ -36666,31 +36715,32 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
@@ -36720,182 +36770,59 @@ export namespace Prisma {
     data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutDepartmentInput>
   }
 
-  export type ServiceCategoryCreateWithoutApplicationsInput = {
+  export type ApplicationAuditLogCreateWithoutApplicationInput = {
     id?: string
-    name: string
-    description?: string | null
-    slaDays: number
-    isActive?: boolean
+    action: string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
+    performedBy: UserCreateNestedOneWithoutAuditLogsInput
   }
 
-  export type ServiceCategoryUncheckedCreateWithoutApplicationsInput = {
+  export type ApplicationAuditLogUncheckedCreateWithoutApplicationInput = {
     id?: string
-    name: string
-    description?: string | null
-    slaDays: number
-    isActive?: boolean
+    action: string
+    performedById: string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
-  export type ServiceCategoryCreateOrConnectWithoutApplicationsInput = {
-    where: ServiceCategoryWhereUniqueInput
-    create: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
+  export type ApplicationAuditLogCreateOrConnectWithoutApplicationInput = {
+    where: ApplicationAuditLogWhereUniqueInput
+    create: XOR<ApplicationAuditLogCreateWithoutApplicationInput, ApplicationAuditLogUncheckedCreateWithoutApplicationInput>
   }
 
-  export type DepartmentCreateWithoutApplicationsInput = {
+  export type ApplicationAuditLogCreateManyApplicationInputEnvelope = {
+    data: ApplicationAuditLogCreateManyApplicationInput | ApplicationAuditLogCreateManyApplicationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ApplicationValidationCreateWithoutApplicationInput = {
     id?: string
-    name: string
-    description?: string | null
-    isActive?: boolean
+    rrNumber: string
+    isDocumentsComplete?: boolean
+    isEligibilityVerified?: boolean
+    validationNotes?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
+    validatedBy: UserCreateNestedOneWithoutValidationsInput
   }
 
-  export type DepartmentUncheckedCreateWithoutApplicationsInput = {
+  export type ApplicationValidationUncheckedCreateWithoutApplicationInput = {
     id?: string
-    name: string
-    description?: string | null
-    isActive?: boolean
+    validatedById: string
+    rrNumber: string
+    isDocumentsComplete?: boolean
+    isEligibilityVerified?: boolean
+    validationNotes?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
-  export type DepartmentCreateOrConnectWithoutApplicationsInput = {
-    where: DepartmentWhereUniqueInput
-    create: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
-  }
-
-  export type UserCreateWithoutCurrentHolderFilesInput = {
-    id?: string
-    email: string
-    phone?: string | null
-    passwordHash?: string | null
-    role?: $Enums.UserRole
-    level?: number | null
-    isActive?: boolean
-    lastLoginAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
-    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
-    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
-    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
-    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
-  }
-
-  export type UserUncheckedCreateWithoutCurrentHolderFilesInput = {
-    id?: string
-    email: string
-    phone?: string | null
-    passwordHash?: string | null
-    role?: $Enums.UserRole
-    level?: number | null
-    isActive?: boolean
-    lastLoginAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
-    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
-    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
-    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
-    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
-  }
-
-  export type UserCreateOrConnectWithoutCurrentHolderFilesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
-  }
-
-  export type UserCreateWithoutDispatchedApplicationsInput = {
-    id?: string
-    email: string
-    phone?: string | null
-    passwordHash?: string | null
-    role?: $Enums.UserRole
-    level?: number | null
-    isActive?: boolean
-    lastLoginAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
-    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
-    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
-    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
-    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
-    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
-  }
-
-  export type UserUncheckedCreateWithoutDispatchedApplicationsInput = {
-    id?: string
-    email: string
-    phone?: string | null
-    passwordHash?: string | null
-    role?: $Enums.UserRole
-    level?: number | null
-    isActive?: boolean
-    lastLoginAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
-    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
-    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
-    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
-    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
-    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
-  }
-
-  export type UserCreateOrConnectWithoutDispatchedApplicationsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
+  export type ApplicationValidationCreateOrConnectWithoutApplicationInput = {
+    where: ApplicationValidationWhereUniqueInput
+    create: XOR<ApplicationValidationCreateWithoutApplicationInput, ApplicationValidationUncheckedCreateWithoutApplicationInput>
   }
 
   export type ApplicationWorkflowCreateWithoutApplicationInput = {
@@ -36926,58 +36853,211 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ApplicationValidationCreateWithoutApplicationInput = {
+  export type UserCreateWithoutCurrentHolderFilesInput = {
     id?: string
-    rrNumber: string
-    isDocumentsComplete?: boolean
-    isEligibilityVerified?: boolean
-    validationNotes?: string | null
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
-    validatedBy: UserCreateNestedOneWithoutValidationsInput
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
-  export type ApplicationValidationUncheckedCreateWithoutApplicationInput = {
+  export type UserUncheckedCreateWithoutCurrentHolderFilesInput = {
     id?: string
-    validatedById: string
-    rrNumber: string
-    isDocumentsComplete?: boolean
-    isEligibilityVerified?: boolean
-    validationNotes?: string | null
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
-  export type ApplicationValidationCreateOrConnectWithoutApplicationInput = {
-    where: ApplicationValidationWhereUniqueInput
-    create: XOR<ApplicationValidationCreateWithoutApplicationInput, ApplicationValidationUncheckedCreateWithoutApplicationInput>
+  export type UserCreateOrConnectWithoutCurrentHolderFilesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
   }
 
-  export type OfficerAssignmentCreateWithoutApplicationInput = {
+  export type DepartmentCreateWithoutApplicationsInput = {
     id?: string
-    expectedCompletionDate?: Date | string | null
-    priority?: number
-    instructions?: string | null
+    name: string
+    description?: string | null
+    isActive?: boolean
     createdAt?: Date | string
-    assignedBy: UserCreateNestedOneWithoutAssignmentsGivenInput
-    assignedTo: UserCreateNestedOneWithoutAssignmentsReceivedInput
+    updatedAt?: Date | string
   }
 
-  export type OfficerAssignmentUncheckedCreateWithoutApplicationInput = {
+  export type DepartmentUncheckedCreateWithoutApplicationsInput = {
     id?: string
-    assignedById: string
-    assignedToId: string
-    expectedCompletionDate?: Date | string | null
-    priority?: number
-    instructions?: string | null
+    name: string
+    description?: string | null
+    isActive?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type OfficerAssignmentCreateOrConnectWithoutApplicationInput = {
-    where: OfficerAssignmentWhereUniqueInput
-    create: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput>
+  export type DepartmentCreateOrConnectWithoutApplicationsInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
   }
 
-  export type OfficerAssignmentCreateManyApplicationInputEnvelope = {
-    data: OfficerAssignmentCreateManyApplicationInput | OfficerAssignmentCreateManyApplicationInput[]
+  export type UserCreateWithoutDispatchedApplicationsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutDispatchedApplicationsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutDispatchedApplicationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
+  }
+
+  export type ServiceCategoryCreateWithoutApplicationsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ServiceCategoryUncheckedCreateWithoutApplicationsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ServiceCategoryCreateOrConnectWithoutApplicationsInput = {
+    where: ServiceCategoryWhereUniqueInput
+    create: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
+  }
+
+  export type DocumentRequestCreateWithoutApplicationInput = {
+    id?: string
+    documentType: $Enums.DocumentType
+    reason?: string | null
+    dueDate?: Date | string | null
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    requestedBy: UserCreateNestedOneWithoutDocumentRequestsInput
+  }
+
+  export type DocumentRequestUncheckedCreateWithoutApplicationInput = {
+    id?: string
+    requestedById: string
+    documentType: $Enums.DocumentType
+    reason?: string | null
+    dueDate?: Date | string | null
+    isCompleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DocumentRequestCreateOrConnectWithoutApplicationInput = {
+    where: DocumentRequestWhereUniqueInput
+    create: XOR<DocumentRequestCreateWithoutApplicationInput, DocumentRequestUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type DocumentRequestCreateManyApplicationInputEnvelope = {
+    data: DocumentRequestCreateManyApplicationInput | DocumentRequestCreateManyApplicationInput[]
     skipDuplicates?: boolean
   }
 
@@ -37019,35 +37099,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type DocumentRequestCreateWithoutApplicationInput = {
+  export type FrontdeskForwardingCreateWithoutApplicationInput = {
     id?: string
-    documentType: $Enums.DocumentType
-    reason?: string | null
-    dueDate?: Date | string | null
-    isCompleted?: boolean
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
-    requestedBy: UserCreateNestedOneWithoutDocumentRequestsInput
+    fromFrontdesk: UserCreateNestedOneWithoutForwardedFromInput
+    toFrontdesk: UserCreateNestedOneWithoutForwardedToInput
   }
 
-  export type DocumentRequestUncheckedCreateWithoutApplicationInput = {
+  export type FrontdeskForwardingUncheckedCreateWithoutApplicationInput = {
     id?: string
-    requestedById: string
-    documentType: $Enums.DocumentType
-    reason?: string | null
-    dueDate?: Date | string | null
-    isCompleted?: boolean
+    fromFrontdeskId: string
+    toFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
-  export type DocumentRequestCreateOrConnectWithoutApplicationInput = {
-    where: DocumentRequestWhereUniqueInput
-    create: XOR<DocumentRequestCreateWithoutApplicationInput, DocumentRequestUncheckedCreateWithoutApplicationInput>
+  export type FrontdeskForwardingCreateOrConnectWithoutApplicationInput = {
+    where: FrontdeskForwardingWhereUniqueInput
+    create: XOR<FrontdeskForwardingCreateWithoutApplicationInput, FrontdeskForwardingUncheckedCreateWithoutApplicationInput>
   }
 
-  export type DocumentRequestCreateManyApplicationInputEnvelope = {
-    data: DocumentRequestCreateManyApplicationInput | DocumentRequestCreateManyApplicationInput[]
+  export type FrontdeskForwardingCreateManyApplicationInputEnvelope = {
+    data: FrontdeskForwardingCreateManyApplicationInput | FrontdeskForwardingCreateManyApplicationInput[]
     skipDuplicates?: boolean
   }
 
@@ -37083,65 +37163,33 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ApplicationAuditLogCreateWithoutApplicationInput = {
+  export type OfficerAssignmentCreateWithoutApplicationInput = {
     id?: string
-    action: string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: string | null
-    createdAt?: Date | string
-    performedBy: UserCreateNestedOneWithoutAuditLogsInput
-  }
-
-  export type ApplicationAuditLogUncheckedCreateWithoutApplicationInput = {
-    id?: string
-    action: string
-    performedById: string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: string | null
-    createdAt?: Date | string
-  }
-
-  export type ApplicationAuditLogCreateOrConnectWithoutApplicationInput = {
-    where: ApplicationAuditLogWhereUniqueInput
-    create: XOR<ApplicationAuditLogCreateWithoutApplicationInput, ApplicationAuditLogUncheckedCreateWithoutApplicationInput>
-  }
-
-  export type ApplicationAuditLogCreateManyApplicationInputEnvelope = {
-    data: ApplicationAuditLogCreateManyApplicationInput | ApplicationAuditLogCreateManyApplicationInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type FrontdeskForwardingCreateWithoutApplicationInput = {
-    id?: string
-    fromOfficerId: string
-    toOfficerId: string
+    expectedCompletionDate?: Date | string | null
+    priority?: number
     instructions?: string | null
-    isActive?: boolean
     createdAt?: Date | string
-    fromFrontdesk: UserCreateNestedOneWithoutForwardedFromInput
-    toFrontdesk: UserCreateNestedOneWithoutForwardedToInput
+    assignedBy: UserCreateNestedOneWithoutAssignmentsGivenInput
+    assignedTo: UserCreateNestedOneWithoutAssignmentsReceivedInput
   }
 
-  export type FrontdeskForwardingUncheckedCreateWithoutApplicationInput = {
+  export type OfficerAssignmentUncheckedCreateWithoutApplicationInput = {
     id?: string
-    fromFrontdeskId: string
-    toFrontdeskId: string
-    fromOfficerId: string
-    toOfficerId: string
+    assignedById: string
+    assignedToId: string
+    expectedCompletionDate?: Date | string | null
+    priority?: number
     instructions?: string | null
-    isActive?: boolean
     createdAt?: Date | string
   }
 
-  export type FrontdeskForwardingCreateOrConnectWithoutApplicationInput = {
-    where: FrontdeskForwardingWhereUniqueInput
-    create: XOR<FrontdeskForwardingCreateWithoutApplicationInput, FrontdeskForwardingUncheckedCreateWithoutApplicationInput>
+  export type OfficerAssignmentCreateOrConnectWithoutApplicationInput = {
+    where: OfficerAssignmentWhereUniqueInput
+    create: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput>
   }
 
-  export type FrontdeskForwardingCreateManyApplicationInputEnvelope = {
-    data: FrontdeskForwardingCreateManyApplicationInput | FrontdeskForwardingCreateManyApplicationInput[]
+  export type OfficerAssignmentCreateManyApplicationInputEnvelope = {
+    data: OfficerAssignmentCreateManyApplicationInput | OfficerAssignmentCreateManyApplicationInput[]
     skipDuplicates?: boolean
   }
 
@@ -37151,8 +37199,8 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
     fromOfficer: UserCreateNestedOneWithoutOfficerForwardedFromInput
     toOfficer: UserCreateNestedOneWithoutOfficerForwardedToInput
   }
@@ -37165,8 +37213,8 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
   }
 
   export type OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput = {
@@ -37179,222 +37227,20 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ServiceCategoryUpsertWithoutApplicationsInput = {
-    update: XOR<ServiceCategoryUpdateWithoutApplicationsInput, ServiceCategoryUncheckedUpdateWithoutApplicationsInput>
-    create: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
-    where?: ServiceCategoryWhereInput
+  export type ApplicationAuditLogUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: ApplicationAuditLogWhereUniqueInput
+    update: XOR<ApplicationAuditLogUpdateWithoutApplicationInput, ApplicationAuditLogUncheckedUpdateWithoutApplicationInput>
+    create: XOR<ApplicationAuditLogCreateWithoutApplicationInput, ApplicationAuditLogUncheckedCreateWithoutApplicationInput>
   }
 
-  export type ServiceCategoryUpdateToOneWithWhereWithoutApplicationsInput = {
-    where?: ServiceCategoryWhereInput
-    data: XOR<ServiceCategoryUpdateWithoutApplicationsInput, ServiceCategoryUncheckedUpdateWithoutApplicationsInput>
+  export type ApplicationAuditLogUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: ApplicationAuditLogWhereUniqueInput
+    data: XOR<ApplicationAuditLogUpdateWithoutApplicationInput, ApplicationAuditLogUncheckedUpdateWithoutApplicationInput>
   }
 
-  export type ServiceCategoryUpdateWithoutApplicationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    slaDays?: IntFieldUpdateOperationsInput | number
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ServiceCategoryUncheckedUpdateWithoutApplicationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    slaDays?: IntFieldUpdateOperationsInput | number
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DepartmentUpsertWithoutApplicationsInput = {
-    update: XOR<DepartmentUpdateWithoutApplicationsInput, DepartmentUncheckedUpdateWithoutApplicationsInput>
-    create: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
-    where?: DepartmentWhereInput
-  }
-
-  export type DepartmentUpdateToOneWithWhereWithoutApplicationsInput = {
-    where?: DepartmentWhereInput
-    data: XOR<DepartmentUpdateWithoutApplicationsInput, DepartmentUncheckedUpdateWithoutApplicationsInput>
-  }
-
-  export type DepartmentUpdateWithoutApplicationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DepartmentUncheckedUpdateWithoutApplicationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserUpsertWithoutCurrentHolderFilesInput = {
-    update: XOR<UserUpdateWithoutCurrentHolderFilesInput, UserUncheckedUpdateWithoutCurrentHolderFilesInput>
-    create: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutCurrentHolderFilesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutCurrentHolderFilesInput, UserUncheckedUpdateWithoutCurrentHolderFilesInput>
-  }
-
-  export type UserUpdateWithoutCurrentHolderFilesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
-    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
-    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
-    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
-    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutCurrentHolderFilesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
-    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
-    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
-    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
-    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
-  }
-
-  export type UserUpsertWithoutDispatchedApplicationsInput = {
-    update: XOR<UserUpdateWithoutDispatchedApplicationsInput, UserUncheckedUpdateWithoutDispatchedApplicationsInput>
-    create: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutDispatchedApplicationsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutDispatchedApplicationsInput, UserUncheckedUpdateWithoutDispatchedApplicationsInput>
-  }
-
-  export type UserUpdateWithoutDispatchedApplicationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
-    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
-    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
-    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
-    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
-    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutDispatchedApplicationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
-    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
-    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
-    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
-    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
-    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
-  }
-
-  export type ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput = {
-    where: ApplicationWorkflowWhereUniqueInput
-    update: XOR<ApplicationWorkflowUpdateWithoutApplicationInput, ApplicationWorkflowUncheckedUpdateWithoutApplicationInput>
-    create: XOR<ApplicationWorkflowCreateWithoutApplicationInput, ApplicationWorkflowUncheckedCreateWithoutApplicationInput>
-  }
-
-  export type ApplicationWorkflowUpdateWithWhereUniqueWithoutApplicationInput = {
-    where: ApplicationWorkflowWhereUniqueInput
-    data: XOR<ApplicationWorkflowUpdateWithoutApplicationInput, ApplicationWorkflowUncheckedUpdateWithoutApplicationInput>
-  }
-
-  export type ApplicationWorkflowUpdateManyWithWhereWithoutApplicationInput = {
-    where: ApplicationWorkflowScalarWhereInput
-    data: XOR<ApplicationWorkflowUpdateManyMutationInput, ApplicationWorkflowUncheckedUpdateManyWithoutApplicationInput>
+  export type ApplicationAuditLogUpdateManyWithWhereWithoutApplicationInput = {
+    where: ApplicationAuditLogScalarWhereInput
+    data: XOR<ApplicationAuditLogUpdateManyMutationInput, ApplicationAuditLogUncheckedUpdateManyWithoutApplicationInput>
   }
 
   export type ApplicationValidationUpsertWithoutApplicationInput = {
@@ -37428,36 +37274,220 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type OfficerAssignmentUpsertWithWhereUniqueWithoutApplicationInput = {
-    where: OfficerAssignmentWhereUniqueInput
-    update: XOR<OfficerAssignmentUpdateWithoutApplicationInput, OfficerAssignmentUncheckedUpdateWithoutApplicationInput>
-    create: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput>
+  export type ApplicationWorkflowUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: ApplicationWorkflowWhereUniqueInput
+    update: XOR<ApplicationWorkflowUpdateWithoutApplicationInput, ApplicationWorkflowUncheckedUpdateWithoutApplicationInput>
+    create: XOR<ApplicationWorkflowCreateWithoutApplicationInput, ApplicationWorkflowUncheckedCreateWithoutApplicationInput>
   }
 
-  export type OfficerAssignmentUpdateWithWhereUniqueWithoutApplicationInput = {
-    where: OfficerAssignmentWhereUniqueInput
-    data: XOR<OfficerAssignmentUpdateWithoutApplicationInput, OfficerAssignmentUncheckedUpdateWithoutApplicationInput>
+  export type ApplicationWorkflowUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: ApplicationWorkflowWhereUniqueInput
+    data: XOR<ApplicationWorkflowUpdateWithoutApplicationInput, ApplicationWorkflowUncheckedUpdateWithoutApplicationInput>
   }
 
-  export type OfficerAssignmentUpdateManyWithWhereWithoutApplicationInput = {
-    where: OfficerAssignmentScalarWhereInput
-    data: XOR<OfficerAssignmentUpdateManyMutationInput, OfficerAssignmentUncheckedUpdateManyWithoutApplicationInput>
+  export type ApplicationWorkflowUpdateManyWithWhereWithoutApplicationInput = {
+    where: ApplicationWorkflowScalarWhereInput
+    data: XOR<ApplicationWorkflowUpdateManyMutationInput, ApplicationWorkflowUncheckedUpdateManyWithoutApplicationInput>
   }
 
-  export type DocumentUpsertWithWhereUniqueWithoutApplicationInput = {
-    where: DocumentWhereUniqueInput
-    update: XOR<DocumentUpdateWithoutApplicationInput, DocumentUncheckedUpdateWithoutApplicationInput>
-    create: XOR<DocumentCreateWithoutApplicationInput, DocumentUncheckedCreateWithoutApplicationInput>
+  export type UserUpsertWithoutCurrentHolderFilesInput = {
+    update: XOR<UserUpdateWithoutCurrentHolderFilesInput, UserUncheckedUpdateWithoutCurrentHolderFilesInput>
+    create: XOR<UserCreateWithoutCurrentHolderFilesInput, UserUncheckedCreateWithoutCurrentHolderFilesInput>
+    where?: UserWhereInput
   }
 
-  export type DocumentUpdateWithWhereUniqueWithoutApplicationInput = {
-    where: DocumentWhereUniqueInput
-    data: XOR<DocumentUpdateWithoutApplicationInput, DocumentUncheckedUpdateWithoutApplicationInput>
+  export type UserUpdateToOneWithWhereWithoutCurrentHolderFilesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCurrentHolderFilesInput, UserUncheckedUpdateWithoutCurrentHolderFilesInput>
   }
 
-  export type DocumentUpdateManyWithWhereWithoutApplicationInput = {
-    where: DocumentScalarWhereInput
-    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutApplicationInput>
+  export type UserUpdateWithoutCurrentHolderFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCurrentHolderFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type DepartmentUpsertWithoutApplicationsInput = {
+    update: XOR<DepartmentUpdateWithoutApplicationsInput, DepartmentUncheckedUpdateWithoutApplicationsInput>
+    create: XOR<DepartmentCreateWithoutApplicationsInput, DepartmentUncheckedCreateWithoutApplicationsInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutApplicationsInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutApplicationsInput, DepartmentUncheckedUpdateWithoutApplicationsInput>
+  }
+
+  export type DepartmentUpdateWithoutApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepartmentUncheckedUpdateWithoutApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutDispatchedApplicationsInput = {
+    update: XOR<UserUpdateWithoutDispatchedApplicationsInput, UserUncheckedUpdateWithoutDispatchedApplicationsInput>
+    create: XOR<UserCreateWithoutDispatchedApplicationsInput, UserUncheckedCreateWithoutDispatchedApplicationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDispatchedApplicationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDispatchedApplicationsInput, UserUncheckedUpdateWithoutDispatchedApplicationsInput>
+  }
+
+  export type UserUpdateWithoutDispatchedApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDispatchedApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type ServiceCategoryUpsertWithoutApplicationsInput = {
+    update: XOR<ServiceCategoryUpdateWithoutApplicationsInput, ServiceCategoryUncheckedUpdateWithoutApplicationsInput>
+    create: XOR<ServiceCategoryCreateWithoutApplicationsInput, ServiceCategoryUncheckedCreateWithoutApplicationsInput>
+    where?: ServiceCategoryWhereInput
+  }
+
+  export type ServiceCategoryUpdateToOneWithWhereWithoutApplicationsInput = {
+    where?: ServiceCategoryWhereInput
+    data: XOR<ServiceCategoryUpdateWithoutApplicationsInput, ServiceCategoryUncheckedUpdateWithoutApplicationsInput>
+  }
+
+  export type ServiceCategoryUpdateWithoutApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCategoryUncheckedUpdateWithoutApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentRequestUpsertWithWhereUniqueWithoutApplicationInput = {
@@ -37476,36 +37506,20 @@ export namespace Prisma {
     data: XOR<DocumentRequestUpdateManyMutationInput, DocumentRequestUncheckedUpdateManyWithoutApplicationInput>
   }
 
-  export type NotificationUpsertWithWhereUniqueWithoutApplicationInput = {
-    where: NotificationWhereUniqueInput
-    update: XOR<NotificationUpdateWithoutApplicationInput, NotificationUncheckedUpdateWithoutApplicationInput>
-    create: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput>
+  export type DocumentUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: DocumentWhereUniqueInput
+    update: XOR<DocumentUpdateWithoutApplicationInput, DocumentUncheckedUpdateWithoutApplicationInput>
+    create: XOR<DocumentCreateWithoutApplicationInput, DocumentUncheckedCreateWithoutApplicationInput>
   }
 
-  export type NotificationUpdateWithWhereUniqueWithoutApplicationInput = {
-    where: NotificationWhereUniqueInput
-    data: XOR<NotificationUpdateWithoutApplicationInput, NotificationUncheckedUpdateWithoutApplicationInput>
+  export type DocumentUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: DocumentWhereUniqueInput
+    data: XOR<DocumentUpdateWithoutApplicationInput, DocumentUncheckedUpdateWithoutApplicationInput>
   }
 
-  export type NotificationUpdateManyWithWhereWithoutApplicationInput = {
-    where: NotificationScalarWhereInput
-    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutApplicationInput>
-  }
-
-  export type ApplicationAuditLogUpsertWithWhereUniqueWithoutApplicationInput = {
-    where: ApplicationAuditLogWhereUniqueInput
-    update: XOR<ApplicationAuditLogUpdateWithoutApplicationInput, ApplicationAuditLogUncheckedUpdateWithoutApplicationInput>
-    create: XOR<ApplicationAuditLogCreateWithoutApplicationInput, ApplicationAuditLogUncheckedCreateWithoutApplicationInput>
-  }
-
-  export type ApplicationAuditLogUpdateWithWhereUniqueWithoutApplicationInput = {
-    where: ApplicationAuditLogWhereUniqueInput
-    data: XOR<ApplicationAuditLogUpdateWithoutApplicationInput, ApplicationAuditLogUncheckedUpdateWithoutApplicationInput>
-  }
-
-  export type ApplicationAuditLogUpdateManyWithWhereWithoutApplicationInput = {
-    where: ApplicationAuditLogScalarWhereInput
-    data: XOR<ApplicationAuditLogUpdateManyMutationInput, ApplicationAuditLogUncheckedUpdateManyWithoutApplicationInput>
+  export type DocumentUpdateManyWithWhereWithoutApplicationInput = {
+    where: DocumentScalarWhereInput
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutApplicationInput>
   }
 
   export type FrontdeskForwardingUpsertWithWhereUniqueWithoutApplicationInput = {
@@ -37522,6 +37536,38 @@ export namespace Prisma {
   export type FrontdeskForwardingUpdateManyWithWhereWithoutApplicationInput = {
     where: FrontdeskForwardingScalarWhereInput
     data: XOR<FrontdeskForwardingUpdateManyMutationInput, FrontdeskForwardingUncheckedUpdateManyWithoutApplicationInput>
+  }
+
+  export type NotificationUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutApplicationInput, NotificationUncheckedUpdateWithoutApplicationInput>
+    create: XOR<NotificationCreateWithoutApplicationInput, NotificationUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutApplicationInput, NotificationUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutApplicationInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutApplicationInput>
+  }
+
+  export type OfficerAssignmentUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: OfficerAssignmentWhereUniqueInput
+    update: XOR<OfficerAssignmentUpdateWithoutApplicationInput, OfficerAssignmentUncheckedUpdateWithoutApplicationInput>
+    create: XOR<OfficerAssignmentCreateWithoutApplicationInput, OfficerAssignmentUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type OfficerAssignmentUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: OfficerAssignmentWhereUniqueInput
+    data: XOR<OfficerAssignmentUpdateWithoutApplicationInput, OfficerAssignmentUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type OfficerAssignmentUpdateManyWithWhereWithoutApplicationInput = {
+    where: OfficerAssignmentScalarWhereInput
+    data: XOR<OfficerAssignmentUpdateManyMutationInput, OfficerAssignmentUncheckedUpdateManyWithoutApplicationInput>
   }
 
   export type OfficerForwardingHistoryUpsertWithWhereUniqueWithoutApplicationInput = {
@@ -37543,32 +37589,33 @@ export namespace Prisma {
   export type ApplicationCreateWithoutWorkflowInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
@@ -37576,31 +37623,32 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
@@ -37615,28 +37663,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWorkflowChangesInput = {
@@ -37645,28 +37693,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWorkflowChangesInput = {
@@ -37688,32 +37736,33 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutWorkflowInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
@@ -37721,31 +37770,32 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
@@ -37766,28 +37816,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkflowChangesInput = {
@@ -37796,59 +37846,60 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ApplicationCreateWithoutValidationInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
@@ -37856,31 +37907,32 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
@@ -37895,28 +37947,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutValidationsInput = {
@@ -37925,28 +37977,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutValidationsInput = {
@@ -37968,32 +38020,33 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutValidationInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
@@ -38001,31 +38054,32 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
@@ -38046,28 +38100,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutValidationsInput = {
@@ -38076,59 +38130,60 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ApplicationCreateWithoutOfficerAssignmentsInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
@@ -38136,31 +38191,32 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
@@ -38175,28 +38231,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAssignmentsGivenInput = {
@@ -38205,28 +38261,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAssignmentsGivenInput = {
@@ -38240,28 +38296,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAssignmentsReceivedInput = {
@@ -38270,28 +38326,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAssignmentsReceivedInput = {
@@ -38313,32 +38369,33 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutOfficerAssignmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
@@ -38346,31 +38403,32 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
@@ -38391,28 +38449,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignmentsGivenInput = {
@@ -38421,28 +38479,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutAssignmentsReceivedInput = {
@@ -38462,28 +38520,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignmentsReceivedInput = {
@@ -38492,59 +38550,60 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ApplicationCreateWithoutDocumentsInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
@@ -38552,31 +38611,32 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
@@ -38591,28 +38651,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUploadedDocumentsInput = {
@@ -38621,28 +38681,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUploadedDocumentsInput = {
@@ -38656,28 +38716,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutVerifiedDocumentsInput = {
@@ -38686,28 +38746,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutVerifiedDocumentsInput = {
@@ -38729,32 +38789,33 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutDocumentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
@@ -38762,31 +38823,32 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
@@ -38807,28 +38869,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUploadedDocumentsInput = {
@@ -38837,28 +38899,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutVerifiedDocumentsInput = {
@@ -38878,28 +38940,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVerifiedDocumentsInput = {
@@ -38908,59 +38970,60 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ApplicationCreateWithoutDocumentRequestsInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
@@ -38968,31 +39031,32 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
@@ -39007,28 +39071,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDocumentRequestsInput = {
@@ -39037,28 +39101,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDocumentRequestsInput = {
@@ -39080,32 +39144,33 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutDocumentRequestsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
@@ -39113,31 +39178,32 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
@@ -39158,28 +39224,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentRequestsInput = {
@@ -39188,28 +39254,99 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type ApplicationCreateWithoutNotificationsInput = {
+    id?: string
+    rrNumber?: string | null
+    status?: $Enums.ApplicationStatus
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutNotificationsInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    status?: $Enums.ApplicationStatus
+    currentHolderId?: string | null
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutNotificationsInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutNotificationsInput, ApplicationUncheckedCreateWithoutNotificationsInput>
   }
 
   export type UserCreateWithoutNotificationsInput = {
@@ -39218,28 +39355,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -39248,28 +39385,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -39277,73 +39414,81 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
   }
 
-  export type ApplicationCreateWithoutNotificationsInput = {
-    id?: string
-    rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
-    status?: $Enums.ApplicationStatus
-    submittedAt?: Date | string | null
-    validatedAt?: Date | string | null
-    completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
-    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
-    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
-  }
-
-  export type ApplicationUncheckedCreateWithoutNotificationsInput = {
-    id?: string
-    rrNumber?: string | null
-    serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
-    status?: $Enums.ApplicationStatus
-    currentHolderId?: string | null
-    submittedAt?: Date | string | null
-    validatedAt?: Date | string | null
-    completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
-    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
-    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
-  }
-
-  export type ApplicationCreateOrConnectWithoutNotificationsInput = {
-    where: ApplicationWhereUniqueInput
+  export type ApplicationUpsertWithoutNotificationsInput = {
+    update: XOR<ApplicationUpdateWithoutNotificationsInput, ApplicationUncheckedUpdateWithoutNotificationsInput>
     create: XOR<ApplicationCreateWithoutNotificationsInput, ApplicationUncheckedCreateWithoutNotificationsInput>
+    where?: ApplicationWhereInput
+  }
+
+  export type ApplicationUpdateToOneWithWhereWithoutNotificationsInput = {
+    where?: ApplicationWhereInput
+    data: XOR<ApplicationUpdateWithoutNotificationsInput, ApplicationUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type ApplicationUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutNotificationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutNotificationsInput = {
@@ -39363,28 +39508,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -39393,134 +39538,60 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
-  }
-
-  export type ApplicationUpsertWithoutNotificationsInput = {
-    update: XOR<ApplicationUpdateWithoutNotificationsInput, ApplicationUncheckedUpdateWithoutNotificationsInput>
-    create: XOR<ApplicationCreateWithoutNotificationsInput, ApplicationUncheckedCreateWithoutNotificationsInput>
-    where?: ApplicationWhereInput
-  }
-
-  export type ApplicationUpdateToOneWithWhereWithoutNotificationsInput = {
-    where?: ApplicationWhereInput
-    data: XOR<ApplicationUpdateWithoutNotificationsInput, ApplicationUncheckedUpdateWithoutNotificationsInput>
-  }
-
-  export type ApplicationUpdateWithoutNotificationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
-    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
-    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
-  }
-
-  export type ApplicationUncheckedUpdateWithoutNotificationsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
-    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
-    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ApplicationCreateWithoutAuditLogsInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
@@ -39528,31 +39599,32 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
@@ -39567,28 +39639,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -39597,28 +39669,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -39640,32 +39712,33 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutAuditLogsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
@@ -39673,31 +39746,32 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
@@ -39718,28 +39792,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -39748,59 +39822,60 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ApplicationCreateWithoutFrontdeskForwardingsInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
   }
 
@@ -39808,31 +39883,32 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
   }
 
@@ -39847,28 +39923,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
     assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
-    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutForwardedFromInput = {
@@ -39877,28 +39953,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
     assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
-    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutForwardedFromInput = {
@@ -39912,28 +39988,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
     uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
     assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
     assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
-    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutForwardedToInput = {
@@ -39942,28 +40018,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
     uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
     assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
-    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutForwardedToInput = {
@@ -39985,32 +40061,33 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutFrontdeskForwardingsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
@@ -40018,31 +40095,32 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
@@ -40063,28 +40141,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
     assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
-    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForwardedFromInput = {
@@ -40093,28 +40171,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
     assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
-    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutForwardedToInput = {
@@ -40134,28 +40212,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
     uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
     assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
     assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
-    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForwardedToInput = {
@@ -40164,92 +40242,94 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
     assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
-    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ApplicationCreateWithoutOfficerForwardingsInput = {
     id?: string
     rrNumber?: string | null
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
-    department: DepartmentCreateNestedOneWithoutApplicationsInput
-    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
-    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
-    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
-    documents?: DocumentCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutOfficerForwardingsInput = {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
-    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
-    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
-    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
-    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutOfficerForwardingsInput = {
@@ -40263,28 +40343,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOfficerForwardedFromInput = {
@@ -40293,28 +40373,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOfficerForwardedFromInput = {
@@ -40328,28 +40408,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOfficerForwardedToInput = {
@@ -40358,28 +40438,28 @@ export namespace Prisma {
     phone?: string | null
     passwordHash?: string | null
     role?: $Enums.UserRole
-    level?: number | null
     isActive?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
-    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
     currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
     dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
-    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
-    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
-    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
-    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
-    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
-    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
     forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
     forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOfficerForwardedToInput = {
@@ -40401,65 +40481,67 @@ export namespace Prisma {
   export type ApplicationUpdateWithoutOfficerForwardingsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutOfficerForwardingsInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutOfficerForwardedFromInput = {
@@ -40479,28 +40561,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfficerForwardedFromInput = {
@@ -40509,28 +40591,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutOfficerForwardedToInput = {
@@ -40550,28 +40632,28 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfficerForwardedToInput = {
@@ -40580,82 +40662,37 @@ export namespace Prisma {
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    level?: NullableIntFieldUpdateOperationsInput | number | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
-    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
     currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
     dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
-    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
-    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
-    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
-    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
-    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
-    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
     forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
     forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
   }
 
-  export type ApplicationCreateManyCurrentHolderInput = {
-    id?: string
-    rrNumber?: string | null
-    serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
-    status?: $Enums.ApplicationStatus
-    submittedAt?: Date | string | null
-    validatedAt?: Date | string | null
-    completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ApplicationCreateManyDispatchedByInput = {
-    id?: string
-    rrNumber?: string | null
-    serviceCategoryId: string
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
-    status?: $Enums.ApplicationStatus
-    currentHolderId?: string | null
-    submittedAt?: Date | string | null
-    validatedAt?: Date | string | null
-    completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ApplicationWorkflowCreateManyChangedByInput = {
+  export type ApplicationAuditLogCreateManyPerformedByInput = {
     id?: string
     applicationId: string
-    fromStatus?: $Enums.ApplicationStatus | null
-    toStatus: $Enums.ApplicationStatus
-    comments?: string | null
+    action: string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
     createdAt?: Date | string
   }
 
@@ -40669,16 +40706,70 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type DocumentCreateManyVerifiedByInput = {
+  export type ApplicationWorkflowCreateManyChangedByInput = {
+    id?: string
+    applicationId: string
+    fromStatus?: $Enums.ApplicationStatus | null
+    toStatus: $Enums.ApplicationStatus
+    comments?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ApplicationCreateManyCurrentHolderInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    status?: $Enums.ApplicationStatus
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
+  }
+
+  export type ApplicationCreateManyDispatchedByInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    status?: $Enums.ApplicationStatus
+    currentHolderId?: string | null
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
+  }
+
+  export type DocumentRequestCreateManyRequestedByInput = {
     id?: string
     applicationId: string
     documentType: $Enums.DocumentType
-    fileName: string
-    filePath: string
-    fileSize: number
-    uploadedById: string
-    isVerified?: boolean
-    verificationNotes?: string | null
+    reason?: string | null
+    dueDate?: Date | string | null
+    isCompleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -40697,62 +40788,18 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type OfficerAssignmentCreateManyAssignedByInput = {
-    id?: string
-    applicationId: string
-    assignedToId: string
-    expectedCompletionDate?: Date | string | null
-    priority?: number
-    instructions?: string | null
-    createdAt?: Date | string
-  }
-
-  export type OfficerAssignmentCreateManyAssignedToInput = {
-    id?: string
-    applicationId: string
-    assignedById: string
-    expectedCompletionDate?: Date | string | null
-    priority?: number
-    instructions?: string | null
-    createdAt?: Date | string
-  }
-
-  export type DocumentRequestCreateManyRequestedByInput = {
+  export type DocumentCreateManyVerifiedByInput = {
     id?: string
     applicationId: string
     documentType: $Enums.DocumentType
-    reason?: string | null
-    dueDate?: Date | string | null
-    isCompleted?: boolean
+    fileName: string
+    filePath: string
+    fileSize: number
+    uploadedById: string
+    isVerified?: boolean
+    verificationNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-  }
-
-  export type NotificationCreateManyUserInput = {
-    id?: string
-    notificationType: $Enums.NotificationType
-    applicationId?: string | null
-    title: string
-    message: string
-    isRead?: boolean
-    readAt?: Date | string | null
-    createdAt?: Date | string
-  }
-
-  export type ApplicationAuditLogCreateManyPerformedByInput = {
-    id?: string
-    applicationId: string
-    action: string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: string | null
-    createdAt?: Date | string
-  }
-
-  export type FrontdeskOfficerCreateManyFrontdeskUserInput = {
-    id?: string
-    officerId?: string | null
-    createdAt?: Date | string
   }
 
   export type FrontdeskForwardingCreateManyFromFrontdeskInput = {
@@ -40777,6 +40824,43 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type FrontdeskOfficerCreateManyFrontdeskUserInput = {
+    id?: string
+    officerId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateManyUserInput = {
+    id?: string
+    notificationType: $Enums.NotificationType
+    applicationId?: string | null
+    title: string
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type OfficerAssignmentCreateManyAssignedByInput = {
+    id?: string
+    applicationId: string
+    assignedToId: string
+    expectedCompletionDate?: Date | string | null
+    priority?: number
+    instructions?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OfficerAssignmentCreateManyAssignedToInput = {
+    id?: string
+    applicationId: string
+    assignedById: string
+    expectedCompletionDate?: Date | string | null
+    priority?: number
+    instructions?: string | null
+    createdAt?: Date | string
+  }
+
   export type OfficerForwardingHistoryCreateManyFromOfficerInput = {
     id?: string
     applicationId: string
@@ -40785,8 +40869,8 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
   }
 
   export type OfficerForwardingHistoryCreateManyToOfficerInput = {
@@ -40797,208 +40881,37 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
   }
 
-  export type ApplicationUpdateWithoutCurrentHolderInput = {
+  export type ApplicationAuditLogUpdateWithoutPerformedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
-    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
-    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    application?: ApplicationUpdateOneRequiredWithoutAuditLogsNestedInput
   }
 
-  export type ApplicationUncheckedUpdateWithoutCurrentHolderInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
-    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
-    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
-  }
-
-  export type ApplicationUncheckedUpdateManyWithoutCurrentHolderInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ApplicationUpdateWithoutDispatchedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
-    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
-    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
-  }
-
-  export type ApplicationUncheckedUpdateWithoutDispatchedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
-    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
-    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
-    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
-  }
-
-  export type ApplicationUncheckedUpdateManyWithoutDispatchedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
-    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ApplicationWorkflowUpdateWithoutChangedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    fromStatus?: NullableEnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus | null
-    toStatus?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    comments?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    application?: ApplicationUpdateOneRequiredWithoutWorkflowNestedInput
-  }
-
-  export type ApplicationWorkflowUncheckedUpdateWithoutChangedByInput = {
+  export type ApplicationAuditLogUncheckedUpdateWithoutPerformedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
-    fromStatus?: NullableEnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus | null
-    toStatus?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ApplicationWorkflowUncheckedUpdateManyWithoutChangedByInput = {
+  export type ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
-    fromStatus?: NullableEnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus | null
-    toStatus?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    action?: StringFieldUpdateOperationsInput | string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -41032,44 +40945,242 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type DocumentUpdateWithoutVerifiedByInput = {
+  export type ApplicationWorkflowUpdateWithoutChangedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
-    fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
-    fileSize?: IntFieldUpdateOperationsInput | number
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
-    verificationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    fromStatus?: NullableEnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus | null
+    toStatus?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    application?: ApplicationUpdateOneRequiredWithoutDocumentsNestedInput
-    uploadedBy?: UserUpdateOneRequiredWithoutUploadedDocumentsNestedInput
+    application?: ApplicationUpdateOneRequiredWithoutWorkflowNestedInput
   }
 
-  export type DocumentUncheckedUpdateWithoutVerifiedByInput = {
+  export type ApplicationWorkflowUncheckedUpdateWithoutChangedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus | null
+    toStatus?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationWorkflowUncheckedUpdateManyWithoutChangedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus | null
+    toStatus?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    comments?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationUpdateWithoutCurrentHolderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutCurrentHolderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateManyWithoutCurrentHolderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ApplicationUpdateWithoutDispatchedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutDispatchedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateManyWithoutDispatchedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type DocumentRequestUpdateWithoutRequestedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutDocumentRequestsNestedInput
+  }
+
+  export type DocumentRequestUncheckedUpdateWithoutRequestedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
-    fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
-    fileSize?: IntFieldUpdateOperationsInput | number
-    uploadedById?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
-    verificationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type DocumentUncheckedUpdateManyWithoutVerifiedByInput = {
+  export type DocumentRequestUncheckedUpdateManyWithoutRequestedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
-    fileName?: StringFieldUpdateOperationsInput | string
-    filePath?: StringFieldUpdateOperationsInput | string
-    fileSize?: IntFieldUpdateOperationsInput | number
-    uploadedById?: StringFieldUpdateOperationsInput | string
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
-    verificationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -41116,178 +41227,46 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type OfficerAssignmentUpdateWithoutAssignedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: IntFieldUpdateOperationsInput | number
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    application?: ApplicationUpdateOneRequiredWithoutOfficerAssignmentsNestedInput
-    assignedTo?: UserUpdateOneRequiredWithoutAssignmentsReceivedNestedInput
-  }
-
-  export type OfficerAssignmentUncheckedUpdateWithoutAssignedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    applicationId?: StringFieldUpdateOperationsInput | string
-    assignedToId?: StringFieldUpdateOperationsInput | string
-    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: IntFieldUpdateOperationsInput | number
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OfficerAssignmentUncheckedUpdateManyWithoutAssignedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    applicationId?: StringFieldUpdateOperationsInput | string
-    assignedToId?: StringFieldUpdateOperationsInput | string
-    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: IntFieldUpdateOperationsInput | number
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OfficerAssignmentUpdateWithoutAssignedToInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: IntFieldUpdateOperationsInput | number
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    application?: ApplicationUpdateOneRequiredWithoutOfficerAssignmentsNestedInput
-    assignedBy?: UserUpdateOneRequiredWithoutAssignmentsGivenNestedInput
-  }
-
-  export type OfficerAssignmentUncheckedUpdateWithoutAssignedToInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    applicationId?: StringFieldUpdateOperationsInput | string
-    assignedById?: StringFieldUpdateOperationsInput | string
-    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: IntFieldUpdateOperationsInput | number
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type OfficerAssignmentUncheckedUpdateManyWithoutAssignedToInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    applicationId?: StringFieldUpdateOperationsInput | string
-    assignedById?: StringFieldUpdateOperationsInput | string
-    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: IntFieldUpdateOperationsInput | number
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type DocumentRequestUpdateWithoutRequestedByInput = {
+  export type DocumentUpdateWithoutVerifiedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
-    reason?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    fileName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    application?: ApplicationUpdateOneRequiredWithoutDocumentRequestsNestedInput
+    application?: ApplicationUpdateOneRequiredWithoutDocumentsNestedInput
+    uploadedBy?: UserUpdateOneRequiredWithoutUploadedDocumentsNestedInput
   }
 
-  export type DocumentRequestUncheckedUpdateWithoutRequestedByInput = {
+  export type DocumentUncheckedUpdateWithoutVerifiedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
-    reason?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    fileName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedById?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type DocumentRequestUncheckedUpdateManyWithoutRequestedByInput = {
+  export type DocumentUncheckedUpdateManyWithoutVerifiedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     applicationId?: StringFieldUpdateOperationsInput | string
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
-    reason?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    fileName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedById?: StringFieldUpdateOperationsInput | string
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type NotificationUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    notificationType?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    application?: ApplicationUpdateOneWithoutNotificationsNestedInput
-  }
-
-  export type NotificationUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    notificationType?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    applicationId?: NullableStringFieldUpdateOperationsInput | string | null
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type NotificationUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    notificationType?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-    applicationId?: NullableStringFieldUpdateOperationsInput | string | null
-    title?: StringFieldUpdateOperationsInput | string
-    message?: StringFieldUpdateOperationsInput | string
-    isRead?: BoolFieldUpdateOperationsInput | boolean
-    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ApplicationAuditLogUpdateWithoutPerformedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    application?: ApplicationUpdateOneRequiredWithoutAuditLogsNestedInput
-  }
-
-  export type ApplicationAuditLogUncheckedUpdateWithoutPerformedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    applicationId?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    applicationId?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FrontdeskOfficerUpdateWithoutFrontdeskUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    officer?: OfficerProfileUpdateOneWithoutFrontdeskUsersNestedInput
-  }
-
-  export type FrontdeskOfficerUncheckedUpdateWithoutFrontdeskUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    officerId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    officerId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FrontdeskForwardingUpdateWithoutFromFrontdeskInput = {
@@ -41356,14 +41335,125 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FrontdeskOfficerUpdateWithoutFrontdeskUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    officer?: OfficerProfileUpdateOneWithoutFrontdeskUsersNestedInput
+  }
+
+  export type FrontdeskOfficerUncheckedUpdateWithoutFrontdeskUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    officerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    officerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    notificationType?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    notificationType?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    applicationId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    notificationType?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    applicationId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfficerAssignmentUpdateWithoutAssignedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutOfficerAssignmentsNestedInput
+    assignedTo?: UserUpdateOneRequiredWithoutAssignmentsReceivedNestedInput
+  }
+
+  export type OfficerAssignmentUncheckedUpdateWithoutAssignedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    assignedToId?: StringFieldUpdateOperationsInput | string
+    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfficerAssignmentUncheckedUpdateManyWithoutAssignedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    assignedToId?: StringFieldUpdateOperationsInput | string
+    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfficerAssignmentUpdateWithoutAssignedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutOfficerAssignmentsNestedInput
+    assignedBy?: UserUpdateOneRequiredWithoutAssignmentsGivenNestedInput
+  }
+
+  export type OfficerAssignmentUncheckedUpdateWithoutAssignedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfficerAssignmentUncheckedUpdateManyWithoutAssignedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OfficerForwardingHistoryUpdateWithoutFromOfficerInput = {
     id?: StringFieldUpdateOperationsInput | string
     instructions?: NullableStringFieldUpdateOperationsInput | string | null
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     application?: ApplicationUpdateOneRequiredWithoutOfficerForwardingsNestedInput
     toOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedToNestedInput
   }
@@ -41376,8 +41466,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerInput = {
@@ -41388,8 +41478,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OfficerForwardingHistoryUpdateWithoutToOfficerInput = {
@@ -41398,8 +41488,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     application?: ApplicationUpdateOneRequiredWithoutOfficerForwardingsNestedInput
     fromOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedFromNestedInput
   }
@@ -41412,8 +41502,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerInput = {
@@ -41424,8 +41514,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FrontdeskOfficerCreateManyOfficerInput = {
@@ -41455,111 +41545,115 @@ export namespace Prisma {
   export type ApplicationCreateManyServiceCategoryInput = {
     id?: string
     rrNumber?: string | null
-    departmentId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
   }
 
   export type ApplicationUpdateWithoutServiceCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    department?: DepartmentUpdateOneRequiredWithoutApplicationsNestedInput
-    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
-    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutServiceCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutServiceCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    departmentId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OfficerProfileCreateManySectionInput = {
@@ -41583,8 +41677,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutOfficerProfileNestedInput
     frontdeskUsers?: FrontdeskOfficerUpdateManyWithoutOfficerNestedInput
+    user?: UserUpdateOneRequiredWithoutOfficerProfileNestedInput
   }
 
   export type OfficerProfileUncheckedUpdateWithoutSectionInput = {
@@ -41616,54 +41710,56 @@ export namespace Prisma {
     id?: string
     rrNumber?: string | null
     serviceCategoryId: string
-    subject?: string
-    citizenName: string
-    citizenPhone: string
-    citizenEmail?: string | null
-    citizenAddress: string
-    citizenGender?: string | null
-    citizenAadhaar?: string | null
     status?: $Enums.ApplicationStatus
     currentHolderId?: string | null
     submittedAt?: Date | string | null
     validatedAt?: Date | string | null
     completedAt?: Date | string | null
-    isDispatched?: boolean
-    dispatchedAt?: Date | string | null
-    dispatchedById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    applicationSource?: $Enums.ApplicationSource
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
   }
 
   export type ApplicationUpdateWithoutDepartmentInput = {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
     dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
-    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
     documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
-    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
   }
 
@@ -41671,31 +41767,32 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
-    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
-    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
-    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
-    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
@@ -41703,23 +41800,34 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
     serviceCategoryId?: StringFieldUpdateOperationsInput | string
-    subject?: StringFieldUpdateOperationsInput | string
-    citizenName?: StringFieldUpdateOperationsInput | string
-    citizenPhone?: StringFieldUpdateOperationsInput | string
-    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAddress?: StringFieldUpdateOperationsInput | string
-    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
     currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDispatched?: BoolFieldUpdateOperationsInput | boolean
-    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ApplicationAuditLogCreateManyApplicationInput = {
+    id?: string
+    action: string
+    performedById: string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: string | null
+    createdAt?: Date | string
   }
 
   export type ApplicationWorkflowCreateManyApplicationInput = {
@@ -41731,14 +41839,15 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type OfficerAssignmentCreateManyApplicationInput = {
+  export type DocumentRequestCreateManyApplicationInput = {
     id?: string
-    assignedById: string
-    assignedToId: string
-    expectedCompletionDate?: Date | string | null
-    priority?: number
-    instructions?: string | null
+    requestedById: string
+    documentType: $Enums.DocumentType
+    reason?: string | null
+    dueDate?: Date | string | null
+    isCompleted?: boolean
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DocumentCreateManyApplicationInput = {
@@ -41755,15 +41864,15 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type DocumentRequestCreateManyApplicationInput = {
+  export type FrontdeskForwardingCreateManyApplicationInput = {
     id?: string
-    requestedById: string
-    documentType: $Enums.DocumentType
-    reason?: string | null
-    dueDate?: Date | string | null
-    isCompleted?: boolean
+    fromFrontdeskId: string
+    toFrontdeskId: string
+    fromOfficerId: string
+    toOfficerId: string
+    instructions?: string | null
+    isActive?: boolean
     createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type NotificationCreateManyApplicationInput = {
@@ -41777,24 +41886,13 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type ApplicationAuditLogCreateManyApplicationInput = {
+  export type OfficerAssignmentCreateManyApplicationInput = {
     id?: string
-    action: string
-    performedById: string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: string | null
-    createdAt?: Date | string
-  }
-
-  export type FrontdeskForwardingCreateManyApplicationInput = {
-    id?: string
-    fromFrontdeskId: string
-    toFrontdeskId: string
-    fromOfficerId: string
-    toOfficerId: string
+    assignedById: string
+    assignedToId: string
+    expectedCompletionDate?: Date | string | null
+    priority?: number
     instructions?: string | null
-    isActive?: boolean
     createdAt?: Date | string
   }
 
@@ -41806,8 +41904,38 @@ export namespace Prisma {
     priority?: number
     isActive?: boolean
     createdAt?: Date | string
-    forwardedAt?: Date | string
     completedAt?: Date | string | null
+    forwardedAt?: Date | string
+  }
+
+  export type ApplicationAuditLogUpdateWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    performedBy?: UserUpdateOneRequiredWithoutAuditLogsNestedInput
+  }
+
+  export type ApplicationAuditLogUncheckedUpdateWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    performedById?: StringFieldUpdateOperationsInput | string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationAuditLogUncheckedUpdateManyWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    performedById?: StringFieldUpdateOperationsInput | string
+    oldValues?: NullableJsonNullValueInput | InputJsonValue
+    newValues?: NullableJsonNullValueInput | InputJsonValue
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ApplicationWorkflowUpdateWithoutApplicationInput = {
@@ -41837,34 +41965,37 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type OfficerAssignmentUpdateWithoutApplicationInput = {
+  export type DocumentRequestUpdateWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: IntFieldUpdateOperationsInput | number
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    assignedBy?: UserUpdateOneRequiredWithoutAssignmentsGivenNestedInput
-    assignedTo?: UserUpdateOneRequiredWithoutAssignmentsReceivedNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    requestedBy?: UserUpdateOneRequiredWithoutDocumentRequestsNestedInput
   }
 
-  export type OfficerAssignmentUncheckedUpdateWithoutApplicationInput = {
+  export type DocumentRequestUncheckedUpdateWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    assignedById?: StringFieldUpdateOperationsInput | string
-    assignedToId?: StringFieldUpdateOperationsInput | string
-    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: IntFieldUpdateOperationsInput | number
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedById?: StringFieldUpdateOperationsInput | string
+    documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type OfficerAssignmentUncheckedUpdateManyWithoutApplicationInput = {
+  export type DocumentRequestUncheckedUpdateManyWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    assignedById?: StringFieldUpdateOperationsInput | string
-    assignedToId?: StringFieldUpdateOperationsInput | string
-    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    priority?: IntFieldUpdateOperationsInput | number
-    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    requestedById?: StringFieldUpdateOperationsInput | string
+    documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isCompleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DocumentUpdateWithoutApplicationInput = {
@@ -41909,37 +42040,37 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type DocumentRequestUpdateWithoutApplicationInput = {
+  export type FrontdeskForwardingUpdateWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
-    reason?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    requestedBy?: UserUpdateOneRequiredWithoutDocumentRequestsNestedInput
+    fromFrontdesk?: UserUpdateOneRequiredWithoutForwardedFromNestedInput
+    toFrontdesk?: UserUpdateOneRequiredWithoutForwardedToNestedInput
   }
 
-  export type DocumentRequestUncheckedUpdateWithoutApplicationInput = {
+  export type FrontdeskForwardingUncheckedUpdateWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    requestedById?: StringFieldUpdateOperationsInput | string
-    documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
-    reason?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    fromFrontdeskId?: StringFieldUpdateOperationsInput | string
+    toFrontdeskId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type DocumentRequestUncheckedUpdateManyWithoutApplicationInput = {
+  export type FrontdeskForwardingUncheckedUpdateManyWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    requestedById?: StringFieldUpdateOperationsInput | string
-    documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
-    reason?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isCompleted?: BoolFieldUpdateOperationsInput | boolean
+    fromFrontdeskId?: StringFieldUpdateOperationsInput | string
+    toFrontdeskId?: StringFieldUpdateOperationsInput | string
+    fromOfficerId?: StringFieldUpdateOperationsInput | string
+    toOfficerId?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationUpdateWithoutApplicationInput = {
@@ -41975,66 +42106,33 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ApplicationAuditLogUpdateWithoutApplicationInput = {
+  export type OfficerAssignmentUpdateWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    performedBy?: UserUpdateOneRequiredWithoutAuditLogsNestedInput
-  }
-
-  export type ApplicationAuditLogUncheckedUpdateWithoutApplicationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    performedById?: StringFieldUpdateOperationsInput | string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ApplicationAuditLogUncheckedUpdateManyWithoutApplicationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    action?: StringFieldUpdateOperationsInput | string
-    performedById?: StringFieldUpdateOperationsInput | string
-    oldValues?: NullableJsonNullValueInput | InputJsonValue
-    newValues?: NullableJsonNullValueInput | InputJsonValue
-    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FrontdeskForwardingUpdateWithoutApplicationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    fromOfficerId?: StringFieldUpdateOperationsInput | string
-    toOfficerId?: StringFieldUpdateOperationsInput | string
+    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
     instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fromFrontdesk?: UserUpdateOneRequiredWithoutForwardedFromNestedInput
-    toFrontdesk?: UserUpdateOneRequiredWithoutForwardedToNestedInput
+    assignedBy?: UserUpdateOneRequiredWithoutAssignmentsGivenNestedInput
+    assignedTo?: UserUpdateOneRequiredWithoutAssignmentsReceivedNestedInput
   }
 
-  export type FrontdeskForwardingUncheckedUpdateWithoutApplicationInput = {
+  export type OfficerAssignmentUncheckedUpdateWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    fromFrontdeskId?: StringFieldUpdateOperationsInput | string
-    toFrontdeskId?: StringFieldUpdateOperationsInput | string
-    fromOfficerId?: StringFieldUpdateOperationsInput | string
-    toOfficerId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    assignedToId?: StringFieldUpdateOperationsInput | string
+    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
     instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FrontdeskForwardingUncheckedUpdateManyWithoutApplicationInput = {
+  export type OfficerAssignmentUncheckedUpdateManyWithoutApplicationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    fromFrontdeskId?: StringFieldUpdateOperationsInput | string
-    toFrontdeskId?: StringFieldUpdateOperationsInput | string
-    fromOfficerId?: StringFieldUpdateOperationsInput | string
-    toOfficerId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    assignedToId?: StringFieldUpdateOperationsInput | string
+    expectedCompletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: IntFieldUpdateOperationsInput | number
     instructions?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -42044,8 +42142,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fromOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedFromNestedInput
     toOfficer?: UserUpdateOneRequiredWithoutOfficerForwardedToNestedInput
   }
@@ -42058,8 +42156,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationInput = {
@@ -42070,8 +42168,8 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

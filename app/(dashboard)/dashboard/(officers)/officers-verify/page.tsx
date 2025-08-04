@@ -39,7 +39,6 @@ interface CitizenProfile {
 
 interface ServiceCategory {
   name: string;
-  slaDays: number;
 }
 
 interface Document {
@@ -1229,8 +1228,7 @@ const OfficerDashboard = () => {
                                   {app.serviceCategory.name}
                                 </span>
                                 <span className="text-xs text-gray-400">
-                                  Estimated Time: {app.serviceCategory.slaDays}{" "}
-                                  days
+                                  Category: {app.serviceCategory.name}
                                 </span>
                               </div>
                               {app.subject && (
@@ -2073,10 +2071,6 @@ const OfficerDashboard = () => {
                                           </span>
                                           <span className="block font-medium mt-1">
                                             {app.serviceCategory.name}
-                                          </span>
-                                          <span className="text-xs text-gray-400">
-                                            Estimated Time:{" "}
-                                            {app.serviceCategory.slaDays} days
                                           </span>
                                         </div>
                                         {app.subject && (

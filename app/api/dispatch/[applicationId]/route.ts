@@ -74,7 +74,6 @@ export async function PATCH(
         serviceCategory: {
           select: {
             name: true,
-            slaDays: true,
           },
         },
         department: {

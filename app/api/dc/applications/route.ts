@@ -93,7 +93,6 @@ export async function GET(request: Request) {
         serviceCategory: {
           select: {
             name: true,
-            slaDays: true,
           },
         },
         currentHolder: {

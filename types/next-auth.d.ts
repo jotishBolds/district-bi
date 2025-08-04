@@ -8,6 +8,7 @@ declare module "next-auth" {
     role: UserRole;
     isActive: boolean;
     needsOtp: boolean;
+    level?: number | null;
     fullName?: string;
     designation?: string;
   }
@@ -18,6 +19,7 @@ declare module "next-auth" {
       email: string;
       role: UserRole;
       isActive: boolean;
+      level?: number | null;
       fullName?: string;
       designation?: string;
     };
@@ -32,6 +34,7 @@ declare module "next-auth/jwt" {
     role: UserRole;
     isActive: boolean;
     requiresOtp: boolean;
+    level?: number | null;
     fullName?: string;
     designation?: string;
   }

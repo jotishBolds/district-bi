@@ -89,7 +89,6 @@ model ServiceCategory {
   id           String        @id @default(uuid())
   name         String        @unique
   description  String?
-  slaDays      Int
   isActive     Boolean       @default(true)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -140,7 +139,8 @@ model Application {
   citizenName          String
   citizenPhone         String
   subject              String                     @default("Application Subject")
-  departmentId         String
+  departmentId         String?
+  applicationSource    ApplicationSource          @default(PUBLIC)
   dispatchedAt         DateTime?
   dispatchedById       String?
   isDispatched         Boolean                    @default(false)
@@ -148,7 +148,7 @@ model Application {
   validation           ApplicationValidation?
   workflow             ApplicationWorkflow[]
   currentHolder        User?                      @relation("CurrentHolder", fields: [currentHolderId], references: [id])
-  department           Department                 @relation(fields: [departmentId], references: [id])
+  department           Department?                @relation(fields: [departmentId], references: [id])
   dispatchedBy         User?                      @relation("DispatchedBy", fields: [dispatchedById], references: [id])
   serviceCategory      ServiceCategory            @relation(fields: [serviceCategoryId], references: [id])
   documentRequests     DocumentRequest[]
@@ -410,4 +410,9 @@ enum NotificationType {
   STATUS_CHANGED
   DOCUMENT_REQUESTED
   PAYMENT_REQUIRED
+}
+
+enum ApplicationSource {
+  PUBLIC
+  GOVERNMENT
 }

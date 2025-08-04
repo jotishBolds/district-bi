@@ -107,7 +107,9 @@ export async function GET(request: NextRequest) {
 
     // Process department statistics
     const departmentSummary = departmentStats.reduce((acc, stat) => {
-      const deptName = departmentMap[stat.departmentId] || "Unknown";
+      const deptName = stat.departmentId
+        ? departmentMap[stat.departmentId] || "Unknown"
+        : "No Department";
 
       if (!acc[deptName]) {
         acc[deptName] = {

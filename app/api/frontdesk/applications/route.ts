@@ -87,7 +87,6 @@ export async function GET(request: NextRequest) {
         serviceCategory: {
           select: {
             name: true,
-            slaDays: true,
           },
         },
         currentHolder: {
@@ -152,7 +151,6 @@ export async function GET(request: NextRequest) {
         serviceCategory: {
           select: {
             name: true,
-            slaDays: true,
           },
         },
         currentHolder: {
@@ -220,7 +218,6 @@ export async function GET(request: NextRequest) {
         serviceCategory: {
           select: {
             name: true,
-            slaDays: true,
           },
         },
         currentHolder: {
@@ -263,7 +260,6 @@ export async function GET(request: NextRequest) {
         serviceCategory: {
           select: {
             name: true,
-            slaDays: true,
           },
         },
         currentHolder: {
@@ -324,7 +320,6 @@ export async function GET(request: NextRequest) {
         serviceCategory: {
           select: {
             name: true,
-            slaDays: true,
           },
         },
         currentHolder: {

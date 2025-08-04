@@ -126,11 +126,11 @@ exports.Prisma.UserScalarFieldEnum = {
   phone: 'phone',
   passwordHash: 'passwordHash',
   role: 'role',
-  level: 'level',
   isActive: 'isActive',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  level: 'level'
 };
 
 exports.Prisma.CitizenProfileScalarFieldEnum = {
@@ -151,10 +151,10 @@ exports.Prisma.OfficerProfileScalarFieldEnum = {
   designation: 'designation',
   department: 'department',
   officeLocation: 'officeLocation',
-  sectionId: 'sectionId',
   isAvailable: 'isAvailable',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  sectionId: 'sectionId'
 };
 
 exports.Prisma.FrontdeskOfficerScalarFieldEnum = {
@@ -168,7 +168,6 @@ exports.Prisma.ServiceCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  slaDays: 'slaDays',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -196,24 +195,25 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   id: 'id',
   rrNumber: 'rrNumber',
   serviceCategoryId: 'serviceCategoryId',
-  departmentId: 'departmentId',
-  subject: 'subject',
-  citizenName: 'citizenName',
-  citizenPhone: 'citizenPhone',
-  citizenEmail: 'citizenEmail',
-  citizenAddress: 'citizenAddress',
-  citizenGender: 'citizenGender',
-  citizenAadhaar: 'citizenAadhaar',
   status: 'status',
   currentHolderId: 'currentHolderId',
   submittedAt: 'submittedAt',
   validatedAt: 'validatedAt',
   completedAt: 'completedAt',
-  isDispatched: 'isDispatched',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  citizenAadhaar: 'citizenAadhaar',
+  citizenAddress: 'citizenAddress',
+  citizenEmail: 'citizenEmail',
+  citizenGender: 'citizenGender',
+  citizenName: 'citizenName',
+  citizenPhone: 'citizenPhone',
+  subject: 'subject',
+  departmentId: 'departmentId',
+  applicationSource: 'applicationSource',
   dispatchedAt: 'dispatchedAt',
   dispatchedById: 'dispatchedById',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  isDispatched: 'isDispatched'
 };
 
 exports.Prisma.ApplicationWorkflowScalarFieldEnum = {
@@ -360,8 +360,8 @@ exports.Prisma.OfficerForwardingHistoryScalarFieldEnum = {
   priority: 'priority',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  forwardedAt: 'forwardedAt',
-  completedAt: 'completedAt'
+  completedAt: 'completedAt',
+  forwardedAt: 'forwardedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -392,12 +392,16 @@ exports.Prisma.JsonNullValueFilter = {
 exports.UserRole = exports.$Enums.UserRole = {
   FRONT_DESK: 'FRONT_DESK',
   DC: 'DC',
+  ADC: 'ADC',
+  RO: 'RO',
+  SDM: 'SDM',
+  DYDIR: 'DYDIR',
+  ADMIN: 'ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN',
   ADC_GTK: 'ADC_GTK',
   ADC_HQ: 'ADC_HQ',
-  ADC: 'ADC',
   SDM_GTK: 'SDM_GTK',
   SDM_HQ: 'SDM_HQ',
-  SDM: 'SDM',
   AC: 'AC',
   DPO_DDMA: 'DPO_DDMA',
   DD_REV: 'DD_REV',
@@ -410,11 +414,7 @@ exports.UserRole = exports.$Enums.UserRole = {
   OS_COI_RC: 'OS_COI_RC',
   OS_RC: 'OS_RC',
   RI_LEGAL: 'RI_LEGAL',
-  RO: 'RO',
-  DYDIR: 'DYDIR',
-  DISPATCH_HANDLER: 'DISPATCH_HANDLER',
-  ADMIN: 'ADMIN',
-  SUPER_ADMIN: 'SUPER_ADMIN'
+  DISPATCH_HANDLER: 'DISPATCH_HANDLER'
 };
 
 exports.ApplicationStatus = exports.$Enums.ApplicationStatus = {
@@ -426,6 +426,11 @@ exports.ApplicationStatus = exports.$Enums.ApplicationStatus = {
   RESOLVED: 'RESOLVED',
   CLOSED: 'CLOSED',
   REOPENED: 'REOPENED'
+};
+
+exports.ApplicationSource = exports.$Enums.ApplicationSource = {
+  PUBLIC: 'PUBLIC',
+  GOVERNMENT: 'GOVERNMENT'
 };
 
 exports.DocumentType = exports.$Enums.DocumentType = {

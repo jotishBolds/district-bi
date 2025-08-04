@@ -14,7 +14,6 @@ import { isOfficerRole, isOfficerOrOfficial } from "@/lib/officer-roles";
 interface ApplicationWithIncludes extends Application {
   serviceCategory: {
     name: string;
-    slaDays: number;
   };
   officerAssignments: Array<{
     assignedTo: {
@@ -487,8 +486,7 @@ async function handleValidationTransition(
         },
         data: {
           expectedCompletionDate: new Date(
-            Date.now() +
-              application.serviceCategory.slaDays * 24 * 60 * 60 * 1000
+            Date.now() + 30 * 24 * 60 * 60 * 1000 // Default 30 days
           ),
         },
       });

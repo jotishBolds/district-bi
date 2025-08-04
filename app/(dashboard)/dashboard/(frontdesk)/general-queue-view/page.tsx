@@ -361,10 +361,10 @@ export default function GeneralFrontdeskQueueView() {
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-gray-200 gap-2">
-                <div className="flex items-center gap-2 text-sm text-amber-600">
+                {/* <div className="flex items-center gap-2 text-sm text-amber-600">
                   <AlertCircle className="h-4 w-4" />
                   <span>SLA: {application.serviceCategory.slaDays} days</span>
-                </div>
+                </div> */}
                 <Badge className="bg-yellow-100 text-yellow-800 self-start sm:self-auto">
                   Waiting for Assignment
                 </Badge>

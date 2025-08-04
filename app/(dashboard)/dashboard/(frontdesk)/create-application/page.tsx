@@ -5,7 +5,7 @@ import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -35,6 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   FileText,
   Upload,
@@ -46,16 +47,18 @@ import {
   CheckCircle,
   AlertCircle,
   Loader2,
+  Building2,
+  Globe,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { ServiceCategorySelect } from "@/components/ui/service-category-select";
 
 interface ServiceCategory {
   id: string;
   name: string;
   description?: string;
-  slaDays: number;
   isActive?: boolean;
 }
 
@@ -92,15 +95,29 @@ interface FrontdeskAssignment {
   } | null;
 }
 
-// Create a simple application schema without conditional validation
-const baseApplicationSchema = z.object({
+// Create schemas for both application types
+const publicApplicationSchema = z.object({
+  serviceCategoryId: z.string().min(1, "Service category is required"),
+  subject: z.string().min(5, "Subject must be at least 5 characters"),
+  citizenName: z.string().min(2, "Name must be at least 2 characters"),
+  citizenPhone: z.string().min(10, "Phone number must be at least 10 digits"),
+  citizenEmail: z.string().email("Invalid email").optional().or(z.literal("")),
+  citizenAddress: z.string().min(5, "Address must be at least 5 characters"),
+  citizenGender: z.string().optional(),
+  citizenAadhaar: z.string().optional(),
+  assignedOfficerId: z.string().optional(),
+  priority: z.number().min(1).max(3),
+  instructions: z.string().optional(),
+});
+
+const governmentApplicationSchema = z.object({
   serviceCategoryId: z.string().min(1, "Service category is required"),
   departmentId: z.string().min(1, "Department is required"),
   subject: z.string().min(5, "Subject must be at least 5 characters"),
   citizenName: z.string().min(2, "Name must be at least 2 characters"),
   citizenPhone: z.string().min(10, "Phone number must be at least 10 digits"),
   citizenEmail: z.string().email("Invalid email").optional().or(z.literal("")),
-  citizenAddress: z.string(),
+  citizenAddress: z.string().min(5, "Address must be at least 5 characters"),
   citizenGender: z.string().optional(),
   citizenAadhaar: z.string().optional(),
   assignedOfficerId: z.string().optional(),
@@ -110,7 +127,7 @@ const baseApplicationSchema = z.object({
 
 type ApplicationFormData = {
   serviceCategoryId: string;
-  departmentId: string;
+  departmentId?: string;
   subject: string;
   citizenName: string;
   citizenPhone: string;
@@ -118,22 +135,22 @@ type ApplicationFormData = {
   citizenAddress: string;
   citizenGender?: string;
   citizenAadhaar?: string;
-  assignedOfficerId?: string; // Make optional for general frontdesk
+  assignedOfficerId?: string;
   priority: number;
-  instructions?: string; // Make optional for general frontdesk
+  instructions?: string;
 };
 
 // Update steps array to be dynamic based on frontdesk type
 const getSteps = (isGeneralFrontdesk: boolean) => {
   if (isGeneralFrontdesk) {
     return [
-      { id: 1, name: "Service & Dept", icon: Settings },
+      { id: 1, name: "Service & Info", icon: Settings },
       { id: 2, name: "Citizen Info", icon: User },
       { id: 3, name: "Documents", icon: FileText },
     ];
   }
   return [
-    { id: 1, name: "Service & Dept", icon: Settings },
+    { id: 1, name: "Service & Info", icon: Settings },
     { id: 2, name: "Citizen Info", icon: User },
     { id: 3, name: "Documents", icon: FileText },
     { id: 4, name: "Assignment", icon: UserCheck },
@@ -163,6 +180,9 @@ export default function CreateApplicationPage() {
   // Add state to track if user is general frontdesk
   const [isGeneralFrontdesk, setIsGeneralFrontdesk] = useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
+  const [applicationType, setApplicationType] = useState<
+    "PUBLIC" | "GOVERNMENT"
+  >("PUBLIC");
 
   // Add refs for each step card
   const stepRefs = [
@@ -179,9 +199,16 @@ export default function CreateApplicationPage() {
   const documentUploadRef = useRef<HTMLInputElement>(null);
   const instructionsRef = useRef<HTMLTextAreaElement>(null);
 
+  // Get current schema based on application type
+  const getCurrentSchema = () => {
+    return applicationType === "PUBLIC"
+      ? publicApplicationSchema
+      : governmentApplicationSchema;
+  };
+
   // Initialize form after determining frontdesk type
   const form = useForm<ApplicationFormData>({
-    resolver: zodResolver(baseApplicationSchema),
+    resolver: zodResolver(getCurrentSchema()),
     defaultValues: {
       serviceCategoryId: "",
       departmentId: "",
@@ -203,12 +230,17 @@ export default function CreateApplicationPage() {
   // Add step validation functions
   const validateStep = (step: number): boolean => {
     switch (step) {
-      case 1: // Service & Department
-        return !!(
-          watchedFields.serviceCategoryId &&
-          watchedFields.departmentId &&
-          watchedFields.subject
-        );
+      case 1: // Service & Department/Info
+        const hasServiceCategory = !!watchedFields.serviceCategoryId;
+        const hasSubject = !!watchedFields.subject;
+
+        if (applicationType === "PUBLIC") {
+          return hasServiceCategory && hasSubject;
+        } else {
+          return (
+            hasServiceCategory && hasSubject && !!watchedFields.departmentId
+          );
+        }
       case 2: // Citizen Info
         return !!(
           watchedFields.citizenName &&
@@ -361,6 +393,14 @@ export default function CreateApplicationPage() {
       setFormInitialized(true);
     }
   }, [formInitialized]);
+
+  // Update form resolver when application type changes
+  useEffect(() => {
+    if (formInitialized) {
+      // We'll create a new form instance with the updated schema if needed
+      // For now, we'll handle validation in the submit function
+    }
+  }, [applicationType, formInitialized]);
 
   // Auto-assign officer when both officers and frontdesk assignments are loaded
   useEffect(() => {
@@ -528,6 +568,17 @@ export default function CreateApplicationPage() {
   };
 
   const onSubmit = async (data: ApplicationFormData) => {
+    // Validate using the current schema
+    const currentSchema = getCurrentSchema();
+    const validation = currentSchema.safeParse(data);
+
+    if (!validation.success) {
+      validation.error.errors.forEach((error) => {
+        toast.error(`${error.path.join(".")}: ${error.message}`);
+      });
+      return;
+    }
+
     // Add validation for specific frontdesk
     if (!isGeneralFrontdesk && !data.assignedOfficerId) {
       toast.error("Officer assignment is required for specific frontdesk");
@@ -543,8 +594,14 @@ export default function CreateApplicationPage() {
     try {
       const applicationFormData = new FormData();
       applicationFormData.append("serviceCategoryId", data.serviceCategoryId);
-      applicationFormData.append("departmentId", data.departmentId);
+
+      // Only append departmentId if it exists (for government applications)
+      if (data.departmentId) {
+        applicationFormData.append("departmentId", data.departmentId);
+      }
+
       applicationFormData.append("subject", data.subject);
+      applicationFormData.append("applicationSource", applicationType);
 
       // Only append officer ID if not general frontdesk
       if (!isGeneralFrontdesk && data.assignedOfficerId) {
@@ -769,117 +826,198 @@ export default function CreateApplicationPage() {
                         Service Information
                       </CardTitle>
                       <CardDescription className="text-sm">
-                        Select the service category, department, and provide a
-                        subject for this application
+                        Select application type and provide service details
                       </CardDescription>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="serviceCategoryId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Service Category *
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger
-                              ref={serviceCategoryRef}
-                              className="h-11"
+                <CardContent>
+                  <Tabs
+                    value={applicationType}
+                    onValueChange={(value) =>
+                      setApplicationType(value as "PUBLIC" | "GOVERNMENT")
+                    }
+                    className="w-full"
+                  >
+                    <TabsList className="grid w-full grid-cols-2 mb-6">
+                      <TabsTrigger
+                        value="PUBLIC"
+                        className="flex items-center gap-2"
+                      >
+                        <Globe className="h-4 w-4" />
+                        Public Service
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="GOVERNMENT"
+                        className="flex items-center gap-2"
+                      >
+                        <Building2 className="h-4 w-4" />
+                        Government Service
+                      </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="PUBLIC" className="space-y-6">
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Globe className="h-5 w-5 text-blue-600" />
+                          <h3 className="font-medium text-blue-900">
+                            Public Service Application
+                          </h3>
+                        </div>
+                        <p className="text-sm text-blue-700">
+                          For general citizen services that do not require
+                          specific department handling.
+                        </p>
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name="serviceCategoryId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">
+                              Service Category *
+                            </FormLabel>
+                            <FormControl>
+                              <ServiceCategorySelect
+                                value={field.value}
+                                onValueChangeAction={field.onChange}
+                                placeholder="Search or create service category..."
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Search for an existing category or create a new
+                              one if it does not exist.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="subject"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">
+                              Application Subject *
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Brief description of the service required"
+                                className="h-11"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </TabsContent>
+
+                    <TabsContent value="GOVERNMENT" className="space-y-6">
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Building2 className="h-5 w-5 text-green-600" />
+                          <h3 className="font-medium text-green-900">
+                            Government Service Application
+                          </h3>
+                        </div>
+                        <p className="text-sm text-green-700">
+                          For services that require specific department handling
+                          and processing.
+                        </p>
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name="serviceCategoryId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">
+                              Service Category *
+                            </FormLabel>
+                            <FormControl>
+                              <ServiceCategorySelect
+                                value={field.value}
+                                onValueChangeAction={field.onChange}
+                                placeholder="Search or create service category..."
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Search for an existing category or create a new
+                              one if it does not exist.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="departmentId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">
+                              Receive from Department *
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
                             >
-                              <SelectValue placeholder="Choose a service category" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {serviceCategories.map((category) => (
-                              <SelectItem key={category.id} value={category.id}>
-                                <div className="flex items-center justify-between w-full">
-                                  <span>{category.name}</span>
-                                  <Badge variant="secondary" className="ml-2">
-                                    {category.slaDays} days
-                                  </Badge>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                              <FormControl>
+                                <SelectTrigger className="h-11">
+                                  <SelectValue placeholder="Select receiving department" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {departments.map((department) => (
+                                  <SelectItem
+                                    key={department.id}
+                                    value={department.id}
+                                  >
+                                    <div className="flex flex-col items-start">
+                                      <span>{department.name}</span>
+                                      {department.description && (
+                                        <span className="text-xs text-muted-foreground">
+                                          {department.description}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormDescription>
+                              Select the department that will receive and
+                              process this application.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name="departmentId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Department *
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="h-11">
-                              <SelectValue placeholder="Choose the relevant department" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {departments.map((department) => (
-                              <SelectItem
-                                key={department.id}
-                                value={department.id}
-                              >
-                                <div className="flex flex-col items-start">
-                                  <span>{department.name}</span>
-                                  {department.description && (
-                                    <span className="text-xs text-gray-500">
-                                      {department.description}
-                                    </span>
-                                  )}
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription className="text-xs text-gray-500">
-                          Select the department that this application belongs to
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="subject"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-gray-700">
-                          Application Subject *
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter a brief subject for this application"
-                            className="h-11"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription className="text-xs text-gray-500">
-                          Provide a clear and concise subject that describes the
-                          purpose of this application
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      <FormField
+                        control={form.control}
+                        name="subject"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">
+                              Application Subject *
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Brief description of the service required"
+                                className="h-11"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </TabsContent>
+                  </Tabs>
                 </CardContent>
                 {/* Step Navigation - Add to Service Card */}
                 <div className="px-6 pb-6">

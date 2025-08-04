@@ -43,6 +43,13 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistance } from "date-fns";
+import {
+  getRoleMapping,
+  getLevelPriority,
+  canAssignTo,
+} from "@/lib/officer-roles";
+import { UserRole } from "@/app/generated/prisma";
+import { useSession } from "next-auth/react";
 
 interface Application {
   id: string;
@@ -57,7 +64,6 @@ interface Application {
   updatedAt: string;
   serviceCategory: {
     name: string;
-    slaDays: number;
   };
   documents?: Array<{
     id: string;
@@ -102,7 +108,20 @@ interface Officer {
   fullName: string;
   designation: string;
   department: string;
-  role?: string;
+  role: UserRole;
+  level?: number;
+}
+
+interface FrontdeskAssignment {
+  id: string;
+  officerId: string | null;
+  officer: {
+    id: string;
+    fullName: string;
+    designation: string;
+    department: string;
+    role: UserRole;
+  } | null;
 }
 
 interface FrontdeskData {
@@ -121,29 +140,127 @@ interface FrontdeskData {
 }
 
 export default function FrontdeskDashboard() {
+  const { data: session } = useSession();
   const [data, setData] = useState<FrontdeskData | null>(null);
   const [availableOfficers, setAvailableOfficers] = useState<Officer[]>([]);
+  const [filteredOfficers, setFilteredOfficers] = useState<Officer[]>([]);
+  const [frontdeskAssignments, setFrontdeskAssignments] = useState<
+    FrontdeskAssignment[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [selectedOfficer, setSelectedOfficer] = useState<string>("");
   const [instructions, setInstructions] = useState("");
   const [forwardingApp, setForwardingApp] = useState<Application | null>(null);
   const [isForwardDialogOpen, setIsForwardDialogOpen] = useState(false);
 
+  const fetchFrontdeskAssignments = async (
+    availableOfficersForRef?: Officer[]
+  ) => {
+    try {
+      const response = await fetch("/api/frontdesk/assignments");
+      if (!response.ok)
+        throw new Error("Failed to fetch frontdesk assignments");
+      const assignmentData = await response.json();
+
+      setFrontdeskAssignments(assignmentData.assignments || []);
+
+      // Find the assigned officer with the highest priority (lowest level number)
+      const specificAssignments = (assignmentData.assignments || []).filter(
+        (assignment: FrontdeskAssignment) =>
+          assignment.officerId !== null && assignment.officer
+      );
+
+      if (specificAssignments.length > 0) {
+        // Get the level of the highest priority assigned officer
+        // Cross-reference with available officers to get correct levels
+        const levels = specificAssignments.map(
+          (assignment: FrontdeskAssignment) => {
+            if (assignment.officer?.role) {
+              // If role is available in assignment, use it
+              return getLevelPriority(assignment.officer.role);
+            } else if (availableOfficersForRef) {
+              // If role is missing, find it in available officers by matching fullName or officerId
+              const matchingOfficer = availableOfficersForRef.find(
+                (officer: Officer) =>
+                  officer.id === assignment.officerId ||
+                  officer.fullName === assignment.officer?.fullName
+              );
+              if (matchingOfficer) {
+                console.log(
+                  `🔧 Fixed missing role for ${assignment.officer?.fullName}: ${
+                    matchingOfficer.role
+                  } (L${getLevelPriority(matchingOfficer.role)})`
+                );
+                return getLevelPriority(matchingOfficer.role);
+              }
+              console.warn(
+                `⚠️ Could not find role for assignment:`,
+                assignment
+              );
+              return 0; // Default to highest level if not found
+            } else {
+              console.warn(
+                `⚠️ No officers available for role lookup:`,
+                assignment
+              );
+              return 0;
+            }
+          }
+        );
+
+        const highestPriorityLevel = Math.min(...levels); // Lowest number = highest priority
+
+        console.log("🎯 Frontdesk Assignment Info:", {
+          assignments: specificAssignments.map((a: FrontdeskAssignment) => {
+            const matchingOfficer = availableOfficersForRef?.find(
+              (officer: Officer) =>
+                officer.id === a.officerId ||
+                officer.fullName === a.officer?.fullName
+            );
+            return {
+              officer: a.officer?.fullName,
+              role: a.officer?.role || matchingOfficer?.role,
+              level: a.officer?.role
+                ? getLevelPriority(a.officer.role)
+                : matchingOfficer
+                ? getLevelPriority(matchingOfficer.role)
+                : 0,
+            };
+          }),
+          highestPriorityLevel,
+          allLevels: levels,
+          canForwardToLevels: `${highestPriorityLevel} to 6`,
+        });
+      } else {
+        // General frontdesk - can forward to all officers
+        console.log("🎯 General Frontdesk - no specific assignments");
+      }
+    } catch (error) {
+      console.error("Error fetching frontdesk assignments:", error);
+      setFrontdeskAssignments([]);
+    }
+  };
+
   const fetchData = async () => {
     try {
       setLoading(true);
+
+      // Fetch available officers first
+      const officersResponse = await fetch("/api/officers/available");
+      if (!officersResponse.ok) throw new Error("Failed to fetch officers");
+      const officersData = await officersResponse.json();
+      setAvailableOfficers(officersData);
+
+      // Fetch frontdesk assignments with officers data for cross-reference
+      await fetchFrontdeskAssignments(officersData);
+
       // Fetch frontdesk applications
       const response = await fetch("/api/frontdesk/applications");
       if (!response.ok) throw new Error("Failed to fetch applications");
       const applicationData = await response.json();
-
-      // Fetch available officers from the proper endpoint
-      const officersResponse = await fetch("/api/officers/available");
-      if (!officersResponse.ok) throw new Error("Failed to fetch officers");
-      const officersData = await officersResponse.json();
-
       setData(applicationData);
-      setAvailableOfficers(officersData);
+
+      // Note: Officer filtering will happen in useEffect when frontdeskAssignments state updates
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch data");
@@ -152,9 +269,171 @@ export default function FrontdeskDashboard() {
     }
   };
 
+  const filterOfficersByLevel = (officers: Officer[]) => {
+    if (!session?.user?.role) {
+      setFilteredOfficers([]);
+      return;
+    }
+
+    const currentUserRole = session.user.role as UserRole;
+
+    // Add level information to officers
+    const officersWithLevels = officers.map((officer) => ({
+      ...officer,
+      level: getLevelPriority(officer.role),
+    }));
+
+    console.log(
+      "👥 All Available Officers:",
+      officersWithLevels.map((o) => ({
+        fullName: o.fullName,
+        role: o.role,
+        level: o.level,
+      }))
+    );
+
+    let assignableOfficers;
+
+    if (currentUserRole === UserRole.FRONT_DESK) {
+      // For frontdesk users, use the level of their assigned officer(s)
+      console.log("=== FRONTDESK ASSIGNMENT LEVEL DEBUG ===");
+      console.log("Current user level from session:", session.user.level);
+      console.log("Frontdesk assignments:", frontdeskAssignments);
+
+      if (frontdeskAssignments.length > 0) {
+        // Find specific assignments (exclude null officer assignments)
+        const specificAssignments = frontdeskAssignments.filter(
+          (assignment: FrontdeskAssignment) =>
+            assignment.officerId !== null && assignment.officer
+        );
+
+        if (specificAssignments.length > 0) {
+          // Get the level of each assigned officer
+          const assignedOfficerLevels = specificAssignments.map(
+            (assignment) => {
+              // Find the officer in available officers to get their role and level
+              const assignedOfficer = officersWithLevels.find(
+                (officer) =>
+                  officer.id === assignment.officerId ||
+                  officer.fullName === assignment.officer?.fullName
+              );
+
+              if (assignedOfficer) {
+                console.log(
+                  `✅ Assignment: ${assignment.officer?.fullName} -> Level ${assignedOfficer.level}`
+                );
+                return assignedOfficer.level;
+              }
+
+              // Fallback: get level from role mapping if officer not found in available list
+              const roleLevel = assignment.officer?.role
+                ? getLevelPriority(assignment.officer.role)
+                : 7;
+              console.log(
+                `⚠️ Assignment fallback: ${assignment.officer?.fullName} -> Level ${roleLevel} (from role)`
+              );
+              return roleLevel;
+            }
+          );
+
+          // Find the highest authority level (lowest number) among assigned officers
+          const highestAuthorityLevel = Math.min(...assignedOfficerLevels);
+
+          console.log("📊 Assignment Analysis:", {
+            assignments: specificAssignments.length,
+            assignedOfficerLevels,
+            highestAuthorityLevel,
+            filterRule: `Can forward to Level ${highestAuthorityLevel} and below (${highestAuthorityLevel}-6)`,
+          });
+
+          // Frontdesk can forward to officers at the SAME level or LOWER authority (same number or HIGHER)
+          // If assigned to Level 6 officer, can only forward to Level 6 officers
+          // If assigned to Level 2 officer, can forward to Level 2,3,4,5,6 officers
+          assignableOfficers = officersWithLevels.filter((officer) => {
+            const canAssign = officer.level >= highestAuthorityLevel;
+            console.log(
+              `🎯 Filter: Frontdesk(assigned to L${highestAuthorityLevel}) -> ${
+                officer.fullName
+              }(L${officer.level}): ${canAssign ? "✅ ALLOWED" : "❌ BLOCKED"}`
+            );
+            return canAssign;
+          });
+
+          console.log("🔍 Frontdesk Assignment-Based Filtering Result:", {
+            totalOfficers: officers.length,
+            filteredOfficers: assignableOfficers.length,
+            filterRule: `Level ${highestAuthorityLevel} and below only`,
+            allowedLevels: Array.from(
+              new Set(assignableOfficers.map((o) => o.level))
+            ).sort(),
+          });
+        } else {
+          // Has assignments but no specific officers - treat as general frontdesk
+          assignableOfficers = officersWithLevels.filter((officer) => {
+            const roleMapping = getRoleMapping(officer.role);
+            return roleMapping?.userType === "Officer";
+          });
+          console.log(
+            "🔍 Frontdesk with general assignments - can forward to all officers"
+          );
+        }
+      } else {
+        // No assignments at all - treat as general frontdesk
+        assignableOfficers = officersWithLevels.filter((officer) => {
+          const roleMapping = getRoleMapping(officer.role);
+          return roleMapping?.userType === "Officer";
+        });
+        console.log(
+          "🔍 General Frontdesk (no assignments) - can forward to all officers"
+        );
+      }
+    } else {
+      // For non-frontdesk officers, use existing canAssignTo logic
+      const currentUserLevel = getLevelPriority(currentUserRole);
+      assignableOfficers = officersWithLevels.filter((officer) => {
+        const canAssign = canAssignTo(currentUserRole, officer.role);
+        console.log(
+          `🎯 Officer canAssignTo(${currentUserRole}, ${officer.role}): ${canAssign} (levels: ${currentUserLevel} -> ${officer.level})`
+        );
+        return canAssign;
+      });
+
+      console.log("🔍 Officer Filtering:", {
+        currentUserRole,
+        currentUserLevel,
+        totalOfficers: officers.length,
+      });
+    }
+
+    console.log(
+      "✅ Final Assignable officers:",
+      assignableOfficers.map((o) => ({
+        fullName: o.fullName,
+        role: o.role,
+        level: o.level,
+      }))
+    );
+
+    // Sort by level (higher priority officers first)
+    assignableOfficers.sort((a, b) => (a.level || 0) - (b.level || 0));
+
+    setFilteredOfficers(assignableOfficers);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (availableOfficers.length > 0) {
+      filterOfficersByLevel(availableOfficers);
+    }
+  }, [
+    session?.user?.role,
+    session?.user?.level,
+    availableOfficers,
+    frontdeskAssignments,
+  ]);
 
   const handleForward = async () => {
     if (!forwardingApp || !selectedOfficer || !instructions.trim()) {
@@ -308,9 +587,7 @@ export default function FrontdeskDashboard() {
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-orange-500" />
-              <span className="font-medium">
-                {application.serviceCategory?.slaDays || 0} days SLA
-              </span>
+              <span className="font-medium">Standard SLA</span>
             </div>
           </div>
 
@@ -871,33 +1148,56 @@ export default function FrontdeskDashboard() {
               <Label htmlFor="officer" className="text-sm font-medium">
                 Select Officer
               </Label>
-              <Select
-                onValueChange={setSelectedOfficer}
-                value={selectedOfficer}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose an officer" />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableOfficers
-                    ?.filter(
-                      (officer) =>
-                        officer.id !== forwardingApp?.currentHolder?.id
-                    )
-                    .map((officer) => (
-                      <SelectItem key={officer.id} value={officer.id}>
-                        <div className="flex flex-col items-start">
-                          <span className="font-medium">
-                            {officer.fullName}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {officer.designation} - {officer.department}
-                          </span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
+              {filteredOfficers.length === 0 ? (
+                <div className="p-4 text-center border border-dashed border-gray-300 rounded-lg">
+                  <p className="text-sm text-gray-500 mb-2">
+                    No officers available for forwarding
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {session?.user?.role === UserRole.FRONT_DESK
+                      ? frontdeskAssignments.length > 0
+                        ? `As a frontdesk assigned to work with officers, you can forward based on your assignment level`
+                        : "As general frontdesk, you can forward to all officers"
+                      : "You can only forward applications to officers at the same level or lower in the hierarchy"}
+                  </p>
+                </div>
+              ) : (
+                <Select
+                  onValueChange={setSelectedOfficer}
+                  value={selectedOfficer}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose an officer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {filteredOfficers
+                      ?.filter(
+                        (officer) =>
+                          officer.id !== forwardingApp?.currentHolder?.id
+                      )
+                      .map((officer) => {
+                        const roleMapping = getRoleMapping(officer.role);
+                        return (
+                          <SelectItem key={officer.id} value={officer.id}>
+                            <div className="flex flex-col items-start">
+                              <span className="font-medium">
+                                {officer.fullName}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {roleMapping?.shortDesignation ||
+                                  officer.designation}{" "}
+                                - Level {officer.level}
+                              </span>
+                              <span className="text-xs text-gray-400">
+                                {officer.department}
+                              </span>
+                            </div>
+                          </SelectItem>
+                        );
+                      })}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -920,7 +1220,11 @@ export default function FrontdeskDashboard() {
             </Button>
             <Button
               onClick={handleForward}
-              disabled={!selectedOfficer || !instructions.trim()}
+              disabled={
+                !selectedOfficer ||
+                !instructions.trim() ||
+                filteredOfficers.length === 0
+              }
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Send className="w-4 h-4 mr-2" />

@@ -67,7 +67,6 @@ export async function GET(request: NextRequest) {
           serviceCategory: {
             select: {
               name: true,
-              slaDays: true,
             },
           },
           department: {

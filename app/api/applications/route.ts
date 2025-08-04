@@ -341,6 +341,7 @@ import prisma from "@/lib/prisma";
 import {
   UserRole,
   ApplicationStatus,
+  ApplicationSource,
   DocumentType,
   Prisma,
 } from "@/app/generated/prisma";
@@ -732,6 +733,8 @@ export async function POST(request: NextRequest) {
     const subject = formData.get("subject") as string;
     const preferredOfficerId = formData.get("preferredOfficerId") as string;
     const applicationDetails = formData.get("applicationDetails") as string;
+    const applicationSource =
+      (formData.get("applicationSource") as string) || "PUBLIC";
 
     // Citizen details (provided by frontdesk)
     const citizenName = formData.get("citizenName") as string;
@@ -762,6 +765,14 @@ export async function POST(request: NextRequest) {
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // For government applications, department is required
+    if (applicationSource === "GOVERNMENT" && !departmentId) {
+      return NextResponse.json(
+        { error: "Department is required for government applications" },
         { status: 400 }
       );
     }
@@ -923,7 +934,7 @@ export async function POST(request: NextRequest) {
       const application = await tx.application.create({
         data: {
           serviceCategoryId,
-          departmentId,
+          departmentId: departmentId || null,
           subject,
           citizenName,
           citizenPhone,
@@ -931,6 +942,7 @@ export async function POST(request: NextRequest) {
           citizenAddress,
           citizenGender,
           citizenAadhaar,
+          applicationSource: applicationSource as ApplicationSource, // Cast to enum value
           status: applicationStatus,
           currentHolderId,
           rrNumber,

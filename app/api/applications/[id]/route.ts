@@ -40,7 +40,6 @@ type ApplicationWithRelations = {
     id: string;
     name: string;
     description: string | null;
-    slaDays: number;
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;

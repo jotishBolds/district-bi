@@ -82,7 +82,6 @@ interface QueuedApplication {
   };
   serviceCategory: {
     name: string;
-    slaDays: number;
   };
   documents: Array<{
     id: string;
@@ -559,7 +558,7 @@ export default function ApplicationQueuePage() {
                   {/* SLA Warning */}
                   <div className="flex items-center gap-2 text-sm text-amber-600">
                     <AlertCircle className="h-4 w-4" />
-                    <span>SLA: {application.serviceCategory.slaDays} days</span>
+                    <span>Category: {application.serviceCategory.name}</span>
                   </div>
                 </CardContent>
 
@@ -671,7 +670,7 @@ export default function ApplicationQueuePage() {
                       <TableCell>
                         <div className="flex items-center gap-1 text-sm text-amber-600">
                           <AlertCircle className="h-3 w-3" />
-                          {application.serviceCategory.slaDays}d
+                          {application.serviceCategory.name}
                         </div>
                       </TableCell>
                       <TableCell className="text-right">

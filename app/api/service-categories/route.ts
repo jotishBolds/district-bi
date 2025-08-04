@@ -20,7 +20,6 @@ export async function GET() {
         id: true,
         name: true,
         description: true,
-        slaDays: true,
       },
       orderBy: {
         name: "asc",
@@ -50,20 +49,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, description, slaDays } = await request.json();
+    const { name, description } = await request.json();
 
-    if (!name || !slaDays) {
-      return NextResponse.json(
-        { error: "Name and SLA days are required" },
-        { status: 400 }
-      );
-    }
-
-    if (slaDays < 1 || slaDays > 365) {
-      return NextResponse.json(
-        { error: "SLA days must be between 1 and 365" },
-        { status: 400 }
-      );
+    if (!name) {
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
     // Check if service category with same name already exists
@@ -87,7 +76,6 @@ export async function POST(request: NextRequest) {
       data: {
         name: name.trim(),
         description: description?.trim() || null,
-        slaDays: parseInt(slaDays),
         isActive: true,
       },
     });
@@ -98,7 +86,6 @@ export async function POST(request: NextRequest) {
         id: serviceCategory.id,
         name: serviceCategory.name,
         description: serviceCategory.description,
-        slaDays: serviceCategory.slaDays,
       },
     });
   } catch (error) {

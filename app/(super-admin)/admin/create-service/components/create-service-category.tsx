@@ -33,10 +33,6 @@ import { Switch } from "@/components/ui/switch";
 const createServiceCategorySchema = z.object({
   name: z.string().min(1, "Service category name is required").max(100),
   description: z.string().optional(),
-  slaDays: z.coerce
-    .number()
-    .min(1, "Processing days must be at least 1")
-    .max(365),
   isActive: z.boolean(),
 });
 
@@ -57,7 +53,6 @@ export default function CreateServiceCategory({
     defaultValues: {
       name: "",
       description: "",
-      slaDays: 30,
       isActive: true,
     },
   });
@@ -145,30 +140,6 @@ export default function CreateServiceCategory({
                   <FormDescription>
                     Optional description to help users understand this service
                     category.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="slaDays"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Estimated Processing Days</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min="1"
-                      max="365"
-                      placeholder="30"
-                      {...field}
-                    />
-                  </FormControl>{" "}
-                  <FormDescription>
-                    Estimated processing time - Expected maximum days to process
-                    applications.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

@@ -49,7 +49,6 @@ async function main() {
     create: {
       name: "Revenue Certificate",
       description: "Certificate for revenue-related matters",
-      slaDays: 7,
       isActive: true,
     },
   });

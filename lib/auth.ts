@@ -55,6 +55,7 @@ export const authOptions: AuthOptions = {
             role: user.role,
             isActive: user.isActive,
             needsOtp: false,
+            level: user.level,
             fullName:
               user.officerProfile?.fullName || user.citizenProfile?.fullName,
             designation: user.officerProfile?.designation,
@@ -124,6 +125,7 @@ export const authOptions: AuthOptions = {
           role: user.role,
           isActive: user.isActive,
           needsOtp: true,
+          level: user.level,
           fullName:
             user.officerProfile?.fullName || user.citizenProfile?.fullName,
           designation: user.officerProfile?.designation,
@@ -144,6 +146,7 @@ export const authOptions: AuthOptions = {
         token.role = user.role;
         token.isActive = user.isActive;
         token.requiresOtp = user.needsOtp || false;
+        token.level = user.level;
         token.fullName = user.fullName;
         // Avoid 'any' by using a type guard
         if (typeof user === "object" && "designation" in user) {
@@ -160,6 +163,7 @@ export const authOptions: AuthOptions = {
         session.user.email = token.email;
         session.user.role = token.role as UserRole;
         session.user.isActive = token.isActive;
+        session.user.level = token.level;
         session.user.fullName = token.fullName;
         session.user.designation = token.designation;
         session.requiresOtp = token.requiresOtp;
