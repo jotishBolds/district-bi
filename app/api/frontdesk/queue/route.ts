@@ -111,6 +111,7 @@ export async function POST(request: NextRequest) {
       officerId,
       priority = 2,
       instructions,
+      serviceCategoryId,
     } = await request.json();
 
     if (!applicationId || !officerId || !instructions) {
@@ -200,6 +201,7 @@ export async function POST(request: NextRequest) {
           status: ApplicationStatus.IN_PROGRESS,
           currentHolderId: officer.id,
           updatedAt: new Date(),
+          ...(serviceCategoryId && { serviceCategoryId }),
         },
       });
 
@@ -258,6 +260,22 @@ export async function POST(request: NextRequest) {
           isRead: false,
         },
       });
+
+      // If service category was changed, create a service category change log
+      if (
+        serviceCategoryId &&
+        serviceCategoryId !== application.serviceCategoryId
+      ) {
+        await tx.serviceCategoryChange.create({
+          data: {
+            applicationId,
+            previousCategoryId: application.serviceCategoryId,
+            newCategoryId: serviceCategoryId,
+            changedById: session.user.id,
+            reason: "Service category assigned during queue pull",
+          },
+        });
+      }
 
       return updatedApplication;
     });

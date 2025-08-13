@@ -12,11 +12,7 @@ const updateServiceCategorySchema = z.object({
     .max(100)
     .optional(),
   description: z.string().optional(),
-  slaDays: z
-    .number()
-    .min(1, "Processing days must be at least 1")
-    .max(365)
-    .optional(),
+  color: z.string().optional(),
   isActive: z.boolean().optional(),
 });
 
@@ -171,7 +167,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.role !== UserRole.SUPER_ADMIN) {
+    if (
+      session.user.role !== UserRole.SUPER_ADMIN &&
+      session.user.role !== UserRole.ADMIN
+    ) {
       return NextResponse.json(
         { error: "Forbidden - Super Admin access required" },
         { status: 403 }

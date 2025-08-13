@@ -177,10 +177,11 @@ function GovernmentLoginForm() {
         return;
       }
 
-      // Reset attempts on successful login
+      // Reset attempts on successful credential validation
       localStorage.setItem("loginAttempts", "0");
 
-      toast.success("Authentication successful");
+      // Redirect to OTP verification page (no session created yet)
+      toast.success("Credentials verified. Please check your email for OTP.");
       router.push("/verify-otp?email=" + encodeURIComponent(data.email));
     } catch (error) {
       console.error("Login error:", error);

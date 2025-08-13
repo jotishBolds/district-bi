@@ -17,7 +17,11 @@ export async function GET(request: Request) {
     const search = searchParams.get("search") || "";
     const officerId = searchParams.get("officerId") || "";
     const departmentId = searchParams.get("departmentId") || "";
+    const serviceCategoryId = searchParams.get("serviceCategoryId") || "";
+    const applicationSource = searchParams.get("applicationSource") || "";
     const ageFilter = searchParams.get("ageFilter") || "";
+    const startDate = searchParams.get("startDate") || "";
+    const endDate = searchParams.get("endDate") || "";
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
     const skip = (page - 1) * limit;
@@ -52,6 +56,18 @@ export async function GET(request: Request) {
       where.departmentId = departmentId;
     }
 
+    // Service Category filter
+    if (serviceCategoryId) {
+      where.serviceCategoryId = serviceCategoryId;
+    }
+
+    // Application Source filter
+    if (applicationSource) {
+      const appSource =
+        applicationSource === "PUBLIC" ? "PUBLIC" : "GOVERNMENT";
+      where.applicationSource = appSource;
+    }
+
     // Age filter (only for OPEN and IN_PROGRESS status)
     if (
       ageFilter &&
@@ -84,6 +100,26 @@ export async function GET(request: Request) {
       }
     }
 
+    // Date range filter - takes precedence over age filter
+    if (startDate || endDate) {
+      const dateFilter: { gte?: Date; lte?: Date } = {};
+
+      if (startDate) {
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0); // Start of day
+        dateFilter.gte = start;
+      }
+
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999); // End of day
+        dateFilter.lte = end;
+      }
+
+      // Override any existing submittedAt filter
+      where.submittedAt = dateFilter;
+    }
+
     // Get applications with all necessary relations
     const applications = await prisma.application.findMany({
       where,
@@ -92,7 +128,9 @@ export async function GET(request: Request) {
       include: {
         serviceCategory: {
           select: {
+            id: true,
             name: true,
+            color: true,
           },
         },
         currentHolder: {
@@ -397,6 +435,18 @@ export async function GET(request: Request) {
       orderBy: { name: "asc" },
     });
 
+    // Get service categories
+    const serviceCategories = await prisma.serviceCategory.findMany({
+      where: { isActive: true },
+      select: {
+        id: true,
+        name: true,
+        color: true,
+        description: true,
+      },
+      orderBy: { name: "asc" },
+    });
+
     // Calculate stats
     const stats = {
       total: await prisma.application.count(),
@@ -425,6 +475,7 @@ export async function GET(request: Request) {
       stats,
       officers: officersWithApplicationCounts,
       departments,
+      serviceCategories,
     });
   } catch (error) {
     console.error("Error fetching DC applications:", error);

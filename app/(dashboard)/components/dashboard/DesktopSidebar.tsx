@@ -126,6 +126,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
     { name: "Applications", href: "/dashboard/applications", icon: FileText },
     { name: "User Management", href: "/admin/user-management", icon: Users },
     {
+      name: "Service Categories",
+      href: "/admin/service-categories",
+      icon: ClipboardList,
+    },
+    {
       name: "Department Management",
       href: "/admin/departments",
       icon: Building2,

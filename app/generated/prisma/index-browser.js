@@ -170,7 +170,8 @@ exports.Prisma.ServiceCategoryScalarFieldEnum = {
   description: 'description',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  color: 'color'
 };
 
 exports.Prisma.SectionScalarFieldEnum = {
@@ -210,10 +211,10 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   citizenPhone: 'citizenPhone',
   subject: 'subject',
   departmentId: 'departmentId',
-  applicationSource: 'applicationSource',
   dispatchedAt: 'dispatchedAt',
   dispatchedById: 'dispatchedById',
-  isDispatched: 'isDispatched'
+  isDispatched: 'isDispatched',
+  applicationSource: 'applicationSource'
 };
 
 exports.Prisma.ApplicationWorkflowScalarFieldEnum = {
@@ -234,6 +235,16 @@ exports.Prisma.ApplicationValidationScalarFieldEnum = {
   isDocumentsComplete: 'isDocumentsComplete',
   isEligibilityVerified: 'isEligibilityVerified',
   validationNotes: 'validationNotes',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ServiceCategoryChangeScalarFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  previousCategoryId: 'previousCategoryId',
+  newCategoryId: 'newCategoryId',
+  changedById: 'changedById',
+  reason: 'reason',
   createdAt: 'createdAt'
 };
 
@@ -324,7 +335,8 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   identifier: 'identifier',
   token: 'token',
   expires: 'expires',
-  type: 'type'
+  type: 'type',
+  metadata: 'metadata'
 };
 
 exports.Prisma.ApplicationTrackingOTPScalarFieldEnum = {
@@ -459,6 +471,7 @@ exports.Prisma.ModelName = {
   Application: 'Application',
   ApplicationWorkflow: 'ApplicationWorkflow',
   ApplicationValidation: 'ApplicationValidation',
+  ServiceCategoryChange: 'ServiceCategoryChange',
   OfficerAssignment: 'OfficerAssignment',
   Document: 'Document',
   DocumentRequest: 'DocumentRequest',

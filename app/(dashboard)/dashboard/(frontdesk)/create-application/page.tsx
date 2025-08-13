@@ -1,5 +1,6 @@
 "use client";
 
+import { validateFile } from "@/lib/s3-storage";
 import type React from "react";
 
 import { useState, useEffect, useRef } from "react";
@@ -53,7 +54,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ServiceCategorySelect } from "@/components/ui/service-category-select";
+import { ServiceCategorySelector } from "@/components/ui/service-category-selector";
 
 interface ServiceCategory {
   id: string;
@@ -95,8 +96,22 @@ interface FrontdeskAssignment {
   } | null;
 }
 
-// Create schemas for both application types
-const publicApplicationSchema = z.object({
+// Create schemas for both application types - service category is optional for general frontdesk
+const publicApplicationSchemaGeneral = z.object({
+  serviceCategoryId: z.string().optional(), // Optional for general frontdesk
+  subject: z.string().min(5, "Subject must be at least 5 characters"),
+  citizenName: z.string().min(2, "Name must be at least 2 characters"),
+  citizenPhone: z.string().min(10, "Phone number must be at least 10 digits"),
+  citizenEmail: z.string().email("Invalid email").optional().or(z.literal("")),
+  citizenAddress: z.string().min(5, "Address must be at least 5 characters"),
+  citizenGender: z.string().optional(),
+  citizenAadhaar: z.string().optional(),
+  assignedOfficerId: z.string().optional(),
+  priority: z.number().min(1).max(3),
+  instructions: z.string().optional(),
+});
+
+const publicApplicationSchemaAssigned = z.object({
   serviceCategoryId: z.string().min(1, "Service category is required"),
   subject: z.string().min(5, "Subject must be at least 5 characters"),
   citizenName: z.string().min(2, "Name must be at least 2 characters"),
@@ -110,7 +125,22 @@ const publicApplicationSchema = z.object({
   instructions: z.string().optional(),
 });
 
-const governmentApplicationSchema = z.object({
+const governmentApplicationSchemaGeneral = z.object({
+  serviceCategoryId: z.string().optional(), // Optional for general frontdesk
+  departmentId: z.string().min(1, "Department is required"),
+  subject: z.string().min(5, "Subject must be at least 5 characters"),
+  citizenName: z.string().min(2, "Name must be at least 2 characters"),
+  citizenPhone: z.string().min(10, "Phone number must be at least 10 digits"),
+  citizenEmail: z.string().email("Invalid email").optional().or(z.literal("")),
+  citizenAddress: z.string().min(5, "Address must be at least 5 characters"),
+  citizenGender: z.string().optional(),
+  citizenAadhaar: z.string().optional(),
+  assignedOfficerId: z.string().optional(),
+  priority: z.number().min(1).max(3),
+  instructions: z.string().optional(),
+});
+
+const governmentApplicationSchemaAssigned = z.object({
   serviceCategoryId: z.string().min(1, "Service category is required"),
   departmentId: z.string().min(1, "Department is required"),
   subject: z.string().min(5, "Subject must be at least 5 characters"),
@@ -126,7 +156,7 @@ const governmentApplicationSchema = z.object({
 });
 
 type ApplicationFormData = {
-  serviceCategoryId: string;
+  serviceCategoryId?: string; // Made optional to accommodate general frontdesk
   departmentId?: string;
   subject: string;
   citizenName: string;
@@ -199,16 +229,25 @@ export default function CreateApplicationPage() {
   const documentUploadRef = useRef<HTMLInputElement>(null);
   const instructionsRef = useRef<HTMLTextAreaElement>(null);
 
-  // Get current schema based on application type
+  // Get current schema based on application type and frontdesk type
   const getCurrentSchema = () => {
-    return applicationType === "PUBLIC"
-      ? publicApplicationSchema
-      : governmentApplicationSchema;
+    if (applicationType === "PUBLIC") {
+      return isGeneralFrontdesk
+        ? publicApplicationSchemaGeneral
+        : publicApplicationSchemaAssigned;
+    } else {
+      return isGeneralFrontdesk
+        ? governmentApplicationSchemaGeneral
+        : governmentApplicationSchemaAssigned;
+    }
   };
 
-  // Initialize form after determining frontdesk type
+  // State for uncategorised category ID
+  const [uncategorisedCategoryId, setUncategorisedCategoryId] =
+    useState<string>("");
+
+  // Initialize form without resolver first
   const form = useForm<ApplicationFormData>({
-    resolver: zodResolver(getCurrentSchema()),
     defaultValues: {
       serviceCategoryId: "",
       departmentId: "",
@@ -231,7 +270,9 @@ export default function CreateApplicationPage() {
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1: // Service & Department/Info
-        const hasServiceCategory = !!watchedFields.serviceCategoryId;
+        const hasServiceCategory = isGeneralFrontdesk
+          ? true
+          : !!watchedFields.serviceCategoryId; // General frontdesk doesn't need category
         const hasSubject = !!watchedFields.subject;
 
         if (applicationType === "PUBLIC") {
@@ -402,6 +443,13 @@ export default function CreateApplicationPage() {
     }
   }, [applicationType, formInitialized]);
 
+  // Auto-set Uncategorised category for general frontdesk
+  useEffect(() => {
+    if (isGeneralFrontdesk && formInitialized && uncategorisedCategoryId) {
+      form.setValue("serviceCategoryId", uncategorisedCategoryId);
+    }
+  }, [isGeneralFrontdesk, formInitialized, uncategorisedCategoryId, form]);
+
   // Auto-assign officer when both officers and frontdesk assignments are loaded
   useEffect(() => {
     if (officers.length > 0 && frontdeskAssignments.length > 0) {
@@ -451,9 +499,21 @@ export default function CreateApplicationPage() {
       const data = await response.json();
 
       if (Array.isArray(data)) {
-        setServiceCategories(
-          data.filter((cat: ServiceCategory) => cat.isActive !== false)
+        const categories = data.filter(
+          (cat: ServiceCategory) => cat.isActive !== false
         );
+        setServiceCategories(categories);
+
+        // Find and set the uncategorised category ID
+        const uncategorised = categories.find(
+          (cat) => cat.name.toLowerCase() === "uncategorised"
+        );
+        if (uncategorised) {
+          setUncategorisedCategoryId(uncategorised.id);
+        } else {
+          // If not found in categories, fetch it from API
+          fetchUncategorisedCategoryId();
+        }
       } else {
         setServiceCategories([]);
       }
@@ -463,6 +523,20 @@ export default function CreateApplicationPage() {
       setServiceCategories([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchUncategorisedCategoryId = async () => {
+    try {
+      const response = await fetch("/api/service-categories/uncategorised");
+      if (response.ok) {
+        const data = await response.json();
+        if (data.id) {
+          setUncategorisedCategoryId(data.id);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching uncategorised category ID:", error);
     }
   };
 
@@ -540,14 +614,17 @@ export default function CreateApplicationPage() {
     const files = Array.from(event.target.files || []);
     if (files.length === 0) return;
 
-    const maxSize = 5 * 1024 * 1024;
-    const validFiles = files.filter((file) => {
-      if (file.size > maxSize) {
-        toast.error(`File ${file.name} is too large. Maximum size is 5MB.`);
-        return false;
+    const validFiles: File[] = [];
+
+    // Validate each file using the S3 validation function
+    for (const file of files) {
+      const validation = validateFile(file);
+      if (!validation.isValid) {
+        toast.error(validation.error);
+        continue;
       }
-      return true;
-    });
+      validFiles.push(file);
+    }
 
     const newDocuments = validFiles.map((file) => ({
       file,
@@ -568,6 +645,11 @@ export default function CreateApplicationPage() {
   };
 
   const onSubmit = async (data: ApplicationFormData) => {
+    // For general frontdesk, set serviceCategoryId to Uncategorised if not set
+    if (isGeneralFrontdesk && !data.serviceCategoryId) {
+      data.serviceCategoryId = uncategorisedCategoryId;
+    }
+
     // Validate using the current schema
     const currentSchema = getCurrentSchema();
     const validation = currentSchema.safeParse(data);
@@ -593,7 +675,10 @@ export default function CreateApplicationPage() {
     setSubmitting(true);
     try {
       const applicationFormData = new FormData();
-      applicationFormData.append("serviceCategoryId", data.serviceCategoryId);
+      applicationFormData.append(
+        "serviceCategoryId",
+        data.serviceCategoryId || uncategorisedCategoryId
+      );
 
       // Only append departmentId if it exists (for government applications)
       if (data.departmentId) {
@@ -845,14 +930,14 @@ export default function CreateApplicationPage() {
                         className="flex items-center gap-2"
                       >
                         <Globe className="h-4 w-4" />
-                        Public Service
+                        Citizen Application
                       </TabsTrigger>
                       <TabsTrigger
                         value="GOVERNMENT"
                         className="flex items-center gap-2"
                       >
                         <Building2 className="h-4 w-4" />
-                        Government Service
+                        Receive via Dak
                       </TabsTrigger>
                     </TabsList>
 
@@ -870,29 +955,52 @@ export default function CreateApplicationPage() {
                         </p>
                       </div>
 
-                      <FormField
-                        control={form.control}
-                        name="serviceCategoryId"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-sm font-medium text-gray-700">
-                              Service Category *
-                            </FormLabel>
-                            <FormControl>
-                              <ServiceCategorySelect
-                                value={field.value}
-                                onValueChangeAction={field.onChange}
-                                placeholder="Search or create service category..."
-                              />
-                            </FormControl>
-                            <FormDescription>
-                              Search for an existing category or create a new
-                              one if it does not exist.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      {/* Service Category - Only show for assigned frontdesk */}
+                      {!isGeneralFrontdesk && (
+                        <FormField
+                          control={form.control}
+                          name="serviceCategoryId"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-700">
+                                Service Category *
+                              </FormLabel>
+                              <FormControl>
+                                <ServiceCategorySelector
+                                  value={field.value || ""}
+                                  onValueChangeAction={field.onChange}
+                                  placeholder="Search or create service category..."
+                                  canCreate={true}
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                Search for an existing category or create a new
+                                one if it does not exist.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+
+                      {/* Information for general frontdesk */}
+                      {isGeneralFrontdesk && (
+                        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                          <div className="flex items-center gap-2 text-blue-700 mb-2">
+                            <AlertCircle className="h-5 w-5" />
+                            <span className="font-medium">
+                              Service Category
+                            </span>
+                          </div>
+                          <p className="text-sm text-blue-600">
+                            Applications created by general frontdesk will
+                            automatically be assigned to the
+                            &quot;Uncategorised&quot; service category. They can
+                            be recategorized later by assigned frontdesk staff
+                            or officers.
+                          </p>
+                        </div>
+                      )}
 
                       <FormField
                         control={form.control}
@@ -929,29 +1037,52 @@ export default function CreateApplicationPage() {
                         </p>
                       </div>
 
-                      <FormField
-                        control={form.control}
-                        name="serviceCategoryId"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-sm font-medium text-gray-700">
-                              Service Category *
-                            </FormLabel>
-                            <FormControl>
-                              <ServiceCategorySelect
-                                value={field.value}
-                                onValueChangeAction={field.onChange}
-                                placeholder="Search or create service category..."
-                              />
-                            </FormControl>
-                            <FormDescription>
-                              Search for an existing category or create a new
-                              one if it does not exist.
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      {/* Service Category - Only show for assigned frontdesk */}
+                      {!isGeneralFrontdesk && (
+                        <FormField
+                          control={form.control}
+                          name="serviceCategoryId"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-700">
+                                Service Category *
+                              </FormLabel>
+                              <FormControl>
+                                <ServiceCategorySelector
+                                  value={field.value || ""}
+                                  onValueChangeAction={field.onChange}
+                                  placeholder="Search or create service category..."
+                                  canCreate={true}
+                                />
+                              </FormControl>
+                              <FormDescription>
+                                Search for an existing category or create a new
+                                one if it does not exist.
+                              </FormDescription>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+
+                      {/* Information for general frontdesk */}
+                      {isGeneralFrontdesk && (
+                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                          <div className="flex items-center gap-2 text-green-700 mb-2">
+                            <AlertCircle className="h-5 w-5" />
+                            <span className="font-medium">
+                              Service Category
+                            </span>
+                          </div>
+                          <p className="text-sm text-green-600">
+                            Applications created by general frontdesk will
+                            automatically be assigned to the
+                            &quot;Uncategorised&quot; service category. They can
+                            be recategorized later by assigned frontdesk staff
+                            or officers.
+                          </p>
+                        </div>
+                      )}
 
                       <FormField
                         control={form.control}

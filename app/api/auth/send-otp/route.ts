@@ -70,6 +70,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { generateOTP } from "@/lib/utils";
+import {
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+  sendLoginOTPEmail,
+} from "@/lib/mail-new";
 
 export async function POST(req: NextRequest) {
   try {
@@ -100,7 +105,7 @@ export async function POST(req: NextRequest) {
     // Generate new OTP
     const otp = generateOTP();
 
-    // Console log the OTP instead of sending email
+    // Always log OTP to console for development
     console.log("=".repeat(50));
     console.log("📧 OTP GENERATED FOR:", email);
     console.log("🔐 OTP CODE:", otp);
@@ -117,12 +122,33 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Email sending is disabled - OTP is only logged to console
-    // Previously would send: sendVerificationEmail, sendPasswordResetEmail, or sendOTPEmail
+    // Send appropriate email based on type
+    try {
+      if (type === "EMAIL_VERIFICATION") {
+        await sendVerificationEmail(email, otp);
+      } else if (type === "PASSWORD_RESET") {
+        await sendPasswordResetEmail(email, otp);
+      } else if (type === "LOGIN_OTP") {
+        await sendLoginOTPEmail(email, otp);
+      } else {
+        await sendVerificationEmail(email, otp); // Default fallback
+      }
+    } catch (emailError) {
+      // Log email error but don't fail the request in development
+      console.error("Email sending error:", emailError);
+
+      // In production, you might want to fail the request if email sending fails
+      if (process.env.NODE_ENV === "production") {
+        throw emailError;
+      }
+    }
 
     return NextResponse.json({
       success: true,
-      message: "OTP generated successfully (check console for development)",
+      message:
+        process.env.NODE_ENV === "production"
+          ? "OTP sent successfully to your email"
+          : "OTP sent successfully (also logged to console for development)",
     });
   } catch (error) {
     console.error("Send OTP error:", error);

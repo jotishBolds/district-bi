@@ -94,6 +94,11 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     { name: "Applications", href: "/applications", icon: FileText },
     { name: "User Management", href: "/admin/user-management", icon: Users },
     {
+      name: "Service Categories",
+      href: "/admin/service-categories",
+      icon: ClipboardList,
+    },
+    {
       name: "Department Management",
       href: "/admin/departments",
       icon: Building2,

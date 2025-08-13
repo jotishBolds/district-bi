@@ -43,6 +43,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistance } from "date-fns";
+import { ServiceCategoryBadge } from "@/components/ui/service-category-badge";
+import { ServiceCategoryEditModal } from "@/components/ui/service-category-edit-modal";
 import {
   getRoleMapping,
   getLevelPriority,
@@ -63,7 +65,9 @@ interface Application {
   submittedAt?: string;
   updatedAt: string;
   serviceCategory: {
+    id: string;
     name: string;
+    color?: string | null;
   };
   documents?: Array<{
     id: string;
@@ -152,6 +156,16 @@ export default function FrontdeskDashboard() {
   const [instructions, setInstructions] = useState("");
   const [forwardingApp, setForwardingApp] = useState<Application | null>(null);
   const [isForwardDialogOpen, setIsForwardDialogOpen] = useState(false);
+  const [selectedCategoryFilter, setSelectedCategoryFilter] =
+    useState<string>("all");
+  const [serviceCategories, setServiceCategories] = useState<
+    Array<{ id: string; name: string; color?: string }>
+  >([]);
+  const [isCategoryEditModalOpen, setIsCategoryEditModalOpen] = useState(false);
+  const [editingApplicationId, setEditingApplicationId] = useState<string>("");
+  const [editingCurrentCategory, setEditingCurrentCategory] = useState<
+    { id: string; name: string; color?: string } | undefined
+  >(undefined);
 
   const fetchFrontdeskAssignments = async (
     availableOfficersForRef?: Officer[]
@@ -266,6 +280,18 @@ export default function FrontdeskDashboard() {
       toast.error("Failed to fetch data");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchServiceCategories = async () => {
+    try {
+      const response = await fetch("/api/frontdesk/service-categories");
+      if (response.ok) {
+        const categories = await response.json();
+        setServiceCategories(Array.isArray(categories) ? categories : []);
+      }
+    } catch (error) {
+      console.error("Error fetching service categories:", error);
     }
   };
 
@@ -420,8 +446,18 @@ export default function FrontdeskDashboard() {
     setFilteredOfficers(assignableOfficers);
   };
 
+  const filterApplicationsByCategory = (applications: Application[]) => {
+    if (selectedCategoryFilter === "all") {
+      return applications;
+    }
+    return applications.filter(
+      (app) => app.serviceCategory?.id === selectedCategoryFilter
+    );
+  };
+
   useEffect(() => {
     fetchData();
+    fetchServiceCategories();
   }, []);
 
   useEffect(() => {
@@ -484,6 +520,26 @@ export default function FrontdeskDashboard() {
     setInstructions("");
   };
 
+  const handleCategoryEdit = (
+    applicationId: string,
+    currentCategory: { id: string; name: string; color?: string }
+  ) => {
+    setEditingApplicationId(applicationId);
+    setEditingCurrentCategory(currentCategory);
+    setIsCategoryEditModalOpen(true);
+  };
+
+  const closeCategoryEditModal = () => {
+    setIsCategoryEditModalOpen(false);
+    setEditingApplicationId("");
+    setEditingCurrentCategory(undefined);
+  };
+
+  const handleCategoryUpdated = () => {
+    fetchData(); // Refresh data after category update
+    toast.success("Service category updated successfully");
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "IN_PROGRESS":
@@ -519,9 +575,26 @@ export default function FrontdeskDashboard() {
                 "N/A"}
             </CardTitle>
             <CardDescription className="space-y-1">
-              <div className="font-medium text-gray-700">
-                {application.serviceCategory?.name}
+              <div className="flex items-center gap-2">
+                <ServiceCategoryBadge
+                  category={{
+                    id: application.serviceCategory.id,
+                    name: application.serviceCategory.name,
+                    color: application.serviceCategory.color || undefined,
+                  }}
+                  clickable={true}
+                  onClick={() =>
+                    handleCategoryEdit(application.id, {
+                      id: application.serviceCategory.id,
+                      name: application.serviceCategory.name,
+                      color: application.serviceCategory.color || undefined,
+                    })
+                  }
+
+                  // No variant or className override here
+                />
               </div>
+
               {application.subject && (
                 <div className="text-blue-600 font-medium">
                   {application.subject}
@@ -933,6 +1006,38 @@ export default function FrontdeskDashboard() {
         </Card>
       </div>
 
+      <div className="mb-4">
+        <div className="flex items-center gap-4">
+          <Label htmlFor="category-filter" className="text-sm font-medium">
+            Filter by Category:
+          </Label>
+          <Select
+            value={selectedCategoryFilter}
+            onValueChange={setSelectedCategoryFilter}
+          >
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {serviceCategories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  <div className="flex items-center gap-2">
+                    {category.color && (
+                      <div
+                        className="w-3 h-3 rounded-full border"
+                        style={{ backgroundColor: category.color }}
+                      />
+                    )}
+                    {category.name}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
       <Tabs defaultValue="active" className="w-full">
         <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto p-1 bg-gray-100 rounded-lg">
           <TabsTrigger
@@ -1005,13 +1110,15 @@ export default function FrontdeskDashboard() {
               </Card>
             ) : (
               <div className="space-y-4">
-                {data.activeApplications.map((app) => (
-                  <ApplicationCard
-                    key={app.id}
-                    application={app}
-                    showForwardButton={true}
-                  />
-                ))}
+                {filterApplicationsByCategory(data.activeApplications).map(
+                  (app) => (
+                    <ApplicationCard
+                      key={app.id}
+                      application={app}
+                      showForwardButton={true}
+                    />
+                  )
+                )}
               </div>
             )}
           </div>
@@ -1042,13 +1149,15 @@ export default function FrontdeskDashboard() {
               </Card>
             ) : (
               <div className="space-y-4">
-                {data.forwardedOutByMe.map((app: Application) => (
-                  <ForwardedHistoryCard
-                    key={app.id}
-                    application={app}
-                    type="outgoing"
-                  />
-                ))}
+                {filterApplicationsByCategory(data.forwardedOutByMe).map(
+                  (app: Application) => (
+                    <ForwardedHistoryCard
+                      key={app.id}
+                      application={app}
+                      type="outgoing"
+                    />
+                  )
+                )}
               </div>
             )}
           </div>
@@ -1079,13 +1188,15 @@ export default function FrontdeskDashboard() {
               </Card>
             ) : (
               <div className="space-y-4">
-                {data.receivedByMe.map((app: Application) => (
-                  <ForwardedHistoryCard
-                    key={app.id}
-                    application={app}
-                    type="incoming"
-                  />
-                ))}
+                {filterApplicationsByCategory(data.receivedByMe).map(
+                  (app: Application) => (
+                    <ForwardedHistoryCard
+                      key={app.id}
+                      application={app}
+                      type="incoming"
+                    />
+                  )
+                )}
               </div>
             )}
           </div>
@@ -1116,7 +1227,9 @@ export default function FrontdeskDashboard() {
               </Card>
             ) : (
               <div className="space-y-4">
-                {data?.completedApplications?.map((app: Application) => (
+                {filterApplicationsByCategory(
+                  data?.completedApplications || []
+                ).map((app: Application) => (
                   <ApplicationCard
                     key={app.id}
                     application={app}
@@ -1233,6 +1346,15 @@ export default function FrontdeskDashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Service Category Edit Modal */}
+      <ServiceCategoryEditModal
+        isOpen={isCategoryEditModalOpen}
+        onCloseAction={closeCategoryEditModal}
+        applicationId={editingApplicationId}
+        currentCategory={editingCurrentCategory}
+        onCategoryUpdatedAction={handleCategoryUpdated}
+      />
     </div>
   );
 }

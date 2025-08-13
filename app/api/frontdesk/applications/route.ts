@@ -87,6 +87,7 @@ export async function GET(request: NextRequest) {
         serviceCategory: {
           select: {
             name: true,
+            color: true,
           },
         },
         currentHolder: {

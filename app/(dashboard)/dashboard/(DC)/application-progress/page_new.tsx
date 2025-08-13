@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { FilePreviewButton } from "@/components/FilePreview";
 import {
   FileText,
   User,
@@ -382,9 +383,15 @@ const DCDashboard = () => {
 
   const downloadDocument = async (doc: Document) => {
     try {
-      const response = await fetch(`/api/${doc.filePath}`);
+      const response = await fetch(`/api/documents/${doc.id}`);
       if (!response.ok) throw new Error("Download failed");
-      const blob = await response.blob();
+
+      const data = await response.json();
+      const fileResponse = await fetch(data.url);
+
+      if (!fileResponse.ok) throw new Error("Failed to download file");
+
+      const blob = await fileResponse.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.style.display = "none";
@@ -1681,13 +1688,22 @@ const DCDashboard = () => {
                             </div>
                           )}
                         </div>
-                        <button
-                          onClick={() => downloadDocument(doc)}
-                          className="ml-6 flex items-center gap-2 px-6 py-3 text-sm bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 border-2 border-transparent rounded-xl hover:shadow-lg transition-all duration-200 font-semibold"
-                        >
-                          <Download className="w-4 h-4" />
-                          Download
-                        </button>
+                        <div className="ml-6 flex items-center gap-2">
+                          <FilePreviewButton
+                            document={doc}
+                            applicationId={showDocumentModal.applicationId}
+                            variant="outline"
+                            size="sm"
+                            className="mr-2"
+                          />
+                          <button
+                            onClick={() => downloadDocument(doc)}
+                            className="flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 border-2 border-transparent rounded-lg hover:shadow-lg transition-all duration-200 font-semibold"
+                          >
+                            <Download className="w-4 h-4" />
+                            Download
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}

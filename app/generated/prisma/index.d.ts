@@ -64,6 +64,11 @@ export type ApplicationWorkflow = $Result.DefaultSelection<Prisma.$ApplicationWo
  */
 export type ApplicationValidation = $Result.DefaultSelection<Prisma.$ApplicationValidationPayload>
 /**
+ * Model ServiceCategoryChange
+ * 
+ */
+export type ServiceCategoryChange = $Result.DefaultSelection<Prisma.$ServiceCategoryChangePayload>
+/**
  * Model OfficerAssignment
  * 
  */
@@ -442,6 +447,16 @@ export class PrismaClient<
     * ```
     */
   get applicationValidation(): Prisma.ApplicationValidationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.serviceCategoryChange`: Exposes CRUD operations for the **ServiceCategoryChange** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ServiceCategoryChanges
+    * const serviceCategoryChanges = await prisma.serviceCategoryChange.findMany()
+    * ```
+    */
+  get serviceCategoryChange(): Prisma.ServiceCategoryChangeDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.officerAssignment`: Exposes CRUD operations for the **OfficerAssignment** model.
@@ -1002,6 +1017,7 @@ export namespace Prisma {
     Application: 'Application',
     ApplicationWorkflow: 'ApplicationWorkflow',
     ApplicationValidation: 'ApplicationValidation',
+    ServiceCategoryChange: 'ServiceCategoryChange',
     OfficerAssignment: 'OfficerAssignment',
     Document: 'Document',
     DocumentRequest: 'DocumentRequest',
@@ -1031,7 +1047,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory"
+      modelProps: "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "serviceCategoryChange" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1772,6 +1788,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ApplicationValidationCountArgs<ExtArgs>
             result: $Utils.Optional<ApplicationValidationCountAggregateOutputType> | number
+          }
+        }
+      }
+      ServiceCategoryChange: {
+        payload: Prisma.$ServiceCategoryChangePayload<ExtArgs>
+        fields: Prisma.ServiceCategoryChangeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ServiceCategoryChangeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ServiceCategoryChangeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload>
+          }
+          findFirst: {
+            args: Prisma.ServiceCategoryChangeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ServiceCategoryChangeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload>
+          }
+          findMany: {
+            args: Prisma.ServiceCategoryChangeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload>[]
+          }
+          create: {
+            args: Prisma.ServiceCategoryChangeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload>
+          }
+          createMany: {
+            args: Prisma.ServiceCategoryChangeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ServiceCategoryChangeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload>[]
+          }
+          delete: {
+            args: Prisma.ServiceCategoryChangeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload>
+          }
+          update: {
+            args: Prisma.ServiceCategoryChangeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload>
+          }
+          deleteMany: {
+            args: Prisma.ServiceCategoryChangeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ServiceCategoryChangeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ServiceCategoryChangeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload>[]
+          }
+          upsert: {
+            args: Prisma.ServiceCategoryChangeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ServiceCategoryChangePayload>
+          }
+          aggregate: {
+            args: Prisma.ServiceCategoryChangeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateServiceCategoryChange>
+          }
+          groupBy: {
+            args: Prisma.ServiceCategoryChangeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ServiceCategoryChangeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ServiceCategoryChangeCountArgs<ExtArgs>
+            result: $Utils.Optional<ServiceCategoryChangeCountAggregateOutputType> | number
           }
         }
       }
@@ -2683,6 +2773,7 @@ export namespace Prisma {
     application?: ApplicationOmit
     applicationWorkflow?: ApplicationWorkflowOmit
     applicationValidation?: ApplicationValidationOmit
+    serviceCategoryChange?: ServiceCategoryChangeOmit
     officerAssignment?: OfficerAssignmentOmit
     document?: DocumentOmit
     documentRequest?: DocumentRequestOmit
@@ -2804,6 +2895,7 @@ export namespace Prisma {
     assignmentsReceived: number
     officerForwardedFrom: number
     officerForwardedTo: number
+    serviceCategoryChanges: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2823,6 +2915,7 @@ export namespace Prisma {
     assignmentsReceived?: boolean | UserCountOutputTypeCountAssignmentsReceivedArgs
     officerForwardedFrom?: boolean | UserCountOutputTypeCountOfficerForwardedFromArgs
     officerForwardedTo?: boolean | UserCountOutputTypeCountOfficerForwardedToArgs
+    serviceCategoryChanges?: boolean | UserCountOutputTypeCountServiceCategoryChangesArgs
   }
 
   // Custom InputTypes
@@ -2948,6 +3041,13 @@ export namespace Prisma {
     where?: OfficerForwardingHistoryWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountServiceCategoryChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ServiceCategoryChangeWhereInput
+  }
+
 
   /**
    * Count Type OfficerProfileCountOutputType
@@ -2986,10 +3086,14 @@ export namespace Prisma {
 
   export type ServiceCategoryCountOutputType = {
     applications: number
+    newCategoryChanges: number
+    previousCategoryChanges: number
   }
 
   export type ServiceCategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applications?: boolean | ServiceCategoryCountOutputTypeCountApplicationsArgs
+    newCategoryChanges?: boolean | ServiceCategoryCountOutputTypeCountNewCategoryChangesArgs
+    previousCategoryChanges?: boolean | ServiceCategoryCountOutputTypeCountPreviousCategoryChangesArgs
   }
 
   // Custom InputTypes
@@ -3008,6 +3112,20 @@ export namespace Prisma {
    */
   export type ServiceCategoryCountOutputTypeCountApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ApplicationWhereInput
+  }
+
+  /**
+   * ServiceCategoryCountOutputType without action
+   */
+  export type ServiceCategoryCountOutputTypeCountNewCategoryChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ServiceCategoryChangeWhereInput
+  }
+
+  /**
+   * ServiceCategoryCountOutputType without action
+   */
+  export type ServiceCategoryCountOutputTypeCountPreviousCategoryChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ServiceCategoryChangeWhereInput
   }
 
 
@@ -3086,6 +3204,7 @@ export namespace Prisma {
     notifications: number
     officerAssignments: number
     officerForwardings: number
+    serviceCategoryChanges: number
   }
 
   export type ApplicationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3097,6 +3216,7 @@ export namespace Prisma {
     notifications?: boolean | ApplicationCountOutputTypeCountNotificationsArgs
     officerAssignments?: boolean | ApplicationCountOutputTypeCountOfficerAssignmentsArgs
     officerForwardings?: boolean | ApplicationCountOutputTypeCountOfficerForwardingsArgs
+    serviceCategoryChanges?: boolean | ApplicationCountOutputTypeCountServiceCategoryChangesArgs
   }
 
   // Custom InputTypes
@@ -3164,6 +3284,13 @@ export namespace Prisma {
    */
   export type ApplicationCountOutputTypeCountOfficerForwardingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OfficerForwardingHistoryWhereInput
+  }
+
+  /**
+   * ApplicationCountOutputType without action
+   */
+  export type ApplicationCountOutputTypeCountServiceCategoryChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ServiceCategoryChangeWhereInput
   }
 
 
@@ -3427,6 +3554,7 @@ export namespace Prisma {
     officerForwardedFrom?: boolean | User$officerForwardedFromArgs<ExtArgs>
     officerForwardedTo?: boolean | User$officerForwardedToArgs<ExtArgs>
     officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
+    serviceCategoryChanges?: boolean | User$serviceCategoryChangesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3489,6 +3617,7 @@ export namespace Prisma {
     officerForwardedFrom?: boolean | User$officerForwardedFromArgs<ExtArgs>
     officerForwardedTo?: boolean | User$officerForwardedToArgs<ExtArgs>
     officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
+    serviceCategoryChanges?: boolean | User$serviceCategoryChangesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3515,6 +3644,7 @@ export namespace Prisma {
       officerForwardedFrom: Prisma.$OfficerForwardingHistoryPayload<ExtArgs>[]
       officerForwardedTo: Prisma.$OfficerForwardingHistoryPayload<ExtArgs>[]
       officerProfile: Prisma.$OfficerProfilePayload<ExtArgs> | null
+      serviceCategoryChanges: Prisma.$ServiceCategoryChangePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3939,6 +4069,7 @@ export namespace Prisma {
     officerForwardedFrom<T extends User$officerForwardedFromArgs<ExtArgs> = {}>(args?: Subset<T, User$officerForwardedFromArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     officerForwardedTo<T extends User$officerForwardedToArgs<ExtArgs> = {}>(args?: Subset<T, User$officerForwardedToArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     officerProfile<T extends User$officerProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$officerProfileArgs<ExtArgs>>): Prisma__OfficerProfileClient<$Result.GetResult<Prisma.$OfficerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    serviceCategoryChanges<T extends User$serviceCategoryChangesArgs<ExtArgs> = {}>(args?: Subset<T, User$serviceCategoryChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4785,6 +4916,30 @@ export namespace Prisma {
      */
     include?: OfficerProfileInclude<ExtArgs> | null
     where?: OfficerProfileWhereInput
+  }
+
+  /**
+   * User.serviceCategoryChanges
+   */
+  export type User$serviceCategoryChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    where?: ServiceCategoryChangeWhereInput
+    orderBy?: ServiceCategoryChangeOrderByWithRelationInput | ServiceCategoryChangeOrderByWithRelationInput[]
+    cursor?: ServiceCategoryChangeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ServiceCategoryChangeScalarFieldEnum | ServiceCategoryChangeScalarFieldEnum[]
   }
 
   /**
@@ -8172,6 +8327,7 @@ export namespace Prisma {
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    color: string | null
   }
 
   export type ServiceCategoryMaxAggregateOutputType = {
@@ -8181,6 +8337,7 @@ export namespace Prisma {
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
+    color: string | null
   }
 
   export type ServiceCategoryCountAggregateOutputType = {
@@ -8190,6 +8347,7 @@ export namespace Prisma {
     isActive: number
     createdAt: number
     updatedAt: number
+    color: number
     _all: number
   }
 
@@ -8201,6 +8359,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    color?: true
   }
 
   export type ServiceCategoryMaxAggregateInputType = {
@@ -8210,6 +8369,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    color?: true
   }
 
   export type ServiceCategoryCountAggregateInputType = {
@@ -8219,6 +8379,7 @@ export namespace Prisma {
     isActive?: true
     createdAt?: true
     updatedAt?: true
+    color?: true
     _all?: true
   }
 
@@ -8301,6 +8462,7 @@ export namespace Prisma {
     isActive: boolean
     createdAt: Date
     updatedAt: Date
+    color: string | null
     _count: ServiceCategoryCountAggregateOutputType | null
     _min: ServiceCategoryMinAggregateOutputType | null
     _max: ServiceCategoryMaxAggregateOutputType | null
@@ -8327,7 +8489,10 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    color?: boolean
     applications?: boolean | ServiceCategory$applicationsArgs<ExtArgs>
+    newCategoryChanges?: boolean | ServiceCategory$newCategoryChangesArgs<ExtArgs>
+    previousCategoryChanges?: boolean | ServiceCategory$previousCategoryChangesArgs<ExtArgs>
     _count?: boolean | ServiceCategoryCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["serviceCategory"]>
 
@@ -8338,6 +8503,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    color?: boolean
   }, ExtArgs["result"]["serviceCategory"]>
 
   export type ServiceCategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8347,6 +8513,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    color?: boolean
   }, ExtArgs["result"]["serviceCategory"]>
 
   export type ServiceCategorySelectScalar = {
@@ -8356,11 +8523,14 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    color?: boolean
   }
 
-  export type ServiceCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["serviceCategory"]>
+  export type ServiceCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isActive" | "createdAt" | "updatedAt" | "color", ExtArgs["result"]["serviceCategory"]>
   export type ServiceCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applications?: boolean | ServiceCategory$applicationsArgs<ExtArgs>
+    newCategoryChanges?: boolean | ServiceCategory$newCategoryChangesArgs<ExtArgs>
+    previousCategoryChanges?: boolean | ServiceCategory$previousCategoryChangesArgs<ExtArgs>
     _count?: boolean | ServiceCategoryCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ServiceCategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -8370,6 +8540,8 @@ export namespace Prisma {
     name: "ServiceCategory"
     objects: {
       applications: Prisma.$ApplicationPayload<ExtArgs>[]
+      newCategoryChanges: Prisma.$ServiceCategoryChangePayload<ExtArgs>[]
+      previousCategoryChanges: Prisma.$ServiceCategoryChangePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8378,6 +8550,7 @@ export namespace Prisma {
       isActive: boolean
       createdAt: Date
       updatedAt: Date
+      color: string | null
     }, ExtArgs["result"]["serviceCategory"]>
     composites: {}
   }
@@ -8773,6 +8946,8 @@ export namespace Prisma {
   export interface Prisma__ServiceCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     applications<T extends ServiceCategory$applicationsArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategory$applicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    newCategoryChanges<T extends ServiceCategory$newCategoryChangesArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategory$newCategoryChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    previousCategoryChanges<T extends ServiceCategory$previousCategoryChangesArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategory$previousCategoryChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8808,6 +8983,7 @@ export namespace Prisma {
     readonly isActive: FieldRef<"ServiceCategory", 'Boolean'>
     readonly createdAt: FieldRef<"ServiceCategory", 'DateTime'>
     readonly updatedAt: FieldRef<"ServiceCategory", 'DateTime'>
+    readonly color: FieldRef<"ServiceCategory", 'String'>
   }
     
 
@@ -9217,6 +9393,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ApplicationScalarFieldEnum | ApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * ServiceCategory.newCategoryChanges
+   */
+  export type ServiceCategory$newCategoryChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    where?: ServiceCategoryChangeWhereInput
+    orderBy?: ServiceCategoryChangeOrderByWithRelationInput | ServiceCategoryChangeOrderByWithRelationInput[]
+    cursor?: ServiceCategoryChangeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ServiceCategoryChangeScalarFieldEnum | ServiceCategoryChangeScalarFieldEnum[]
+  }
+
+  /**
+   * ServiceCategory.previousCategoryChanges
+   */
+  export type ServiceCategory$previousCategoryChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    where?: ServiceCategoryChangeWhereInput
+    orderBy?: ServiceCategoryChangeOrderByWithRelationInput | ServiceCategoryChangeOrderByWithRelationInput[]
+    cursor?: ServiceCategoryChangeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ServiceCategoryChangeScalarFieldEnum | ServiceCategoryChangeScalarFieldEnum[]
   }
 
   /**
@@ -11433,10 +11657,10 @@ export namespace Prisma {
     citizenPhone: string | null
     subject: string | null
     departmentId: string | null
-    applicationSource: $Enums.ApplicationSource | null
     dispatchedAt: Date | null
     dispatchedById: string | null
     isDispatched: boolean | null
+    applicationSource: $Enums.ApplicationSource | null
   }
 
   export type ApplicationMaxAggregateOutputType = {
@@ -11458,10 +11682,10 @@ export namespace Prisma {
     citizenPhone: string | null
     subject: string | null
     departmentId: string | null
-    applicationSource: $Enums.ApplicationSource | null
     dispatchedAt: Date | null
     dispatchedById: string | null
     isDispatched: boolean | null
+    applicationSource: $Enums.ApplicationSource | null
   }
 
   export type ApplicationCountAggregateOutputType = {
@@ -11483,10 +11707,10 @@ export namespace Prisma {
     citizenPhone: number
     subject: number
     departmentId: number
-    applicationSource: number
     dispatchedAt: number
     dispatchedById: number
     isDispatched: number
+    applicationSource: number
     _all: number
   }
 
@@ -11510,10 +11734,10 @@ export namespace Prisma {
     citizenPhone?: true
     subject?: true
     departmentId?: true
-    applicationSource?: true
     dispatchedAt?: true
     dispatchedById?: true
     isDispatched?: true
+    applicationSource?: true
   }
 
   export type ApplicationMaxAggregateInputType = {
@@ -11535,10 +11759,10 @@ export namespace Prisma {
     citizenPhone?: true
     subject?: true
     departmentId?: true
-    applicationSource?: true
     dispatchedAt?: true
     dispatchedById?: true
     isDispatched?: true
+    applicationSource?: true
   }
 
   export type ApplicationCountAggregateInputType = {
@@ -11560,10 +11784,10 @@ export namespace Prisma {
     citizenPhone?: true
     subject?: true
     departmentId?: true
-    applicationSource?: true
     dispatchedAt?: true
     dispatchedById?: true
     isDispatched?: true
+    applicationSource?: true
     _all?: true
   }
 
@@ -11658,10 +11882,10 @@ export namespace Prisma {
     citizenPhone: string
     subject: string
     departmentId: string | null
-    applicationSource: $Enums.ApplicationSource
     dispatchedAt: Date | null
     dispatchedById: string | null
     isDispatched: boolean
+    applicationSource: $Enums.ApplicationSource
     _count: ApplicationCountAggregateOutputType | null
     _min: ApplicationMinAggregateOutputType | null
     _max: ApplicationMaxAggregateOutputType | null
@@ -11700,10 +11924,10 @@ export namespace Prisma {
     citizenPhone?: boolean
     subject?: boolean
     departmentId?: boolean
-    applicationSource?: boolean
     dispatchedAt?: boolean
     dispatchedById?: boolean
     isDispatched?: boolean
+    applicationSource?: boolean
     auditLogs?: boolean | Application$auditLogsArgs<ExtArgs>
     validation?: boolean | Application$validationArgs<ExtArgs>
     workflow?: boolean | Application$workflowArgs<ExtArgs>
@@ -11717,6 +11941,7 @@ export namespace Prisma {
     notifications?: boolean | Application$notificationsArgs<ExtArgs>
     officerAssignments?: boolean | Application$officerAssignmentsArgs<ExtArgs>
     officerForwardings?: boolean | Application$officerForwardingsArgs<ExtArgs>
+    serviceCategoryChanges?: boolean | Application$serviceCategoryChangesArgs<ExtArgs>
     _count?: boolean | ApplicationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
 
@@ -11739,10 +11964,10 @@ export namespace Prisma {
     citizenPhone?: boolean
     subject?: boolean
     departmentId?: boolean
-    applicationSource?: boolean
     dispatchedAt?: boolean
     dispatchedById?: boolean
     isDispatched?: boolean
+    applicationSource?: boolean
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
     department?: boolean | Application$departmentArgs<ExtArgs>
     dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
@@ -11768,10 +11993,10 @@ export namespace Prisma {
     citizenPhone?: boolean
     subject?: boolean
     departmentId?: boolean
-    applicationSource?: boolean
     dispatchedAt?: boolean
     dispatchedById?: boolean
     isDispatched?: boolean
+    applicationSource?: boolean
     currentHolder?: boolean | Application$currentHolderArgs<ExtArgs>
     department?: boolean | Application$departmentArgs<ExtArgs>
     dispatchedBy?: boolean | Application$dispatchedByArgs<ExtArgs>
@@ -11797,13 +12022,13 @@ export namespace Prisma {
     citizenPhone?: boolean
     subject?: boolean
     departmentId?: boolean
-    applicationSource?: boolean
     dispatchedAt?: boolean
     dispatchedById?: boolean
     isDispatched?: boolean
+    applicationSource?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rrNumber" | "serviceCategoryId" | "status" | "currentHolderId" | "submittedAt" | "validatedAt" | "completedAt" | "createdAt" | "updatedAt" | "citizenAadhaar" | "citizenAddress" | "citizenEmail" | "citizenGender" | "citizenName" | "citizenPhone" | "subject" | "departmentId" | "applicationSource" | "dispatchedAt" | "dispatchedById" | "isDispatched", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rrNumber" | "serviceCategoryId" | "status" | "currentHolderId" | "submittedAt" | "validatedAt" | "completedAt" | "createdAt" | "updatedAt" | "citizenAadhaar" | "citizenAddress" | "citizenEmail" | "citizenGender" | "citizenName" | "citizenPhone" | "subject" | "departmentId" | "dispatchedAt" | "dispatchedById" | "isDispatched" | "applicationSource", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     auditLogs?: boolean | Application$auditLogsArgs<ExtArgs>
     validation?: boolean | Application$validationArgs<ExtArgs>
@@ -11818,6 +12043,7 @@ export namespace Prisma {
     notifications?: boolean | Application$notificationsArgs<ExtArgs>
     officerAssignments?: boolean | Application$officerAssignmentsArgs<ExtArgs>
     officerForwardings?: boolean | Application$officerForwardingsArgs<ExtArgs>
+    serviceCategoryChanges?: boolean | Application$serviceCategoryChangesArgs<ExtArgs>
     _count?: boolean | ApplicationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11849,6 +12075,7 @@ export namespace Prisma {
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       officerAssignments: Prisma.$OfficerAssignmentPayload<ExtArgs>[]
       officerForwardings: Prisma.$OfficerForwardingHistoryPayload<ExtArgs>[]
+      serviceCategoryChanges: Prisma.$ServiceCategoryChangePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11869,10 +12096,10 @@ export namespace Prisma {
       citizenPhone: string
       subject: string
       departmentId: string | null
-      applicationSource: $Enums.ApplicationSource
       dispatchedAt: Date | null
       dispatchedById: string | null
       isDispatched: boolean
+      applicationSource: $Enums.ApplicationSource
     }, ExtArgs["result"]["application"]>
     composites: {}
   }
@@ -12280,6 +12507,7 @@ export namespace Prisma {
     notifications<T extends Application$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Application$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     officerAssignments<T extends Application$officerAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Application$officerAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     officerForwardings<T extends Application$officerForwardingsArgs<ExtArgs> = {}>(args?: Subset<T, Application$officerForwardingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerForwardingHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    serviceCategoryChanges<T extends Application$serviceCategoryChangesArgs<ExtArgs> = {}>(args?: Subset<T, Application$serviceCategoryChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12327,10 +12555,10 @@ export namespace Prisma {
     readonly citizenPhone: FieldRef<"Application", 'String'>
     readonly subject: FieldRef<"Application", 'String'>
     readonly departmentId: FieldRef<"Application", 'String'>
-    readonly applicationSource: FieldRef<"Application", 'ApplicationSource'>
     readonly dispatchedAt: FieldRef<"Application", 'DateTime'>
     readonly dispatchedById: FieldRef<"Application", 'String'>
     readonly isDispatched: FieldRef<"Application", 'Boolean'>
+    readonly applicationSource: FieldRef<"Application", 'ApplicationSource'>
   }
     
 
@@ -12992,6 +13220,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OfficerForwardingHistoryScalarFieldEnum | OfficerForwardingHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * Application.serviceCategoryChanges
+   */
+  export type Application$serviceCategoryChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    where?: ServiceCategoryChangeWhereInput
+    orderBy?: ServiceCategoryChangeOrderByWithRelationInput | ServiceCategoryChangeOrderByWithRelationInput[]
+    cursor?: ServiceCategoryChangeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ServiceCategoryChangeScalarFieldEnum | ServiceCategoryChangeScalarFieldEnum[]
   }
 
   /**
@@ -15207,6 +15459,1133 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ApplicationValidationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ServiceCategoryChange
+   */
+
+  export type AggregateServiceCategoryChange = {
+    _count: ServiceCategoryChangeCountAggregateOutputType | null
+    _min: ServiceCategoryChangeMinAggregateOutputType | null
+    _max: ServiceCategoryChangeMaxAggregateOutputType | null
+  }
+
+  export type ServiceCategoryChangeMinAggregateOutputType = {
+    id: string | null
+    applicationId: string | null
+    previousCategoryId: string | null
+    newCategoryId: string | null
+    changedById: string | null
+    reason: string | null
+    createdAt: Date | null
+  }
+
+  export type ServiceCategoryChangeMaxAggregateOutputType = {
+    id: string | null
+    applicationId: string | null
+    previousCategoryId: string | null
+    newCategoryId: string | null
+    changedById: string | null
+    reason: string | null
+    createdAt: Date | null
+  }
+
+  export type ServiceCategoryChangeCountAggregateOutputType = {
+    id: number
+    applicationId: number
+    previousCategoryId: number
+    newCategoryId: number
+    changedById: number
+    reason: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ServiceCategoryChangeMinAggregateInputType = {
+    id?: true
+    applicationId?: true
+    previousCategoryId?: true
+    newCategoryId?: true
+    changedById?: true
+    reason?: true
+    createdAt?: true
+  }
+
+  export type ServiceCategoryChangeMaxAggregateInputType = {
+    id?: true
+    applicationId?: true
+    previousCategoryId?: true
+    newCategoryId?: true
+    changedById?: true
+    reason?: true
+    createdAt?: true
+  }
+
+  export type ServiceCategoryChangeCountAggregateInputType = {
+    id?: true
+    applicationId?: true
+    previousCategoryId?: true
+    newCategoryId?: true
+    changedById?: true
+    reason?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ServiceCategoryChangeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ServiceCategoryChange to aggregate.
+     */
+    where?: ServiceCategoryChangeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ServiceCategoryChanges to fetch.
+     */
+    orderBy?: ServiceCategoryChangeOrderByWithRelationInput | ServiceCategoryChangeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ServiceCategoryChangeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ServiceCategoryChanges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ServiceCategoryChanges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ServiceCategoryChanges
+    **/
+    _count?: true | ServiceCategoryChangeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ServiceCategoryChangeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ServiceCategoryChangeMaxAggregateInputType
+  }
+
+  export type GetServiceCategoryChangeAggregateType<T extends ServiceCategoryChangeAggregateArgs> = {
+        [P in keyof T & keyof AggregateServiceCategoryChange]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateServiceCategoryChange[P]>
+      : GetScalarType<T[P], AggregateServiceCategoryChange[P]>
+  }
+
+
+
+
+  export type ServiceCategoryChangeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ServiceCategoryChangeWhereInput
+    orderBy?: ServiceCategoryChangeOrderByWithAggregationInput | ServiceCategoryChangeOrderByWithAggregationInput[]
+    by: ServiceCategoryChangeScalarFieldEnum[] | ServiceCategoryChangeScalarFieldEnum
+    having?: ServiceCategoryChangeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ServiceCategoryChangeCountAggregateInputType | true
+    _min?: ServiceCategoryChangeMinAggregateInputType
+    _max?: ServiceCategoryChangeMaxAggregateInputType
+  }
+
+  export type ServiceCategoryChangeGroupByOutputType = {
+    id: string
+    applicationId: string
+    previousCategoryId: string | null
+    newCategoryId: string
+    changedById: string
+    reason: string | null
+    createdAt: Date
+    _count: ServiceCategoryChangeCountAggregateOutputType | null
+    _min: ServiceCategoryChangeMinAggregateOutputType | null
+    _max: ServiceCategoryChangeMaxAggregateOutputType | null
+  }
+
+  type GetServiceCategoryChangeGroupByPayload<T extends ServiceCategoryChangeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ServiceCategoryChangeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ServiceCategoryChangeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ServiceCategoryChangeGroupByOutputType[P]>
+            : GetScalarType<T[P], ServiceCategoryChangeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ServiceCategoryChangeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    previousCategoryId?: boolean
+    newCategoryId?: boolean
+    changedById?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    changedBy?: boolean | UserDefaultArgs<ExtArgs>
+    newCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    previousCategory?: boolean | ServiceCategoryChange$previousCategoryArgs<ExtArgs>
+  }, ExtArgs["result"]["serviceCategoryChange"]>
+
+  export type ServiceCategoryChangeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    previousCategoryId?: boolean
+    newCategoryId?: boolean
+    changedById?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    changedBy?: boolean | UserDefaultArgs<ExtArgs>
+    newCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    previousCategory?: boolean | ServiceCategoryChange$previousCategoryArgs<ExtArgs>
+  }, ExtArgs["result"]["serviceCategoryChange"]>
+
+  export type ServiceCategoryChangeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    previousCategoryId?: boolean
+    newCategoryId?: boolean
+    changedById?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    changedBy?: boolean | UserDefaultArgs<ExtArgs>
+    newCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    previousCategory?: boolean | ServiceCategoryChange$previousCategoryArgs<ExtArgs>
+  }, ExtArgs["result"]["serviceCategoryChange"]>
+
+  export type ServiceCategoryChangeSelectScalar = {
+    id?: boolean
+    applicationId?: boolean
+    previousCategoryId?: boolean
+    newCategoryId?: boolean
+    changedById?: boolean
+    reason?: boolean
+    createdAt?: boolean
+  }
+
+  export type ServiceCategoryChangeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicationId" | "previousCategoryId" | "newCategoryId" | "changedById" | "reason" | "createdAt", ExtArgs["result"]["serviceCategoryChange"]>
+  export type ServiceCategoryChangeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    changedBy?: boolean | UserDefaultArgs<ExtArgs>
+    newCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    previousCategory?: boolean | ServiceCategoryChange$previousCategoryArgs<ExtArgs>
+  }
+  export type ServiceCategoryChangeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    changedBy?: boolean | UserDefaultArgs<ExtArgs>
+    newCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    previousCategory?: boolean | ServiceCategoryChange$previousCategoryArgs<ExtArgs>
+  }
+  export type ServiceCategoryChangeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | ApplicationDefaultArgs<ExtArgs>
+    changedBy?: boolean | UserDefaultArgs<ExtArgs>
+    newCategory?: boolean | ServiceCategoryDefaultArgs<ExtArgs>
+    previousCategory?: boolean | ServiceCategoryChange$previousCategoryArgs<ExtArgs>
+  }
+
+  export type $ServiceCategoryChangePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ServiceCategoryChange"
+    objects: {
+      application: Prisma.$ApplicationPayload<ExtArgs>
+      changedBy: Prisma.$UserPayload<ExtArgs>
+      newCategory: Prisma.$ServiceCategoryPayload<ExtArgs>
+      previousCategory: Prisma.$ServiceCategoryPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      applicationId: string
+      previousCategoryId: string | null
+      newCategoryId: string
+      changedById: string
+      reason: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["serviceCategoryChange"]>
+    composites: {}
+  }
+
+  type ServiceCategoryChangeGetPayload<S extends boolean | null | undefined | ServiceCategoryChangeDefaultArgs> = $Result.GetResult<Prisma.$ServiceCategoryChangePayload, S>
+
+  type ServiceCategoryChangeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ServiceCategoryChangeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ServiceCategoryChangeCountAggregateInputType | true
+    }
+
+  export interface ServiceCategoryChangeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ServiceCategoryChange'], meta: { name: 'ServiceCategoryChange' } }
+    /**
+     * Find zero or one ServiceCategoryChange that matches the filter.
+     * @param {ServiceCategoryChangeFindUniqueArgs} args - Arguments to find a ServiceCategoryChange
+     * @example
+     * // Get one ServiceCategoryChange
+     * const serviceCategoryChange = await prisma.serviceCategoryChange.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ServiceCategoryChangeFindUniqueArgs>(args: SelectSubset<T, ServiceCategoryChangeFindUniqueArgs<ExtArgs>>): Prisma__ServiceCategoryChangeClient<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ServiceCategoryChange that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ServiceCategoryChangeFindUniqueOrThrowArgs} args - Arguments to find a ServiceCategoryChange
+     * @example
+     * // Get one ServiceCategoryChange
+     * const serviceCategoryChange = await prisma.serviceCategoryChange.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ServiceCategoryChangeFindUniqueOrThrowArgs>(args: SelectSubset<T, ServiceCategoryChangeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ServiceCategoryChangeClient<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ServiceCategoryChange that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceCategoryChangeFindFirstArgs} args - Arguments to find a ServiceCategoryChange
+     * @example
+     * // Get one ServiceCategoryChange
+     * const serviceCategoryChange = await prisma.serviceCategoryChange.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ServiceCategoryChangeFindFirstArgs>(args?: SelectSubset<T, ServiceCategoryChangeFindFirstArgs<ExtArgs>>): Prisma__ServiceCategoryChangeClient<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ServiceCategoryChange that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceCategoryChangeFindFirstOrThrowArgs} args - Arguments to find a ServiceCategoryChange
+     * @example
+     * // Get one ServiceCategoryChange
+     * const serviceCategoryChange = await prisma.serviceCategoryChange.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ServiceCategoryChangeFindFirstOrThrowArgs>(args?: SelectSubset<T, ServiceCategoryChangeFindFirstOrThrowArgs<ExtArgs>>): Prisma__ServiceCategoryChangeClient<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ServiceCategoryChanges that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceCategoryChangeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ServiceCategoryChanges
+     * const serviceCategoryChanges = await prisma.serviceCategoryChange.findMany()
+     * 
+     * // Get first 10 ServiceCategoryChanges
+     * const serviceCategoryChanges = await prisma.serviceCategoryChange.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const serviceCategoryChangeWithIdOnly = await prisma.serviceCategoryChange.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ServiceCategoryChangeFindManyArgs>(args?: SelectSubset<T, ServiceCategoryChangeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ServiceCategoryChange.
+     * @param {ServiceCategoryChangeCreateArgs} args - Arguments to create a ServiceCategoryChange.
+     * @example
+     * // Create one ServiceCategoryChange
+     * const ServiceCategoryChange = await prisma.serviceCategoryChange.create({
+     *   data: {
+     *     // ... data to create a ServiceCategoryChange
+     *   }
+     * })
+     * 
+     */
+    create<T extends ServiceCategoryChangeCreateArgs>(args: SelectSubset<T, ServiceCategoryChangeCreateArgs<ExtArgs>>): Prisma__ServiceCategoryChangeClient<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ServiceCategoryChanges.
+     * @param {ServiceCategoryChangeCreateManyArgs} args - Arguments to create many ServiceCategoryChanges.
+     * @example
+     * // Create many ServiceCategoryChanges
+     * const serviceCategoryChange = await prisma.serviceCategoryChange.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ServiceCategoryChangeCreateManyArgs>(args?: SelectSubset<T, ServiceCategoryChangeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ServiceCategoryChanges and returns the data saved in the database.
+     * @param {ServiceCategoryChangeCreateManyAndReturnArgs} args - Arguments to create many ServiceCategoryChanges.
+     * @example
+     * // Create many ServiceCategoryChanges
+     * const serviceCategoryChange = await prisma.serviceCategoryChange.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ServiceCategoryChanges and only return the `id`
+     * const serviceCategoryChangeWithIdOnly = await prisma.serviceCategoryChange.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ServiceCategoryChangeCreateManyAndReturnArgs>(args?: SelectSubset<T, ServiceCategoryChangeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ServiceCategoryChange.
+     * @param {ServiceCategoryChangeDeleteArgs} args - Arguments to delete one ServiceCategoryChange.
+     * @example
+     * // Delete one ServiceCategoryChange
+     * const ServiceCategoryChange = await prisma.serviceCategoryChange.delete({
+     *   where: {
+     *     // ... filter to delete one ServiceCategoryChange
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ServiceCategoryChangeDeleteArgs>(args: SelectSubset<T, ServiceCategoryChangeDeleteArgs<ExtArgs>>): Prisma__ServiceCategoryChangeClient<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ServiceCategoryChange.
+     * @param {ServiceCategoryChangeUpdateArgs} args - Arguments to update one ServiceCategoryChange.
+     * @example
+     * // Update one ServiceCategoryChange
+     * const serviceCategoryChange = await prisma.serviceCategoryChange.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ServiceCategoryChangeUpdateArgs>(args: SelectSubset<T, ServiceCategoryChangeUpdateArgs<ExtArgs>>): Prisma__ServiceCategoryChangeClient<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ServiceCategoryChanges.
+     * @param {ServiceCategoryChangeDeleteManyArgs} args - Arguments to filter ServiceCategoryChanges to delete.
+     * @example
+     * // Delete a few ServiceCategoryChanges
+     * const { count } = await prisma.serviceCategoryChange.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ServiceCategoryChangeDeleteManyArgs>(args?: SelectSubset<T, ServiceCategoryChangeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ServiceCategoryChanges.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceCategoryChangeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ServiceCategoryChanges
+     * const serviceCategoryChange = await prisma.serviceCategoryChange.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ServiceCategoryChangeUpdateManyArgs>(args: SelectSubset<T, ServiceCategoryChangeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ServiceCategoryChanges and returns the data updated in the database.
+     * @param {ServiceCategoryChangeUpdateManyAndReturnArgs} args - Arguments to update many ServiceCategoryChanges.
+     * @example
+     * // Update many ServiceCategoryChanges
+     * const serviceCategoryChange = await prisma.serviceCategoryChange.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ServiceCategoryChanges and only return the `id`
+     * const serviceCategoryChangeWithIdOnly = await prisma.serviceCategoryChange.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ServiceCategoryChangeUpdateManyAndReturnArgs>(args: SelectSubset<T, ServiceCategoryChangeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ServiceCategoryChange.
+     * @param {ServiceCategoryChangeUpsertArgs} args - Arguments to update or create a ServiceCategoryChange.
+     * @example
+     * // Update or create a ServiceCategoryChange
+     * const serviceCategoryChange = await prisma.serviceCategoryChange.upsert({
+     *   create: {
+     *     // ... data to create a ServiceCategoryChange
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ServiceCategoryChange we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ServiceCategoryChangeUpsertArgs>(args: SelectSubset<T, ServiceCategoryChangeUpsertArgs<ExtArgs>>): Prisma__ServiceCategoryChangeClient<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ServiceCategoryChanges.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceCategoryChangeCountArgs} args - Arguments to filter ServiceCategoryChanges to count.
+     * @example
+     * // Count the number of ServiceCategoryChanges
+     * const count = await prisma.serviceCategoryChange.count({
+     *   where: {
+     *     // ... the filter for the ServiceCategoryChanges we want to count
+     *   }
+     * })
+    **/
+    count<T extends ServiceCategoryChangeCountArgs>(
+      args?: Subset<T, ServiceCategoryChangeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ServiceCategoryChangeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ServiceCategoryChange.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceCategoryChangeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ServiceCategoryChangeAggregateArgs>(args: Subset<T, ServiceCategoryChangeAggregateArgs>): Prisma.PrismaPromise<GetServiceCategoryChangeAggregateType<T>>
+
+    /**
+     * Group by ServiceCategoryChange.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ServiceCategoryChangeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ServiceCategoryChangeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ServiceCategoryChangeGroupByArgs['orderBy'] }
+        : { orderBy?: ServiceCategoryChangeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ServiceCategoryChangeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetServiceCategoryChangeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ServiceCategoryChange model
+   */
+  readonly fields: ServiceCategoryChangeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ServiceCategoryChange.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ServiceCategoryChangeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    application<T extends ApplicationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicationDefaultArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    changedBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    newCategory<T extends ServiceCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategoryDefaultArgs<ExtArgs>>): Prisma__ServiceCategoryClient<$Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    previousCategory<T extends ServiceCategoryChange$previousCategoryArgs<ExtArgs> = {}>(args?: Subset<T, ServiceCategoryChange$previousCategoryArgs<ExtArgs>>): Prisma__ServiceCategoryClient<$Result.GetResult<Prisma.$ServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ServiceCategoryChange model
+   */
+  interface ServiceCategoryChangeFieldRefs {
+    readonly id: FieldRef<"ServiceCategoryChange", 'String'>
+    readonly applicationId: FieldRef<"ServiceCategoryChange", 'String'>
+    readonly previousCategoryId: FieldRef<"ServiceCategoryChange", 'String'>
+    readonly newCategoryId: FieldRef<"ServiceCategoryChange", 'String'>
+    readonly changedById: FieldRef<"ServiceCategoryChange", 'String'>
+    readonly reason: FieldRef<"ServiceCategoryChange", 'String'>
+    readonly createdAt: FieldRef<"ServiceCategoryChange", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ServiceCategoryChange findUnique
+   */
+  export type ServiceCategoryChangeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    /**
+     * Filter, which ServiceCategoryChange to fetch.
+     */
+    where: ServiceCategoryChangeWhereUniqueInput
+  }
+
+  /**
+   * ServiceCategoryChange findUniqueOrThrow
+   */
+  export type ServiceCategoryChangeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    /**
+     * Filter, which ServiceCategoryChange to fetch.
+     */
+    where: ServiceCategoryChangeWhereUniqueInput
+  }
+
+  /**
+   * ServiceCategoryChange findFirst
+   */
+  export type ServiceCategoryChangeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    /**
+     * Filter, which ServiceCategoryChange to fetch.
+     */
+    where?: ServiceCategoryChangeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ServiceCategoryChanges to fetch.
+     */
+    orderBy?: ServiceCategoryChangeOrderByWithRelationInput | ServiceCategoryChangeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ServiceCategoryChanges.
+     */
+    cursor?: ServiceCategoryChangeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ServiceCategoryChanges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ServiceCategoryChanges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ServiceCategoryChanges.
+     */
+    distinct?: ServiceCategoryChangeScalarFieldEnum | ServiceCategoryChangeScalarFieldEnum[]
+  }
+
+  /**
+   * ServiceCategoryChange findFirstOrThrow
+   */
+  export type ServiceCategoryChangeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    /**
+     * Filter, which ServiceCategoryChange to fetch.
+     */
+    where?: ServiceCategoryChangeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ServiceCategoryChanges to fetch.
+     */
+    orderBy?: ServiceCategoryChangeOrderByWithRelationInput | ServiceCategoryChangeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ServiceCategoryChanges.
+     */
+    cursor?: ServiceCategoryChangeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ServiceCategoryChanges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ServiceCategoryChanges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ServiceCategoryChanges.
+     */
+    distinct?: ServiceCategoryChangeScalarFieldEnum | ServiceCategoryChangeScalarFieldEnum[]
+  }
+
+  /**
+   * ServiceCategoryChange findMany
+   */
+  export type ServiceCategoryChangeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    /**
+     * Filter, which ServiceCategoryChanges to fetch.
+     */
+    where?: ServiceCategoryChangeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ServiceCategoryChanges to fetch.
+     */
+    orderBy?: ServiceCategoryChangeOrderByWithRelationInput | ServiceCategoryChangeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ServiceCategoryChanges.
+     */
+    cursor?: ServiceCategoryChangeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ServiceCategoryChanges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ServiceCategoryChanges.
+     */
+    skip?: number
+    distinct?: ServiceCategoryChangeScalarFieldEnum | ServiceCategoryChangeScalarFieldEnum[]
+  }
+
+  /**
+   * ServiceCategoryChange create
+   */
+  export type ServiceCategoryChangeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ServiceCategoryChange.
+     */
+    data: XOR<ServiceCategoryChangeCreateInput, ServiceCategoryChangeUncheckedCreateInput>
+  }
+
+  /**
+   * ServiceCategoryChange createMany
+   */
+  export type ServiceCategoryChangeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ServiceCategoryChanges.
+     */
+    data: ServiceCategoryChangeCreateManyInput | ServiceCategoryChangeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ServiceCategoryChange createManyAndReturn
+   */
+  export type ServiceCategoryChangeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * The data used to create many ServiceCategoryChanges.
+     */
+    data: ServiceCategoryChangeCreateManyInput | ServiceCategoryChangeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ServiceCategoryChange update
+   */
+  export type ServiceCategoryChangeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ServiceCategoryChange.
+     */
+    data: XOR<ServiceCategoryChangeUpdateInput, ServiceCategoryChangeUncheckedUpdateInput>
+    /**
+     * Choose, which ServiceCategoryChange to update.
+     */
+    where: ServiceCategoryChangeWhereUniqueInput
+  }
+
+  /**
+   * ServiceCategoryChange updateMany
+   */
+  export type ServiceCategoryChangeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ServiceCategoryChanges.
+     */
+    data: XOR<ServiceCategoryChangeUpdateManyMutationInput, ServiceCategoryChangeUncheckedUpdateManyInput>
+    /**
+     * Filter which ServiceCategoryChanges to update
+     */
+    where?: ServiceCategoryChangeWhereInput
+    /**
+     * Limit how many ServiceCategoryChanges to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ServiceCategoryChange updateManyAndReturn
+   */
+  export type ServiceCategoryChangeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * The data used to update ServiceCategoryChanges.
+     */
+    data: XOR<ServiceCategoryChangeUpdateManyMutationInput, ServiceCategoryChangeUncheckedUpdateManyInput>
+    /**
+     * Filter which ServiceCategoryChanges to update
+     */
+    where?: ServiceCategoryChangeWhereInput
+    /**
+     * Limit how many ServiceCategoryChanges to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ServiceCategoryChange upsert
+   */
+  export type ServiceCategoryChangeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ServiceCategoryChange to update in case it exists.
+     */
+    where: ServiceCategoryChangeWhereUniqueInput
+    /**
+     * In case the ServiceCategoryChange found by the `where` argument doesn't exist, create a new ServiceCategoryChange with this data.
+     */
+    create: XOR<ServiceCategoryChangeCreateInput, ServiceCategoryChangeUncheckedCreateInput>
+    /**
+     * In case the ServiceCategoryChange was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ServiceCategoryChangeUpdateInput, ServiceCategoryChangeUncheckedUpdateInput>
+  }
+
+  /**
+   * ServiceCategoryChange delete
+   */
+  export type ServiceCategoryChangeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
+    /**
+     * Filter which ServiceCategoryChange to delete.
+     */
+    where: ServiceCategoryChangeWhereUniqueInput
+  }
+
+  /**
+   * ServiceCategoryChange deleteMany
+   */
+  export type ServiceCategoryChangeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ServiceCategoryChanges to delete
+     */
+    where?: ServiceCategoryChangeWhereInput
+    /**
+     * Limit how many ServiceCategoryChanges to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ServiceCategoryChange.previousCategory
+   */
+  export type ServiceCategoryChange$previousCategoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategory
+     */
+    select?: ServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategory
+     */
+    omit?: ServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryInclude<ExtArgs> | null
+    where?: ServiceCategoryWhereInput
+  }
+
+  /**
+   * ServiceCategoryChange without action
+   */
+  export type ServiceCategoryChangeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceCategoryChange
+     */
+    select?: ServiceCategoryChangeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceCategoryChange
+     */
+    omit?: ServiceCategoryChangeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceCategoryChangeInclude<ExtArgs> | null
   }
 
 
@@ -23048,6 +24427,7 @@ export namespace Prisma {
     token: string | null
     expires: Date | null
     type: string | null
+    metadata: string | null
   }
 
   export type VerificationTokenMaxAggregateOutputType = {
@@ -23056,6 +24436,7 @@ export namespace Prisma {
     token: string | null
     expires: Date | null
     type: string | null
+    metadata: string | null
   }
 
   export type VerificationTokenCountAggregateOutputType = {
@@ -23064,6 +24445,7 @@ export namespace Prisma {
     token: number
     expires: number
     type: number
+    metadata: number
     _all: number
   }
 
@@ -23074,6 +24456,7 @@ export namespace Prisma {
     token?: true
     expires?: true
     type?: true
+    metadata?: true
   }
 
   export type VerificationTokenMaxAggregateInputType = {
@@ -23082,6 +24465,7 @@ export namespace Prisma {
     token?: true
     expires?: true
     type?: true
+    metadata?: true
   }
 
   export type VerificationTokenCountAggregateInputType = {
@@ -23090,6 +24474,7 @@ export namespace Prisma {
     token?: true
     expires?: true
     type?: true
+    metadata?: true
     _all?: true
   }
 
@@ -23171,6 +24556,7 @@ export namespace Prisma {
     token: string
     expires: Date
     type: string
+    metadata: string | null
     _count: VerificationTokenCountAggregateOutputType | null
     _min: VerificationTokenMinAggregateOutputType | null
     _max: VerificationTokenMaxAggregateOutputType | null
@@ -23196,6 +24582,7 @@ export namespace Prisma {
     token?: boolean
     expires?: boolean
     type?: boolean
+    metadata?: boolean
   }, ExtArgs["result"]["verificationToken"]>
 
   export type VerificationTokenSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -23204,6 +24591,7 @@ export namespace Prisma {
     token?: boolean
     expires?: boolean
     type?: boolean
+    metadata?: boolean
   }, ExtArgs["result"]["verificationToken"]>
 
   export type VerificationTokenSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -23212,6 +24600,7 @@ export namespace Prisma {
     token?: boolean
     expires?: boolean
     type?: boolean
+    metadata?: boolean
   }, ExtArgs["result"]["verificationToken"]>
 
   export type VerificationTokenSelectScalar = {
@@ -23220,9 +24609,10 @@ export namespace Prisma {
     token?: boolean
     expires?: boolean
     type?: boolean
+    metadata?: boolean
   }
 
-  export type VerificationTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "identifier" | "token" | "expires" | "type", ExtArgs["result"]["verificationToken"]>
+  export type VerificationTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "identifier" | "token" | "expires" | "type" | "metadata", ExtArgs["result"]["verificationToken"]>
 
   export type $VerificationTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "VerificationToken"
@@ -23233,6 +24623,7 @@ export namespace Prisma {
       token: string
       expires: Date
       type: string
+      metadata: string | null
     }, ExtArgs["result"]["verificationToken"]>
     composites: {}
   }
@@ -23661,6 +25052,7 @@ export namespace Prisma {
     readonly token: FieldRef<"VerificationToken", 'String'>
     readonly expires: FieldRef<"VerificationToken", 'DateTime'>
     readonly type: FieldRef<"VerificationToken", 'String'>
+    readonly metadata: FieldRef<"VerificationToken", 'String'>
   }
     
 
@@ -27483,7 +28875,8 @@ export namespace Prisma {
     description: 'description',
     isActive: 'isActive',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    color: 'color'
   };
 
   export type ServiceCategoryScalarFieldEnum = (typeof ServiceCategoryScalarFieldEnum)[keyof typeof ServiceCategoryScalarFieldEnum]
@@ -27532,10 +28925,10 @@ export namespace Prisma {
     citizenPhone: 'citizenPhone',
     subject: 'subject',
     departmentId: 'departmentId',
-    applicationSource: 'applicationSource',
     dispatchedAt: 'dispatchedAt',
     dispatchedById: 'dispatchedById',
-    isDispatched: 'isDispatched'
+    isDispatched: 'isDispatched',
+    applicationSource: 'applicationSource'
   };
 
   export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
@@ -27566,6 +28959,19 @@ export namespace Prisma {
   };
 
   export type ApplicationValidationScalarFieldEnum = (typeof ApplicationValidationScalarFieldEnum)[keyof typeof ApplicationValidationScalarFieldEnum]
+
+
+  export const ServiceCategoryChangeScalarFieldEnum: {
+    id: 'id',
+    applicationId: 'applicationId',
+    previousCategoryId: 'previousCategoryId',
+    newCategoryId: 'newCategoryId',
+    changedById: 'changedById',
+    reason: 'reason',
+    createdAt: 'createdAt'
+  };
+
+  export type ServiceCategoryChangeScalarFieldEnum = (typeof ServiceCategoryChangeScalarFieldEnum)[keyof typeof ServiceCategoryChangeScalarFieldEnum]
 
 
   export const OfficerAssignmentScalarFieldEnum: {
@@ -27676,7 +29082,8 @@ export namespace Prisma {
     identifier: 'identifier',
     token: 'token',
     expires: 'expires',
-    type: 'type'
+    type: 'type',
+    metadata: 'metadata'
   };
 
   export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
@@ -27956,6 +29363,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryListRelationFilter
     officerForwardedTo?: OfficerForwardingHistoryListRelationFilter
     officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
+    serviceCategoryChanges?: ServiceCategoryChangeListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -27987,6 +29395,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryOrderByRelationAggregateInput
     officerForwardedTo?: OfficerForwardingHistoryOrderByRelationAggregateInput
     officerProfile?: OfficerProfileOrderByWithRelationInput
+    serviceCategoryChanges?: ServiceCategoryChangeOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -28021,6 +29430,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryListRelationFilter
     officerForwardedTo?: OfficerForwardingHistoryListRelationFilter
     officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
+    serviceCategoryChanges?: ServiceCategoryChangeListRelationFilter
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -28277,7 +29687,10 @@ export namespace Prisma {
     isActive?: BoolFilter<"ServiceCategory"> | boolean
     createdAt?: DateTimeFilter<"ServiceCategory"> | Date | string
     updatedAt?: DateTimeFilter<"ServiceCategory"> | Date | string
+    color?: StringNullableFilter<"ServiceCategory"> | string | null
     applications?: ApplicationListRelationFilter
+    newCategoryChanges?: ServiceCategoryChangeListRelationFilter
+    previousCategoryChanges?: ServiceCategoryChangeListRelationFilter
   }
 
   export type ServiceCategoryOrderByWithRelationInput = {
@@ -28287,7 +29700,10 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    color?: SortOrderInput | SortOrder
     applications?: ApplicationOrderByRelationAggregateInput
+    newCategoryChanges?: ServiceCategoryChangeOrderByRelationAggregateInput
+    previousCategoryChanges?: ServiceCategoryChangeOrderByRelationAggregateInput
   }
 
   export type ServiceCategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -28300,7 +29716,10 @@ export namespace Prisma {
     isActive?: BoolFilter<"ServiceCategory"> | boolean
     createdAt?: DateTimeFilter<"ServiceCategory"> | Date | string
     updatedAt?: DateTimeFilter<"ServiceCategory"> | Date | string
+    color?: StringNullableFilter<"ServiceCategory"> | string | null
     applications?: ApplicationListRelationFilter
+    newCategoryChanges?: ServiceCategoryChangeListRelationFilter
+    previousCategoryChanges?: ServiceCategoryChangeListRelationFilter
   }, "id" | "name">
 
   export type ServiceCategoryOrderByWithAggregationInput = {
@@ -28310,6 +29729,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    color?: SortOrderInput | SortOrder
     _count?: ServiceCategoryCountOrderByAggregateInput
     _max?: ServiceCategoryMaxOrderByAggregateInput
     _min?: ServiceCategoryMinOrderByAggregateInput
@@ -28325,6 +29745,7 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"ServiceCategory"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ServiceCategory"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ServiceCategory"> | Date | string
+    color?: StringNullableWithAggregatesFilter<"ServiceCategory"> | string | null
   }
 
   export type SectionWhereInput = {
@@ -28469,10 +29890,10 @@ export namespace Prisma {
     citizenPhone?: StringFilter<"Application"> | string
     subject?: StringFilter<"Application"> | string
     departmentId?: StringNullableFilter<"Application"> | string | null
-    applicationSource?: EnumApplicationSourceFilter<"Application"> | $Enums.ApplicationSource
     dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     dispatchedById?: StringNullableFilter<"Application"> | string | null
     isDispatched?: BoolFilter<"Application"> | boolean
+    applicationSource?: EnumApplicationSourceFilter<"Application"> | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogListRelationFilter
     validation?: XOR<ApplicationValidationNullableScalarRelationFilter, ApplicationValidationWhereInput> | null
     workflow?: ApplicationWorkflowListRelationFilter
@@ -28486,6 +29907,7 @@ export namespace Prisma {
     notifications?: NotificationListRelationFilter
     officerAssignments?: OfficerAssignmentListRelationFilter
     officerForwardings?: OfficerForwardingHistoryListRelationFilter
+    serviceCategoryChanges?: ServiceCategoryChangeListRelationFilter
   }
 
   export type ApplicationOrderByWithRelationInput = {
@@ -28507,10 +29929,10 @@ export namespace Prisma {
     citizenPhone?: SortOrder
     subject?: SortOrder
     departmentId?: SortOrderInput | SortOrder
-    applicationSource?: SortOrder
     dispatchedAt?: SortOrderInput | SortOrder
     dispatchedById?: SortOrderInput | SortOrder
     isDispatched?: SortOrder
+    applicationSource?: SortOrder
     auditLogs?: ApplicationAuditLogOrderByRelationAggregateInput
     validation?: ApplicationValidationOrderByWithRelationInput
     workflow?: ApplicationWorkflowOrderByRelationAggregateInput
@@ -28524,6 +29946,7 @@ export namespace Prisma {
     notifications?: NotificationOrderByRelationAggregateInput
     officerAssignments?: OfficerAssignmentOrderByRelationAggregateInput
     officerForwardings?: OfficerForwardingHistoryOrderByRelationAggregateInput
+    serviceCategoryChanges?: ServiceCategoryChangeOrderByRelationAggregateInput
   }
 
   export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
@@ -28548,10 +29971,10 @@ export namespace Prisma {
     citizenPhone?: StringFilter<"Application"> | string
     subject?: StringFilter<"Application"> | string
     departmentId?: StringNullableFilter<"Application"> | string | null
-    applicationSource?: EnumApplicationSourceFilter<"Application"> | $Enums.ApplicationSource
     dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     dispatchedById?: StringNullableFilter<"Application"> | string | null
     isDispatched?: BoolFilter<"Application"> | boolean
+    applicationSource?: EnumApplicationSourceFilter<"Application"> | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogListRelationFilter
     validation?: XOR<ApplicationValidationNullableScalarRelationFilter, ApplicationValidationWhereInput> | null
     workflow?: ApplicationWorkflowListRelationFilter
@@ -28565,6 +29988,7 @@ export namespace Prisma {
     notifications?: NotificationListRelationFilter
     officerAssignments?: OfficerAssignmentListRelationFilter
     officerForwardings?: OfficerForwardingHistoryListRelationFilter
+    serviceCategoryChanges?: ServiceCategoryChangeListRelationFilter
   }, "id" | "rrNumber">
 
   export type ApplicationOrderByWithAggregationInput = {
@@ -28586,10 +30010,10 @@ export namespace Prisma {
     citizenPhone?: SortOrder
     subject?: SortOrder
     departmentId?: SortOrderInput | SortOrder
-    applicationSource?: SortOrder
     dispatchedAt?: SortOrderInput | SortOrder
     dispatchedById?: SortOrderInput | SortOrder
     isDispatched?: SortOrder
+    applicationSource?: SortOrder
     _count?: ApplicationCountOrderByAggregateInput
     _max?: ApplicationMaxOrderByAggregateInput
     _min?: ApplicationMinOrderByAggregateInput
@@ -28617,10 +30041,10 @@ export namespace Prisma {
     citizenPhone?: StringWithAggregatesFilter<"Application"> | string
     subject?: StringWithAggregatesFilter<"Application"> | string
     departmentId?: StringNullableWithAggregatesFilter<"Application"> | string | null
-    applicationSource?: EnumApplicationSourceWithAggregatesFilter<"Application"> | $Enums.ApplicationSource
     dispatchedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
     dispatchedById?: StringNullableWithAggregatesFilter<"Application"> | string | null
     isDispatched?: BoolWithAggregatesFilter<"Application"> | boolean
+    applicationSource?: EnumApplicationSourceWithAggregatesFilter<"Application"> | $Enums.ApplicationSource
   }
 
   export type ApplicationWorkflowWhereInput = {
@@ -28762,6 +30186,80 @@ export namespace Prisma {
     isEligibilityVerified?: BoolWithAggregatesFilter<"ApplicationValidation"> | boolean
     validationNotes?: StringNullableWithAggregatesFilter<"ApplicationValidation"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ApplicationValidation"> | Date | string
+  }
+
+  export type ServiceCategoryChangeWhereInput = {
+    AND?: ServiceCategoryChangeWhereInput | ServiceCategoryChangeWhereInput[]
+    OR?: ServiceCategoryChangeWhereInput[]
+    NOT?: ServiceCategoryChangeWhereInput | ServiceCategoryChangeWhereInput[]
+    id?: StringFilter<"ServiceCategoryChange"> | string
+    applicationId?: StringFilter<"ServiceCategoryChange"> | string
+    previousCategoryId?: StringNullableFilter<"ServiceCategoryChange"> | string | null
+    newCategoryId?: StringFilter<"ServiceCategoryChange"> | string
+    changedById?: StringFilter<"ServiceCategoryChange"> | string
+    reason?: StringNullableFilter<"ServiceCategoryChange"> | string | null
+    createdAt?: DateTimeFilter<"ServiceCategoryChange"> | Date | string
+    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
+    changedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    newCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
+    previousCategory?: XOR<ServiceCategoryNullableScalarRelationFilter, ServiceCategoryWhereInput> | null
+  }
+
+  export type ServiceCategoryChangeOrderByWithRelationInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    previousCategoryId?: SortOrderInput | SortOrder
+    newCategoryId?: SortOrder
+    changedById?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    application?: ApplicationOrderByWithRelationInput
+    changedBy?: UserOrderByWithRelationInput
+    newCategory?: ServiceCategoryOrderByWithRelationInput
+    previousCategory?: ServiceCategoryOrderByWithRelationInput
+  }
+
+  export type ServiceCategoryChangeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ServiceCategoryChangeWhereInput | ServiceCategoryChangeWhereInput[]
+    OR?: ServiceCategoryChangeWhereInput[]
+    NOT?: ServiceCategoryChangeWhereInput | ServiceCategoryChangeWhereInput[]
+    applicationId?: StringFilter<"ServiceCategoryChange"> | string
+    previousCategoryId?: StringNullableFilter<"ServiceCategoryChange"> | string | null
+    newCategoryId?: StringFilter<"ServiceCategoryChange"> | string
+    changedById?: StringFilter<"ServiceCategoryChange"> | string
+    reason?: StringNullableFilter<"ServiceCategoryChange"> | string | null
+    createdAt?: DateTimeFilter<"ServiceCategoryChange"> | Date | string
+    application?: XOR<ApplicationScalarRelationFilter, ApplicationWhereInput>
+    changedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    newCategory?: XOR<ServiceCategoryScalarRelationFilter, ServiceCategoryWhereInput>
+    previousCategory?: XOR<ServiceCategoryNullableScalarRelationFilter, ServiceCategoryWhereInput> | null
+  }, "id">
+
+  export type ServiceCategoryChangeOrderByWithAggregationInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    previousCategoryId?: SortOrderInput | SortOrder
+    newCategoryId?: SortOrder
+    changedById?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ServiceCategoryChangeCountOrderByAggregateInput
+    _max?: ServiceCategoryChangeMaxOrderByAggregateInput
+    _min?: ServiceCategoryChangeMinOrderByAggregateInput
+  }
+
+  export type ServiceCategoryChangeScalarWhereWithAggregatesInput = {
+    AND?: ServiceCategoryChangeScalarWhereWithAggregatesInput | ServiceCategoryChangeScalarWhereWithAggregatesInput[]
+    OR?: ServiceCategoryChangeScalarWhereWithAggregatesInput[]
+    NOT?: ServiceCategoryChangeScalarWhereWithAggregatesInput | ServiceCategoryChangeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ServiceCategoryChange"> | string
+    applicationId?: StringWithAggregatesFilter<"ServiceCategoryChange"> | string
+    previousCategoryId?: StringNullableWithAggregatesFilter<"ServiceCategoryChange"> | string | null
+    newCategoryId?: StringWithAggregatesFilter<"ServiceCategoryChange"> | string
+    changedById?: StringWithAggregatesFilter<"ServiceCategoryChange"> | string
+    reason?: StringNullableWithAggregatesFilter<"ServiceCategoryChange"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ServiceCategoryChange"> | Date | string
   }
 
   export type OfficerAssignmentWhereInput = {
@@ -29309,6 +30807,7 @@ export namespace Prisma {
     token?: StringFilter<"VerificationToken"> | string
     expires?: DateTimeFilter<"VerificationToken"> | Date | string
     type?: StringFilter<"VerificationToken"> | string
+    metadata?: StringNullableFilter<"VerificationToken"> | string | null
   }
 
   export type VerificationTokenOrderByWithRelationInput = {
@@ -29317,6 +30816,7 @@ export namespace Prisma {
     token?: SortOrder
     expires?: SortOrder
     type?: SortOrder
+    metadata?: SortOrderInput | SortOrder
   }
 
   export type VerificationTokenWhereUniqueInput = Prisma.AtLeast<{
@@ -29329,6 +30829,7 @@ export namespace Prisma {
     identifier?: StringFilter<"VerificationToken"> | string
     expires?: DateTimeFilter<"VerificationToken"> | Date | string
     type?: StringFilter<"VerificationToken"> | string
+    metadata?: StringNullableFilter<"VerificationToken"> | string | null
   }, "id" | "token" | "identifier_token">
 
   export type VerificationTokenOrderByWithAggregationInput = {
@@ -29337,6 +30838,7 @@ export namespace Prisma {
     token?: SortOrder
     expires?: SortOrder
     type?: SortOrder
+    metadata?: SortOrderInput | SortOrder
     _count?: VerificationTokenCountOrderByAggregateInput
     _max?: VerificationTokenMaxOrderByAggregateInput
     _min?: VerificationTokenMinOrderByAggregateInput
@@ -29351,6 +30853,7 @@ export namespace Prisma {
     token?: StringWithAggregatesFilter<"VerificationToken"> | string
     expires?: DateTimeWithAggregatesFilter<"VerificationToken"> | Date | string
     type?: StringWithAggregatesFilter<"VerificationToken"> | string
+    metadata?: StringNullableWithAggregatesFilter<"VerificationToken"> | string | null
   }
 
   export type ApplicationTrackingOTPWhereInput = {
@@ -29625,6 +31128,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -29656,6 +31160,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUpdateInput = {
@@ -29687,6 +31192,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -29718,6 +31224,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -29982,7 +31489,10 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    color?: string | null
     applications?: ApplicationCreateNestedManyWithoutServiceCategoryInput
+    newCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutNewCategoryInput
+    previousCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutPreviousCategoryInput
   }
 
   export type ServiceCategoryUncheckedCreateInput = {
@@ -29992,7 +31502,10 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    color?: string | null
     applications?: ApplicationUncheckedCreateNestedManyWithoutServiceCategoryInput
+    newCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutNewCategoryInput
+    previousCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutPreviousCategoryInput
   }
 
   export type ServiceCategoryUpdateInput = {
@@ -30002,7 +31515,10 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     applications?: ApplicationUpdateManyWithoutServiceCategoryNestedInput
+    newCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutNewCategoryNestedInput
+    previousCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutPreviousCategoryNestedInput
   }
 
   export type ServiceCategoryUncheckedUpdateInput = {
@@ -30012,7 +31528,10 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     applications?: ApplicationUncheckedUpdateManyWithoutServiceCategoryNestedInput
+    newCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutNewCategoryNestedInput
+    previousCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutPreviousCategoryNestedInput
   }
 
   export type ServiceCategoryCreateManyInput = {
@@ -30022,6 +31541,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    color?: string | null
   }
 
   export type ServiceCategoryUpdateManyMutationInput = {
@@ -30031,6 +31551,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ServiceCategoryUncheckedUpdateManyInput = {
@@ -30040,6 +31561,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SectionCreateInput = {
@@ -30192,9 +31714,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -30208,6 +31730,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateInput = {
@@ -30229,10 +31752,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -30242,6 +31765,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUpdateInput = {
@@ -30260,9 +31784,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -30276,6 +31800,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateInput = {
@@ -30297,10 +31822,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -30310,6 +31835,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationCreateManyInput = {
@@ -30331,10 +31857,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
   }
 
   export type ApplicationUpdateManyMutationInput = {
@@ -30353,9 +31879,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
   }
 
   export type ApplicationUncheckedUpdateManyInput = {
@@ -30377,10 +31903,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
   }
 
   export type ApplicationWorkflowCreateInput = {
@@ -30523,6 +32049,72 @@ export namespace Prisma {
     isDocumentsComplete?: BoolFieldUpdateOperationsInput | boolean
     isEligibilityVerified?: BoolFieldUpdateOperationsInput | boolean
     validationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCategoryChangeCreateInput = {
+    id?: string
+    reason?: string | null
+    createdAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutServiceCategoryChangesInput
+    changedBy: UserCreateNestedOneWithoutServiceCategoryChangesInput
+    newCategory: ServiceCategoryCreateNestedOneWithoutNewCategoryChangesInput
+    previousCategory?: ServiceCategoryCreateNestedOneWithoutPreviousCategoryChangesInput
+  }
+
+  export type ServiceCategoryChangeUncheckedCreateInput = {
+    id?: string
+    applicationId: string
+    previousCategoryId?: string | null
+    newCategoryId: string
+    changedById: string
+    reason?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ServiceCategoryChangeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutServiceCategoryChangesNestedInput
+    changedBy?: UserUpdateOneRequiredWithoutServiceCategoryChangesNestedInput
+    newCategory?: ServiceCategoryUpdateOneRequiredWithoutNewCategoryChangesNestedInput
+    previousCategory?: ServiceCategoryUpdateOneWithoutPreviousCategoryChangesNestedInput
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    previousCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    newCategoryId?: StringFieldUpdateOperationsInput | string
+    changedById?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCategoryChangeCreateManyInput = {
+    id?: string
+    applicationId: string
+    previousCategoryId?: string | null
+    newCategoryId: string
+    changedById: string
+    reason?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ServiceCategoryChangeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    previousCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    newCategoryId?: StringFieldUpdateOperationsInput | string
+    changedById?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -31094,6 +32686,7 @@ export namespace Prisma {
     token: string
     expires: Date | string
     type: string
+    metadata?: string | null
   }
 
   export type VerificationTokenUncheckedCreateInput = {
@@ -31102,6 +32695,7 @@ export namespace Prisma {
     token: string
     expires: Date | string
     type: string
+    metadata?: string | null
   }
 
   export type VerificationTokenUpdateInput = {
@@ -31110,6 +32704,7 @@ export namespace Prisma {
     token?: StringFieldUpdateOperationsInput | string
     expires?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VerificationTokenUncheckedUpdateInput = {
@@ -31118,6 +32713,7 @@ export namespace Prisma {
     token?: StringFieldUpdateOperationsInput | string
     expires?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VerificationTokenCreateManyInput = {
@@ -31126,6 +32722,7 @@ export namespace Prisma {
     token: string
     expires: Date | string
     type: string
+    metadata?: string | null
   }
 
   export type VerificationTokenUpdateManyMutationInput = {
@@ -31134,6 +32731,7 @@ export namespace Prisma {
     token?: StringFieldUpdateOperationsInput | string
     expires?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VerificationTokenUncheckedUpdateManyInput = {
@@ -31142,6 +32740,7 @@ export namespace Prisma {
     token?: StringFieldUpdateOperationsInput | string
     expires?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ApplicationTrackingOTPCreateInput = {
@@ -31548,6 +33147,12 @@ export namespace Prisma {
     isNot?: OfficerProfileWhereInput | null
   }
 
+  export type ServiceCategoryChangeListRelationFilter = {
+    every?: ServiceCategoryChangeWhereInput
+    some?: ServiceCategoryChangeWhereInput
+    none?: ServiceCategoryChangeWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -31594,6 +33199,10 @@ export namespace Prisma {
   }
 
   export type OfficerForwardingHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ServiceCategoryChangeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31857,6 +33466,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    color?: SortOrder
   }
 
   export type ServiceCategoryMaxOrderByAggregateInput = {
@@ -31866,6 +33476,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    color?: SortOrder
   }
 
   export type ServiceCategoryMinOrderByAggregateInput = {
@@ -31875,6 +33486,7 @@ export namespace Prisma {
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    color?: SortOrder
   }
 
   export type OfficerProfileListRelationFilter = {
@@ -31994,10 +33606,10 @@ export namespace Prisma {
     citizenPhone?: SortOrder
     subject?: SortOrder
     departmentId?: SortOrder
-    applicationSource?: SortOrder
     dispatchedAt?: SortOrder
     dispatchedById?: SortOrder
     isDispatched?: SortOrder
+    applicationSource?: SortOrder
   }
 
   export type ApplicationMaxOrderByAggregateInput = {
@@ -32019,10 +33631,10 @@ export namespace Prisma {
     citizenPhone?: SortOrder
     subject?: SortOrder
     departmentId?: SortOrder
-    applicationSource?: SortOrder
     dispatchedAt?: SortOrder
     dispatchedById?: SortOrder
     isDispatched?: SortOrder
+    applicationSource?: SortOrder
   }
 
   export type ApplicationMinOrderByAggregateInput = {
@@ -32044,10 +33656,10 @@ export namespace Prisma {
     citizenPhone?: SortOrder
     subject?: SortOrder
     departmentId?: SortOrder
-    applicationSource?: SortOrder
     dispatchedAt?: SortOrder
     dispatchedById?: SortOrder
     isDispatched?: SortOrder
+    applicationSource?: SortOrder
   }
 
   export type EnumApplicationStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -32152,6 +33764,41 @@ export namespace Prisma {
     isDocumentsComplete?: SortOrder
     isEligibilityVerified?: SortOrder
     validationNotes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ServiceCategoryNullableScalarRelationFilter = {
+    is?: ServiceCategoryWhereInput | null
+    isNot?: ServiceCategoryWhereInput | null
+  }
+
+  export type ServiceCategoryChangeCountOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    previousCategoryId?: SortOrder
+    newCategoryId?: SortOrder
+    changedById?: SortOrder
+    reason?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ServiceCategoryChangeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    previousCategoryId?: SortOrder
+    newCategoryId?: SortOrder
+    changedById?: SortOrder
+    reason?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ServiceCategoryChangeMinOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    previousCategoryId?: SortOrder
+    newCategoryId?: SortOrder
+    changedById?: SortOrder
+    reason?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -32555,6 +34202,7 @@ export namespace Prisma {
     token?: SortOrder
     expires?: SortOrder
     type?: SortOrder
+    metadata?: SortOrder
   }
 
   export type VerificationTokenMaxOrderByAggregateInput = {
@@ -32563,6 +34211,7 @@ export namespace Prisma {
     token?: SortOrder
     expires?: SortOrder
     type?: SortOrder
+    metadata?: SortOrder
   }
 
   export type VerificationTokenMinOrderByAggregateInput = {
@@ -32571,6 +34220,7 @@ export namespace Prisma {
     token?: SortOrder
     expires?: SortOrder
     type?: SortOrder
+    metadata?: SortOrder
   }
 
   export type ApplicationTrackingOTPCountOrderByAggregateInput = {
@@ -32824,6 +34474,13 @@ export namespace Prisma {
     connect?: OfficerProfileWhereUniqueInput
   }
 
+  export type ServiceCategoryChangeCreateNestedManyWithoutChangedByInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutChangedByInput, ServiceCategoryChangeUncheckedCreateWithoutChangedByInput> | ServiceCategoryChangeCreateWithoutChangedByInput[] | ServiceCategoryChangeUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutChangedByInput | ServiceCategoryChangeCreateOrConnectWithoutChangedByInput[]
+    createMany?: ServiceCategoryChangeCreateManyChangedByInputEnvelope
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+  }
+
   export type ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput = {
     create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
     connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
@@ -32946,6 +34603,13 @@ export namespace Prisma {
     create?: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
     connectOrCreate?: OfficerProfileCreateOrConnectWithoutUserInput
     connect?: OfficerProfileWhereUniqueInput
+  }
+
+  export type ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutChangedByInput, ServiceCategoryChangeUncheckedCreateWithoutChangedByInput> | ServiceCategoryChangeCreateWithoutChangedByInput[] | ServiceCategoryChangeUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutChangedByInput | ServiceCategoryChangeCreateOrConnectWithoutChangedByInput[]
+    createMany?: ServiceCategoryChangeCreateManyChangedByInputEnvelope
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -33224,6 +34888,20 @@ export namespace Prisma {
     update?: XOR<XOR<OfficerProfileUpdateToOneWithWhereWithoutUserInput, OfficerProfileUpdateWithoutUserInput>, OfficerProfileUncheckedUpdateWithoutUserInput>
   }
 
+  export type ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutChangedByInput, ServiceCategoryChangeUncheckedCreateWithoutChangedByInput> | ServiceCategoryChangeCreateWithoutChangedByInput[] | ServiceCategoryChangeUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutChangedByInput | ServiceCategoryChangeCreateOrConnectWithoutChangedByInput[]
+    upsert?: ServiceCategoryChangeUpsertWithWhereUniqueWithoutChangedByInput | ServiceCategoryChangeUpsertWithWhereUniqueWithoutChangedByInput[]
+    createMany?: ServiceCategoryChangeCreateManyChangedByInputEnvelope
+    set?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    disconnect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    delete?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    update?: ServiceCategoryChangeUpdateWithWhereUniqueWithoutChangedByInput | ServiceCategoryChangeUpdateWithWhereUniqueWithoutChangedByInput[]
+    updateMany?: ServiceCategoryChangeUpdateManyWithWhereWithoutChangedByInput | ServiceCategoryChangeUpdateManyWithWhereWithoutChangedByInput[]
+    deleteMany?: ServiceCategoryChangeScalarWhereInput | ServiceCategoryChangeScalarWhereInput[]
+  }
+
   export type ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput = {
     create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
     connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
@@ -33468,6 +35146,20 @@ export namespace Prisma {
     update?: XOR<XOR<OfficerProfileUpdateToOneWithWhereWithoutUserInput, OfficerProfileUpdateWithoutUserInput>, OfficerProfileUncheckedUpdateWithoutUserInput>
   }
 
+  export type ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutChangedByInput, ServiceCategoryChangeUncheckedCreateWithoutChangedByInput> | ServiceCategoryChangeCreateWithoutChangedByInput[] | ServiceCategoryChangeUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutChangedByInput | ServiceCategoryChangeCreateOrConnectWithoutChangedByInput[]
+    upsert?: ServiceCategoryChangeUpsertWithWhereUniqueWithoutChangedByInput | ServiceCategoryChangeUpsertWithWhereUniqueWithoutChangedByInput[]
+    createMany?: ServiceCategoryChangeCreateManyChangedByInputEnvelope
+    set?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    disconnect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    delete?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    update?: ServiceCategoryChangeUpdateWithWhereUniqueWithoutChangedByInput | ServiceCategoryChangeUpdateWithWhereUniqueWithoutChangedByInput[]
+    updateMany?: ServiceCategoryChangeUpdateManyWithWhereWithoutChangedByInput | ServiceCategoryChangeUpdateManyWithWhereWithoutChangedByInput[]
+    deleteMany?: ServiceCategoryChangeScalarWhereInput | ServiceCategoryChangeScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutCitizenProfileInput = {
     create?: XOR<UserCreateWithoutCitizenProfileInput, UserUncheckedCreateWithoutCitizenProfileInput>
     connectOrCreate?: UserCreateOrConnectWithoutCitizenProfileInput
@@ -33591,11 +35283,39 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
+  export type ServiceCategoryChangeCreateNestedManyWithoutNewCategoryInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutNewCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput> | ServiceCategoryChangeCreateWithoutNewCategoryInput[] | ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutNewCategoryInput | ServiceCategoryChangeCreateOrConnectWithoutNewCategoryInput[]
+    createMany?: ServiceCategoryChangeCreateManyNewCategoryInputEnvelope
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+  }
+
+  export type ServiceCategoryChangeCreateNestedManyWithoutPreviousCategoryInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutPreviousCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput> | ServiceCategoryChangeCreateWithoutPreviousCategoryInput[] | ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutPreviousCategoryInput | ServiceCategoryChangeCreateOrConnectWithoutPreviousCategoryInput[]
+    createMany?: ServiceCategoryChangeCreateManyPreviousCategoryInputEnvelope
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+  }
+
   export type ApplicationUncheckedCreateNestedManyWithoutServiceCategoryInput = {
     create?: XOR<ApplicationCreateWithoutServiceCategoryInput, ApplicationUncheckedCreateWithoutServiceCategoryInput> | ApplicationCreateWithoutServiceCategoryInput[] | ApplicationUncheckedCreateWithoutServiceCategoryInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutServiceCategoryInput | ApplicationCreateOrConnectWithoutServiceCategoryInput[]
     createMany?: ApplicationCreateManyServiceCategoryInputEnvelope
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+  }
+
+  export type ServiceCategoryChangeUncheckedCreateNestedManyWithoutNewCategoryInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutNewCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput> | ServiceCategoryChangeCreateWithoutNewCategoryInput[] | ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutNewCategoryInput | ServiceCategoryChangeCreateOrConnectWithoutNewCategoryInput[]
+    createMany?: ServiceCategoryChangeCreateManyNewCategoryInputEnvelope
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+  }
+
+  export type ServiceCategoryChangeUncheckedCreateNestedManyWithoutPreviousCategoryInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutPreviousCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput> | ServiceCategoryChangeCreateWithoutPreviousCategoryInput[] | ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutPreviousCategoryInput | ServiceCategoryChangeCreateOrConnectWithoutPreviousCategoryInput[]
+    createMany?: ServiceCategoryChangeCreateManyPreviousCategoryInputEnvelope
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
   }
 
   export type ApplicationUpdateManyWithoutServiceCategoryNestedInput = {
@@ -33612,6 +35332,34 @@ export namespace Prisma {
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
   }
 
+  export type ServiceCategoryChangeUpdateManyWithoutNewCategoryNestedInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutNewCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput> | ServiceCategoryChangeCreateWithoutNewCategoryInput[] | ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutNewCategoryInput | ServiceCategoryChangeCreateOrConnectWithoutNewCategoryInput[]
+    upsert?: ServiceCategoryChangeUpsertWithWhereUniqueWithoutNewCategoryInput | ServiceCategoryChangeUpsertWithWhereUniqueWithoutNewCategoryInput[]
+    createMany?: ServiceCategoryChangeCreateManyNewCategoryInputEnvelope
+    set?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    disconnect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    delete?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    update?: ServiceCategoryChangeUpdateWithWhereUniqueWithoutNewCategoryInput | ServiceCategoryChangeUpdateWithWhereUniqueWithoutNewCategoryInput[]
+    updateMany?: ServiceCategoryChangeUpdateManyWithWhereWithoutNewCategoryInput | ServiceCategoryChangeUpdateManyWithWhereWithoutNewCategoryInput[]
+    deleteMany?: ServiceCategoryChangeScalarWhereInput | ServiceCategoryChangeScalarWhereInput[]
+  }
+
+  export type ServiceCategoryChangeUpdateManyWithoutPreviousCategoryNestedInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutPreviousCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput> | ServiceCategoryChangeCreateWithoutPreviousCategoryInput[] | ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutPreviousCategoryInput | ServiceCategoryChangeCreateOrConnectWithoutPreviousCategoryInput[]
+    upsert?: ServiceCategoryChangeUpsertWithWhereUniqueWithoutPreviousCategoryInput | ServiceCategoryChangeUpsertWithWhereUniqueWithoutPreviousCategoryInput[]
+    createMany?: ServiceCategoryChangeCreateManyPreviousCategoryInputEnvelope
+    set?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    disconnect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    delete?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    update?: ServiceCategoryChangeUpdateWithWhereUniqueWithoutPreviousCategoryInput | ServiceCategoryChangeUpdateWithWhereUniqueWithoutPreviousCategoryInput[]
+    updateMany?: ServiceCategoryChangeUpdateManyWithWhereWithoutPreviousCategoryInput | ServiceCategoryChangeUpdateManyWithWhereWithoutPreviousCategoryInput[]
+    deleteMany?: ServiceCategoryChangeScalarWhereInput | ServiceCategoryChangeScalarWhereInput[]
+  }
+
   export type ApplicationUncheckedUpdateManyWithoutServiceCategoryNestedInput = {
     create?: XOR<ApplicationCreateWithoutServiceCategoryInput, ApplicationUncheckedCreateWithoutServiceCategoryInput> | ApplicationCreateWithoutServiceCategoryInput[] | ApplicationUncheckedCreateWithoutServiceCategoryInput[]
     connectOrCreate?: ApplicationCreateOrConnectWithoutServiceCategoryInput | ApplicationCreateOrConnectWithoutServiceCategoryInput[]
@@ -33624,6 +35372,34 @@ export namespace Prisma {
     update?: ApplicationUpdateWithWhereUniqueWithoutServiceCategoryInput | ApplicationUpdateWithWhereUniqueWithoutServiceCategoryInput[]
     updateMany?: ApplicationUpdateManyWithWhereWithoutServiceCategoryInput | ApplicationUpdateManyWithWhereWithoutServiceCategoryInput[]
     deleteMany?: ApplicationScalarWhereInput | ApplicationScalarWhereInput[]
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateManyWithoutNewCategoryNestedInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutNewCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput> | ServiceCategoryChangeCreateWithoutNewCategoryInput[] | ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutNewCategoryInput | ServiceCategoryChangeCreateOrConnectWithoutNewCategoryInput[]
+    upsert?: ServiceCategoryChangeUpsertWithWhereUniqueWithoutNewCategoryInput | ServiceCategoryChangeUpsertWithWhereUniqueWithoutNewCategoryInput[]
+    createMany?: ServiceCategoryChangeCreateManyNewCategoryInputEnvelope
+    set?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    disconnect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    delete?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    update?: ServiceCategoryChangeUpdateWithWhereUniqueWithoutNewCategoryInput | ServiceCategoryChangeUpdateWithWhereUniqueWithoutNewCategoryInput[]
+    updateMany?: ServiceCategoryChangeUpdateManyWithWhereWithoutNewCategoryInput | ServiceCategoryChangeUpdateManyWithWhereWithoutNewCategoryInput[]
+    deleteMany?: ServiceCategoryChangeScalarWhereInput | ServiceCategoryChangeScalarWhereInput[]
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateManyWithoutPreviousCategoryNestedInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutPreviousCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput> | ServiceCategoryChangeCreateWithoutPreviousCategoryInput[] | ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutPreviousCategoryInput | ServiceCategoryChangeCreateOrConnectWithoutPreviousCategoryInput[]
+    upsert?: ServiceCategoryChangeUpsertWithWhereUniqueWithoutPreviousCategoryInput | ServiceCategoryChangeUpsertWithWhereUniqueWithoutPreviousCategoryInput[]
+    createMany?: ServiceCategoryChangeCreateManyPreviousCategoryInputEnvelope
+    set?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    disconnect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    delete?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    update?: ServiceCategoryChangeUpdateWithWhereUniqueWithoutPreviousCategoryInput | ServiceCategoryChangeUpdateWithWhereUniqueWithoutPreviousCategoryInput[]
+    updateMany?: ServiceCategoryChangeUpdateManyWithWhereWithoutPreviousCategoryInput | ServiceCategoryChangeUpdateManyWithWhereWithoutPreviousCategoryInput[]
+    deleteMany?: ServiceCategoryChangeScalarWhereInput | ServiceCategoryChangeScalarWhereInput[]
   }
 
   export type OfficerProfileCreateNestedManyWithoutSectionInput = {
@@ -33796,6 +35572,13 @@ export namespace Prisma {
     connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
   }
 
+  export type ServiceCategoryChangeCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutApplicationInput, ServiceCategoryChangeUncheckedCreateWithoutApplicationInput> | ServiceCategoryChangeCreateWithoutApplicationInput[] | ServiceCategoryChangeUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutApplicationInput | ServiceCategoryChangeCreateOrConnectWithoutApplicationInput[]
+    createMany?: ServiceCategoryChangeCreateManyApplicationInputEnvelope
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+  }
+
   export type ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput = {
     create?: XOR<ApplicationAuditLogCreateWithoutApplicationInput, ApplicationAuditLogUncheckedCreateWithoutApplicationInput> | ApplicationAuditLogCreateWithoutApplicationInput[] | ApplicationAuditLogUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutApplicationInput | ApplicationAuditLogCreateOrConnectWithoutApplicationInput[]
@@ -33856,6 +35639,13 @@ export namespace Prisma {
     connectOrCreate?: OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput | OfficerForwardingHistoryCreateOrConnectWithoutApplicationInput[]
     createMany?: OfficerForwardingHistoryCreateManyApplicationInputEnvelope
     connect?: OfficerForwardingHistoryWhereUniqueInput | OfficerForwardingHistoryWhereUniqueInput[]
+  }
+
+  export type ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutApplicationInput, ServiceCategoryChangeUncheckedCreateWithoutApplicationInput> | ServiceCategoryChangeCreateWithoutApplicationInput[] | ServiceCategoryChangeUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutApplicationInput | ServiceCategoryChangeCreateOrConnectWithoutApplicationInput[]
+    createMany?: ServiceCategoryChangeCreateManyApplicationInputEnvelope
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
   }
 
   export type EnumApplicationStatusFieldUpdateOperationsInput = {
@@ -34026,6 +35816,20 @@ export namespace Prisma {
     deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
   }
 
+  export type ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutApplicationInput, ServiceCategoryChangeUncheckedCreateWithoutApplicationInput> | ServiceCategoryChangeCreateWithoutApplicationInput[] | ServiceCategoryChangeUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutApplicationInput | ServiceCategoryChangeCreateOrConnectWithoutApplicationInput[]
+    upsert?: ServiceCategoryChangeUpsertWithWhereUniqueWithoutApplicationInput | ServiceCategoryChangeUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: ServiceCategoryChangeCreateManyApplicationInputEnvelope
+    set?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    disconnect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    delete?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    update?: ServiceCategoryChangeUpdateWithWhereUniqueWithoutApplicationInput | ServiceCategoryChangeUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: ServiceCategoryChangeUpdateManyWithWhereWithoutApplicationInput | ServiceCategoryChangeUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: ServiceCategoryChangeScalarWhereInput | ServiceCategoryChangeScalarWhereInput[]
+  }
+
   export type ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput = {
     create?: XOR<ApplicationAuditLogCreateWithoutApplicationInput, ApplicationAuditLogUncheckedCreateWithoutApplicationInput> | ApplicationAuditLogCreateWithoutApplicationInput[] | ApplicationAuditLogUncheckedCreateWithoutApplicationInput[]
     connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutApplicationInput | ApplicationAuditLogCreateOrConnectWithoutApplicationInput[]
@@ -34148,6 +35952,20 @@ export namespace Prisma {
     deleteMany?: OfficerForwardingHistoryScalarWhereInput | OfficerForwardingHistoryScalarWhereInput[]
   }
 
+  export type ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput = {
+    create?: XOR<ServiceCategoryChangeCreateWithoutApplicationInput, ServiceCategoryChangeUncheckedCreateWithoutApplicationInput> | ServiceCategoryChangeCreateWithoutApplicationInput[] | ServiceCategoryChangeUncheckedCreateWithoutApplicationInput[]
+    connectOrCreate?: ServiceCategoryChangeCreateOrConnectWithoutApplicationInput | ServiceCategoryChangeCreateOrConnectWithoutApplicationInput[]
+    upsert?: ServiceCategoryChangeUpsertWithWhereUniqueWithoutApplicationInput | ServiceCategoryChangeUpsertWithWhereUniqueWithoutApplicationInput[]
+    createMany?: ServiceCategoryChangeCreateManyApplicationInputEnvelope
+    set?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    disconnect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    delete?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    connect?: ServiceCategoryChangeWhereUniqueInput | ServiceCategoryChangeWhereUniqueInput[]
+    update?: ServiceCategoryChangeUpdateWithWhereUniqueWithoutApplicationInput | ServiceCategoryChangeUpdateWithWhereUniqueWithoutApplicationInput[]
+    updateMany?: ServiceCategoryChangeUpdateManyWithWhereWithoutApplicationInput | ServiceCategoryChangeUpdateManyWithWhereWithoutApplicationInput[]
+    deleteMany?: ServiceCategoryChangeScalarWhereInput | ServiceCategoryChangeScalarWhereInput[]
+  }
+
   export type ApplicationCreateNestedOneWithoutWorkflowInput = {
     create?: XOR<ApplicationCreateWithoutWorkflowInput, ApplicationUncheckedCreateWithoutWorkflowInput>
     connectOrCreate?: ApplicationCreateOrConnectWithoutWorkflowInput
@@ -34206,6 +36024,64 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutValidationsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutValidationsInput, UserUpdateWithoutValidationsInput>, UserUncheckedUpdateWithoutValidationsInput>
+  }
+
+  export type ApplicationCreateNestedOneWithoutServiceCategoryChangesInput = {
+    create?: XOR<ApplicationCreateWithoutServiceCategoryChangesInput, ApplicationUncheckedCreateWithoutServiceCategoryChangesInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutServiceCategoryChangesInput
+    connect?: ApplicationWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutServiceCategoryChangesInput = {
+    create?: XOR<UserCreateWithoutServiceCategoryChangesInput, UserUncheckedCreateWithoutServiceCategoryChangesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutServiceCategoryChangesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ServiceCategoryCreateNestedOneWithoutNewCategoryChangesInput = {
+    create?: XOR<ServiceCategoryCreateWithoutNewCategoryChangesInput, ServiceCategoryUncheckedCreateWithoutNewCategoryChangesInput>
+    connectOrCreate?: ServiceCategoryCreateOrConnectWithoutNewCategoryChangesInput
+    connect?: ServiceCategoryWhereUniqueInput
+  }
+
+  export type ServiceCategoryCreateNestedOneWithoutPreviousCategoryChangesInput = {
+    create?: XOR<ServiceCategoryCreateWithoutPreviousCategoryChangesInput, ServiceCategoryUncheckedCreateWithoutPreviousCategoryChangesInput>
+    connectOrCreate?: ServiceCategoryCreateOrConnectWithoutPreviousCategoryChangesInput
+    connect?: ServiceCategoryWhereUniqueInput
+  }
+
+  export type ApplicationUpdateOneRequiredWithoutServiceCategoryChangesNestedInput = {
+    create?: XOR<ApplicationCreateWithoutServiceCategoryChangesInput, ApplicationUncheckedCreateWithoutServiceCategoryChangesInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutServiceCategoryChangesInput
+    upsert?: ApplicationUpsertWithoutServiceCategoryChangesInput
+    connect?: ApplicationWhereUniqueInput
+    update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutServiceCategoryChangesInput, ApplicationUpdateWithoutServiceCategoryChangesInput>, ApplicationUncheckedUpdateWithoutServiceCategoryChangesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutServiceCategoryChangesNestedInput = {
+    create?: XOR<UserCreateWithoutServiceCategoryChangesInput, UserUncheckedCreateWithoutServiceCategoryChangesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutServiceCategoryChangesInput
+    upsert?: UserUpsertWithoutServiceCategoryChangesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutServiceCategoryChangesInput, UserUpdateWithoutServiceCategoryChangesInput>, UserUncheckedUpdateWithoutServiceCategoryChangesInput>
+  }
+
+  export type ServiceCategoryUpdateOneRequiredWithoutNewCategoryChangesNestedInput = {
+    create?: XOR<ServiceCategoryCreateWithoutNewCategoryChangesInput, ServiceCategoryUncheckedCreateWithoutNewCategoryChangesInput>
+    connectOrCreate?: ServiceCategoryCreateOrConnectWithoutNewCategoryChangesInput
+    upsert?: ServiceCategoryUpsertWithoutNewCategoryChangesInput
+    connect?: ServiceCategoryWhereUniqueInput
+    update?: XOR<XOR<ServiceCategoryUpdateToOneWithWhereWithoutNewCategoryChangesInput, ServiceCategoryUpdateWithoutNewCategoryChangesInput>, ServiceCategoryUncheckedUpdateWithoutNewCategoryChangesInput>
+  }
+
+  export type ServiceCategoryUpdateOneWithoutPreviousCategoryChangesNestedInput = {
+    create?: XOR<ServiceCategoryCreateWithoutPreviousCategoryChangesInput, ServiceCategoryUncheckedCreateWithoutPreviousCategoryChangesInput>
+    connectOrCreate?: ServiceCategoryCreateOrConnectWithoutPreviousCategoryChangesInput
+    upsert?: ServiceCategoryUpsertWithoutPreviousCategoryChangesInput
+    disconnect?: ServiceCategoryWhereInput | boolean
+    delete?: ServiceCategoryWhereInput | boolean
+    connect?: ServiceCategoryWhereUniqueInput
+    update?: XOR<XOR<ServiceCategoryUpdateToOneWithWhereWithoutPreviousCategoryChangesInput, ServiceCategoryUpdateWithoutPreviousCategoryChangesInput>, ServiceCategoryUncheckedUpdateWithoutPreviousCategoryChangesInput>
   }
 
   export type ApplicationCreateNestedOneWithoutOfficerAssignmentsInput = {
@@ -34910,9 +36786,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -34925,6 +36801,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutCurrentHolderInput = {
@@ -34945,10 +36822,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -34958,6 +36835,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutCurrentHolderInput = {
@@ -34986,9 +36864,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -35001,6 +36879,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutDispatchedByInput = {
@@ -35022,9 +36901,9 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -35034,6 +36913,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutDispatchedByInput = {
@@ -35456,6 +37336,34 @@ export namespace Prisma {
     create: XOR<OfficerProfileCreateWithoutUserInput, OfficerProfileUncheckedCreateWithoutUserInput>
   }
 
+  export type ServiceCategoryChangeCreateWithoutChangedByInput = {
+    id?: string
+    reason?: string | null
+    createdAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutServiceCategoryChangesInput
+    newCategory: ServiceCategoryCreateNestedOneWithoutNewCategoryChangesInput
+    previousCategory?: ServiceCategoryCreateNestedOneWithoutPreviousCategoryChangesInput
+  }
+
+  export type ServiceCategoryChangeUncheckedCreateWithoutChangedByInput = {
+    id?: string
+    applicationId: string
+    previousCategoryId?: string | null
+    newCategoryId: string
+    reason?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ServiceCategoryChangeCreateOrConnectWithoutChangedByInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    create: XOR<ServiceCategoryChangeCreateWithoutChangedByInput, ServiceCategoryChangeUncheckedCreateWithoutChangedByInput>
+  }
+
+  export type ServiceCategoryChangeCreateManyChangedByInputEnvelope = {
+    data: ServiceCategoryChangeCreateManyChangedByInput | ServiceCategoryChangeCreateManyChangedByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput = {
     where: ApplicationAuditLogWhereUniqueInput
     update: XOR<ApplicationAuditLogUpdateWithoutPerformedByInput, ApplicationAuditLogUncheckedUpdateWithoutPerformedByInput>
@@ -35583,10 +37491,10 @@ export namespace Prisma {
     citizenPhone?: StringFilter<"Application"> | string
     subject?: StringFilter<"Application"> | string
     departmentId?: StringNullableFilter<"Application"> | string | null
-    applicationSource?: EnumApplicationSourceFilter<"Application"> | $Enums.ApplicationSource
     dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     dispatchedById?: StringNullableFilter<"Application"> | string | null
     isDispatched?: BoolFilter<"Application"> | boolean
+    applicationSource?: EnumApplicationSourceFilter<"Application"> | $Enums.ApplicationSource
   }
 
   export type ApplicationUpsertWithWhereUniqueWithoutDispatchedByInput = {
@@ -35952,6 +37860,35 @@ export namespace Prisma {
     frontdeskUsers?: FrontdeskOfficerUncheckedUpdateManyWithoutOfficerNestedInput
   }
 
+  export type ServiceCategoryChangeUpsertWithWhereUniqueWithoutChangedByInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    update: XOR<ServiceCategoryChangeUpdateWithoutChangedByInput, ServiceCategoryChangeUncheckedUpdateWithoutChangedByInput>
+    create: XOR<ServiceCategoryChangeCreateWithoutChangedByInput, ServiceCategoryChangeUncheckedCreateWithoutChangedByInput>
+  }
+
+  export type ServiceCategoryChangeUpdateWithWhereUniqueWithoutChangedByInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    data: XOR<ServiceCategoryChangeUpdateWithoutChangedByInput, ServiceCategoryChangeUncheckedUpdateWithoutChangedByInput>
+  }
+
+  export type ServiceCategoryChangeUpdateManyWithWhereWithoutChangedByInput = {
+    where: ServiceCategoryChangeScalarWhereInput
+    data: XOR<ServiceCategoryChangeUpdateManyMutationInput, ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByInput>
+  }
+
+  export type ServiceCategoryChangeScalarWhereInput = {
+    AND?: ServiceCategoryChangeScalarWhereInput | ServiceCategoryChangeScalarWhereInput[]
+    OR?: ServiceCategoryChangeScalarWhereInput[]
+    NOT?: ServiceCategoryChangeScalarWhereInput | ServiceCategoryChangeScalarWhereInput[]
+    id?: StringFilter<"ServiceCategoryChange"> | string
+    applicationId?: StringFilter<"ServiceCategoryChange"> | string
+    previousCategoryId?: StringNullableFilter<"ServiceCategoryChange"> | string | null
+    newCategoryId?: StringFilter<"ServiceCategoryChange"> | string
+    changedById?: StringFilter<"ServiceCategoryChange"> | string
+    reason?: StringNullableFilter<"ServiceCategoryChange"> | string | null
+    createdAt?: DateTimeFilter<"ServiceCategoryChange"> | Date | string
+  }
+
   export type UserCreateWithoutCitizenProfileInput = {
     id?: string
     email: string
@@ -35980,6 +37917,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutCitizenProfileInput = {
@@ -36010,6 +37948,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutCitizenProfileInput = {
@@ -36056,6 +37995,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCitizenProfileInput = {
@@ -36086,6 +38026,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type FrontdeskOfficerCreateWithoutOfficerInput = {
@@ -36161,6 +38102,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutOfficerProfileInput = {
@@ -36191,6 +38133,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutOfficerProfileInput = {
@@ -36282,6 +38225,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfficerProfileInput = {
@@ -36312,6 +38256,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserCreateWithoutFrontdeskAssignmentsInput = {
@@ -36342,6 +38287,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutFrontdeskAssignmentsInput = {
@@ -36372,6 +38318,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutFrontdeskAssignmentsInput = {
@@ -36449,6 +38396,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFrontdeskAssignmentsInput = {
@@ -36479,6 +38427,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type OfficerProfileUpsertWithoutFrontdeskUsersInput = {
@@ -36534,9 +38483,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -36549,6 +38498,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutServiceCategoryInput = {
@@ -36569,10 +38519,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -36582,6 +38532,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutServiceCategoryInput = {
@@ -36591,6 +38542,62 @@ export namespace Prisma {
 
   export type ApplicationCreateManyServiceCategoryInputEnvelope = {
     data: ApplicationCreateManyServiceCategoryInput | ApplicationCreateManyServiceCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ServiceCategoryChangeCreateWithoutNewCategoryInput = {
+    id?: string
+    reason?: string | null
+    createdAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutServiceCategoryChangesInput
+    changedBy: UserCreateNestedOneWithoutServiceCategoryChangesInput
+    previousCategory?: ServiceCategoryCreateNestedOneWithoutPreviousCategoryChangesInput
+  }
+
+  export type ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput = {
+    id?: string
+    applicationId: string
+    previousCategoryId?: string | null
+    changedById: string
+    reason?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ServiceCategoryChangeCreateOrConnectWithoutNewCategoryInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    create: XOR<ServiceCategoryChangeCreateWithoutNewCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput>
+  }
+
+  export type ServiceCategoryChangeCreateManyNewCategoryInputEnvelope = {
+    data: ServiceCategoryChangeCreateManyNewCategoryInput | ServiceCategoryChangeCreateManyNewCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ServiceCategoryChangeCreateWithoutPreviousCategoryInput = {
+    id?: string
+    reason?: string | null
+    createdAt?: Date | string
+    application: ApplicationCreateNestedOneWithoutServiceCategoryChangesInput
+    changedBy: UserCreateNestedOneWithoutServiceCategoryChangesInput
+    newCategory: ServiceCategoryCreateNestedOneWithoutNewCategoryChangesInput
+  }
+
+  export type ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput = {
+    id?: string
+    applicationId: string
+    newCategoryId: string
+    changedById: string
+    reason?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ServiceCategoryChangeCreateOrConnectWithoutPreviousCategoryInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    create: XOR<ServiceCategoryChangeCreateWithoutPreviousCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput>
+  }
+
+  export type ServiceCategoryChangeCreateManyPreviousCategoryInputEnvelope = {
+    data: ServiceCategoryChangeCreateManyPreviousCategoryInput | ServiceCategoryChangeCreateManyPreviousCategoryInput[]
     skipDuplicates?: boolean
   }
 
@@ -36608,6 +38615,38 @@ export namespace Prisma {
   export type ApplicationUpdateManyWithWhereWithoutServiceCategoryInput = {
     where: ApplicationScalarWhereInput
     data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyWithoutServiceCategoryInput>
+  }
+
+  export type ServiceCategoryChangeUpsertWithWhereUniqueWithoutNewCategoryInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    update: XOR<ServiceCategoryChangeUpdateWithoutNewCategoryInput, ServiceCategoryChangeUncheckedUpdateWithoutNewCategoryInput>
+    create: XOR<ServiceCategoryChangeCreateWithoutNewCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutNewCategoryInput>
+  }
+
+  export type ServiceCategoryChangeUpdateWithWhereUniqueWithoutNewCategoryInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    data: XOR<ServiceCategoryChangeUpdateWithoutNewCategoryInput, ServiceCategoryChangeUncheckedUpdateWithoutNewCategoryInput>
+  }
+
+  export type ServiceCategoryChangeUpdateManyWithWhereWithoutNewCategoryInput = {
+    where: ServiceCategoryChangeScalarWhereInput
+    data: XOR<ServiceCategoryChangeUpdateManyMutationInput, ServiceCategoryChangeUncheckedUpdateManyWithoutNewCategoryInput>
+  }
+
+  export type ServiceCategoryChangeUpsertWithWhereUniqueWithoutPreviousCategoryInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    update: XOR<ServiceCategoryChangeUpdateWithoutPreviousCategoryInput, ServiceCategoryChangeUncheckedUpdateWithoutPreviousCategoryInput>
+    create: XOR<ServiceCategoryChangeCreateWithoutPreviousCategoryInput, ServiceCategoryChangeUncheckedCreateWithoutPreviousCategoryInput>
+  }
+
+  export type ServiceCategoryChangeUpdateWithWhereUniqueWithoutPreviousCategoryInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    data: XOR<ServiceCategoryChangeUpdateWithoutPreviousCategoryInput, ServiceCategoryChangeUncheckedUpdateWithoutPreviousCategoryInput>
+  }
+
+  export type ServiceCategoryChangeUpdateManyWithWhereWithoutPreviousCategoryInput = {
+    where: ServiceCategoryChangeScalarWhereInput
+    data: XOR<ServiceCategoryChangeUpdateManyMutationInput, ServiceCategoryChangeUncheckedUpdateManyWithoutPreviousCategoryInput>
   }
 
   export type OfficerProfileCreateWithoutSectionInput = {
@@ -36694,9 +38733,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -36709,6 +38748,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutDepartmentInput = {
@@ -36729,10 +38769,10 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -36742,6 +38782,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutDepartmentInput = {
@@ -36881,6 +38922,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutCurrentHolderFilesInput = {
@@ -36911,6 +38953,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutCurrentHolderFilesInput = {
@@ -36969,6 +39012,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutDispatchedApplicationsInput = {
@@ -36999,6 +39043,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutDispatchedApplicationsInput = {
@@ -37013,6 +39058,9 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    color?: string | null
+    newCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutNewCategoryInput
+    previousCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutPreviousCategoryInput
   }
 
   export type ServiceCategoryUncheckedCreateWithoutApplicationsInput = {
@@ -37022,6 +39070,9 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    color?: string | null
+    newCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutNewCategoryInput
+    previousCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutPreviousCategoryInput
   }
 
   export type ServiceCategoryCreateOrConnectWithoutApplicationsInput = {
@@ -37227,6 +39278,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ServiceCategoryChangeCreateWithoutApplicationInput = {
+    id?: string
+    reason?: string | null
+    createdAt?: Date | string
+    changedBy: UserCreateNestedOneWithoutServiceCategoryChangesInput
+    newCategory: ServiceCategoryCreateNestedOneWithoutNewCategoryChangesInput
+    previousCategory?: ServiceCategoryCreateNestedOneWithoutPreviousCategoryChangesInput
+  }
+
+  export type ServiceCategoryChangeUncheckedCreateWithoutApplicationInput = {
+    id?: string
+    previousCategoryId?: string | null
+    newCategoryId: string
+    changedById: string
+    reason?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ServiceCategoryChangeCreateOrConnectWithoutApplicationInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    create: XOR<ServiceCategoryChangeCreateWithoutApplicationInput, ServiceCategoryChangeUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type ServiceCategoryChangeCreateManyApplicationInputEnvelope = {
+    data: ServiceCategoryChangeCreateManyApplicationInput | ServiceCategoryChangeCreateManyApplicationInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ApplicationAuditLogUpsertWithWhereUniqueWithoutApplicationInput = {
     where: ApplicationAuditLogWhereUniqueInput
     update: XOR<ApplicationAuditLogUpdateWithoutApplicationInput, ApplicationAuditLogUncheckedUpdateWithoutApplicationInput>
@@ -37329,6 +39408,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCurrentHolderFilesInput = {
@@ -37359,6 +39439,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type DepartmentUpsertWithoutApplicationsInput = {
@@ -37429,6 +39510,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDispatchedApplicationsInput = {
@@ -37459,6 +39541,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type ServiceCategoryUpsertWithoutApplicationsInput = {
@@ -37479,6 +39562,9 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    newCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutNewCategoryNestedInput
+    previousCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutPreviousCategoryNestedInput
   }
 
   export type ServiceCategoryUncheckedUpdateWithoutApplicationsInput = {
@@ -37488,6 +39574,9 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    newCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutNewCategoryNestedInput
+    previousCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutPreviousCategoryNestedInput
   }
 
   export type DocumentRequestUpsertWithWhereUniqueWithoutApplicationInput = {
@@ -37586,6 +39675,22 @@ export namespace Prisma {
     data: XOR<OfficerForwardingHistoryUpdateManyMutationInput, OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationInput>
   }
 
+  export type ServiceCategoryChangeUpsertWithWhereUniqueWithoutApplicationInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    update: XOR<ServiceCategoryChangeUpdateWithoutApplicationInput, ServiceCategoryChangeUncheckedUpdateWithoutApplicationInput>
+    create: XOR<ServiceCategoryChangeCreateWithoutApplicationInput, ServiceCategoryChangeUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type ServiceCategoryChangeUpdateWithWhereUniqueWithoutApplicationInput = {
+    where: ServiceCategoryChangeWhereUniqueInput
+    data: XOR<ServiceCategoryChangeUpdateWithoutApplicationInput, ServiceCategoryChangeUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type ServiceCategoryChangeUpdateManyWithWhereWithoutApplicationInput = {
+    where: ServiceCategoryChangeScalarWhereInput
+    data: XOR<ServiceCategoryChangeUpdateManyMutationInput, ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationInput>
+  }
+
   export type ApplicationCreateWithoutWorkflowInput = {
     id?: string
     rrNumber?: string | null
@@ -37602,9 +39707,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
@@ -37617,6 +39722,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutWorkflowInput = {
@@ -37638,10 +39744,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
@@ -37650,6 +39756,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutWorkflowInput = {
@@ -37685,6 +39792,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutWorkflowChangesInput = {
@@ -37715,6 +39823,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutWorkflowChangesInput = {
@@ -37749,9 +39858,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
@@ -37764,6 +39873,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutWorkflowInput = {
@@ -37785,10 +39895,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
@@ -37797,6 +39907,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutWorkflowChangesInput = {
@@ -37838,6 +39949,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkflowChangesInput = {
@@ -37868,6 +39980,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type ApplicationCreateWithoutValidationInput = {
@@ -37886,9 +39999,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
@@ -37901,6 +40014,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutValidationInput = {
@@ -37922,10 +40036,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
@@ -37934,6 +40048,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutValidationInput = {
@@ -37969,6 +40084,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutValidationsInput = {
@@ -37999,6 +40115,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutValidationsInput = {
@@ -38033,9 +40150,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
@@ -38048,6 +40165,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutValidationInput = {
@@ -38069,10 +40187,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
@@ -38081,6 +40199,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutValidationsInput = {
@@ -38122,6 +40241,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutValidationsInput = {
@@ -38152,6 +40272,427 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
+  }
+
+  export type ApplicationCreateWithoutServiceCategoryChangesInput = {
+    id?: string
+    rrNumber?: string | null
+    status?: $Enums.ApplicationStatus
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    dispatchedAt?: Date | string | null
+    isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
+    currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
+    department?: DepartmentCreateNestedOneWithoutApplicationsInput
+    dispatchedBy?: UserCreateNestedOneWithoutDispatchedApplicationsInput
+    serviceCategory: ServiceCategoryCreateNestedOneWithoutApplicationsInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutApplicationInput
+    documents?: DocumentCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateWithoutServiceCategoryChangesInput = {
+    id?: string
+    rrNumber?: string | null
+    serviceCategoryId: string
+    status?: $Enums.ApplicationStatus
+    currentHolderId?: string | null
+    submittedAt?: Date | string | null
+    validatedAt?: Date | string | null
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizenAadhaar?: string | null
+    citizenAddress: string
+    citizenEmail?: string | null
+    citizenGender?: string | null
+    citizenName: string
+    citizenPhone: string
+    subject?: string
+    departmentId?: string | null
+    dispatchedAt?: Date | string | null
+    dispatchedById?: string | null
+    isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
+    validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
+    workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutApplicationInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
+    officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+  }
+
+  export type ApplicationCreateOrConnectWithoutServiceCategoryChangesInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutServiceCategoryChangesInput, ApplicationUncheckedCreateWithoutServiceCategoryChangesInput>
+  }
+
+  export type UserCreateWithoutServiceCategoryChangesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutServiceCategoryChangesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutServiceCategoryChangesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutServiceCategoryChangesInput, UserUncheckedCreateWithoutServiceCategoryChangesInput>
+  }
+
+  export type ServiceCategoryCreateWithoutNewCategoryChangesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    color?: string | null
+    applications?: ApplicationCreateNestedManyWithoutServiceCategoryInput
+    previousCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutPreviousCategoryInput
+  }
+
+  export type ServiceCategoryUncheckedCreateWithoutNewCategoryChangesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    color?: string | null
+    applications?: ApplicationUncheckedCreateNestedManyWithoutServiceCategoryInput
+    previousCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutPreviousCategoryInput
+  }
+
+  export type ServiceCategoryCreateOrConnectWithoutNewCategoryChangesInput = {
+    where: ServiceCategoryWhereUniqueInput
+    create: XOR<ServiceCategoryCreateWithoutNewCategoryChangesInput, ServiceCategoryUncheckedCreateWithoutNewCategoryChangesInput>
+  }
+
+  export type ServiceCategoryCreateWithoutPreviousCategoryChangesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    color?: string | null
+    applications?: ApplicationCreateNestedManyWithoutServiceCategoryInput
+    newCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutNewCategoryInput
+  }
+
+  export type ServiceCategoryUncheckedCreateWithoutPreviousCategoryChangesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    color?: string | null
+    applications?: ApplicationUncheckedCreateNestedManyWithoutServiceCategoryInput
+    newCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutNewCategoryInput
+  }
+
+  export type ServiceCategoryCreateOrConnectWithoutPreviousCategoryChangesInput = {
+    where: ServiceCategoryWhereUniqueInput
+    create: XOR<ServiceCategoryCreateWithoutPreviousCategoryChangesInput, ServiceCategoryUncheckedCreateWithoutPreviousCategoryChangesInput>
+  }
+
+  export type ApplicationUpsertWithoutServiceCategoryChangesInput = {
+    update: XOR<ApplicationUpdateWithoutServiceCategoryChangesInput, ApplicationUncheckedUpdateWithoutServiceCategoryChangesInput>
+    create: XOR<ApplicationCreateWithoutServiceCategoryChangesInput, ApplicationUncheckedCreateWithoutServiceCategoryChangesInput>
+    where?: ApplicationWhereInput
+  }
+
+  export type ApplicationUpdateToOneWithWhereWithoutServiceCategoryChangesInput = {
+    where?: ApplicationWhereInput
+    data: XOR<ApplicationUpdateWithoutServiceCategoryChangesInput, ApplicationUncheckedUpdateWithoutServiceCategoryChangesInput>
+  }
+
+  export type ApplicationUpdateWithoutServiceCategoryChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
+    currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
+    department?: DepartmentUpdateOneWithoutApplicationsNestedInput
+    dispatchedBy?: UserUpdateOneWithoutDispatchedApplicationsNestedInput
+    serviceCategory?: ServiceCategoryUpdateOneRequiredWithoutApplicationsNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateWithoutServiceCategoryChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rrNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceCategoryId?: StringFieldUpdateOperationsInput | string
+    status?: EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+    currentHolderId?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenAddress?: StringFieldUpdateOperationsInput | string
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: StringFieldUpdateOperationsInput | string
+    citizenPhone?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
+    isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
+    validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
+    workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutApplicationNestedInput
+    frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
+    officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
+    officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+  }
+
+  export type UserUpsertWithoutServiceCategoryChangesInput = {
+    update: XOR<UserUpdateWithoutServiceCategoryChangesInput, UserUncheckedUpdateWithoutServiceCategoryChangesInput>
+    create: XOR<UserCreateWithoutServiceCategoryChangesInput, UserUncheckedCreateWithoutServiceCategoryChangesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutServiceCategoryChangesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutServiceCategoryChangesInput, UserUncheckedUpdateWithoutServiceCategoryChangesInput>
+  }
+
+  export type UserUpdateWithoutServiceCategoryChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutServiceCategoryChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type ServiceCategoryUpsertWithoutNewCategoryChangesInput = {
+    update: XOR<ServiceCategoryUpdateWithoutNewCategoryChangesInput, ServiceCategoryUncheckedUpdateWithoutNewCategoryChangesInput>
+    create: XOR<ServiceCategoryCreateWithoutNewCategoryChangesInput, ServiceCategoryUncheckedCreateWithoutNewCategoryChangesInput>
+    where?: ServiceCategoryWhereInput
+  }
+
+  export type ServiceCategoryUpdateToOneWithWhereWithoutNewCategoryChangesInput = {
+    where?: ServiceCategoryWhereInput
+    data: XOR<ServiceCategoryUpdateWithoutNewCategoryChangesInput, ServiceCategoryUncheckedUpdateWithoutNewCategoryChangesInput>
+  }
+
+  export type ServiceCategoryUpdateWithoutNewCategoryChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    applications?: ApplicationUpdateManyWithoutServiceCategoryNestedInput
+    previousCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutPreviousCategoryNestedInput
+  }
+
+  export type ServiceCategoryUncheckedUpdateWithoutNewCategoryChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    applications?: ApplicationUncheckedUpdateManyWithoutServiceCategoryNestedInput
+    previousCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutPreviousCategoryNestedInput
+  }
+
+  export type ServiceCategoryUpsertWithoutPreviousCategoryChangesInput = {
+    update: XOR<ServiceCategoryUpdateWithoutPreviousCategoryChangesInput, ServiceCategoryUncheckedUpdateWithoutPreviousCategoryChangesInput>
+    create: XOR<ServiceCategoryCreateWithoutPreviousCategoryChangesInput, ServiceCategoryUncheckedCreateWithoutPreviousCategoryChangesInput>
+    where?: ServiceCategoryWhereInput
+  }
+
+  export type ServiceCategoryUpdateToOneWithWhereWithoutPreviousCategoryChangesInput = {
+    where?: ServiceCategoryWhereInput
+    data: XOR<ServiceCategoryUpdateWithoutPreviousCategoryChangesInput, ServiceCategoryUncheckedUpdateWithoutPreviousCategoryChangesInput>
+  }
+
+  export type ServiceCategoryUpdateWithoutPreviousCategoryChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    applications?: ApplicationUpdateManyWithoutServiceCategoryNestedInput
+    newCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutNewCategoryNestedInput
+  }
+
+  export type ServiceCategoryUncheckedUpdateWithoutPreviousCategoryChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    applications?: ApplicationUncheckedUpdateManyWithoutServiceCategoryNestedInput
+    newCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutNewCategoryNestedInput
   }
 
   export type ApplicationCreateWithoutOfficerAssignmentsInput = {
@@ -38170,9 +40711,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -38185,6 +40726,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutOfficerAssignmentsInput = {
@@ -38206,10 +40748,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -38218,6 +40760,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutOfficerAssignmentsInput = {
@@ -38253,6 +40796,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutAssignmentsGivenInput = {
@@ -38283,6 +40827,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutAssignmentsGivenInput = {
@@ -38318,6 +40863,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutAssignmentsReceivedInput = {
@@ -38348,6 +40894,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutAssignmentsReceivedInput = {
@@ -38382,9 +40929,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -38397,6 +40944,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutOfficerAssignmentsInput = {
@@ -38418,10 +40966,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -38430,6 +40978,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutAssignmentsGivenInput = {
@@ -38471,6 +41020,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignmentsGivenInput = {
@@ -38501,6 +41051,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUpsertWithoutAssignmentsReceivedInput = {
@@ -38542,6 +41093,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignmentsReceivedInput = {
@@ -38572,6 +41124,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type ApplicationCreateWithoutDocumentsInput = {
@@ -38590,9 +41143,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -38605,6 +41158,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutDocumentsInput = {
@@ -38626,10 +41180,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -38638,6 +41192,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutDocumentsInput = {
@@ -38673,6 +41228,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutUploadedDocumentsInput = {
@@ -38703,6 +41259,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutUploadedDocumentsInput = {
@@ -38738,6 +41295,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutVerifiedDocumentsInput = {
@@ -38768,6 +41326,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutVerifiedDocumentsInput = {
@@ -38802,9 +41361,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -38817,6 +41376,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutDocumentsInput = {
@@ -38838,10 +41398,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -38850,6 +41410,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutUploadedDocumentsInput = {
@@ -38891,6 +41452,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUploadedDocumentsInput = {
@@ -38921,6 +41483,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUpsertWithoutVerifiedDocumentsInput = {
@@ -38962,6 +41525,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVerifiedDocumentsInput = {
@@ -38992,6 +41556,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type ApplicationCreateWithoutDocumentRequestsInput = {
@@ -39010,9 +41575,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -39025,6 +41590,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutDocumentRequestsInput = {
@@ -39046,10 +41612,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -39058,6 +41624,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutDocumentRequestsInput = {
@@ -39093,6 +41660,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutDocumentRequestsInput = {
@@ -39123,6 +41691,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutDocumentRequestsInput = {
@@ -39157,9 +41726,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -39172,6 +41741,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutDocumentRequestsInput = {
@@ -39193,10 +41763,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -39205,6 +41775,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutDocumentRequestsInput = {
@@ -39246,6 +41817,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentRequestsInput = {
@@ -39276,6 +41848,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type ApplicationCreateWithoutNotificationsInput = {
@@ -39294,9 +41867,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -39309,6 +41882,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutNotificationsInput = {
@@ -39330,10 +41904,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -39342,6 +41916,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutNotificationsInput = {
@@ -39377,6 +41952,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -39407,6 +41983,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -39441,9 +42018,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -39456,6 +42033,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutNotificationsInput = {
@@ -39477,10 +42055,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -39489,6 +42067,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutNotificationsInput = {
@@ -39530,6 +42109,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -39560,6 +42140,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type ApplicationCreateWithoutAuditLogsInput = {
@@ -39578,9 +42159,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
     currentHolder?: UserCreateNestedOneWithoutCurrentHolderFilesInput
@@ -39593,6 +42174,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutAuditLogsInput = {
@@ -39614,10 +42196,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
     documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutApplicationInput
@@ -39626,6 +42208,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutAuditLogsInput = {
@@ -39661,6 +42244,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -39691,6 +42275,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -39725,9 +42310,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
     currentHolder?: UserUpdateOneWithoutCurrentHolderFilesNestedInput
@@ -39740,6 +42325,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutAuditLogsInput = {
@@ -39761,10 +42347,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
     documentRequests?: DocumentRequestUncheckedUpdateManyWithoutApplicationNestedInput
@@ -39773,6 +42359,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutAuditLogsInput = {
@@ -39814,6 +42401,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -39844,6 +42432,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type ApplicationCreateWithoutFrontdeskForwardingsInput = {
@@ -39862,9 +42451,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -39877,6 +42466,7 @@ export namespace Prisma {
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutFrontdeskForwardingsInput = {
@@ -39898,10 +42488,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -39910,6 +42500,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
     officerForwardings?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutFrontdeskForwardingsInput = {
@@ -39945,6 +42536,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutForwardedFromInput = {
@@ -39975,6 +42567,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutForwardedFromInput = {
@@ -40010,6 +42603,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutForwardedToInput = {
@@ -40040,6 +42634,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutForwardedToInput = {
@@ -40074,9 +42669,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -40089,6 +42684,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutFrontdeskForwardingsInput = {
@@ -40110,10 +42706,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -40122,6 +42718,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutForwardedFromInput = {
@@ -40163,6 +42760,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForwardedFromInput = {
@@ -40193,6 +42791,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUpsertWithoutForwardedToInput = {
@@ -40234,6 +42833,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForwardedToInput = {
@@ -40264,6 +42864,7 @@ export namespace Prisma {
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type ApplicationCreateWithoutOfficerForwardingsInput = {
@@ -40282,9 +42883,9 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowCreateNestedManyWithoutApplicationInput
@@ -40297,6 +42898,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingCreateNestedManyWithoutApplicationInput
     notifications?: NotificationCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationUncheckedCreateWithoutOfficerForwardingsInput = {
@@ -40318,10 +42920,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutApplicationInput
     validation?: ApplicationValidationUncheckedCreateNestedOneWithoutApplicationInput
     workflow?: ApplicationWorkflowUncheckedCreateNestedManyWithoutApplicationInput
@@ -40330,6 +42932,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingUncheckedCreateNestedManyWithoutApplicationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutApplicationInput
     officerAssignments?: OfficerAssignmentUncheckedCreateNestedManyWithoutApplicationInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutApplicationInput
   }
 
   export type ApplicationCreateOrConnectWithoutOfficerForwardingsInput = {
@@ -40365,6 +42968,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutOfficerForwardedFromInput = {
@@ -40395,6 +42999,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutOfficerForwardedFromInput = {
@@ -40430,6 +43035,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
   }
 
   export type UserUncheckedCreateWithoutOfficerForwardedToInput = {
@@ -40460,6 +43066,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
   }
 
   export type UserCreateOrConnectWithoutOfficerForwardedToInput = {
@@ -40494,9 +43101,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -40509,6 +43116,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutOfficerForwardingsInput = {
@@ -40530,10 +43138,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -40542,6 +43150,7 @@ export namespace Prisma {
     frontdeskForwardings?: FrontdeskForwardingUncheckedUpdateManyWithoutApplicationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type UserUpsertWithoutOfficerForwardedFromInput = {
@@ -40583,6 +43192,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfficerForwardedFromInput = {
@@ -40613,6 +43223,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUpsertWithoutOfficerForwardedToInput = {
@@ -40654,6 +43265,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfficerForwardedToInput = {
@@ -40684,6 +43296,7 @@ export namespace Prisma {
     assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
     officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type ApplicationAuditLogCreateManyPerformedByInput = {
@@ -40733,10 +43346,10 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
   }
 
   export type ApplicationCreateManyDispatchedByInput = {
@@ -40758,9 +43371,9 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
   }
 
   export type DocumentRequestCreateManyRequestedByInput = {
@@ -40885,6 +43498,15 @@ export namespace Prisma {
     forwardedAt?: Date | string
   }
 
+  export type ServiceCategoryChangeCreateManyChangedByInput = {
+    id?: string
+    applicationId: string
+    previousCategoryId?: string | null
+    newCategoryId: string
+    reason?: string | null
+    createdAt?: Date | string
+  }
+
   export type ApplicationAuditLogUpdateWithoutPerformedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     action?: StringFieldUpdateOperationsInput | string
@@ -40988,9 +43610,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -41003,6 +43625,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutCurrentHolderInput = {
@@ -41023,10 +43646,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -41036,6 +43659,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutCurrentHolderInput = {
@@ -41056,10 +43680,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
   }
 
   export type ApplicationUpdateWithoutDispatchedByInput = {
@@ -41078,9 +43702,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -41093,6 +43717,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutDispatchedByInput = {
@@ -41114,9 +43739,9 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -41126,6 +43751,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutDispatchedByInput = {
@@ -41147,9 +43773,9 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
   }
 
   export type DocumentRequestUpdateWithoutRequestedByInput = {
@@ -41518,6 +44144,33 @@ export namespace Prisma {
     forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ServiceCategoryChangeUpdateWithoutChangedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutServiceCategoryChangesNestedInput
+    newCategory?: ServiceCategoryUpdateOneRequiredWithoutNewCategoryChangesNestedInput
+    previousCategory?: ServiceCategoryUpdateOneWithoutPreviousCategoryChangesNestedInput
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateWithoutChangedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    previousCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    newCategoryId?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    previousCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    newCategoryId?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type FrontdeskOfficerCreateManyOfficerInput = {
     id?: string
     frontdeskUserId: string
@@ -41560,10 +44213,28 @@ export namespace Prisma {
     citizenPhone: string
     subject?: string
     departmentId?: string | null
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
+  }
+
+  export type ServiceCategoryChangeCreateManyNewCategoryInput = {
+    id?: string
+    applicationId: string
+    previousCategoryId?: string | null
+    changedById: string
+    reason?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ServiceCategoryChangeCreateManyPreviousCategoryInput = {
+    id?: string
+    applicationId: string
+    newCategoryId: string
+    changedById: string
+    reason?: string | null
+    createdAt?: Date | string
   }
 
   export type ApplicationUpdateWithoutServiceCategoryInput = {
@@ -41582,9 +44253,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -41597,6 +44268,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutServiceCategoryInput = {
@@ -41617,10 +44289,10 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -41630,6 +44302,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutServiceCategoryInput = {
@@ -41650,10 +44323,64 @@ export namespace Prisma {
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
+  }
+
+  export type ServiceCategoryChangeUpdateWithoutNewCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutServiceCategoryChangesNestedInput
+    changedBy?: UserUpdateOneRequiredWithoutServiceCategoryChangesNestedInput
+    previousCategory?: ServiceCategoryUpdateOneWithoutPreviousCategoryChangesNestedInput
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateWithoutNewCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    previousCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    changedById?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateManyWithoutNewCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    previousCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    changedById?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCategoryChangeUpdateWithoutPreviousCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneRequiredWithoutServiceCategoryChangesNestedInput
+    changedBy?: UserUpdateOneRequiredWithoutServiceCategoryChangesNestedInput
+    newCategory?: ServiceCategoryUpdateOneRequiredWithoutNewCategoryChangesNestedInput
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateWithoutPreviousCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    newCategoryId?: StringFieldUpdateOperationsInput | string
+    changedById?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateManyWithoutPreviousCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: StringFieldUpdateOperationsInput | string
+    newCategoryId?: StringFieldUpdateOperationsInput | string
+    changedById?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OfficerProfileCreateManySectionInput = {
@@ -41724,10 +44451,10 @@ export namespace Prisma {
     citizenName: string
     citizenPhone: string
     subject?: string
-    applicationSource?: $Enums.ApplicationSource
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
     isDispatched?: boolean
+    applicationSource?: $Enums.ApplicationSource
   }
 
   export type ApplicationUpdateWithoutDepartmentInput = {
@@ -41746,9 +44473,9 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUpdateManyWithoutApplicationNestedInput
@@ -41761,6 +44488,7 @@ export namespace Prisma {
     notifications?: NotificationUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateWithoutDepartmentInput = {
@@ -41781,10 +44509,10 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutApplicationNestedInput
     validation?: ApplicationValidationUncheckedUpdateOneWithoutApplicationNestedInput
     workflow?: ApplicationWorkflowUncheckedUpdateManyWithoutApplicationNestedInput
@@ -41794,6 +44522,7 @@ export namespace Prisma {
     notifications?: NotificationUncheckedUpdateManyWithoutApplicationNestedInput
     officerAssignments?: OfficerAssignmentUncheckedUpdateManyWithoutApplicationNestedInput
     officerForwardings?: OfficerForwardingHistoryUncheckedUpdateManyWithoutApplicationNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationNestedInput
   }
 
   export type ApplicationUncheckedUpdateManyWithoutDepartmentInput = {
@@ -41814,10 +44543,10 @@ export namespace Prisma {
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
     subject?: StringFieldUpdateOperationsInput | string
-    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
+    applicationSource?: EnumApplicationSourceFieldUpdateOperationsInput | $Enums.ApplicationSource
   }
 
   export type ApplicationAuditLogCreateManyApplicationInput = {
@@ -41906,6 +44635,15 @@ export namespace Prisma {
     createdAt?: Date | string
     completedAt?: Date | string | null
     forwardedAt?: Date | string
+  }
+
+  export type ServiceCategoryChangeCreateManyApplicationInput = {
+    id?: string
+    previousCategoryId?: string | null
+    newCategoryId: string
+    changedById: string
+    reason?: string | null
+    createdAt?: Date | string
   }
 
   export type ApplicationAuditLogUpdateWithoutApplicationInput = {
@@ -42170,6 +44908,33 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCategoryChangeUpdateWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changedBy?: UserUpdateOneRequiredWithoutServiceCategoryChangesNestedInput
+    newCategory?: ServiceCategoryUpdateOneRequiredWithoutNewCategoryChangesNestedInput
+    previousCategory?: ServiceCategoryUpdateOneWithoutPreviousCategoryChangesNestedInput
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    previousCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    newCategoryId?: StringFieldUpdateOperationsInput | string
+    changedById?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceCategoryChangeUncheckedUpdateManyWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    previousCategoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    newCategoryId?: StringFieldUpdateOperationsInput | string
+    changedById?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

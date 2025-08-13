@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { FilePreviewButton } from "@/components/FilePreview";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
+import { format } from "date-fns";
 import {
   FileText,
   User,
-  Calendar,
+  CalendarIcon,
   Clock,
   Search,
   RefreshCw,
@@ -34,9 +36,40 @@ import {
   CheckCircle2,
   XCircleIcon,
   RotateCcw,
+  SlidersHorizontal,
+  Phone,
+  Mail,
+  MapPin,
+  Building,
+  Tag,
+  Filter,
+  Loader2,
 } from "lucide-react";
 import { getRoleMapping } from "@/lib/officer-roles";
-import { UserRole } from "@/app/generated/prisma";
+import type { UserRole } from "@/app/generated/prisma";
+import { ServiceCategoryBadge } from "@/components/ui/service-category-badge";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
+import { NotificationDialog } from "@/components/ui/notification-dialog";
+import { toast } from "sonner";
+import { ServiceCategoryEditModal } from "@/components/ui/service-category-edit-modal";
+import { canUserManageServiceCategories } from "@/lib/service-category-utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 // Enhanced Types
 interface Document {
@@ -168,14 +201,17 @@ interface Application {
   citizenEmail?: string;
   citizenAddress: string;
   subject?: string;
+  applicationSource?: string;
   department?: {
     id: string;
     name: string;
     description?: string;
   };
   serviceCategory: {
+    id: string;
     name: string;
     slaDays: number;
+    color?: string;
   };
   submittedAt: string;
   validatedAt: string | null;
@@ -231,10 +267,20 @@ const DCDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
-  const [selectedOfficer, setSelectedOfficer] = useState<string>("");
-  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
+  const [selectedOfficer, setSelectedOfficer] = useState<string>("all");
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("all");
+  const [selectedServiceCategory, setSelectedServiceCategory] =
+    useState<string>("all");
+  const [selectedApplicationSource, setSelectedApplicationSource] =
+    useState<string>("all");
+  const [serviceCategories, setServiceCategories] = useState<
+    { id: string; name: string; color?: string }[]
+  >([]);
   const [ageFilter, setAgeFilter] = useState<string>("");
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
   const [currentPage, setCurrentPage] = useState(1);
+  const [recentPage, setRecentPage] = useState(1);
   const [viewMode, setViewMode] = useState<"cards" | "list">("cards");
   const [showApplications, setShowApplications] = useState(false);
   const [showDetails, setShowDetails] = useState<string | null>(null);
@@ -246,6 +292,18 @@ const DCDashboard = () => {
     documents: Document[];
     applicationId: string;
   }>({ show: false, documents: [], applicationId: "" });
+  const [isCategoryEditModalOpen, setIsCategoryEditModalOpen] = useState(false);
+  const [editingApplicationId, setEditingApplicationId] = useState<string>("");
+  const [editingCurrentCategory, setEditingCurrentCategory] = useState<
+    | {
+        id: string;
+        name: string;
+        color?: string;
+      }
+    | undefined
+  >(undefined);
+  const [canManageCategories, setCanManageCategories] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const [stats, setStats] = useState<Stats>({
     total: 0,
     open: 0,
@@ -269,40 +327,187 @@ const DCDashboard = () => {
   });
 
   // Fetch applications for DC
-  const fetchApplications = async (status?: string, page = 1) => {
+  const fetchApplications = useCallback(
+    async (status?: string, page = 1) => {
+      try {
+        setLoading(true);
+
+        // Handle status parameter correctly
+        const statusParam = status || selectedStatus;
+        const finalStatus =
+          statusParam === "all" || statusParam === "ALL" ? "" : statusParam;
+
+        const params = new URLSearchParams({
+          status: finalStatus,
+          search: searchTerm,
+          officerId: selectedOfficer === "all" ? "" : selectedOfficer,
+          departmentId: selectedDepartment === "all" ? "" : selectedDepartment,
+          serviceCategoryId:
+            selectedServiceCategory === "all" ? "" : selectedServiceCategory,
+          applicationSource:
+            selectedApplicationSource === "all"
+              ? ""
+              : selectedApplicationSource,
+          ageFilter: ageFilter,
+          startDate: startDate ? format(startDate, "yyyy-MM-dd") : "",
+          endDate: endDate ? format(endDate, "yyyy-MM-dd") : "",
+          page: page.toString(),
+          limit: "10",
+        });
+
+        console.log("Fetching with params:", Object.fromEntries(params));
+
+        const response = await fetch(`/api/dc/applications?${params}`);
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Failed to fetch applications: ${errorText}`);
+        }
+
+        const data = await response.json();
+        setApplications(data.applications || []);
+        setOfficers(data.officers || []);
+        setDepartments(data.departments || []);
+        setServiceCategories(data.serviceCategories || []);
+        setStats(
+          data.stats || {
+            total: 0,
+            open: 0,
+            inProgress: 0,
+            resolved: 0,
+            closed: 0,
+            reopened: 0,
+            ageStats: { recent: 0, medium: 0, old: 0 },
+            pagination: {
+              page: 1,
+              limit: 10,
+              totalCount: 0,
+              totalPages: 0,
+              hasNext: false,
+              hasPrev: false,
+            },
+          }
+        );
+        setCurrentPage(page);
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+        setApplications([]);
+        setStats((prev) => ({
+          ...prev,
+          pagination: {
+            page: 1,
+            limit: 10,
+            totalCount: 0,
+            totalPages: 0,
+            hasNext: false,
+            hasPrev: false,
+          },
+        }));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [
+      selectedStatus,
+      searchTerm,
+      selectedOfficer,
+      selectedDepartment,
+      selectedServiceCategory,
+      selectedApplicationSource,
+      ageFilter,
+      startDate,
+      endDate,
+    ]
+  );
+
+  const fetchRecentApplications = useCallback(async (page = 1) => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
-        status: status || selectedStatus === "ALL" ? "" : selectedStatus,
-        search: searchTerm,
-        officerId: selectedOfficer,
-        departmentId: selectedDepartment,
-        ageFilter: ageFilter,
         page: page.toString(),
-        limit: "10",
+        limit: "5",
+        recent: "true",
       });
       const response = await fetch(`/api/dc/applications?${params}`);
-      if (!response.ok) throw new Error("Failed to fetch applications");
+      if (!response.ok) throw new Error("Failed to fetch recent applications");
       const data = await response.json();
       setApplications(data.applications || []);
-      setOfficers(data.officers || []);
-      setDepartments(data.departments || []);
-      setStats(data.stats || stats);
+      // Also fetch the full stats for the dashboard
+      setStats(
+        data.stats || {
+          total: 0,
+          open: 0,
+          inProgress: 0,
+          resolved: 0,
+          closed: 0,
+          reopened: 0,
+          ageStats: { recent: 0, medium: 0, old: 0 },
+          pagination: data.stats?.pagination || {
+            page: 1,
+            limit: 5,
+            totalCount: 0,
+            totalPages: 0,
+            hasNext: false,
+            hasPrev: false,
+          },
+        }
+      );
     } catch (error) {
-      console.error("Error fetching applications:", error);
+      console.error("Error fetching recent applications:", error);
     } finally {
       setLoading(false);
+    }
+  }, []);
+
+  const fetchServiceCategories = async () => {
+    try {
+      const response = await fetch("/api/service-categories");
+      if (!response.ok) throw new Error("Failed to fetch service categories");
+      const categories = await response.json();
+      setServiceCategories(categories || []);
+    } catch (error) {
+      console.error("Error fetching service categories:", error);
     }
   };
 
   useEffect(() => {
-    fetchApplications();
+    // Fetch service categories on initial load as backup
+    fetchServiceCategories();
+  }, []);
+
+  // Check if user can manage service categories
+  useEffect(() => {
+    const checkPermissions = async () => {
+      if (session?.user?.role) {
+        const canManage = await canUserManageServiceCategories(
+          session.user.role
+        );
+        setCanManageCategories(canManage);
+      }
+    };
+    checkPermissions();
+  }, [session]);
+
+  useEffect(() => {
+    if (showApplications) {
+      fetchApplications(selectedStatus, currentPage);
+    } else {
+      fetchRecentApplications(recentPage);
+    }
   }, [
+    currentPage,
+    recentPage,
+    showApplications,
     selectedStatus,
+    searchTerm,
     selectedOfficer,
     selectedDepartment,
+    selectedServiceCategory,
+    selectedApplicationSource,
     ageFilter,
-    currentPage,
+    startDate,
+    endDate,
+    fetchApplications,
+    fetchRecentApplications,
   ]);
 
   const handleStatusCardClick = (status: string) => {
@@ -312,38 +517,82 @@ const DCDashboard = () => {
   };
 
   const handleRefresh = () => {
-    fetchApplications(selectedStatus, currentPage);
+    if (showApplications) {
+      fetchApplications(selectedStatus, currentPage);
+    } else {
+      fetchRecentApplications(recentPage);
+    }
+  };
+
+  // Service Category Edit Modal Functions
+  const openCategoryEditModal = (
+    applicationId: string,
+    currentCategory: { id: string; name: string; color?: string }
+  ) => {
+    setEditingApplicationId(applicationId);
+    setEditingCurrentCategory(currentCategory);
+    setIsCategoryEditModalOpen(true);
+  };
+
+  const closeCategoryEditModal = () => {
+    setIsCategoryEditModalOpen(false);
+    setEditingApplicationId("");
+    setEditingCurrentCategory(undefined);
+  };
+
+  const handleCategoryUpdated = () => {
+    if (showApplications) {
+      fetchApplications(selectedStatus, currentPage);
+    } else {
+      fetchRecentApplications(recentPage);
+    }
   };
 
   const clearFilters = () => {
     setSearchTerm("");
-    setSelectedOfficer("");
-    setSelectedDepartment("");
+    setSelectedOfficer("all");
+    setSelectedDepartment("all");
+    setSelectedServiceCategory("all");
+    setSelectedApplicationSource("all");
     setAgeFilter("");
-    setSelectedStatus("ALL");
+    setStartDate(undefined);
+    setEndDate(undefined);
+    setSelectedStatus("all"); // Changed from "ALL" to "all" for consistency
     setShowApplications(false);
     setCurrentPage(1);
+    setRecentPage(1);
+    // Fetch recent applications after clearing filters
+    fetchRecentApplications(1);
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "OPEN":
-        return <FolderOpen className="w-6 h-6" />;
+        return <FolderOpen className="w-5 h-5" />;
       case "IN_PROGRESS":
-        return <PlayCircle className="w-6 h-6" />;
+        return <PlayCircle className="w-5 h-5" />;
       case "RESOLVED":
-        return <CheckCircle2 className="w-6 h-6" />;
+        return <CheckCircle2 className="w-5 h-5" />;
       case "CLOSED":
-        return <XCircleIcon className="w-6 h-6" />;
+        return <XCircleIcon className="w-5 h-5" />;
       case "REOPENED":
-        return <RotateCcw className="w-6 h-6" />;
+        return <RotateCcw className="w-5 h-5" />;
       default:
-        return <FileText className="w-6 h-6" />;
+        return <FileText className="w-5 h-5" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case "TOTAL":
+        return {
+          gradient: "from-indigo-500 to-indigo-600",
+          bg: "bg-indigo-500",
+          text: "text-indigo-600",
+          light: "bg-indigo-50",
+          border: "border-indigo-200",
+          ring: "ring-indigo-500/20",
+        };
       case "OPEN":
         return {
           gradient: "from-blue-500 to-blue-600",
@@ -351,6 +600,7 @@ const DCDashboard = () => {
           text: "text-blue-600",
           light: "bg-blue-50",
           border: "border-blue-200",
+          ring: "ring-blue-500/20",
         };
       case "IN_PROGRESS":
         return {
@@ -359,6 +609,7 @@ const DCDashboard = () => {
           text: "text-purple-600",
           light: "bg-purple-50",
           border: "border-purple-200",
+          ring: "ring-purple-500/20",
         };
       case "RESOLVED":
         return {
@@ -367,6 +618,7 @@ const DCDashboard = () => {
           text: "text-green-600",
           light: "bg-green-50",
           border: "border-green-200",
+          ring: "ring-green-500/20",
         };
       case "CLOSED":
         return {
@@ -375,6 +627,7 @@ const DCDashboard = () => {
           text: "text-red-600",
           light: "bg-red-50",
           border: "border-red-200",
+          ring: "ring-red-500/20",
         };
       case "REOPENED":
         return {
@@ -383,6 +636,7 @@ const DCDashboard = () => {
           text: "text-orange-600",
           light: "bg-orange-50",
           border: "border-orange-200",
+          ring: "ring-orange-500/20",
         };
       default:
         return {
@@ -391,6 +645,7 @@ const DCDashboard = () => {
           text: "text-gray-600",
           light: "bg-gray-50",
           border: "border-gray-200",
+          ring: "ring-gray-500/20",
         };
     }
   };
@@ -540,11 +795,13 @@ const DCDashboard = () => {
 
   const downloadDocument = async (doc: Document) => {
     try {
-      const response = await fetch(
-        `/api/${doc.filePath.replace(/^uploads[\\/]/, "")}`
-      );
+      // Fetch the presigned URL from the API
+      const response = await fetch(`/api/documents/${doc.id}`);
       if (!response.ok) throw new Error("Download failed");
-      const blob = await response.blob();
+      const data = await response.json();
+      const fileResponse = await fetch(data.url);
+      if (!fileResponse.ok) throw new Error("Failed to download file");
+      const blob = await fileResponse.blob();
       const url = window.URL.createObjectURL(blob);
       const a = window.document.createElement("a");
       a.style.display = "none";
@@ -555,7 +812,7 @@ const DCDashboard = () => {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading document:", error);
-      alert("Failed to download document");
+      toast.error("Failed to download document");
     }
   };
 
@@ -563,8 +820,16 @@ const DCDashboard = () => {
   const renderStatusCards = () => {
     const statusCards = [
       {
+        status: "all",
+        title: "Total",
+        count: stats.total,
+        description: "All applications",
+        icon: BarChart3,
+        colors: getStatusColor("TOTAL"),
+      },
+      {
         status: "OPEN",
-        title: "Open Applications",
+        title: "Open",
         count: stats.open,
         description: "Awaiting assignment",
         icon: FolderOpen,
@@ -604,71 +869,127 @@ const DCDashboard = () => {
       },
     ];
 
+    // Separate total card from other status cards
+    const totalCard = statusCards.find((card) => card.status === "all");
+    const otherStatusCards = statusCards.filter(
+      (card) => card.status !== "all"
+    );
+
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
-        {statusCards.map((card) => {
-          const IconComponent = card.icon;
-          return (
+      <div className="mb-6 lg:mb-8 space-y-4 lg:space-y-6">
+        {/* Total Applications Card - Full Width Row */}
+        {totalCard && (
+          <div className="w-full">
             <div
-              key={card.status}
-              onClick={() => handleStatusCardClick(card.status)}
-              className="group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+              key={totalCard.status}
+              onClick={() => handleStatusCardClick(totalCard.status)}
+              className="group relative overflow-hidden rounded-xl lg:rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 p-6 lg:p-8"
             >
-              {/* Background Gradient Overlay */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${card.colors.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
-              ></div>
-
-              {/* Card Content */}
-              <div className="relative p-6">
-                {/* Header with Icon and Count */}
-                <div className="flex items-center justify-between mb-4">
-                  <div
-                    className={`p-3 rounded-xl ${card.colors.light} ${card.colors.border} border`}
-                  >
-                    <IconComponent className={`w-6 h-6 ${card.colors.text}`} />
+              <div className="flex items-center justify-between">
+                {/* Left Section - Icon and Count */}
+                <div className="flex items-center gap-4 lg:gap-6">
+                  <div className="p-3 lg:p-4 rounded-xl lg:rounded-2xl bg-blue-100 border-2 border-blue-200">
+                    <BarChart3 className="w-8 h-8 lg:w-10 lg:h-10 text-blue-600" />
                   </div>
-                  <div className="text-right">
-                    <div
-                      className={`text-3xl font-bold ${card.colors.text} leading-none`}
-                    >
-                      {card.count.toLocaleString()}
+                  <div>
+                    <div className="text-3xl lg:text-5xl font-bold text-blue-600 leading-none">
+                      {totalCard.count.toLocaleString()}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1 font-medium">
-                      APPLICATIONS
+                    <div className="text-sm lg:text-base text-blue-600 mt-1 font-semibold">
+                      TOTAL APPLICATIONS
                     </div>
                   </div>
                 </div>
 
-                {/* Title and Description */}
-                <div className="space-y-1">
-                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
-                    {card.title}
+                {/* Right Section - Title and Description */}
+                <div className="text-right">
+                  <h3 className="text-xl lg:text-2xl font-bold text-blue-700 group-hover:text-blue-800 transition-colors">
+                    {totalCard.title}
                   </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {card.description}
+                  <p className="text-sm lg:text-base text-blue-600 leading-relaxed mt-1">
+                    {totalCard.description}
                   </p>
-                </div>
-
-                {/* Progress Indicator */}
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-500">Click to view details</span>
-                    <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-200" />
+                  <div className="flex items-center justify-end gap-2 mt-3 text-sm text-blue-600">
+                    <span>Click to view all</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-all duration-200" />
                   </div>
                 </div>
               </div>
 
-              {/* Hover Effect Border */}
-              <div
-                className={`absolute inset-0 border-2 border-transparent group-hover:${card.colors.border.replace(
-                  "border-",
-                  "border-"
-                )} rounded-2xl transition-colors duration-300`}
-              ></div>
+              {/* Hover Effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-indigo-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl lg:rounded-2xl"></div>
             </div>
-          );
-        })}
+          </div>
+        )}
+
+        {/* Other Status Cards - Grid Layout */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
+          {otherStatusCards.map((card) => {
+            const IconComponent = card.icon;
+            return (
+              <div
+                key={card.status}
+                onClick={() => handleStatusCardClick(card.status)}
+                className="group relative overflow-hidden rounded-xl lg:rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+              >
+                {/* Background Gradient Overlay */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${card.colors.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
+                ></div>
+
+                {/* Card Content */}
+                <div className="relative p-4 lg:p-6">
+                  {/* Header with Icon and Count */}
+                  <div className="flex items-center justify-between mb-3 lg:mb-4">
+                    <div
+                      className={`p-2 lg:p-3 rounded-lg lg:rounded-xl ${card.colors.light} ${card.colors.border} border`}
+                    >
+                      <IconComponent
+                        className={`w-4 h-4 lg:w-5 lg:h-5 ${card.colors.text}`}
+                      />
+                    </div>
+                    <div className="text-right">
+                      <div
+                        className={`text-xl lg:text-3xl font-bold ${card.colors.text} leading-none`}
+                      >
+                        {card.count.toLocaleString()}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1 font-medium hidden lg:block">
+                        APPLICATIONS
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Title and Description */}
+                  <div className="space-y-1">
+                    <h3 className="text-sm lg:text-lg font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
+                      {card.title}
+                    </h3>
+                    <p className="text-xs lg:text-sm text-gray-600 leading-relaxed">
+                      {card.description}
+                    </p>
+                  </div>
+
+                  {/* Progress Indicator */}
+                  <div className="mt-3 lg:mt-4 pt-3 lg:pt-4 border-t border-gray-100">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-500">Click to view</span>
+                      <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-200" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Hover Effect Border */}
+                <div
+                  className={`absolute inset-0 border-2 border-transparent group-hover:${card.colors.border.replace(
+                    "border-",
+                    "border-"
+                  )} rounded-xl lg:rounded-2xl transition-colors duration-300`}
+                ></div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   };
@@ -715,43 +1036,45 @@ const DCDashboard = () => {
     ];
 
     return (
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-6">
-        <div className="flex items-center gap-3 mb-6">
+      <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200 mb-4 lg:mb-6">
+        <div className="flex items-center gap-3 mb-4 lg:mb-6">
           <div className="p-2 bg-blue-50 rounded-lg">
-            <Timer className="w-5 h-5 text-blue-600" />
+            <Timer className="w-4 h-4 lg:w-5 lg:h-5 text-blue-600" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-base lg:text-lg font-semibold text-gray-900">
               Filter by Application Age
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-xs lg:text-sm text-gray-600 mt-1">
               Filter applications based on how long they&apos;ve been in the
               system
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4">
           {ageFilters.map((filter) => (
-            <button
+            <Button
               key={filter.key}
+              variant="outline"
               onClick={() =>
                 setAgeFilter(ageFilter === filter.key ? "" : filter.key)
               }
-              className={`p-4 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
+              className={cn(
+                "p-3 lg:p-4 h-auto flex-col items-start space-y-2 transition-all duration-200 hover:shadow-md",
                 ageFilter === filter.key
                   ? filter.activeColor
                   : `${filter.bgColor} ${
                       filter.borderColor
                     } hover:${filter.borderColor.replace("200", "300")}`
-              }`}
+              )}
             >
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between w-full">
                 <div
-                  className={`w-3 h-3 rounded-full bg-${filter.color}-500`}
+                  className={`w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-${filter.color}-500`}
                 ></div>
                 <div
-                  className={`text-2xl font-bold ${
+                  className={`text-lg lg:text-2xl font-bold ${
                     ageFilter === filter.key
                       ? filter.textColor
                       : filter.textColor
@@ -760,126 +1083,602 @@ const DCDashboard = () => {
                   {filter.count}
                 </div>
               </div>
-              <div className="text-left">
-                <div className={`font-semibold ${filter.textColor}`}>
+              <div className="text-left w-full">
+                <div
+                  className={`font-semibold text-sm lg:text-base ${filter.textColor}`}
+                >
                   {filter.label}
                 </div>
-                <div className={`text-sm ${filter.textColor} opacity-75`}>
+                <div
+                  className={`text-xs lg:text-sm ${filter.textColor} opacity-75`}
+                >
                   {filter.description}
                 </div>
               </div>
-            </button>
+            </Button>
           ))}
         </div>
       </div>
     );
   };
 
-  // Enhanced Filters Component
+  // Enhanced Professional Filters Component with shadcn UI
   const renderFilters = () => {
     if (!showApplications) return null;
 
+    const hasActiveFilters =
+      searchTerm ||
+      (selectedOfficer && selectedOfficer !== "all") ||
+      (selectedDepartment && selectedDepartment !== "all") ||
+      (selectedServiceCategory && selectedServiceCategory !== "all") ||
+      (selectedApplicationSource && selectedApplicationSource !== "all") ||
+      ageFilter ||
+      startDate ||
+      endDate;
+
     return (
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-6">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Search Input */}
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search by RR number, citizen name, or service category..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") fetchApplications(selectedStatus, 1);
-                }}
-                className="pl-12 pr-4 w-full h-12 rounded-xl border border-gray-300 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 text-sm placeholder-gray-500"
-              />
+      <div className="bg-white rounded-xl lg:rounded-2xl shadow-sm border border-gray-200 mb-4 lg:mb-6">
+        {/* Header Section - Always Visible */}
+        <div className="p-4 lg:p-6 border-b border-gray-100">
+          {/* Search Bar */}
+          <div className="relative mb-4">
+            <Search className="absolute left-3 lg:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 lg:w-5 lg:h-5" />
+            <Input
+              type="text"
+              placeholder="Search by RR number, citizen name, or service category..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") fetchApplications(selectedStatus, 1);
+              }}
+              className="pl-10 lg:pl-12 h-10 lg:h-12 text-sm border-gray-200 focus:border-blue-400 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Mobile Controls */}
+          <div className="flex items-center justify-between lg:hidden">
+            <Button
+              variant="outline"
+              onClick={() => setShowFilters(!showFilters)}
+              className={cn(
+                "flex items-center gap-2 h-10 px-4",
+                showFilters || hasActiveFilters
+                  ? "bg-blue-50 border-blue-200 text-blue-700"
+                  : "bg-gray-50 border-gray-200 text-gray-600"
+              )}
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+              <span className="text-sm font-medium">Filters</span>
+              {hasActiveFilters && (
+                <span className="bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
+                  !
+                </span>
+              )}
+            </Button>
+
+            {/* Mobile View Mode Toggle */}
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setViewMode("cards")}
+                className={cn(
+                  "p-2 h-8",
+                  viewMode === "cards"
+                    ? "bg-white text-blue-600 shadow-sm"
+                    : "text-gray-600 hover:text-gray-700"
+                )}
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setViewMode("list")}
+                className={cn(
+                  "p-2 h-8",
+                  viewMode === "list"
+                    ? "bg-white text-blue-600 shadow-sm"
+                    : "text-gray-600 hover:text-gray-700"
+                )}
+              >
+                <List className="w-4 h-4" />
+              </Button>
             </div>
           </div>
 
-          {/* Officer Filter */}
-          <div className="min-w-[200px]">
-            <select
-              value={selectedOfficer}
-              onChange={(e) => setSelectedOfficer(e.target.value)}
-              className="w-full h-12 rounded-xl border border-gray-300 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 px-4 text-sm transition-all duration-200"
-            >
-              <option value="">All Officers</option>
-              {officers.map((officer) => (
-                <option key={officer.id} value={officer.id}>
-                  {officer.officerProfile?.fullName || "Unknown"} (
-                  {getOfficerShortForm(officer.role)}) -{" "}
-                  {officer.applicationCount}
-                </option>
-              ))}
-            </select>
+          {/* Desktop View Mode Toggle */}
+          <div className="hidden lg:flex items-center justify-between">
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <Button
+                variant="ghost"
+                onClick={() => setViewMode("cards")}
+                className={cn(
+                  "flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-colors",
+                  viewMode === "cards"
+                    ? "bg-white text-blue-600 shadow-sm"
+                    : "text-gray-600 hover:text-gray-800"
+                )}
+              >
+                <Grid3X3 className="w-4 h-4" />
+                Cards
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setViewMode("list")}
+                className={cn(
+                  "flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-colors",
+                  viewMode === "list"
+                    ? "bg-white text-blue-600 shadow-sm"
+                    : "text-gray-600 hover:text-gray-800"
+                )}
+              >
+                <List className="w-4 h-4" />
+                List
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Filters */}
+        <div className="hidden lg:block p-6 bg-gradient-to-br from-slate-50/50 to-gray-50/30">
+          {/* Filter Header */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-lg">
+              <Filter className="w-4 h-4 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900">
+                Advanced Filters
+              </h3>
+              <p className="text-xs text-gray-600">
+                Refine your search criteria
+              </p>
+            </div>
           </div>
 
-          {/* Department Filter */}
-          <div className="min-w-[200px]">
-            <select
-              value={selectedDepartment}
-              onChange={(e) => setSelectedDepartment(e.target.value)}
-              className="w-full h-12 rounded-xl border border-gray-300 bg-gray-50 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 px-4 text-sm transition-all duration-200"
-            >
-              <option value="">All Departments</option>
-              {departments.map((department) => (
-                <option key={department.id} value={department.id}>
-                  {department.name}
-                </option>
-              ))}
-            </select>
+          {/* Filter Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            {/* Officer Filter */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                Officer <span className="text-gray-500">(Optional)</span>
+              </Label>
+              <Select
+                value={selectedOfficer}
+                onValueChange={setSelectedOfficer}
+              >
+                <SelectTrigger className="h-9 border-gray-200 text-sm">
+                  <SelectValue placeholder="All Officers" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Officers</SelectItem>
+                  {officers.map((officer) => (
+                    <SelectItem key={officer.id} value={officer.id}>
+                      <div className="flex flex-col py-0.5">
+                        <span className="font-medium text-xs">
+                          {officer.officerProfile?.fullName || "Unknown"}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {getOfficerShortForm(officer.role)} •{" "}
+                          {officer.applicationCount} apps
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Department Filter */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                Department <span className="text-gray-500">(Optional)</span>
+              </Label>
+              <Select
+                value={selectedDepartment}
+                onValueChange={setSelectedDepartment}
+              >
+                <SelectTrigger className="h-9 border-gray-200 text-sm">
+                  <SelectValue placeholder="All Departments" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Departments</SelectItem>
+                  {departments.map((department) => (
+                    <SelectItem key={department.id} value={department.id}>
+                      <span className="truncate text-sm">
+                        {department.name}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Service Category Filter */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                Service Category{" "}
+                <span className="text-gray-500">(Optional)</span>
+              </Label>
+              <Select
+                value={selectedServiceCategory}
+                onValueChange={setSelectedServiceCategory}
+              >
+                <SelectTrigger className="h-9 border-gray-200 text-sm">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {serviceCategories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      <span className="truncate text-sm">{category.name}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Application Source Filter */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                Source <span className="text-gray-500">(Optional)</span>
+              </Label>
+              <Select
+                value={selectedApplicationSource}
+                onValueChange={setSelectedApplicationSource}
+              >
+                <SelectTrigger className="h-9 border-gray-200 text-sm">
+                  <SelectValue placeholder="All Sources" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sources</SelectItem>
+                  <SelectItem value="PUBLIC">
+                    <div className="flex items-center gap-2">
+                      <span>📄</span>
+                      <span className="text-sm">Public Portal</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="GOVERNMENT">
+                    <div className="flex items-center gap-2">
+                      <span>🏛️</span>
+                      <span className="text-sm">Government</span>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          {/* View Mode Toggle */}
-          <div className="flex bg-gray-100 rounded-xl p-1">
-            <button
-              onClick={() => setViewMode("cards")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                viewMode === "cards"
-                  ? "bg-white text-blue-600 shadow-sm"
-                  : "text-gray-600 hover:text-gray-800"
-              }`}
-            >
-              <Grid3X3 className="w-4 h-4" />
-              Cards
-            </button>
-            <button
-              onClick={() => setViewMode("list")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                viewMode === "list"
-                  ? "bg-white text-blue-600 shadow-sm"
-                  : "text-gray-600 hover:text-gray-800"
-              }`}
-            >
-              <List className="w-4 h-4" />
-              List
-            </button>
+          {/* Date Range Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 pt-4 border-t border-gray-200">
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-gray-700">
+                Start Date
+              </Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full h-9 justify-start text-left font-normal border-gray-200 text-sm",
+                      !startDate && "text-gray-500"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-3.5 w-3.5 text-gray-400" />
+                    {startDate
+                      ? format(startDate, "MMM dd, yyyy")
+                      : "Select start date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={startDate}
+                    onSelect={(date) => {
+                      setStartDate(date);
+                      if (date && endDate && endDate < date) {
+                        setEndDate(undefined);
+                      }
+                    }}
+                    disabled={(date) => date > new Date()}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                End Date
+                {startDate && !endDate && (
+                  <span className="text-red-500 text-xs">Required</span>
+                )}
+              </Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    disabled={!startDate}
+                    className={cn(
+                      "w-full h-9 justify-start text-left font-normal border-gray-200 text-sm",
+                      !endDate && "text-gray-500",
+                      !startDate && "opacity-50 cursor-not-allowed bg-gray-50"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-3.5 w-3.5 text-gray-400" />
+                    {endDate
+                      ? format(endDate, "MMM dd, yyyy")
+                      : startDate
+                      ? "Select end date"
+                      : "Select start date first"}
+                  </Button>
+                </PopoverTrigger>
+                {startDate && (
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={endDate}
+                      onSelect={setEndDate}
+                      disabled={(date) => {
+                        if (date > new Date()) return true;
+                        if (startDate && date < startDate) return true;
+                        return false;
+                      }}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                )}
+              </Popover>
+            </div>
           </div>
 
-          {/* Clear Filters */}
-          {(searchTerm ||
-            selectedOfficer ||
-            selectedDepartment ||
-            ageFilter) && (
-            <button
-              onClick={clearFilters}
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-200 text-sm font-medium"
-            >
-              <X className="w-4 h-4" />
-              Clear Filters
-            </button>
+          {/* Clear Filters Button - Desktop */}
+          {hasActiveFilters && (
+            <div className="flex justify-center pt-4 border-t border-gray-200">
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="h-9 px-6 border-gray-300 text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+              >
+                <X className="mr-2 h-4 w-4" />
+                Clear All Filters
+              </Button>
+            </div>
           )}
         </div>
+
+        {/* Mobile Filters - Collapsible */}
+        {showFilters && (
+          <div className="lg:hidden border-t border-gray-100 p-4 bg-gray-50/50">
+            <div className="mb-4">
+              <h3 className="text-sm font-medium text-gray-900 mb-1">
+                Filter Options
+              </h3>
+              <p className="text-xs text-gray-600">
+                Customize your search criteria
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {/* Officer Filter */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-gray-700">
+                  Officer
+                </Label>
+                <Select
+                  value={selectedOfficer}
+                  onValueChange={setSelectedOfficer}
+                >
+                  <SelectTrigger className="h-10 border-gray-200">
+                    <SelectValue placeholder="All Officers" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Officers</SelectItem>
+                    {officers.map((officer) => (
+                      <SelectItem key={officer.id} value={officer.id}>
+                        <div className="flex flex-col py-1">
+                          <span className="font-medium text-sm">
+                            {officer.officerProfile?.fullName || "Unknown"}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {getOfficerShortForm(officer.role)}
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Department Filter */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-gray-700">
+                  Department
+                </Label>
+                <Select
+                  value={selectedDepartment}
+                  onValueChange={setSelectedDepartment}
+                >
+                  <SelectTrigger className="h-10 border-gray-200">
+                    <SelectValue placeholder="All Departments" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Departments</SelectItem>
+                    {departments.map((department) => (
+                      <SelectItem key={department.id} value={department.id}>
+                        <span className="truncate">{department.name}</span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Service Category Filter */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-gray-700">
+                  Service Category
+                </Label>
+                <Select
+                  value={selectedServiceCategory}
+                  onValueChange={setSelectedServiceCategory}
+                >
+                  <SelectTrigger className="h-10 border-gray-200">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {serviceCategories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        <span className="truncate">{category.name}</span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Application Source Filter */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-gray-700">
+                  Source
+                </Label>
+                <Select
+                  value={selectedApplicationSource}
+                  onValueChange={setSelectedApplicationSource}
+                >
+                  <SelectTrigger className="h-10 border-gray-200">
+                    <SelectValue placeholder="All Sources" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Sources</SelectItem>
+                    <SelectItem value="PUBLIC">
+                      <div className="flex items-center gap-2">
+                        <span>📄</span>
+                        <span>Public Portal</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="GOVERNMENT">
+                      <div className="flex items-center gap-2">
+                        <span>🏛️</span>
+                        <span>Government</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Mobile Date Filters */}
+              <div className="space-y-3 pt-4 border-t border-gray-200">
+                <h4 className="text-sm font-medium text-gray-700">
+                  Date Range
+                </h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-medium text-gray-600">
+                      Start Date
+                    </Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full h-10 justify-start text-left font-normal border-gray-200",
+                            !startDate && "text-gray-500"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
+                          {startDate ? (
+                            <span className="text-sm">
+                              {format(startDate, "MMM dd")}
+                            </span>
+                          ) : (
+                            <span className="text-sm">Start</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={startDate}
+                          onSelect={setStartDate}
+                          disabled={(date) => {
+                            if (date > new Date()) return true;
+                            if (endDate && date > endDate) return true;
+                            return false;
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-xs font-medium text-gray-600">
+                      End Date
+                    </Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full h-10 justify-start text-left font-normal border-gray-200",
+                            !endDate && "text-gray-500"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
+                          {endDate ? (
+                            <span className="text-sm">
+                              {format(endDate, "MMM dd")}
+                            </span>
+                          ) : (
+                            <span className="text-sm">End</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={endDate}
+                          onSelect={setEndDate}
+                          disabled={(date) => {
+                            if (date > new Date()) return true;
+                            if (startDate && date < startDate) return true;
+                            return false;
+                          }}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
+              </div>
+
+              {/* Clear Filters Button - Mobile */}
+              {hasActiveFilters && (
+                <div className="flex justify-center pt-4 border-t border-gray-200">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      clearFilters();
+                      setShowFilters(false);
+                    }}
+                    className="h-10 px-6 border-gray-300 text-gray-700 hover:bg-gray-50 font-medium"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Clear All Filters
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     );
   };
 
-  // Enhanced Applications Cards Component
+  // Enhanced Mobile-First Applications Cards Component with Fixed Text Overflow
   const renderApplicationsCards = () => (
-    <div className="grid grid-cols-1 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
       {applications.map((app) => {
         const age = calculateApplicationAge(app.submittedAt);
         const showingDetails = showDetails === app.id;
@@ -889,126 +1688,182 @@ const DCDashboard = () => {
         return (
           <div
             key={app.id}
-            className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden"
+            className="bg-white rounded-xl lg:rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 overflow-hidden group h-fit"
           >
             {/* Card Header */}
-            <div className="p-6 border-b border-gray-100">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  {/* Application Title */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <div
-                      className={`p-2 rounded-lg ${statusColors.light} ${statusColors.border} border`}
-                    >
-                      <FileText className={`w-5 h-5 ${statusColors.text}`} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-900">
-                        {app.rrNumber}
-                      </h3>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <span>{app.serviceCategory.name}</span>
-                        {app.department && (
-                          <>
-                            <span>•</span>
-                            <span className="text-blue-600 font-medium">
-                              {app.department.name}
-                            </span>
-                          </>
-                        )}
-                      </div>
-                    </div>
+            <div className="p-4 lg:p-6">
+              {/* Top Row - RR Number and Actions */}
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
+                  <div
+                    className={`p-2 lg:p-2.5 rounded-lg lg:rounded-xl ${statusColors.light} ${statusColors.border} border group-hover:scale-105 transition-transform duration-200 flex-shrink-0`}
+                  >
+                    <FileText
+                      className={`w-4 h-4 lg:w-5 lg:h-5 ${statusColors.text}`}
+                    />
                   </div>
-
-                  {/* Status and Age Badges */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <span
-                      className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${getStatusBadgeColor(
-                        app.status
-                      )}`}
-                    >
-                      {app.status.replace("_", " ")}
-                    </span>
-                    {(selectedStatus === "OPEN" ||
-                      selectedStatus === "IN_PROGRESS") && (
-                      <span
-                        className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${getAgeColor(
-                          age
-                        )}`}
-                      >
-                        <Clock className="w-3 h-3 mr-1" />
-                        {age} days old
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Citizen Information */}
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <User className="w-4 h-4" />
-                      <span className="font-medium">{app.citizenName}</span>
-                      <span>•</span>
-                      <span>{app.citizenPhone}</span>
-                    </div>
-                    {app.citizenEmail && (
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <span className="w-4 h-4"></span>
-                        <span>{app.citizenEmail}</span>
-                      </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors truncate">
+                      {app.rrNumber}
+                    </h3>
+                    {app.subject && (
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2 leading-relaxed">
+                        {app.subject}
+                      </p>
                     )}
                   </div>
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-2 ml-4">
-                  <button
+                <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => openDocumentModal(app.documents, app.id)}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200"
+                    className="h-8 px-2 text-xs text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border-blue-200"
                     title="View Documents"
                   >
-                    <Paperclip className="w-4 h-4" />
-                    <span className="font-medium">{app.documents.length}</span>
-                  </button>
-                  <button
+                    <Paperclip className="w-3 h-3 lg:w-3.5 lg:h-3.5 mr-1" />
+                    {app.documents.length}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() =>
                       setShowDetails(showingDetails ? null : app.id)
                     }
-                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600"
                     title={showingDetails ? "Hide Details" : "Show Details"}
                   >
                     {showingDetails ? (
-                      <ChevronUp className="w-5 h-5" />
+                      <ChevronUp className="w-4 h-4" />
                     ) : (
-                      <ChevronDown className="w-5 h-5" />
+                      <ChevronDown className="w-4 h-4" />
                     )}
-                  </button>
+                  </Button>
                 </div>
+              </div>
+
+              {/* Citizen Information */}
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-sm">
+                  <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <span className="font-medium text-gray-900 truncate">
+                    {app.citizenName}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <span>{app.citizenPhone}</span>
+                </div>
+                {app.citizenEmail && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <span className="truncate">{app.citizenEmail}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Service Category - Positioned Below Citizen Info */}
+              <div className="mb-4">
+                <ServiceCategoryBadge
+                  category={{
+                    id: app.serviceCategory.id,
+                    name: app.serviceCategory.name,
+                    color: app.serviceCategory.color,
+                  }}
+                  variant="default"
+                  clickable={canManageCategories}
+                  onClick={
+                    canManageCategories
+                      ? () =>
+                          openCategoryEditModal(app.id, {
+                            id: app.serviceCategory.id,
+                            name: app.serviceCategory.name,
+                            color: app.serviceCategory.color,
+                          })
+                      : undefined
+                  }
+                />
+              </div>
+
+              {/* Status and Metadata Row */}
+              <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`inline-flex items-center px-2.5 lg:px-3 py-1 lg:py-1.5 rounded-full text-xs lg:text-sm font-medium border ${getStatusBadgeColor(
+                      app.status
+                    )}`}
+                  >
+                    {app.status.replace("_", " ")}
+                  </span>
+                  {(selectedStatus === "OPEN" ||
+                    selectedStatus === "IN_PROGRESS") && (
+                    <span
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getAgeColor(
+                        age
+                      )}`}
+                    >
+                      <Clock className="w-3 h-3 mr-1" />
+                      {age}d
+                    </span>
+                  )}
+                </div>
+
+                <div className="text-xs text-gray-500 font-medium flex items-center gap-1">
+                  <CalendarIcon className="w-3 h-3" />
+                  {formatDate(app.submittedAt)}
+                </div>
+              </div>
+
+              {/* Additional Info Badges */}
+              <div className="flex items-center gap-2 flex-wrap">
+                {app.applicationSource && (
+                  <span
+                    className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${
+                      app.applicationSource === "PUBLIC"
+                        ? "bg-green-100 text-green-800 border border-green-200"
+                        : "bg-blue-100 text-blue-800 border border-blue-200"
+                    }`}
+                  >
+                    {app.applicationSource === "PUBLIC"
+                      ? "📄 Public"
+                      : "🏛️ Gov"}
+                  </span>
+                )}
+                {app.department && (
+                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+                    <Building className="w-3 h-3 mr-1" />
+                    {app.department.name}
+                  </span>
+                )}
               </div>
             </div>
 
             {/* Current Holder */}
             {app.currentHolder && (
-              <div className="px-6 py-3 bg-gray-50 border-b border-gray-100">
+              <div className="px-4 lg:px-6 py-3 bg-gradient-to-r from-green-50 to-emerald-50 border-t border-gray-100">
                 <div className="flex items-center gap-3">
-                  <UserCheck className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-gray-700">
-                    <span className="font-medium">Current Officer:</span>{" "}
-                    {app.currentHolder.officerProfile.fullName}
-                  </span>
-                  <span
-                    className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getLevelColor(
-                      app.currentHolder.level
-                    )}`}
-                  >
-                    {getLevelText(app.currentHolder.level)}
-                  </span>
+                  <div className="p-1.5 bg-green-100 rounded-lg flex-shrink-0">
+                    <UserCheck className="w-4 h-4 text-green-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm text-gray-700">
+                      <span className="font-medium text-gray-900">
+                        Current Officer:
+                      </span>
+                    </div>
+                    <div className="font-semibold text-green-700 truncate">
+                      {app.currentHolder.officerProfile.fullName}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
 
             {/* SLA Progress */}
             {slaProgress && (
-              <div className="px-6 py-4 border-b border-gray-100">
+              <div className="px-4 lg:px-6 py-4 border-t border-gray-100">
                 <div className="flex justify-between items-center text-sm mb-2">
                   <span className="text-gray-600 font-medium">
                     Time Progress
@@ -1022,9 +1877,9 @@ const DCDashboard = () => {
                     {slaProgress.percentage}%)
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-gray-200 rounded-full h-2 lg:h-3">
                   <div
-                    className={`h-3 rounded-full transition-all duration-300 ${
+                    className={`h-2 lg:h-3 rounded-full transition-all duration-300 ${
                       slaProgress.isOverdue ? "bg-red-500" : "bg-blue-500"
                     }`}
                     style={{ width: `${slaProgress.percentage}%` }}
@@ -1032,7 +1887,7 @@ const DCDashboard = () => {
                 </div>
                 {slaProgress.isOverdue && (
                   <div className="flex items-center gap-2 mt-2">
-                    <AlertCircle className="w-4 h-4 text-red-500" />
+                    <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
                     <span className="text-sm text-red-600 font-medium">
                       Application is overdue
                     </span>
@@ -1043,43 +1898,52 @@ const DCDashboard = () => {
 
             {/* Expanded Details */}
             {showingDetails && (
-              <div className="p-6 bg-gray-50 space-y-6">
-                {/* Statistics Cards */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-white p-4 rounded-xl border border-gray-200 text-center">
-                    <div className="text-2xl font-bold text-blue-600 mb-1">
+              <div className="p-4 lg:p-6 bg-gray-50 space-y-4 lg:space-y-6 border-t border-gray-100">
+                {/* Statistics Cards - Fixed Text Overflow */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+                  <div className="bg-white p-3 lg:p-4 rounded-lg lg:rounded-xl border border-gray-200 text-center overflow-hidden">
+                    <div className="text-xl lg:text-2xl font-bold text-blue-600 mb-1">
                       {app.workflow?.length || 0}
                     </div>
-                    <div className="text-sm text-gray-600">Status Changes</div>
+                    <div className="text-xs lg:text-sm text-gray-600 leading-tight break-words">
+                      Status Changes
+                    </div>
                   </div>
-                  <div className="bg-white p-4 rounded-xl border border-gray-200 text-center">
-                    <div className="text-2xl font-bold text-green-600 mb-1">
+                  <div className="bg-white p-3 lg:p-4 rounded-lg lg:rounded-xl border border-gray-200 text-center overflow-hidden">
+                    <div className="text-xl lg:text-2xl font-bold text-green-600 mb-1">
                       {app.officerAssignments?.length || 0}
                     </div>
-                    <div className="text-sm text-gray-600">Assignments</div>
+                    <div className="text-xs lg:text-sm text-gray-600 leading-tight break-words">
+                      Assignments
+                    </div>
                   </div>
-                  <div className="bg-white p-4 rounded-xl border border-gray-200 text-center">
-                    <div className="text-2xl font-bold text-orange-600 mb-1">
+                  <div className="bg-white p-3 lg:p-4 rounded-lg lg:rounded-xl border border-gray-200 text-center overflow-hidden">
+                    <div className="text-xl lg:text-2xl font-bold text-orange-600 mb-1">
                       {(app.officerForwardings?.length || 0) +
                         (app.frontdeskForwardings?.length || 0)}
                     </div>
-                    <div className="text-sm text-gray-600">Forwardings</div>
+                    <div className="text-xs lg:text-sm text-gray-600 leading-tight break-words">
+                      Forwardings
+                    </div>
                   </div>
-                  <div className="bg-white p-4 rounded-xl border border-gray-200 text-center">
-                    <div className="text-2xl font-bold text-purple-600 mb-1">
+                  <div className="bg-white p-3 lg:p-4 rounded-lg lg:rounded-xl border border-gray-200 text-center overflow-hidden">
+                    <div className="text-xl lg:text-2xl font-bold text-purple-600 mb-1">
                       {app.documents?.length || 0}
                     </div>
-                    <div className="text-sm text-gray-600">Documents</div>
+                    <div className="text-xs lg:text-sm text-gray-600 leading-tight break-words">
+                      Documents
+                    </div>
                   </div>
                 </div>
 
                 {/* Collapsible Sections */}
-                <div className="space-y-4">
+                <div className="space-y-3 lg:space-y-4">
                   {/* Application Information */}
-                  <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <button
+                  <div className="bg-white rounded-lg lg:rounded-xl border border-gray-200 overflow-hidden">
+                    <Button
+                      variant="ghost"
                       onClick={() => toggleSection(app.id, "application-info")}
-                      className="w-full px-6 py-4 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center justify-between transition-colors"
+                      className="w-full px-4 lg:px-6 py-3 lg:py-4 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center justify-between h-auto"
                     >
                       <span className="flex items-center gap-2">
                         <FileText className="w-4 h-4" />
@@ -1090,88 +1954,121 @@ const DCDashboard = () => {
                       ) : (
                         <ChevronDown className="w-4 h-4" />
                       )}
-                    </button>
+                    </Button>
                     {isSectionExpanded(app.id, "application-info") && (
-                      <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                          <div className="space-y-3">
-                            <div>
-                              <p className="text-gray-500 font-medium mb-1">
-                                Citizen Name
-                              </p>
-                              <p className="text-gray-900">{app.citizenName}</p>
-                            </div>
-                            <div>
-                              <p className="text-gray-500 font-medium mb-1">
-                                Phone
-                              </p>
-                              <p className="text-gray-900">
-                                {app.citizenPhone}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-gray-500 font-medium mb-1">
-                                Email
-                              </p>
-                              <p className="text-gray-900">
-                                {app.citizenEmail || "N/A"}
-                              </p>
+                      <div className="px-4 lg:px-6 py-4 border-t border-gray-200 bg-gray-50">
+                        <div className="space-y-4 text-sm">
+                          <div className="grid grid-cols-1 gap-4">
+                            <div className="space-y-3">
+                              <div className="flex items-start gap-2">
+                                <User className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <p className="text-gray-500 font-medium mb-1">
+                                    Citizen Name
+                                  </p>
+                                  <p className="text-gray-900">
+                                    {app.citizenName}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-2">
+                                <Phone className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <p className="text-gray-500 font-medium mb-1">
+                                    Phone
+                                  </p>
+                                  <p className="text-gray-900">
+                                    {app.citizenPhone}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-2">
+                                <Mail className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <p className="text-gray-500 font-medium mb-1">
+                                    Email
+                                  </p>
+                                  <p className="text-gray-900">
+                                    {app.citizenEmail || "N/A"}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-2">
+                                <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <p className="text-gray-500 font-medium mb-1">
+                                    Address
+                                  </p>
+                                  <p className="text-gray-900">
+                                    {app.citizenAddress}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-2">
+                                <Tag className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <p className="text-gray-500 font-medium mb-1">
+                                    Service Category
+                                  </p>
+                                  <p className="text-gray-900">
+                                    {app.serviceCategory.name}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-2">
+                                <CalendarIcon className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                <div className="flex-1">
+                                  <p className="text-gray-500 font-medium mb-1">
+                                    Timeline
+                                  </p>
+                                  <div className="space-y-1">
+                                    <p className="text-gray-900">
+                                      <span className="font-medium">
+                                        Submitted:
+                                      </span>{" "}
+                                      {formatDateTime(app.submittedAt)}
+                                    </p>
+                                    <p className="text-gray-900">
+                                      <span className="font-medium">
+                                        Validated:
+                                      </span>{" "}
+                                      {formatDateTime(app.validatedAt)}
+                                    </p>
+                                    <p className="text-gray-900">
+                                      <span className="font-medium">
+                                        Completed:
+                                      </span>{" "}
+                                      {formatDateTime(app.completedAt)}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                              {app.subject && (
+                                <div className="flex items-start gap-2">
+                                  <FileText className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                                  <div className="flex-1">
+                                    <p className="text-gray-500 font-medium mb-1">
+                                      Subject
+                                    </p>
+                                    <p className="text-gray-900">
+                                      {app.subject}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
-                          <div className="space-y-3">
-                            <div>
-                              <p className="text-gray-500 font-medium mb-1">
-                                Service Category
-                              </p>
-                              <p className="text-gray-900">
-                                {app.serviceCategory.name}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-gray-500 font-medium mb-1">
-                                Submitted At
-                              </p>
-                              <p className="text-gray-900">
-                                {formatDateTime(app.submittedAt)}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-gray-500 font-medium mb-1">
-                                Validated At
-                              </p>
-                              <p className="text-gray-900">
-                                {formatDateTime(app.validatedAt)}
-                              </p>
-                            </div>
-                          </div>
-                          {app.citizenAddress && (
-                            <div className="md:col-span-2">
-                              <p className="text-gray-500 font-medium mb-1">
-                                Address
-                              </p>
-                              <p className="text-gray-900">
-                                {app.citizenAddress}
-                              </p>
-                            </div>
-                          )}
-                          {app.subject && (
-                            <div className="md:col-span-2">
-                              <p className="text-gray-500 font-medium mb-1">
-                                Subject
-                              </p>
-                              <p className="text-gray-900">{app.subject}</p>
-                            </div>
-                          )}
                         </div>
                       </div>
                     )}
                   </div>
 
                   {/* Status History */}
-                  <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <button
+                  <div className="bg-white rounded-lg lg:rounded-xl border border-gray-200 overflow-hidden">
+                    <Button
+                      variant="ghost"
                       onClick={() => toggleSection(app.id, "status-history")}
-                      className="w-full px-6 py-4 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center justify-between transition-colors"
+                      className="w-full px-4 lg:px-6 py-3 lg:py-4 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center justify-between h-auto"
                     >
                       <span className="flex items-center gap-2">
                         <History className="w-4 h-4" />
@@ -1182,22 +2079,22 @@ const DCDashboard = () => {
                       ) : (
                         <ChevronDown className="w-4 h-4" />
                       )}
-                    </button>
+                    </Button>
                     {isSectionExpanded(app.id, "status-history") && (
-                      <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                      <div className="px-4 lg:px-6 py-4 border-t border-gray-200 bg-gray-50">
                         {app.workflow && app.workflow.length > 0 ? (
-                          <div className="space-y-4">
+                          <div className="space-y-3 lg:space-y-4">
                             {app.workflow.map((entry, index) => (
                               <div
                                 key={index}
-                                className="flex items-start gap-4 relative"
+                                className="flex items-start gap-3 lg:gap-4 relative"
                               >
                                 {index < app.workflow.length - 1 && (
                                   <div className="absolute left-2 top-8 bottom-0 w-0.5 bg-gray-200"></div>
                                 )}
                                 <div className="flex-shrink-0 w-4 h-4 bg-blue-500 rounded-full mt-1"></div>
-                                <div className="flex-1 min-w-0 bg-white p-4 rounded-lg border border-gray-200">
-                                  <div className="flex items-center gap-2 mb-2">
+                                <div className="flex-1 min-w-0 bg-white p-3 lg:p-4 rounded-lg border border-gray-200">
+                                  <div className="flex items-center gap-2 mb-2 flex-wrap">
                                     <span
                                       className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getStatusBadgeColor(
                                         entry.toStatus
@@ -1212,7 +2109,7 @@ const DCDashboard = () => {
                                     </span>
                                   </div>
                                   <div className="text-sm text-gray-600">
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 flex-wrap">
                                       <span>Changed by:</span>
                                       <span className="font-medium">
                                         {entry.changedBy.officerProfile
@@ -1240,9 +2137,11 @@ const DCDashboard = () => {
                             ))}
                           </div>
                         ) : (
-                          <div className="text-center py-8 text-gray-500">
-                            <History className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                            <p>No status changes recorded</p>
+                          <div className="text-center py-6 lg:py-8 text-gray-500">
+                            <History className="w-6 h-6 lg:w-8 lg:h-8 mx-auto mb-2 opacity-50" />
+                            <p className="text-sm">
+                              No status changes recorded
+                            </p>
                           </div>
                         )}
                       </div>
@@ -1250,10 +2149,11 @@ const DCDashboard = () => {
                   </div>
 
                   {/* Officer Assignments */}
-                  <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    <button
+                  <div className="bg-white rounded-lg lg:rounded-xl border border-gray-200 overflow-hidden">
+                    <Button
+                      variant="ghost"
                       onClick={() => toggleSection(app.id, "assignments")}
-                      className="w-full px-6 py-4 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center justify-between transition-colors"
+                      className="w-full px-4 lg:px-6 py-3 lg:py-4 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center justify-between h-auto"
                     >
                       <span className="flex items-center gap-2">
                         <Users className="w-4 h-4" />
@@ -1265,30 +2165,30 @@ const DCDashboard = () => {
                       ) : (
                         <ChevronDown className="w-4 h-4" />
                       )}
-                    </button>
+                    </Button>
                     {isSectionExpanded(app.id, "assignments") && (
-                      <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                      <div className="px-4 lg:px-6 py-4 border-t border-gray-200 bg-gray-50">
                         {app.officerAssignments &&
                         app.officerAssignments.length > 0 ? (
-                          <div className="space-y-4">
+                          <div className="space-y-3 lg:space-y-4">
                             {app.officerAssignments.map((assignment, index) => (
                               <div
                                 key={index}
-                                className="bg-white p-4 rounded-lg border border-gray-200"
+                                className="bg-white p-3 lg:p-4 rounded-lg border border-gray-200"
                               >
                                 <div className="flex items-start justify-between mb-3">
-                                  <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-blue-50 rounded-lg">
+                                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                                    <div className="p-2 bg-blue-50 rounded-lg flex-shrink-0">
                                       <UserCheck className="w-4 h-4 text-blue-600" />
                                     </div>
-                                    <div>
-                                      <div className="font-medium text-gray-900">
+                                    <div className="flex-1 min-w-0">
+                                      <div className="font-medium text-gray-900 truncate">
                                         {
                                           assignment.assignedTo.officerProfile
                                             .fullName
                                         }
                                       </div>
-                                      <div className="text-sm text-gray-600">
+                                      <div className="text-sm text-gray-600 truncate">
                                         {
                                           assignment.assignedTo.officerProfile
                                             .designation
@@ -1296,7 +2196,7 @@ const DCDashboard = () => {
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                                     <span
                                       className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getLevelColor(
                                         assignment.assignedTo.level
@@ -1311,7 +2211,7 @@ const DCDashboard = () => {
                                         assignment.priority
                                       )}`}
                                     >
-                                      Priority {assignment.priority}
+                                      P{assignment.priority}
                                     </span>
                                   </div>
                                 </div>
@@ -1340,9 +2240,9 @@ const DCDashboard = () => {
                             ))}
                           </div>
                         ) : (
-                          <div className="text-center py-8 text-gray-500">
-                            <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                            <p>No officer assignments</p>
+                          <div className="text-center py-6 lg:py-8 text-gray-500">
+                            <Users className="w-6 h-6 lg:w-8 lg:h-8 mx-auto mb-2 opacity-50" />
+                            <p className="text-sm">No officer assignments</p>
                           </div>
                         )}
                       </div>
@@ -1354,12 +2254,13 @@ const DCDashboard = () => {
                     app.officerForwardings.length > 0) ||
                     (app.frontdeskForwardings &&
                       app.frontdeskForwardings.length > 0)) && (
-                    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                      <button
+                    <div className="bg-white rounded-lg lg:rounded-xl border border-gray-200 overflow-hidden">
+                      <Button
+                        variant="ghost"
                         onClick={() =>
                           toggleSection(app.id, "forwarding-history")
                         }
-                        className="w-full px-6 py-4 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center justify-between transition-colors"
+                        className="w-full px-4 lg:px-6 py-3 lg:py-4 text-left text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center justify-between h-auto"
                       >
                         <span className="flex items-center gap-2">
                           <Send className="w-4 h-4" />
@@ -1373,19 +2274,19 @@ const DCDashboard = () => {
                         ) : (
                           <ChevronDown className="w-4 h-4" />
                         )}
-                      </button>
+                      </Button>
                       {isSectionExpanded(app.id, "forwarding-history") && (
-                        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                          <div className="space-y-4">
+                        <div className="px-4 lg:px-6 py-4 border-t border-gray-200 bg-gray-50">
+                          <div className="space-y-3 lg:space-y-4">
                             {/* Officer Forwardings */}
                             {app.officerForwardings &&
                               app.officerForwardings.map(
                                 (forwarding, index) => (
                                   <div
                                     key={`officer-${index}`}
-                                    className="bg-blue-50 border border-blue-200 p-4 rounded-lg"
+                                    className="bg-blue-50 border border-blue-200 p-3 lg:p-4 rounded-lg"
                                   >
-                                    <div className="flex items-center gap-2 mb-3">
+                                    <div className="flex items-center gap-2 mb-3 flex-wrap">
                                       <ArrowRight className="w-4 h-4 text-blue-600" />
                                       <span className="text-sm font-medium text-blue-800">
                                         Officer Forwarding
@@ -1396,45 +2297,48 @@ const DCDashboard = () => {
                                         </span>
                                       )}
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                      <div>
-                                        <p className="text-gray-600 font-medium mb-1">
-                                          From:
-                                        </p>
-                                        <p className="text-gray-900">
-                                          {forwarding.fromOfficer.officerProfile
-                                            ?.fullName || "Unknown"}
-                                        </p>
-                                        <span
-                                          className={`inline-flex items-center px-2 py-0.5 rounded text-xs mt-1 ${getLevelColor(
-                                            forwarding.fromOfficer.level
-                                          )}`}
-                                        >
-                                          {getLevelText(
-                                            forwarding.fromOfficer.level
-                                          )}
-                                        </span>
-                                      </div>
-                                      <div>
-                                        <p className="text-gray-600 font-medium mb-1">
-                                          To:
-                                        </p>
-                                        <p className="text-gray-900">
-                                          {forwarding.toOfficer.officerProfile
-                                            ?.fullName || "Unknown"}
-                                        </p>
-                                        <span
-                                          className={`inline-flex items-center px-2 py-0.5 rounded text-xs mt-1 ${getLevelColor(
-                                            forwarding.toOfficer.level
-                                          )}`}
-                                        >
-                                          {getLevelText(
-                                            forwarding.toOfficer.level
-                                          )}
-                                        </span>
+                                    <div className="space-y-3 text-sm">
+                                      <div className="grid grid-cols-1 gap-3">
+                                        <div>
+                                          <p className="text-gray-600 font-medium mb-1">
+                                            From:
+                                          </p>
+                                          <p className="text-gray-900">
+                                            {forwarding.fromOfficer
+                                              .officerProfile?.fullName ||
+                                              "Unknown"}
+                                          </p>
+                                          <span
+                                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs mt-1 ${getLevelColor(
+                                              forwarding.fromOfficer.level
+                                            )}`}
+                                          >
+                                            {getLevelText(
+                                              forwarding.fromOfficer.level
+                                            )}
+                                          </span>
+                                        </div>
+                                        <div>
+                                          <p className="text-gray-600 font-medium mb-1">
+                                            To:
+                                          </p>
+                                          <p className="text-gray-900">
+                                            {forwarding.toOfficer.officerProfile
+                                              ?.fullName || "Unknown"}
+                                          </p>
+                                          <span
+                                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs mt-1 ${getLevelColor(
+                                              forwarding.toOfficer.level
+                                            )}`}
+                                          >
+                                            {getLevelText(
+                                              forwarding.toOfficer.level
+                                            )}
+                                          </span>
+                                        </div>
                                       </div>
                                     </div>
-                                    <div className="flex items-center justify-between mt-3">
+                                    <div className="flex items-center justify-between mt-3 flex-wrap gap-2">
                                       <span
                                         className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getPriorityColor(
                                           forwarding.priority
@@ -1462,9 +2366,9 @@ const DCDashboard = () => {
                                 (forwarding, index) => (
                                   <div
                                     key={`frontdesk-${index}`}
-                                    className="bg-green-50 border border-green-200 p-4 rounded-lg"
+                                    className="bg-green-50 border border-green-200 p-3 lg:p-4 rounded-lg"
                                   >
-                                    <div className="flex items-center gap-2 mb-3">
+                                    <div className="flex items-center gap-2 mb-3 flex-wrap">
                                       <Send className="w-4 h-4 text-green-600" />
                                       <span className="text-sm font-medium text-green-800">
                                         Frontdesk Forwarding
@@ -1475,22 +2379,24 @@ const DCDashboard = () => {
                                         </span>
                                       )}
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                      <div>
-                                        <p className="text-gray-600 font-medium mb-1">
-                                          From:
-                                        </p>
-                                        <p className="text-gray-900">
-                                          {forwarding.fromFrontdesk.email}
-                                        </p>
-                                      </div>
-                                      <div>
-                                        <p className="text-gray-600 font-medium mb-1">
-                                          To:
-                                        </p>
-                                        <p className="text-gray-900">
-                                          {forwarding.toFrontdesk.email}
-                                        </p>
+                                    <div className="space-y-3 text-sm">
+                                      <div className="grid grid-cols-1 gap-3">
+                                        <div>
+                                          <p className="text-gray-600 font-medium mb-1">
+                                            From:
+                                          </p>
+                                          <p className="text-gray-900">
+                                            {forwarding.fromFrontdesk.email}
+                                          </p>
+                                        </div>
+                                        <div>
+                                          <p className="text-gray-600 font-medium mb-1">
+                                            To:
+                                          </p>
+                                          <p className="text-gray-900">
+                                            {forwarding.toFrontdesk.email}
+                                          </p>
+                                        </div>
                                       </div>
                                     </div>
                                     <div className="text-xs text-gray-500 mt-3">
@@ -1519,10 +2425,258 @@ const DCDashboard = () => {
     </div>
   );
 
-  // Applications List Component - Table View
+  // Enhanced Mobile-First Applications Table Component
   const renderApplicationsTable = () => (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-      <div className="overflow-x-auto">
+    <div className="bg-white rounded-xl lg:rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* Mobile Table - Stacked Cards */}
+      <div className="lg:hidden">
+        {applications.map((app) => {
+          const slaProgress = calculateSlaProgress(app);
+          const showingDetails = showDetails === app.id;
+          return (
+            <div
+              key={app.id}
+              className={`border-b border-gray-200 last:border-b-0 transition-colors ${
+                showingDetails ? "bg-blue-50" : "hover:bg-gray-50"
+              }`}
+            >
+              <div className="p-4 space-y-3">
+                {/* Header Row */}
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="p-2 bg-blue-50 rounded-lg flex-shrink-0">
+                      <FileText className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-gray-900 truncate">
+                        {app.rrNumber}
+                      </div>
+                      <div className="text-xs text-gray-600 mt-1">
+                        <ServiceCategoryBadge
+                          category={{
+                            id: app.serviceCategory.id,
+                            name: app.serviceCategory.name,
+                            color: app.serviceCategory.color,
+                          }}
+                          variant="outline"
+                          size="sm"
+                          clickable={canManageCategories}
+                          onClick={
+                            canManageCategories
+                              ? () =>
+                                  openCategoryEditModal(app.id, {
+                                    id: app.serviceCategory.id,
+                                    name: app.serviceCategory.name,
+                                    color: app.serviceCategory.color,
+                                  })
+                              : undefined
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setShowDetails(showingDetails ? null : app.id)
+                    }
+                    className="flex-shrink-0 h-8 w-8 p-0"
+                    title="Toggle Details"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Button>
+                </div>
+
+                {/* Citizen Info */}
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium text-gray-900 truncate">
+                      {app.citizenName}
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      {app.citizenPhone}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Status and Source */}
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getStatusBadgeColor(
+                        app.status
+                      )}`}
+                    >
+                      {app.status.replace("_", " ")}
+                    </span>
+                    {app.applicationSource && (
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${
+                          app.applicationSource === "PUBLIC"
+                            ? "bg-green-100 text-green-800 border border-green-200"
+                            : "bg-blue-100 text-blue-800 border border-blue-200"
+                        }`}
+                      >
+                        {app.applicationSource === "PUBLIC"
+                          ? "📄 Public"
+                          : "🏛️ Gov"}
+                      </span>
+                    )}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openDocumentModal(app.documents, app.id)}
+                    className="h-7 px-2 text-xs text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border-blue-200"
+                  >
+                    <Paperclip className="w-3 h-3 mr-1" />
+                    {app.documents.length}
+                  </Button>
+                </div>
+
+                {/* Current Holder */}
+                {app.currentHolder && (
+                  <div className="flex items-center gap-2 p-2 bg-green-50 rounded-lg">
+                    <UserCheck className="w-4 h-4 text-green-600 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs text-green-700 font-medium truncate">
+                        {app.currentHolder.officerProfile.fullName}
+                      </div>
+                      <div className="text-xs text-green-600">
+                        {app.currentHolder.officerProfile.designation}
+                      </div>
+                    </div>
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getLevelColor(
+                        app.currentHolder.level
+                      )}`}
+                    >
+                      {getLevelText(app.currentHolder.level)}
+                    </span>
+                  </div>
+                )}
+
+                {/* Progress Bar */}
+                {slaProgress && (
+                  <div>
+                    <div className="flex justify-between text-xs text-gray-500 mb-1">
+                      <span>
+                        {slaProgress.elapsed}/{slaProgress.total} days
+                      </span>
+                      <span>{slaProgress.percentage}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full ${
+                          slaProgress.isOverdue ? "bg-red-500" : "bg-blue-500"
+                        }`}
+                        style={{ width: `${slaProgress.percentage}%` }}
+                      ></div>
+                    </div>
+                    {slaProgress.isOverdue && (
+                      <div className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
+                        Overdue
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Expanded Details for Mobile */}
+              {showingDetails && (
+                <div className="px-4 pb-4 bg-gray-50 border-t border-gray-200">
+                  <div className="space-y-4 pt-4">
+                    {/* Statistics */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-white p-3 rounded-lg border border-gray-200 text-center">
+                        <div className="text-lg font-bold text-blue-600">
+                          {app.workflow?.length || 0}
+                        </div>
+                        <div className="text-xs text-gray-600">
+                          Status Changes
+                        </div>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border border-gray-200 text-center">
+                        <div className="text-lg font-bold text-green-600">
+                          {app.officerAssignments?.length || 0}
+                        </div>
+                        <div className="text-xs text-gray-600">Assignments</div>
+                      </div>
+                    </div>
+
+                    {/* Quick Info */}
+                    <div className="bg-white p-3 rounded-lg border border-gray-200">
+                      <h4 className="font-semibold text-gray-900 mb-2 text-sm flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        Contact Information
+                      </h4>
+                      <div className="space-y-1 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Phone:</span>
+                          <span className="font-medium">
+                            {app.citizenPhone}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Email:</span>
+                          <span className="font-medium truncate ml-2">
+                            {app.citizenEmail || "N/A"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Latest Status Changes */}
+                    {app.workflow && app.workflow.length > 0 && (
+                      <div className="bg-white p-3 rounded-lg border border-gray-200">
+                        <h4 className="font-semibold text-gray-900 mb-2 text-sm flex items-center gap-2">
+                          <History className="w-4 h-4" />
+                          Recent Changes
+                        </h4>
+                        <div className="space-y-2">
+                          {app.workflow
+                            .slice(-2)
+                            .reverse()
+                            .map((entry, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-between p-2 bg-gray-50 rounded text-xs"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getStatusBadgeColor(
+                                      entry.toStatus
+                                    )}`}
+                                  >
+                                    {entry.toStatus}
+                                  </span>
+                                  <span className="text-gray-600 truncate">
+                                    by{" "}
+                                    {entry.changedBy.officerProfile?.fullName ||
+                                      entry.changedBy.email}
+                                  </span>
+                                </div>
+                                <span className="text-gray-500 text-xs">
+                                  {formatDate(entry.createdAt)}
+                                </span>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop Table */}
+      <div className="hidden lg:block overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -1531,6 +2685,9 @@ const DCDashboard = () => {
               </th>
               <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Citizen
+              </th>
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Source
               </th>
               <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Status
@@ -1569,8 +2726,27 @@ const DCDashboard = () => {
                           <div className="text-sm font-semibold text-gray-900">
                             {app.rrNumber}
                           </div>
-                          <div className="text-sm text-gray-600">
-                            {app.serviceCategory.name}
+                          <div className="text-sm text-gray-600 mt-1">
+                            <ServiceCategoryBadge
+                              category={{
+                                id: app.serviceCategory.id,
+                                name: app.serviceCategory.name,
+                                color: app.serviceCategory.color,
+                              }}
+                              variant="outline"
+                              size="sm"
+                              clickable={canManageCategories}
+                              onClick={
+                                canManageCategories
+                                  ? () =>
+                                      openCategoryEditModal(app.id, {
+                                        id: app.serviceCategory.id,
+                                        name: app.serviceCategory.name,
+                                        color: app.serviceCategory.color,
+                                      })
+                                  : undefined
+                              }
+                            />
                           </div>
                         </div>
                       </div>
@@ -1584,6 +2760,21 @@ const DCDashboard = () => {
                           {app.citizenPhone}
                         </div>
                       </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {app.applicationSource && (
+                        <span
+                          className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${
+                            app.applicationSource === "PUBLIC"
+                              ? "bg-green-100 text-green-800 border border-green-200"
+                              : "bg-blue-100 text-blue-800 border border-blue-200"
+                          }`}
+                        >
+                          {app.applicationSource === "PUBLIC"
+                            ? "📄 Public"
+                            : "🏛️ Government"}
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -1647,32 +2838,34 @@ const DCDashboard = () => {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <button
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => openDocumentModal(app.documents, app.id)}
-                        className="flex items-center gap-2 px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200"
+                        className="text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border-blue-200"
                       >
-                        <Paperclip className="w-4 h-4" />
-                        <span className="font-medium">
-                          {app.documents.length}
-                        </span>
-                      </button>
+                        <Paperclip className="w-4 h-4 mr-2" />
+                        {app.documents.length}
+                      </Button>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() =>
                           setShowDetails(showingDetails ? null : app.id)
                         }
-                        className="text-blue-600 hover:text-blue-900 p-2 rounded-lg hover:bg-blue-50 transition-colors"
+                        className="text-blue-600 hover:text-blue-900 hover:bg-blue-50"
                         title="Toggle Details"
                       >
                         <Eye className="w-4 h-4" />
-                      </button>
+                      </Button>
                     </td>
                   </tr>
                   {/* Expanded Details Row */}
                   {showingDetails && (
                     <tr>
-                      <td colSpan={7} className="px-6 py-6 bg-gray-50">
+                      <td colSpan={8} className="px-6 py-6 bg-gray-50">
                         <div className="space-y-6">
                           {/* Application Details */}
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1712,7 +2905,7 @@ const DCDashboard = () => {
                             </div>
                             <div className="bg-white p-4 rounded-xl border border-gray-200">
                               <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                <Calendar className="w-4 h-4" />
+                                <CalendarIcon className="w-4 h-4" />
                                 Application Timeline
                               </h4>
                               <div className="space-y-2 text-sm">
@@ -1849,47 +3042,147 @@ const DCDashboard = () => {
     );
   };
 
-  // Enhanced Pagination Component
+  // Enhanced Mobile-First Pagination Component
   const renderPagination = () => {
     if (!showApplications || stats.pagination.totalPages <= 1) return null;
 
     return (
-      <div className="flex items-center justify-between bg-white px-6 py-4 rounded-2xl shadow-sm border border-gray-200 mt-6">
-        <div className="text-sm text-gray-600">
-          Showing{" "}
-          <span className="font-medium">
-            {(stats.pagination.page - 1) * stats.pagination.limit + 1}
-          </span>{" "}
-          to{" "}
-          <span className="font-medium">
-            {Math.min(
-              stats.pagination.page * stats.pagination.limit,
-              stats.pagination.totalCount
-            )}
-          </span>{" "}
-          of <span className="font-medium">{stats.pagination.totalCount}</span>{" "}
-          results
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={!stats.pagination.hasPrev}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Previous
-          </button>
-          <span className="px-4 py-2 text-sm font-medium text-gray-700">
+      <div className="bg-white px-4 lg:px-6 py-4 rounded-xl lg:rounded-2xl shadow-sm border border-gray-200 mt-4 lg:mt-6">
+        {/* Mobile Pagination */}
+        <div className="flex items-center justify-between lg:hidden">
+          <div className="text-sm text-gray-600">
             Page {stats.pagination.page} of {stats.pagination.totalPages}
-          </span>
-          <button
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={!stats.pagination.hasNext}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            Next
-            <ChevronRight className="w-4 h-4" />
-          </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={!stats.pagination.hasPrev}
+              className="h-8 w-8 p-0"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={!stats.pagination.hasNext}
+              className="h-8 w-8 p-0"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Desktop Pagination */}
+        <div className="hidden lg:flex items-center justify-between">
+          <div className="text-sm text-gray-600">
+            Showing{" "}
+            <span className="font-medium">
+              {(stats.pagination.page - 1) * stats.pagination.limit + 1}
+            </span>{" "}
+            to{" "}
+            <span className="font-medium">
+              {Math.min(
+                stats.pagination.page * stats.pagination.limit,
+                stats.pagination.totalCount
+              )}
+            </span>{" "}
+            of{" "}
+            <span className="font-medium">{stats.pagination.totalCount}</span>{" "}
+            results
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={!stats.pagination.hasPrev}
+              className="flex items-center gap-2"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Previous
+            </Button>
+            <span className="px-4 py-2 text-sm font-medium text-gray-700">
+              Page {stats.pagination.page} of {stats.pagination.totalPages}
+            </span>
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={!stats.pagination.hasNext}
+              className="flex items-center gap-2"
+            >
+              Next
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Recent Applications Pagination Component
+  const renderRecentPagination = () => {
+    if (showApplications || stats.pagination.totalPages <= 1) return null;
+
+    return (
+      <div className="bg-white px-4 lg:px-6 py-4 rounded-xl lg:rounded-2xl shadow-sm border border-gray-200 mt-4 lg:mt-6">
+        {/* Mobile Pagination */}
+        <div className="flex items-center justify-between lg:hidden">
+          <div className="text-sm text-gray-600">
+            Page {recentPage} of {stats.pagination.totalPages}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setRecentPage(recentPage - 1)}
+              disabled={recentPage <= 1}
+              className="h-8 w-8 p-0"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setRecentPage(recentPage + 1)}
+              disabled={recentPage >= stats.pagination.totalPages}
+              className="h-8 w-8 p-0"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Desktop Pagination */}
+        <div className="hidden lg:flex items-center justify-between">
+          <div className="text-sm text-gray-600">
+            Showing recent applications - Page {recentPage} of{" "}
+            {stats.pagination.totalPages}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setRecentPage(recentPage - 1)}
+              disabled={recentPage <= 1}
+              className="flex items-center gap-2"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Previous
+            </Button>
+            <span className="px-4 py-2 text-sm font-medium text-gray-700">
+              Page {recentPage} of {stats.pagination.totalPages}
+            </span>
+            <Button
+              variant="outline"
+              onClick={() => setRecentPage(recentPage + 1)}
+              disabled={recentPage >= stats.pagination.totalPages}
+              className="flex items-center gap-2"
+            >
+              Next
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -1897,48 +3190,50 @@ const DCDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Enhanced Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+      {/* Enhanced Mobile-First Header */}
+      <div className="bg-white border-b border-gray-200 sticky top-16 z-10 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 lg:py-6">
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
                 Application Status Report
               </h1>
-              <p className="text-gray-600 mt-2">
+              <p className="text-gray-600 mt-1 lg:mt-2 text-sm lg:text-base">
                 Comprehensive application progress monitoring and management
                 system
               </p>
             </div>
             <div className="flex items-center gap-3">
               {showApplications && (
-                <button
+                <Button
+                  variant="outline"
                   onClick={() => {
                     setShowApplications(false);
                     setSelectedStatus("ALL");
                   }}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium"
+                  className="flex items-center gap-2"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  Back to Overview
-                </button>
+                  <span className="hidden sm:inline">Back to Overview</span>
+                  <span className="sm:hidden">Back</span>
+                </Button>
               )}
-              <button
+              <Button
                 onClick={handleRefresh}
                 disabled={loading}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium"
+                className="flex items-center gap-2"
               >
                 <RefreshCw
                   className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
                 />
-                Refresh
-              </button>
+                <span className="hidden sm:inline">Refresh</span>
+              </Button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 lg:py-8">
         {/* Overview Section */}
         {!showApplications && (
           <>
@@ -1946,277 +3241,334 @@ const DCDashboard = () => {
             {renderStatusCards()}
 
             {/* Recent Applications Overview */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between mb-6">
+            <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between mb-4 lg:mb-6">
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">
+                  <h2 className="text-lg lg:text-xl font-semibold text-gray-900">
                     Recent Applications
                   </h2>
-                  <p className="text-sm text-gray-600 mt-1">
-                    Latest {applications.length} applications in the system
+                  <p className="text-xs lg:text-sm text-gray-600 mt-1">
+                    Latest applications in the system
                   </p>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-xs lg:text-sm text-gray-600">
                   <Activity className="w-4 h-4" />
-                  <span>Live Updates</span>
+                  <span className="hidden sm:inline">Live Updates</span>
                 </div>
               </div>
 
               {applications.length > 0 ? (
-                <div className="space-y-4">
-                  {applications.slice(0, 5).map((app) => {
-                    const showingDetails = showDetails === app.id;
-                    const age = calculateApplicationAge(app.submittedAt);
-                    const slaProgress = calculateSlaProgress(app);
-                    const statusColors = getStatusColor(app.status);
+                <>
+                  <div className="space-y-3 lg:space-y-4">
+                    {applications.map((app) => {
+                      const showingDetails = showDetails === app.id;
+                      const age = calculateApplicationAge(app.submittedAt);
+                      const slaProgress = calculateSlaProgress(app);
+                      const statusColors = getStatusColor(app.status);
 
-                    return (
-                      <div key={app.id}>
-                        <div
-                          className={`p-4 rounded-xl border transition-all duration-200 ${
-                            showingDetails
-                              ? "bg-blue-50 border-blue-200"
-                              : "bg-gray-50 hover:bg-gray-100 border-gray-200"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                              <div
-                                className={`p-2 rounded-lg ${statusColors.light} ${statusColors.border} border`}
-                              >
-                                <FileText
-                                  className={`w-4 h-4 ${statusColors.text}`}
-                                />
-                              </div>
-                              <div>
-                                <div className="font-semibold text-gray-900">
-                                  {app.rrNumber}
-                                </div>
-                                <div className="text-sm text-gray-600">
-                                  {app.citizenName} • {app.serviceCategory.name}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <span
-                                className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusBadgeColor(
-                                  app.status
-                                )}`}
-                              >
-                                {app.status.replace("_", " ")}
-                              </span>
-                              <button
-                                onClick={() =>
-                                  openDocumentModal(app.documents, app.id)
-                                }
-                                className="flex items-center gap-1 px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border border-blue-200"
-                                title="View Documents"
-                              >
-                                <Paperclip className="w-4 h-4" />
-                                <span className="font-medium">
-                                  {app.documents.length}
-                                </span>
-                              </button>
-                              <button
-                                onClick={() =>
-                                  setShowDetails(showingDetails ? null : app.id)
-                                }
-                                className="flex items-center gap-2 px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors font-medium"
-                                title={
-                                  showingDetails
-                                    ? "Hide Details"
-                                    : "View Details"
-                                }
-                              >
-                                <Eye className="w-4 h-4" />
-                                {showingDetails ? "Hide" : "View"}
-                              </button>
-                              <div className="text-sm text-gray-500 font-medium">
-                                {formatDate(app.submittedAt)}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Current Holder */}
-                          {app.currentHolder && (
-                            <div className="flex items-center gap-3 mt-3 pt-3 border-t border-gray-200">
-                              <UserCheck className="w-4 h-4 text-green-600" />
-                              <span className="text-sm text-gray-700">
-                                <span className="font-medium">
-                                  Current Officer:
-                                </span>{" "}
-                                {app.currentHolder.officerProfile.fullName}
-                              </span>
-                              <span
-                                className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getLevelColor(
-                                  app.currentHolder.level
-                                )}`}
-                              >
-                                {getLevelText(app.currentHolder.level)}
-                              </span>
-                            </div>
-                          )}
-
-                          {/* SLA Progress */}
-                          {slaProgress && (
-                            <div className="mt-3 pt-3 border-t border-gray-200">
-                              <div className="flex justify-between items-center text-sm mb-2">
-                                <span className="text-gray-600 font-medium">
-                                  Time Progress
-                                </span>
-                                <span
-                                  className={`font-semibold ${
-                                    slaProgress.isOverdue
-                                      ? "text-red-600"
-                                      : "text-blue-600"
-                                  }`}
-                                >
-                                  {slaProgress.elapsed}/{slaProgress.total} days
-                                  ({slaProgress.percentage}%)
-                                </span>
-                              </div>
-                              <div className="w-full bg-gray-200 rounded-full h-2">
+                      return (
+                        <div key={app.id}>
+                          <div
+                            className={`p-3 lg:p-4 rounded-lg lg:rounded-xl border transition-all duration-200 ${
+                              showingDetails
+                                ? "bg-blue-50 border-blue-200"
+                                : "bg-gray-50 hover:bg-gray-100 border-gray-200"
+                            }`}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start gap-3 lg:gap-4 flex-1 min-w-0">
                                 <div
-                                  className={`h-2 rounded-full transition-all duration-300 ${
-                                    slaProgress.isOverdue
-                                      ? "bg-red-500"
-                                      : "bg-blue-500"
-                                  }`}
-                                  style={{
-                                    width: `${slaProgress.percentage}%`,
-                                  }}
-                                ></div>
-                              </div>
-                              {slaProgress.isOverdue && (
-                                <div className="flex items-center gap-2 mt-2">
-                                  <AlertCircle className="w-4 h-4 text-red-500" />
-                                  <span className="text-sm text-red-600 font-medium">
-                                    Application is overdue
-                                  </span>
+                                  className={`p-2 rounded-lg ${statusColors.light} ${statusColors.border} border flex-shrink-0`}
+                                >
+                                  <FileText
+                                    className={`w-4 h-4 ${statusColors.text}`}
+                                  />
                                 </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
+                                <div className="flex-1 min-w-0">
+                                  {/* RR Number */}
+                                  <div className="font-semibold text-gray-900 mb-1 text-sm lg:text-base">
+                                    {app.rrNumber}
+                                  </div>
 
-                        {/* Expanded Details for Overview */}
-                        {showingDetails && (
-                          <div className="mt-4 bg-white border border-gray-200 rounded-xl p-6 space-y-6">
-                            {/* Statistics Cards */}
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                              <div className="bg-blue-50 p-4 rounded-xl border border-blue-200 text-center">
-                                <div className="text-2xl font-bold text-blue-600 mb-1">
-                                  {app.workflow?.length || 0}
-                                </div>
-                                <div className="text-sm text-blue-700">
-                                  Status Changes
-                                </div>
-                              </div>
-                              <div className="bg-green-50 p-4 rounded-xl border border-green-200 text-center">
-                                <div className="text-2xl font-bold text-green-600 mb-1">
-                                  {app.officerAssignments?.length || 0}
-                                </div>
-                                <div className="text-sm text-green-700">
-                                  Assignments
-                                </div>
-                              </div>
-                              <div className="bg-orange-50 p-4 rounded-xl border border-orange-200 text-center">
-                                <div className="text-2xl font-bold text-orange-600 mb-1">
-                                  {(app.officerForwardings?.length || 0) +
-                                    (app.frontdeskForwardings?.length || 0)}
-                                </div>
-                                <div className="text-sm text-orange-700">
-                                  Forwardings
-                                </div>
-                              </div>
-                              <div className="bg-purple-50 p-4 rounded-xl border border-purple-200 text-center">
-                                <div className="text-2xl font-bold text-purple-600 mb-1">
-                                  {app.documents?.length || 0}
-                                </div>
-                                <div className="text-sm text-purple-700">
-                                  Documents
-                                </div>
-                              </div>
-                            </div>
+                                  {/* Subject - Below RR Number */}
+                                  {app.subject && (
+                                    <div className="text-xs lg:text-sm text-gray-600 mb-2 line-clamp-1">
+                                      {app.subject}
+                                    </div>
+                                  )}
 
-                            {/* Quick Info Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                              <div className="space-y-3">
-                                <h4 className="font-semibold text-gray-900 flex items-center gap-2">
-                                  <User className="w-4 h-4" />
-                                  Citizen Information
-                                </h4>
-                                <div className="space-y-2 text-sm">
-                                  <div className="flex justify-between">
-                                    <span className="text-gray-500">Name:</span>
+                                  {/* Citizen Information */}
+                                  <div className="text-xs lg:text-sm text-gray-600">
                                     <span className="font-medium">
                                       {app.citizenName}
                                     </span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-gray-500">
-                                      Phone:
-                                    </span>
-                                    <span className="font-medium">
-                                      {app.citizenPhone}
-                                    </span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-gray-500">
-                                      Email:
-                                    </span>
-                                    <span className="font-medium">
-                                      {app.citizenEmail || "N/A"}
-                                    </span>
+                                    <span className="mx-2">•</span>
+                                    <span>{app.citizenPhone}</span>
                                   </div>
                                 </div>
                               </div>
-                              <div className="space-y-3">
-                                <h4 className="font-semibold text-gray-900 flex items-center gap-2">
-                                  <Calendar className="w-4 h-4" />
-                                  Timeline
-                                </h4>
-                                <div className="space-y-2 text-sm">
-                                  <div className="flex justify-between">
-                                    <span className="text-gray-500">
-                                      Submitted:
+
+                              {/* Right Side - Category, Status, and Actions */}
+                              <div className="flex flex-col items-end gap-2 lg:gap-3 ml-3 lg:ml-4 flex-shrink-0">
+                                {/* Service Category - On Right */}
+                                <ServiceCategoryBadge
+                                  category={{
+                                    id: app.serviceCategory.id,
+                                    name: app.serviceCategory.name,
+                                    color: app.serviceCategory.color,
+                                  }}
+                                  variant="outline"
+                                  size="sm"
+                                  clickable={canManageCategories}
+                                  onClick={
+                                    canManageCategories
+                                      ? () =>
+                                          openCategoryEditModal(app.id, {
+                                            id: app.serviceCategory.id,
+                                            name: app.serviceCategory.name,
+                                            color: app.serviceCategory.color,
+                                          })
+                                      : undefined
+                                  }
+                                />
+
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className={`inline-flex items-center px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium border ${getStatusBadgeColor(
+                                      app.status
+                                    )}`}
+                                  >
+                                    {app.status.replace("_", " ")}
+                                  </span>
+
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() =>
+                                      openDocumentModal(app.documents, app.id)
+                                    }
+                                    className="h-7 px-2 text-xs text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border-blue-200"
+                                    title="View Documents"
+                                  >
+                                    <Paperclip className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
+                                    {app.documents.length}
+                                  </Button>
+
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() =>
+                                      setShowDetails(
+                                        showingDetails ? null : app.id
+                                      )
+                                    }
+                                    className="h-7 px-2 text-xs text-blue-600 hover:text-blue-800 border-blue-200 hover:bg-blue-50"
+                                    title={
+                                      showingDetails
+                                        ? "Hide Details"
+                                        : "View Details"
+                                    }
+                                  >
+                                    <Eye className="w-3 h-3 lg:w-4 lg:h-4 mr-1" />
+                                    <span className="hidden lg:inline">
+                                      {showingDetails ? "Hide" : "View"}
                                     </span>
-                                    <span className="font-medium">
-                                      {formatDate(app.submittedAt)}
+                                  </Button>
+                                </div>
+
+                                <div className="text-xs text-gray-500 font-medium">
+                                  {formatDate(app.submittedAt)}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Current Holder */}
+                            {app.currentHolder && (
+                              <div className="flex items-center gap-3 mt-3 pt-3 border-t border-gray-200">
+                                <UserCheck className="w-4 h-4 text-green-600 flex-shrink-0" />
+                                <span className="text-xs lg:text-sm text-gray-700 flex-1 min-w-0">
+                                  <span className="font-medium">
+                                    Current Officer:
+                                  </span>{" "}
+                                  <span className="truncate">
+                                    {app.currentHolder.officerProfile.fullName}
+                                  </span>
+                                </span>
+                                <span
+                                  className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getLevelColor(
+                                    app.currentHolder.level
+                                  )} flex-shrink-0`}
+                                >
+                                  {getLevelText(app.currentHolder.level)}
+                                </span>
+                              </div>
+                            )}
+
+                            {/* SLA Progress */}
+                            {slaProgress && (
+                              <div className="mt-3 pt-3 border-t border-gray-200">
+                                <div className="flex justify-between items-center text-xs lg:text-sm mb-2">
+                                  <span className="text-gray-600 font-medium">
+                                    Time Progress
+                                  </span>
+                                  <span
+                                    className={`font-semibold ${
+                                      slaProgress.isOverdue
+                                        ? "text-red-600"
+                                        : "text-blue-600"
+                                    }`}
+                                  >
+                                    {slaProgress.elapsed}/{slaProgress.total}{" "}
+                                    days ({slaProgress.percentage}%)
+                                  </span>
+                                </div>
+                                <div className="w-full bg-gray-200 rounded-full h-2">
+                                  <div
+                                    className={`h-2 rounded-full transition-all duration-300 ${
+                                      slaProgress.isOverdue
+                                        ? "bg-red-500"
+                                        : "bg-blue-500"
+                                    }`}
+                                    style={{
+                                      width: `${slaProgress.percentage}%`,
+                                    }}
+                                  ></div>
+                                </div>
+                                {slaProgress.isOverdue && (
+                                  <div className="flex items-center gap-2 mt-2">
+                                    <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                                    <span className="text-xs lg:text-sm text-red-600 font-medium">
+                                      Application is overdue
                                     </span>
                                   </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-gray-500">
-                                      Validated:
-                                    </span>
-                                    <span className="font-medium">
-                                      {formatDate(app.validatedAt)}
-                                    </span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Expanded Details for Overview */}
+                          {showingDetails && (
+                            <div className="mt-3 lg:mt-4 bg-white border border-gray-200 rounded-lg lg:rounded-xl p-4 lg:p-6 space-y-4 lg:space-y-6">
+                              {/* Statistics Cards - Fixed Text Overflow */}
+                              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+                                <div className="bg-blue-50 p-3 lg:p-4 rounded-lg lg:rounded-xl border border-blue-200 text-center">
+                                  <div className="text-xl lg:text-2xl font-bold text-blue-600 mb-1">
+                                    {app.workflow?.length || 0}
                                   </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-gray-500">
-                                      Completed:
-                                    </span>
-                                    <span className="font-medium">
-                                      {formatDate(app.completedAt)}
-                                    </span>
+                                  <div className="text-xs lg:text-sm text-blue-700 leading-tight">
+                                    Status Changes
+                                  </div>
+                                </div>
+                                <div className="bg-green-50 p-3 lg:p-4 rounded-lg lg:rounded-xl border border-green-200 text-center">
+                                  <div className="text-xl lg:text-2xl font-bold text-green-600 mb-1">
+                                    {app.officerAssignments?.length || 0}
+                                  </div>
+                                  <div className="text-xs lg:text-sm text-green-700 leading-tight">
+                                    Assignments
+                                  </div>
+                                </div>
+                                <div className="bg-orange-50 p-3 lg:p-4 rounded-lg lg:rounded-xl border border-orange-200 text-center">
+                                  <div className="text-xl lg:text-2xl font-bold text-orange-600 mb-1">
+                                    {(app.officerForwardings?.length || 0) +
+                                      (app.frontdeskForwardings?.length || 0)}
+                                  </div>
+                                  <div className="text-xs lg:text-sm text-orange-700 leading-tight">
+                                    Forwardings
+                                  </div>
+                                </div>
+                                <div className="bg-purple-50 p-3 lg:p-4 rounded-lg lg:rounded-xl border border-purple-200 text-center">
+                                  <div className="text-xl lg:text-2xl font-bold text-purple-600 mb-1">
+                                    {app.documents?.length || 0}
+                                  </div>
+                                  <div className="text-xs lg:text-sm text-purple-700 leading-tight">
+                                    Documents
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Quick Info Grid */}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+                                <div className="space-y-3">
+                                  <h4 className="font-semibold text-gray-900 flex items-center gap-2 text-sm lg:text-base">
+                                    <User className="w-4 h-4" />
+                                    Citizen Information
+                                  </h4>
+                                  <div className="space-y-2 text-xs lg:text-sm">
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-500">
+                                        Name:
+                                      </span>
+                                      <span className="font-medium truncate ml-2">
+                                        {app.citizenName}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-500">
+                                        Phone:
+                                      </span>
+                                      <span className="font-medium">
+                                        {app.citizenPhone}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-500">
+                                        Email:
+                                      </span>
+                                      <span className="font-medium truncate ml-2">
+                                        {app.citizenEmail || "N/A"}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="space-y-3">
+                                  <h4 className="font-semibold text-gray-900 flex items-center gap-2 text-sm lg:text-base">
+                                    <CalendarIcon className="w-4 h-4" />
+                                    Timeline
+                                  </h4>
+                                  <div className="space-y-2 text-xs lg:text-sm">
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-500">
+                                        Submitted:
+                                      </span>
+                                      <span className="font-medium">
+                                        {formatDate(app.submittedAt)}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-500">
+                                        Validated:
+                                      </span>
+                                      <span className="font-medium">
+                                        {formatDate(app.validatedAt)}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-500">
+                                        Completed:
+                                      </span>
+                                      <span className="font-medium">
+                                        {formatDate(app.completedAt)}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {/* Recent Applications Pagination */}
+                  {renderRecentPagination()}
+                </>
               ) : (
-                <div className="text-center py-12 text-gray-500">
-                  <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <div className="text-center py-8 lg:py-12 text-gray-500">
+                  <FileText className="w-8 h-8 lg:w-12 lg:h-12 mx-auto mb-4 opacity-50" />
+                  <h3 className="text-base lg:text-lg font-medium text-gray-900 mb-2">
                     No recent applications found
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-sm lg:text-base text-gray-600">
                     Applications will appear here once they are submitted
                   </p>
                 </div>
@@ -2228,11 +3580,11 @@ const DCDashboard = () => {
         {/* Applications Detail Section */}
         {showApplications && (
           <>
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <div className="mb-4 lg:mb-6">
+              <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2">
                 {selectedStatus.replace("_", " ")} Applications
               </h2>
-              <p className="text-gray-600">
+              <p className="text-sm lg:text-base text-gray-600">
                 Showing all applications with status:{" "}
                 {selectedStatus.replace("_", " ")}
               </p>
@@ -2246,22 +3598,22 @@ const DCDashboard = () => {
 
             {/* Applications List */}
             {loading ? (
-              <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-200">
-                <RefreshCw className="w-8 h-8 animate-spin mx-auto text-blue-600 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <div className="bg-white rounded-xl lg:rounded-2xl p-8 lg:p-12 text-center shadow-sm border border-gray-200">
+                <RefreshCw className="w-6 h-6 lg:w-8 lg:h-8 animate-spin mx-auto text-blue-600 mb-4" />
+                <h3 className="text-base lg:text-lg font-medium text-gray-900 mb-2">
                   Loading applications...
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-sm lg:text-base text-gray-600">
                   Please wait while we fetch the data
                 </p>
               </div>
             ) : applications.length === 0 ? (
-              <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-200">
-                <FileText className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <div className="bg-white rounded-xl lg:rounded-2xl p-8 lg:p-12 text-center shadow-sm border border-gray-200">
+                <FileText className="w-8 h-8 lg:w-12 lg:h-12 mx-auto text-gray-400 mb-4" />
+                <h3 className="text-base lg:text-lg font-medium text-gray-900 mb-2">
                   No applications found
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-sm lg:text-base text-gray-600">
                   Try adjusting your filters or check back later for new
                   applications.
                 </p>
@@ -2276,39 +3628,41 @@ const DCDashboard = () => {
       {/* Enhanced Document Modal */}
       {showDocumentModal.show && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+          <div className="bg-white rounded-xl lg:rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+            <div className="px-4 lg:px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-base lg:text-lg font-semibold text-gray-900">
                   Application Documents
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-xs lg:text-sm text-gray-600">
                   {showDocumentModal.documents.length} documents found
                 </p>
               </div>
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={closeDocumentModal}
-                className="text-gray-400 hover:text-gray-500 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="text-gray-400 hover:text-gray-500 p-2 hover:bg-gray-100"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </Button>
             </div>
-            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+            <div className="p-4 lg:p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
               {showDocumentModal.documents.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4">
                   {showDocumentModal.documents.map((doc) => (
                     <div
                       key={doc.id}
-                      className="border border-gray-200 rounded-xl p-4 hover:shadow-sm transition-all duration-200"
+                      className="border border-gray-200 rounded-lg lg:rounded-xl p-4 hover:shadow-sm transition-all duration-200"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-3">
-                            <div className="p-2 bg-blue-50 rounded-lg">
+                            <div className="p-2 bg-blue-50 rounded-lg flex-shrink-0">
                               <FileText className="w-5 h-5 text-blue-600" />
                             </div>
-                            <div>
-                              <h4 className="font-semibold text-gray-900">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-gray-900 truncate">
                                 {doc.fileName}
                               </h4>
                               <p className="text-sm text-gray-600">
@@ -2316,7 +3670,7 @@ const DCDashboard = () => {
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-4 text-sm text-gray-600">
+                          <div className="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
                             <span>
                               Size: {(doc.fileSize / 1024).toFixed(1)} KB
                             </span>
@@ -2341,24 +3695,35 @@ const DCDashboard = () => {
                             </div>
                           )}
                         </div>
-                        <button
-                          onClick={() => downloadDocument(doc)}
-                          className="ml-4 flex items-center gap-2 px-4 py-2 text-sm text-blue-600 hover:text-blue-800 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors font-medium"
-                        >
-                          <Download className="w-4 h-4" />
-                          Download
-                        </button>
+                        <div className="ml-4 flex items-center gap-2 flex-shrink-0">
+                          <FilePreviewButton
+                            document={doc}
+                            applicationId={showDocumentModal.applicationId}
+                            variant="outline"
+                            size="sm"
+                            className="h-8"
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => downloadDocument(doc)}
+                            className="h-8 flex items-center gap-2"
+                          >
+                            <Download className="w-4 h-4" />
+                            <span className="hidden sm:inline">Download</span>
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <FileText className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-                  <h4 className="text-lg font-medium text-gray-900 mb-2">
+                <div className="text-center py-8 lg:py-12">
+                  <FileText className="w-8 h-8 lg:w-12 lg:h-12 mx-auto text-gray-400 mb-4" />
+                  <h4 className="text-base lg:text-lg font-medium text-gray-900 mb-2">
                     No documents available
                   </h4>
-                  <p className="text-gray-600">
+                  <p className="text-sm lg:text-base text-gray-600">
                     No documents have been uploaded for this application yet.
                   </p>
                 </div>
@@ -2367,6 +3732,15 @@ const DCDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Service Category Edit Modal */}
+      <ServiceCategoryEditModal
+        isOpen={isCategoryEditModalOpen}
+        onCloseAction={closeCategoryEditModal}
+        applicationId={editingApplicationId}
+        currentCategory={editingCurrentCategory}
+        onCategoryUpdatedAction={handleCategoryUpdated}
+      />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import MobileSidebar from "../components/dashboard/MobileSidebar";
 import DesktopSidebar from "../components/dashboard/DesktopSidebar";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import { getServerAuthSession } from "@/lib/auth";
+import DashboardMainWrapper from "./DashboardMainWrapper";
 
 export default async function DashboardLayout({
   children,
@@ -21,10 +22,7 @@ export default async function DashboardLayout({
 
       <div className="lg:pl-72">
         <DashboardHeader />
-
-        <main className="py-10">
-          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
-        </main>
+        <DashboardMainWrapper>{children}</DashboardMainWrapper>
       </div>
     </div>
   );

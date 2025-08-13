@@ -3,15 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getServerAuthSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { canUserManageServiceCategories } from "@/lib/service-category-utils";
 import { UserRole } from "@/app/generated/prisma";
 
 const createServiceCategorySchema = z.object({
   name: z.string().min(1, "Service category name is required").max(100),
   description: z.string().optional(),
-});
-
-const searchServiceCategoriesSchema = z.object({
-  search: z.string().min(1, "Search term is required"),
+  color: z.string().optional(),
+  isActive: z.boolean().default(true),
 });
 
 export async function GET(request: NextRequest) {
@@ -22,13 +21,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.role !== UserRole.FRONT_DESK) {
-      return NextResponse.json(
-        { error: "Forbidden - Frontdesk access required" },
-        { status: 403 }
-      );
-    }
-
+    // All authenticated users can view service categories
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search") || "";
 
@@ -49,14 +42,14 @@ export async function GET(request: NextRequest) {
         id: true,
         name: true,
         description: true,
+        color: true,
         isActive: true,
         createdAt: true,
       },
     });
 
-    return NextResponse.json({
-      data: serviceCategories,
-    });
+    // Return in format expected by ServiceCategorySelector
+    return NextResponse.json(serviceCategories);
   } catch (error) {
     console.error("Error fetching service categories:", error);
     return NextResponse.json(
@@ -74,9 +67,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (session.user.role !== UserRole.FRONT_DESK) {
+    // Check if user can manage service categories
+    // For frontdesk users, we need to check if they have officer assignments
+    let canManage = await canUserManageServiceCategories(session.user.role);
+
+    if (!canManage && session.user.role === UserRole.FRONT_DESK) {
+      // Check if frontdesk user has officer assignments
+      const assignments = await prisma.frontdeskOfficer.findMany({
+        where: { frontdeskUserId: session.user.id },
+      });
+      canManage = assignments.length > 0;
+    }
+
+    if (!canManage) {
       return NextResponse.json(
-        { error: "Forbidden - Frontdesk access required" },
+        {
+          error:
+            "Forbidden - Insufficient permissions to create service categories",
+        },
         { status: 403 }
       );
     }
@@ -99,10 +107,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           message: "Service category already exists",
-          existingCategory: {
+          data: {
             id: existingCategory.id,
             name: existingCategory.name,
             description: existingCategory.description,
+            color: existingCategory.color,
+            isActive: existingCategory.isActive,
+            createdAt: existingCategory.createdAt,
           },
         },
         { status: 200 }
@@ -114,12 +125,14 @@ export async function POST(request: NextRequest) {
       data: {
         name: validatedData.name,
         description: validatedData.description,
+        color: validatedData.color,
         isActive: true,
       },
       select: {
         id: true,
         name: true,
         description: true,
+        color: true,
         isActive: true,
         createdAt: true,
       },

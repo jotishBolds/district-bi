@@ -22,6 +22,9 @@ import {
   PlayCircle,
   Send,
 } from "lucide-react";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
+import { NotificationDialog } from "@/components/ui/notification-dialog";
+import { toast } from "sonner";
 
 // Types based on your Prisma schema
 interface CitizenProfile {
@@ -125,6 +128,33 @@ const FrontDeskDashboard = () => {
   const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
+
+  // Modal state
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    onConfirm: () => void;
+    confirmText?: string;
+    variant?: "default" | "destructive";
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+    onConfirm: () => {},
+  });
+
+  const [notificationDialog, setNotificationDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
 
   const [actionForm, setActionForm] = useState({
     action: "",
@@ -309,7 +339,7 @@ const FrontDeskDashboard = () => {
       const successMessage = `Application forwarded successfully${
         targetOfficer?.fullName ? ` to ${targetOfficer.fullName}` : ""
       }`;
-      alert(successMessage);
+      toast.success(successMessage);
 
       // Reset form and refresh data
       setActionForm({
@@ -325,9 +355,9 @@ const FrontDeskDashboard = () => {
       fetchApplications();
     } catch (error) {
       console.error("Action error:", error);
-      alert(
-        `Error: ${error instanceof Error ? error.message : "Action failed"}`
-      );
+      const errorMessage =
+        error instanceof Error ? error.message : "Action failed";
+      toast.error(`Error: ${errorMessage}`);
     } finally {
       setProcessing(false);
     }
@@ -1209,6 +1239,28 @@ const FrontDeskDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={confirmDialog.onConfirm}
+        title={confirmDialog.title}
+        description={confirmDialog.description}
+        confirmText={confirmDialog.confirmText}
+        variant={confirmDialog.variant}
+      />
+
+      {/* Notification Dialog */}
+      <NotificationDialog
+        isOpen={notificationDialog.isOpen}
+        onClose={() =>
+          setNotificationDialog({ ...notificationDialog, isOpen: false })
+        }
+        title={notificationDialog.title}
+        message={notificationDialog.message}
+        type={notificationDialog.type}
+      />
     </div>
   );
 };

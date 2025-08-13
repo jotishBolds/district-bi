@@ -55,6 +55,7 @@ export const authOptions: AuthOptions = {
             role: user.role,
             isActive: user.isActive,
             needsOtp: false,
+            requiresOtpVerification: false, // Clear the OTP verification flag
             level: user.level,
             fullName:
               user.officerProfile?.fullName || user.citizenProfile?.fullName,
@@ -98,15 +99,22 @@ export const authOptions: AuthOptions = {
           throw new Error("Account is inactive");
         }
 
-        // Generate and store OTP
+        // Generate and store OTP with user credentials for later verification
         const otp = generateOTP();
 
+        // Store OTP verification token with pre-auth data
         await prisma.verificationToken.create({
           data: {
             identifier: user.email,
             token: otp,
             expires: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
             type: "EMAIL_VERIFICATION",
+            // Store user ID securely for session creation after OTP verification
+            metadata: JSON.stringify({
+              userId: user.id,
+              preAuthValidated: true,
+              timestamp: Date.now(),
+            }),
           },
         });
 
@@ -118,13 +126,15 @@ export const authOptions: AuthOptions = {
         console.log("⏰ EXPIRES IN: 10 minutes");
         console.log("=".repeat(50));
 
-        // Return user with a flag indicating OTP is required
+        // Return user with OTP required flag
+        // This creates a temporary session that requires OTP verification
         return {
           id: user.id,
           email: user.email,
           role: user.role,
           isActive: user.isActive,
           needsOtp: true,
+          requiresOtpVerification: true, // Special flag for middleware
           level: user.level,
           fullName:
             user.officerProfile?.fullName || user.citizenProfile?.fullName,
@@ -146,6 +156,9 @@ export const authOptions: AuthOptions = {
         token.role = user.role;
         token.isActive = user.isActive;
         token.requiresOtp = user.needsOtp || false;
+        token.requiresOtpVerification =
+          (user as { requiresOtpVerification?: boolean })
+            .requiresOtpVerification || false;
         token.level = user.level;
         token.fullName = user.fullName;
         // Avoid 'any' by using a type guard
@@ -167,6 +180,7 @@ export const authOptions: AuthOptions = {
         session.user.fullName = token.fullName;
         session.user.designation = token.designation;
         session.requiresOtp = token.requiresOtp;
+        session.requiresOtpVerification = token.requiresOtpVerification;
       }
       return session;
     },

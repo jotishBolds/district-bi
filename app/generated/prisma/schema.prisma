@@ -37,6 +37,7 @@ model User {
   officerForwardedFrom   OfficerForwardingHistory[] @relation("OfficerForwardedFrom")
   officerForwardedTo     OfficerForwardingHistory[] @relation("OfficerForwardedTo")
   officerProfile         OfficerProfile?
+  serviceCategoryChanges ServiceCategoryChange[]    @relation("CategoryChangedBy")
 
   @@map("users")
 }
@@ -86,13 +87,16 @@ model FrontdeskOfficer {
 }
 
 model ServiceCategory {
-  id           String        @id @default(uuid())
-  name         String        @unique
-  description  String?
-  isActive     Boolean       @default(true)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  applications Application[]
+  id                      String                  @id @default(uuid())
+  name                    String                  @unique
+  description             String?
+  isActive                Boolean                 @default(true)
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  color                   String?
+  applications            Application[]
+  newCategoryChanges      ServiceCategoryChange[] @relation("NewCategory")
+  previousCategoryChanges ServiceCategoryChange[] @relation("PreviousCategory")
 
   @@map("service_categories")
 }
@@ -122,41 +126,42 @@ model Department {
 }
 
 model Application {
-  id                   String                     @id @default(uuid())
-  rrNumber             String?                    @unique
-  serviceCategoryId    String
-  status               ApplicationStatus          @default(DRAFT)
-  currentHolderId      String?
-  submittedAt          DateTime?
-  validatedAt          DateTime?
-  completedAt          DateTime?
-  createdAt            DateTime                   @default(now())
-  updatedAt            DateTime                   @updatedAt
-  citizenAadhaar       String?
-  citizenAddress       String
-  citizenEmail         String?
-  citizenGender        String?
-  citizenName          String
-  citizenPhone         String
-  subject              String                     @default("Application Subject")
-  departmentId         String?
-  applicationSource    ApplicationSource          @default(PUBLIC)
-  dispatchedAt         DateTime?
-  dispatchedById       String?
-  isDispatched         Boolean                    @default(false)
-  auditLogs            ApplicationAuditLog[]
-  validation           ApplicationValidation?
-  workflow             ApplicationWorkflow[]
-  currentHolder        User?                      @relation("CurrentHolder", fields: [currentHolderId], references: [id])
-  department           Department?                @relation(fields: [departmentId], references: [id])
-  dispatchedBy         User?                      @relation("DispatchedBy", fields: [dispatchedById], references: [id])
-  serviceCategory      ServiceCategory            @relation(fields: [serviceCategoryId], references: [id])
-  documentRequests     DocumentRequest[]
-  documents            Document[]
-  frontdeskForwardings FrontdeskForwarding[]
-  notifications        Notification[]
-  officerAssignments   OfficerAssignment[]
-  officerForwardings   OfficerForwardingHistory[]
+  id                     String                     @id @default(uuid())
+  rrNumber               String?                    @unique
+  serviceCategoryId      String
+  status                 ApplicationStatus          @default(DRAFT)
+  currentHolderId        String?
+  submittedAt            DateTime?
+  validatedAt            DateTime?
+  completedAt            DateTime?
+  createdAt              DateTime                   @default(now())
+  updatedAt              DateTime                   @updatedAt
+  citizenAadhaar         String?
+  citizenAddress         String
+  citizenEmail           String?
+  citizenGender          String?
+  citizenName            String
+  citizenPhone           String
+  subject                String                     @default("Application Subject")
+  departmentId           String?
+  dispatchedAt           DateTime?
+  dispatchedById         String?
+  isDispatched           Boolean                    @default(false)
+  applicationSource      ApplicationSource          @default(PUBLIC)
+  auditLogs              ApplicationAuditLog[]
+  validation             ApplicationValidation?
+  workflow               ApplicationWorkflow[]
+  currentHolder          User?                      @relation("CurrentHolder", fields: [currentHolderId], references: [id])
+  department             Department?                @relation(fields: [departmentId], references: [id])
+  dispatchedBy           User?                      @relation("DispatchedBy", fields: [dispatchedById], references: [id])
+  serviceCategory        ServiceCategory            @relation(fields: [serviceCategoryId], references: [id])
+  documentRequests       DocumentRequest[]
+  documents              Document[]
+  frontdeskForwardings   FrontdeskForwarding[]
+  notifications          Notification[]
+  officerAssignments     OfficerAssignment[]
+  officerForwardings     OfficerForwardingHistory[]
+  serviceCategoryChanges ServiceCategoryChange[]
 
   @@map("applications")
 }
@@ -188,6 +193,22 @@ model ApplicationValidation {
   validatedBy           User        @relation("ValidatedBy", fields: [validatedById], references: [id])
 
   @@map("application_validations")
+}
+
+model ServiceCategoryChange {
+  id                 String           @id @default(uuid())
+  applicationId      String
+  previousCategoryId String?
+  newCategoryId      String
+  changedById        String
+  reason             String?
+  createdAt          DateTime         @default(now())
+  application        Application      @relation(fields: [applicationId], references: [id])
+  changedBy          User             @relation("CategoryChangedBy", fields: [changedById], references: [id])
+  newCategory        ServiceCategory  @relation("NewCategory", fields: [newCategoryId], references: [id])
+  previousCategory   ServiceCategory? @relation("PreviousCategory", fields: [previousCategoryId], references: [id])
+
+  @@map("service_category_changes")
 }
 
 model OfficerAssignment {
@@ -304,6 +325,7 @@ model VerificationToken {
   token      String   @unique
   expires    DateTime
   type       String
+  metadata   String? // JSON string for storing additional secure data
 
   @@unique([identifier, token])
   @@map("verification_tokens")

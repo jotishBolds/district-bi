@@ -43,6 +43,17 @@ async function main() {
   });
 
   // Create service categories
+  const uncategorisedCategory = await prisma.serviceCategory.upsert({
+    where: { name: "Uncategorised" },
+    update: {},
+    create: {
+      name: "Uncategorised",
+      description:
+        "Default category for applications without specific categorization",
+      isActive: true,
+    },
+  });
+
   const serviceCategory = await prisma.serviceCategory.upsert({
     where: { name: "Revenue Certificate" },
     update: {},

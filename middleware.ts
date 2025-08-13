@@ -3,7 +3,12 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
-  const token = await getToken({ req: request });
+  // Get session token from cookies
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
   const path = request.nextUrl.pathname;
 
   // Public paths that don't require authentication
@@ -35,22 +40,27 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Check if user needs OTP verification
-    if (token.requiresOtp) {
+    // If user has session but requires OTP verification, redirect to OTP page
+    if (token.requiresOtpVerification) {
       return NextResponse.redirect(
         new URL(
-          `/verify-otp?email=${encodeURIComponent(token.email as string)}`,
+          `/verify-otp?email=${encodeURIComponent(token.email || "")}`,
           request.url
         )
       );
     }
 
-    // User is authenticated and verified
+    // User is fully authenticated
     return NextResponse.next();
   }
 
   // Handle public paths when user is already authenticated
-  if (isPublicPath && token && !token.requiresOtp) {
+  if (isPublicPath && token) {
+    // If user requires OTP verification, allow access to auth pages
+    if (token.requiresOtpVerification) {
+      return NextResponse.next();
+    }
+    // Only redirect fully authenticated users away from auth pages
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

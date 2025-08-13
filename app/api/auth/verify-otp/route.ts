@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { v4 as uuidv4 } from "uuid"; // Make sure to install uuid package
+import { v4 as uuidv4 } from "uuid";
+import { getToken } from "next-auth/jwt";
+import { signIn } from "next-auth/react";
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,21 +35,83 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate pre-auth metadata for login OTP
+    if (type === "EMAIL_VERIFICATION" && verificationToken.metadata) {
+      try {
+        const metadata = JSON.parse(verificationToken.metadata);
+        if (!metadata.preAuthValidated || !metadata.userId) {
+          return NextResponse.json(
+            { error: "Invalid verification token" },
+            { status: 400 }
+          );
+        }
+
+        // Check if token was created recently (within 10 minutes)
+        const tokenAge = Date.now() - metadata.timestamp;
+        if (tokenAge > 10 * 60 * 1000) {
+          return NextResponse.json(
+            { error: "Verification token expired" },
+            { status: 400 }
+          );
+        }
+      } catch (e) {
+        return NextResponse.json(
+          { error: "Invalid verification token format" },
+          { status: 400 }
+        );
+      }
+    }
+
     // Handle different verification types
     if (type === "EMAIL_VERIFICATION") {
-      // For login OTP verification or email verification
+      // For login OTP verification - verify user exists and is valid
+      const user = await prisma.user.findUnique({
+        where: { email },
+        include: {
+          officerProfile: {
+            select: { fullName: true, designation: true },
+          },
+          citizenProfile: {
+            select: { fullName: true },
+          },
+        },
+      });
+
+      if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 400 });
+      }
+
+      // Update user as active and last login time
       await prisma.user.update({
         where: { email },
         data: {
           isActive: true,
-          lastLoginAt: new Date(), // Update the last login time
+          lastLoginAt: new Date(),
         },
       });
 
-      // Delete the used token for email verification
+      // Delete the used token
       await prisma.verificationToken.delete({
         where: {
           id: verificationToken.id,
+        },
+      });
+
+      // Return success with user data for session creation
+      return NextResponse.json({
+        success: true,
+        message: "OTP verification successful",
+        verified: true,
+        clearOtpFlag: true, // Signal to clear the OTP verification requirement
+        user: {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          isActive: true,
+          level: user.level,
+          fullName:
+            user.officerProfile?.fullName || user.citizenProfile?.fullName,
+          designation: user.officerProfile?.designation,
         },
       });
     } else if (type === "PASSWORD_RESET") {

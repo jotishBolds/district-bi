@@ -352,8 +352,7 @@ import {
 } from "@/lib/officer-roles";
 // import { put } from "@vercel/blob"; // Commented out for development
 import { v4 as uuidv4 } from "uuid";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { uploadFileToS3, validateFile } from "@/lib/s3-storage";
 
 export async function GET(request: NextRequest) {
   try {
@@ -367,6 +366,9 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
     const status = searchParams.get("status");
+    const search = searchParams.get("search") || "";
+    const serviceCategoryId = searchParams.get("serviceCategoryId") || "";
+    const applicationSource = searchParams.get("applicationSource") || "";
     const assignedToMe = searchParams.get("assignedToMe") === "true";
     const includeForwardingHistory =
       searchParams.get("includeForwardingHistory") === "true";
@@ -525,6 +527,68 @@ export async function GET(request: NextRequest) {
           };
         } else {
           whereClause.status = status as ApplicationStatus;
+        }
+      }
+
+      // Add search filter
+      if (search) {
+        const searchConditions = [
+          { rrNumber: { contains: search, mode: "insensitive" as const } },
+          { citizenName: { contains: search, mode: "insensitive" as const } },
+          { subject: { contains: search, mode: "insensitive" as const } },
+          {
+            serviceCategory: {
+              name: { contains: search, mode: "insensitive" as const },
+            },
+          },
+        ];
+
+        if (whereClause.AND && Array.isArray(whereClause.AND)) {
+          whereClause.AND.push({ OR: searchConditions });
+        } else if (whereClause.OR) {
+          whereClause = {
+            AND: [{ OR: whereClause.OR }, { OR: searchConditions }],
+          };
+        } else {
+          if (Object.keys(whereClause).length > 0) {
+            whereClause = {
+              AND: [whereClause, { OR: searchConditions }],
+            };
+          } else {
+            whereClause.OR = searchConditions;
+          }
+        }
+      }
+
+      // Add service category filter
+      if (serviceCategoryId) {
+        if (whereClause.AND && Array.isArray(whereClause.AND)) {
+          whereClause.AND.push({ serviceCategoryId: serviceCategoryId });
+        } else {
+          if (Object.keys(whereClause).length > 0) {
+            whereClause = {
+              AND: [whereClause, { serviceCategoryId: serviceCategoryId }],
+            };
+          } else {
+            whereClause.serviceCategoryId = serviceCategoryId;
+          }
+        }
+      }
+
+      // Add application source filter
+      if (applicationSource) {
+        const appSource =
+          applicationSource === "PUBLIC" ? "PUBLIC" : "GOVERNMENT";
+        if (whereClause.AND && Array.isArray(whereClause.AND)) {
+          whereClause.AND.push({ applicationSource: appSource });
+        } else {
+          if (Object.keys(whereClause).length > 0) {
+            whereClause = {
+              AND: [whereClause, { applicationSource: appSource }],
+            };
+          } else {
+            whereClause.applicationSource = appSource;
+          }
         }
       }
     }
@@ -890,30 +954,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file types and sizes
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp",
-      "application/pdf",
-    ];
-    const maxFileSize = 5 * 1024 * 1024; // 5MB
-
+    // Validate file types and sizes using the validation function
     for (const { file } of uploadedDocuments) {
-      if (!allowedTypes.includes(file.type)) {
-        return NextResponse.json(
-          {
-            error: `File type ${file.type} is not allowed. Only JPEG, PNG, WebP, and PDF files are permitted.`,
-          },
-          { status: 400 }
-        );
-      }
-
-      if (file.size > maxFileSize) {
-        return NextResponse.json(
-          { error: `File ${file.name} is too large. Maximum size is 5MB.` },
-          { status: 400 }
-        );
+      const validation = validateFile(file);
+      if (!validation.isValid) {
+        return NextResponse.json({ error: validation.error }, { status: 400 });
       }
     }
 
@@ -952,41 +997,28 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // Upload documents and save records (unchanged)
+      // Upload documents and save records
       const documentPromises = uploadedDocuments.map(
         async ({ file, documentType }) => {
           try {
-            // Generate unique filename
-            const fileExtension = file.name.split(".").pop();
-            const uniqueFileName = `${
-              application.id
-            }/${uuidv4()}.${fileExtension}`;
+            // Generate unique document ID
+            const documentId = uuidv4();
 
-            // // Upload to Vercel Blob (commented out for development)
-            // const blob = await put(`applications/${uniqueFileName}`, file, {
-            //   access: "public",
-            //   addRandomSuffix: false,
-            // });
-
-            // Local file storage for development
-            const uploadsDir = join(process.cwd(), "uploads", "applications");
-            const applicationDir = join(uploadsDir, application.id);
-            await mkdir(applicationDir, { recursive: true });
-
-            const filePath = join(uploadsDir, uniqueFileName);
-            const buffer = Buffer.from(await file.arrayBuffer());
-            await writeFile(filePath, buffer);
-
-            // For development, we'll store the relative path
-            const relativePath = `/uploads/applications/${uniqueFileName}`;
+            // Upload to S3
+            const uploadResult = await uploadFileToS3(
+              file,
+              application.id,
+              documentId
+            );
 
             // Save document record to database
             return tx.document.create({
               data: {
+                id: documentId,
                 applicationId: application.id,
                 documentType,
                 fileName: file.name,
-                filePath: relativePath, // Store the relative path for development
+                filePath: uploadResult.key, // Store S3 key
                 fileSize: file.size,
                 uploadedById: session.user.id,
                 isVerified: false,

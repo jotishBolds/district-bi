@@ -1,7 +1,9 @@
 "use client";
 
+import { FilePreviewButton } from "@/components/FilePreview";
+
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import {
   CheckCircle,
@@ -28,6 +30,11 @@ import {
   Grid3X3,
   List,
 } from "lucide-react";
+import { ServiceCategoryBadge } from "@/components/ui/service-category-badge";
+import { ServiceCategoryEditModal } from "@/components/ui/service-category-edit-modal";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
+import { NotificationDialog } from "@/components/ui/notification-dialog";
+import { toast } from "sonner";
 
 // Types (keeping the same as original)
 interface CitizenProfile {
@@ -38,7 +45,9 @@ interface CitizenProfile {
 }
 
 interface ServiceCategory {
+  id: string;
   name: string;
+  color?: string;
 }
 
 interface Document {
@@ -142,6 +151,7 @@ interface Application {
   validatedAt?: string;
   completedAt?: string;
   createdAt: string;
+  applicationSource?: string;
   department?: {
     id: string;
     name: string;
@@ -183,6 +193,9 @@ const OfficerDashboard = () => {
   const [allApplications, setAllApplications] = useState<Application[]>([]);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [availableOfficers, setAvailableOfficers] = useState<Officer[]>([]);
+  const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -207,9 +220,49 @@ const OfficerDashboard = () => {
   // Additional state for enhanced search and view modes
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedServiceCategory, setSelectedServiceCategory] = useState("");
+  const [selectedApplicationSource, setSelectedApplicationSource] =
+    useState("");
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
 
-  // Helper functions
+  // Modal state
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    onConfirm: () => void;
+    confirmText?: string;
+    variant?: "default" | "destructive";
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+    onConfirm: () => {},
+  });
+
+  const [notificationDialog, setNotificationDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "success" | "error" | "warning" | "info";
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
+
+  // Service category management state
+  const [categoryEditModalOpen, setCategoryEditModalOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState<{
+    id: string;
+    serviceCategory: {
+      id: string;
+      name: string;
+      color?: string;
+    };
+  } | null>(null);
+
+  // Helper functions - defined first to avoid temporal dead zone issues
   const getPriorityLabel = (priority: string) => {
     switch (priority) {
       case "HIGH":
@@ -234,64 +287,6 @@ const OfficerDashboard = () => {
       default:
         return "bg-gray-100 text-gray-800";
     }
-  };
-
-  // Filter options with colors and icons - calculated dynamically
-  const getFilterOptions = () => [
-    {
-      value: "IN_PROGRESS",
-      label: "In Progress",
-      count: allApplications.filter(
-        (app) => app.status === "IN_PROGRESS" && hasApplicationInvolvement(app)
-      ).length,
-      color: "bg-blue-100 text-blue-800 border-blue-200",
-      icon: <Clock className="w-4 h-4" />,
-    },
-    {
-      value: "RESOLVED",
-      label: "Resolved",
-      count: allApplications.filter(
-        (app) => app.status === "RESOLVED" && hasApplicationInvolvement(app)
-      ).length,
-      color: "bg-green-100 text-green-800 border-green-200",
-      icon: <CheckCircle className="w-4 h-4" />,
-    },
-    {
-      value: "CLOSED",
-      label: "Closed",
-      count: allApplications.filter(
-        (app) => app.status === "CLOSED" && hasApplicationInvolvement(app)
-      ).length,
-      color: "bg-red-100 text-red-800 border-red-200",
-      icon: <XCircle className="w-4 h-4" />,
-    },
-    {
-      value: "REOPENED",
-      label: "Reopened",
-      count: allApplications.filter(
-        (app) => app.status === "REOPENED" && hasApplicationInvolvement(app)
-      ).length,
-      color: "bg-purple-100 text-purple-800 border-purple-200",
-      icon: <RefreshCw className="w-4 h-4" />,
-    },
-  ];
-
-  // Forwarding filter options
-  const getForwardingFilterOptions = () => {
-    const currentUserId = session?.user?.id;
-    const forwardedByMeCount = allApplications.filter((app) => {
-      return hasForwardedThisApplication(app);
-    }).length;
-
-    return [
-      {
-        value: "FORWARDED_BY_ME",
-        label: "Forwarded by Me",
-        count: forwardedByMeCount,
-        color: "bg-orange-100 text-orange-800 border-orange-200",
-        icon: <Send className="w-4 h-4" />,
-      },
-    ];
   };
 
   // Helper function to check if current user forwarded this application but is not current holder
@@ -359,6 +354,90 @@ const OfficerDashboard = () => {
     );
   };
 
+  // Filter options with colors and icons - calculated dynamically with memoization
+  const filterOptions = useMemo(() => {
+    // Show loading state when data is being fetched or no data loaded yet
+    const isDataLoading = loading || allApplications.length === 0;
+
+    // Always calculate counts from ALL applications regardless of current filters
+    // This ensures accurate counts are shown for each status badge
+    const allUserApplications = allApplications.filter((app) =>
+      hasApplicationInvolvement(app)
+    );
+
+    return [
+      {
+        value: "IN_PROGRESS",
+        label: "In Progress",
+        count: isDataLoading
+          ? "..."
+          : allUserApplications.filter((app) => app.status === "IN_PROGRESS")
+              .length,
+        color: "bg-blue-100 text-blue-800 border-blue-200",
+        icon: <Clock className="w-4 h-4" />,
+      },
+      {
+        value: "RESOLVED",
+        label: "Resolved",
+        count: isDataLoading
+          ? "..."
+          : allUserApplications.filter((app) => app.status === "RESOLVED")
+              .length,
+        color: "bg-green-100 text-green-800 border-green-200",
+        icon: <CheckCircle className="w-4 h-4" />,
+      },
+      {
+        value: "CLOSED",
+        label: "Closed",
+        count: isDataLoading
+          ? "..."
+          : allUserApplications.filter((app) => app.status === "CLOSED").length,
+        color: "bg-red-100 text-red-800 border-red-200",
+        icon: <XCircle className="w-4 h-4" />,
+      },
+      {
+        value: "REOPENED",
+        label: "Reopened",
+        count: isDataLoading
+          ? "..."
+          : allUserApplications.filter((app) => app.status === "REOPENED")
+              .length,
+        color: "bg-purple-100 text-purple-800 border-purple-200",
+        icon: <RefreshCw className="w-4 h-4" />,
+      },
+    ];
+  }, [allApplications, session?.user?.id, loading]); // Re-calculate when applications, user, or loading state changes
+
+  // Keep the function for backwards compatibility but return memoized values
+  const getFilterOptions = () => filterOptions;
+
+  // Forwarding filter options with memoization
+  const forwardingFilterOptions = useMemo(() => {
+    // Show loading state when data is being fetched or no data loaded yet
+    const isDataLoading = loading || allApplications.length === 0;
+    const currentUserId = session?.user?.id;
+
+    // Calculate count from ALL applications that user has forwarded
+    const forwardedByMeCount = isDataLoading
+      ? "..."
+      : allApplications.filter((app) => {
+          return hasForwardedThisApplication(app);
+        }).length;
+
+    return [
+      {
+        value: "FORWARDED_BY_ME",
+        label: "Forwarded by Me",
+        count: forwardedByMeCount,
+        color: "bg-orange-100 text-orange-800 border-orange-200",
+        icon: <Send className="w-4 h-4" />,
+      },
+    ];
+  }, [allApplications, session?.user?.id, loading]);
+
+  // Keep the function for backwards compatibility but return memoized values
+  const getForwardingFilterOptions = () => forwardingFilterOptions;
+
   // Helper function to get citizen data
   const getCitizenData = (app: Application) => {
     if (app.citizen?.citizenProfile) {
@@ -379,13 +458,35 @@ const OfficerDashboard = () => {
   };
 
   // Fetch functions
-  const fetchApplications = async () => {
+  const fetchApplications = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
         limit: "50",
         includeForwardingHistory: "true",
       });
+
+      // Add search parameter
+      if (searchQuery.trim()) {
+        params.append("search", searchQuery.trim());
+      }
+
+      // Add service category filter
+      if (selectedServiceCategory) {
+        params.append("serviceCategoryId", selectedServiceCategory);
+      }
+
+      // Add application source filter
+      if (selectedApplicationSource) {
+        params.append("applicationSource", selectedApplicationSource);
+      }
+
+      // Don't add status filter to the API call - we'll filter on frontend to maintain accurate counts
+      // This ensures we always have all applications for accurate badge counts
+      // if (statusFilter && statusFilter !== "ALL") {
+      //   params.append("status", statusFilter);
+      // }
+
       const response = await fetch(`/api/applications?${params}`);
       if (!response.ok) throw new Error("Failed to fetch applications");
       const data = await response.json();
@@ -395,7 +496,12 @@ const OfficerDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    searchQuery,
+    selectedServiceCategory,
+    selectedApplicationSource,
+    // Removed statusFilter from dependencies since we're not filtering by status in API
+  ]);
 
   const fetchAvailableOfficers = async () => {
     try {
@@ -408,10 +514,31 @@ const OfficerDashboard = () => {
     }
   };
 
+  const fetchServiceCategories = async () => {
+    try {
+      const response = await fetch("/api/service-categories");
+      if (!response.ok) throw new Error("Failed to fetch service categories");
+      const categories = await response.json();
+      setServiceCategories(categories || []);
+    } catch (error) {
+      console.error("Error fetching service categories:", error);
+    }
+  };
+
   useEffect(() => {
     fetchApplications();
     fetchAvailableOfficers();
-  }, []);
+    fetchServiceCategories();
+  }, [fetchApplications]);
+
+  // Re-fetch applications when filters change (excluding statusFilter since it's now frontend-only)
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchApplications();
+    }, 300); // 300ms debounce for search
+
+    return () => clearTimeout(timeoutId);
+  }, [fetchApplications]);
 
   // Close action dropdown when clicking outside
   useEffect(() => {
@@ -430,6 +557,49 @@ const OfficerDashboard = () => {
   const handleRefresh = () => {
     fetchApplications();
     fetchAvailableOfficers();
+  };
+
+  // Get status-specific button configuration
+  const getStatusActionConfig = (status: string) => {
+    switch (status) {
+      case "RESOLVED":
+        return {
+          label: "Mark as Resolved",
+          icon: CheckCircle,
+          bgColor: "bg-green-600 hover:bg-green-700",
+          description:
+            "Mark this application as resolved. The issue has been addressed.",
+        };
+      case "CLOSED":
+        return {
+          label: "Close Application",
+          icon: XCircle,
+          bgColor: "bg-red-600 hover:bg-red-700",
+          description:
+            "Close this application. No further action will be taken.",
+        };
+      case "REOPENED":
+        return {
+          label: "Reopen Application",
+          icon: RefreshCw,
+          bgColor: "bg-purple-600 hover:bg-purple-700",
+          description: "Reopen this application for further processing.",
+        };
+      case "IN_PROGRESS":
+        return {
+          label: "Start Processing",
+          icon: PlayCircle,
+          bgColor: "bg-blue-600 hover:bg-blue-700",
+          description: "Start processing this application.",
+        };
+      default:
+        return {
+          label: "Change Status",
+          icon: RefreshCw,
+          bgColor: "bg-gray-600 hover:bg-gray-700",
+          description: "Update the application status.",
+        };
+    }
   };
 
   // Handle application status changes
@@ -476,7 +646,7 @@ const OfficerDashboard = () => {
           successMessage = "Status updated successfully";
       }
 
-      alert(successMessage);
+      toast.success(successMessage);
       setActionForm({
         action: "",
         newStatus: "",
@@ -490,11 +660,9 @@ const OfficerDashboard = () => {
       fetchApplications();
     } catch (error) {
       console.error("Status change error:", error);
-      alert(
-        `Error: ${
-          error instanceof Error ? error.message : "Status change failed"
-        }`
-      );
+      const errorMessage =
+        error instanceof Error ? error.message : "Status change failed";
+      toast.error(`Error: ${errorMessage}`);
     } finally {
       setProcessing(false);
     }
@@ -527,7 +695,7 @@ const OfficerDashboard = () => {
         throw new Error(error.error || "Forward failed");
       }
 
-      alert("Application forwarded successfully");
+      toast.success("Application forwarded successfully");
       setActionForm({
         action: "",
         newStatus: "",
@@ -541,9 +709,9 @@ const OfficerDashboard = () => {
       fetchApplications();
     } catch (error) {
       console.error("Forward error:", error);
-      alert(
-        `Error: ${error instanceof Error ? error.message : "Forward failed"}`
-      );
+      const errorMessage =
+        error instanceof Error ? error.message : "Forward failed";
+      toast.error(`Error: ${errorMessage}`);
     } finally {
       setProcessing(false);
     }
@@ -579,9 +747,15 @@ const OfficerDashboard = () => {
 
         const matchesServiceCategory =
           !selectedServiceCategory ||
-          app?.serviceCategory?.name === selectedServiceCategory;
+          app?.serviceCategory?.id === selectedServiceCategory;
 
-        return matchesSearch && matchesServiceCategory;
+        const matchesApplicationSource =
+          !selectedApplicationSource ||
+          app?.applicationSource === selectedApplicationSource;
+
+        return (
+          matchesSearch && matchesServiceCategory && matchesApplicationSource
+        );
       }
 
       if (app.status !== statusFilter) return false;
@@ -603,9 +777,15 @@ const OfficerDashboard = () => {
 
       const matchesServiceCategory =
         !selectedServiceCategory ||
-        app?.serviceCategory?.name === selectedServiceCategory;
+        app?.serviceCategory?.id === selectedServiceCategory;
 
-      return matchesSearch && matchesServiceCategory;
+      const matchesApplicationSource =
+        !selectedApplicationSource ||
+        app?.applicationSource === selectedApplicationSource;
+
+      return (
+        matchesSearch && matchesServiceCategory && matchesApplicationSource
+      );
     }) || [];
 
   const getStatusColor = (status: string) => {
@@ -668,6 +848,7 @@ const OfficerDashboard = () => {
     setSearchTerm("");
     setSearchQuery("");
     setSelectedServiceCategory("");
+    setSelectedApplicationSource("");
     setStatusFilter("IN_PROGRESS");
     setForwardingFilter("ALL");
   };
@@ -728,14 +909,42 @@ const OfficerDashboard = () => {
                   )}
                   {/* Category - Second Line */}
                   <div className="flex items-center flex-wrap gap-2 mb-3">
-                    <p className="text-base sm:text-lg font-semibold text-gray-800 break-words">
-                      {app.serviceCategory.name}
-                    </p>
+                    <ServiceCategoryBadge
+                      category={{
+                        id: app.serviceCategory.id,
+                        name: app.serviceCategory.name,
+                        color: app.serviceCategory.color,
+                      }}
+                      clickable={true}
+                      onClick={() => {
+                        setSelectedApplication(app);
+                        setCategoryEditModalOpen(true);
+                      }}
+                      className="cursor-pointer hover:scale-105 transition-transform"
+                    />
+
                     {app.department && (
                       <>
                         <span className="text-gray-400">•</span>
                         <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
                           {app.department.name}
+                        </span>
+                      </>
+                    )}
+
+                    {app.applicationSource && (
+                      <>
+                        <span className="text-gray-400">•</span>
+                        <span
+                          className={`text-xs font-medium px-2 py-1 rounded-md ${
+                            app.applicationSource === "PUBLIC"
+                              ? "bg-green-100 text-green-800 border border-green-200"
+                              : "bg-blue-100 text-blue-800 border border-blue-200"
+                          }`}
+                        >
+                          {app.applicationSource === "PUBLIC"
+                            ? "📄 Public"
+                            : "🏛️ Government"}
                         </span>
                       </>
                     )}
@@ -1465,12 +1674,13 @@ const OfficerDashboard = () => {
                                     )}
                                   </div>
                                   <div className="ml-4 flex flex-col gap-2">
-                                    <button
-                                      className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
-                                      title="View Document"
-                                    >
-                                      <Eye className="w-4 h-4" />
-                                    </button>
+                                    <FilePreviewButton
+                                      document={doc}
+                                      applicationId={app.id}
+                                      variant="ghost"
+                                      size="icon"
+                                      className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg"
+                                    />
                                     {!doc.isVerified && (
                                       <button
                                         className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
@@ -1511,6 +1721,9 @@ const OfficerDashboard = () => {
                 Citizen
               </th>
               <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Source
+              </th>
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -1539,8 +1752,20 @@ const OfficerDashboard = () => {
                         <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
                           {app.subject || app.serviceCategory.name}
                         </div>
-                        <div className="text-sm text-gray-500 truncate max-w-xs">
-                          {app.serviceCategory.name}
+                        <div className="text-sm text-gray-500">
+                          <ServiceCategoryBadge
+                            category={{
+                              id: app.serviceCategory.id,
+                              name: app.serviceCategory.name,
+                              color: app.serviceCategory.color,
+                            }}
+                            clickable={true}
+                            onClick={() => {
+                              setSelectedApplication(app);
+                              setCategoryEditModalOpen(true);
+                            }}
+                            className="cursor-pointer hover:scale-105 transition-transform"
+                          />
                         </div>
                         {app.rrNumber && (
                           <div className="text-xs text-gray-400">
@@ -1558,6 +1783,21 @@ const OfficerDashboard = () => {
                           {citizenData.phone}
                         </div>
                       </div>
+                    </td>
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                      {app.applicationSource && (
+                        <span
+                          className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${
+                            app.applicationSource === "PUBLIC"
+                              ? "bg-green-100 text-green-800 border border-green-200"
+                              : "bg-blue-100 text-blue-800 border border-blue-200"
+                          }`}
+                        >
+                          {app.applicationSource === "PUBLIC"
+                            ? "📄 Public"
+                            : "🏛️ Government"}
+                        </span>
+                      )}
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-col gap-1">
@@ -2332,12 +2572,13 @@ const OfficerDashboard = () => {
                                               )}
                                             </div>
                                             <div className="ml-4 flex flex-col gap-2">
-                                              <button
-                                                className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
-                                                title="View Document"
-                                              >
-                                                <Eye className="w-4 h-4" />
-                                              </button>
+                                              <FilePreviewButton
+                                                document={doc}
+                                                applicationId={app.id}
+                                                variant="ghost"
+                                                size="icon"
+                                                className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg"
+                                              />
                                               {!doc.isVerified && (
                                                 <button
                                                   className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
@@ -2653,19 +2894,26 @@ const OfficerDashboard = () => {
                   className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
                 >
                   <option value="">All Service Categories</option>
-                  {Array.from(
-                    new Set(
-                      allApplications
-                        ?.map((app) => app.serviceCategory?.name)
-                        .filter(Boolean)
-                    )
-                  )
-                    .sort()
+                  {serviceCategories
+                    .sort((a, b) => a.name.localeCompare(b.name))
                     .map((category) => (
-                      <option key={category} value={category}>
-                        {category}
+                      <option key={category.id} value={category.id}>
+                        {category.name}
                       </option>
                     ))}
+                </select>
+              </div>
+
+              {/* Application Source Filter */}
+              <div className="w-full lg:w-48">
+                <select
+                  value={selectedApplicationSource}
+                  onChange={(e) => setSelectedApplicationSource(e.target.value)}
+                  className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                >
+                  <option value="">All Sources</option>
+                  <option value="PUBLIC">📄 Public Portal</option>
+                  <option value="GOVERNMENT">🏛️ Government</option>
                 </select>
               </div>
 
@@ -2696,7 +2944,9 @@ const OfficerDashboard = () => {
               </div>
 
               {/* Clear Filters Button */}
-              {(searchQuery || selectedServiceCategory) && (
+              {(searchQuery ||
+                selectedServiceCategory ||
+                selectedApplicationSource) && (
                 <button
                   onClick={clearFilters}
                   className="px-4 py-3 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm"
@@ -2730,7 +2980,7 @@ const OfficerDashboard = () => {
                     {option.icon}
                     <span className="hidden sm:inline">{option.label}</span>
                     <span className="bg-white bg-opacity-70 px-1.5 sm:px-2 py-0.5 rounded-full text-xs font-semibold">
-                      {option.count}
+                      {loading ? "..." : option.count}
                     </span>
                   </button>
                 ))}
@@ -2756,7 +3006,7 @@ const OfficerDashboard = () => {
                       {option.icon}
                       <span className="hidden sm:inline">{option.label}</span>
                       <span className="bg-white bg-opacity-70 px-1.5 sm:px-2 py-0.5 rounded-full text-xs font-semibold">
-                        {option.count}
+                        {loading ? "..." : option.count}
                       </span>
                     </button>
                   ))}
@@ -3018,17 +3268,13 @@ const OfficerDashboard = () => {
                         </div>
                         <div>
                           <h4 className="font-medium text-gray-900">
-                            Change Status to {actionForm.newStatus}
+                            {getStatusActionConfig(actionForm.newStatus).label}
                           </h4>
                           <p className="text-sm text-gray-600 mt-1">
-                            {actionForm.newStatus === "RESOLVED" &&
-                              "Mark this application as resolved. The issue has been addressed."}
-                            {actionForm.newStatus === "CLOSED" &&
-                              "Close this application. No further action will be taken."}
-                            {actionForm.newStatus === "REOPENED" &&
-                              "Reopen this application for further processing."}
-                            {actionForm.newStatus === "IN_PROGRESS" &&
-                              "Start processing this application."}
+                            {
+                              getStatusActionConfig(actionForm.newStatus)
+                                .description
+                            }
                           </p>
                         </div>
                       </div>
@@ -3083,7 +3329,7 @@ const OfficerDashboard = () => {
                 }
                 className={`w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 rounded-lg text-white font-medium disabled:opacity-50 transition-colors ${
                   actionForm.action === "change_status"
-                    ? "bg-blue-600 hover:bg-blue-700"
+                    ? getStatusActionConfig(actionForm.newStatus).bgColor
                     : actionForm.action === "forward"
                     ? "bg-purple-600 hover:bg-purple-700"
                     : "bg-gray-600 hover:bg-gray-700"
@@ -3096,14 +3342,16 @@ const OfficerDashboard = () => {
                   </>
                 ) : (
                   <>
-                    {actionForm.action === "change_status" && (
-                      <RefreshCw className="w-4 h-4" />
-                    )}
+                    {actionForm.action === "change_status" &&
+                      React.createElement(
+                        getStatusActionConfig(actionForm.newStatus).icon,
+                        { className: "w-4 h-4" }
+                      )}
                     {actionForm.action === "forward" && (
                       <Forward className="w-4 h-4" />
                     )}
                     {actionForm.action === "change_status"
-                      ? "Change Status"
+                      ? getStatusActionConfig(actionForm.newStatus).label
                       : actionForm.action === "forward"
                       ? "Forward Application"
                       : "Submit Action"}
@@ -3114,6 +3362,41 @@ const OfficerDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Service Category Edit Modal */}
+      <ServiceCategoryEditModal
+        isOpen={categoryEditModalOpen}
+        onCloseAction={() => setCategoryEditModalOpen(false)}
+        applicationId={selectedApplication?.id || ""}
+        currentCategory={selectedApplication?.serviceCategory}
+        onCategoryUpdatedAction={() => {
+          // Refresh the applications list
+          fetchApplications();
+          setCategoryEditModalOpen(false);
+        }}
+      />
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
+        onConfirm={confirmDialog.onConfirm}
+        title={confirmDialog.title}
+        description={confirmDialog.description}
+        confirmText={confirmDialog.confirmText}
+        variant={confirmDialog.variant}
+      />
+
+      {/* Notification Dialog */}
+      <NotificationDialog
+        isOpen={notificationDialog.isOpen}
+        onClose={() =>
+          setNotificationDialog({ ...notificationDialog, isOpen: false })
+        }
+        title={notificationDialog.title}
+        message={notificationDialog.message}
+        type={notificationDialog.type}
+      />
     </div>
   );
 };

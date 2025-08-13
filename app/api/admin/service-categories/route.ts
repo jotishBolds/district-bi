@@ -8,6 +8,7 @@ import { UserRole } from "@/app/generated/prisma";
 const createServiceCategorySchema = z.object({
   name: z.string().min(1, "Service category name is required").max(100),
   description: z.string().optional(),
+  color: z.string().optional(),
   isActive: z.boolean().default(true),
 });
 
@@ -55,6 +56,7 @@ export async function POST(request: NextRequest) {
       data: {
         name: validatedData.name,
         description: validatedData.description,
+        color: validatedData.color,
         isActive: validatedData.isActive,
       },
     });

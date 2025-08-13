@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { ServiceCategorySelector } from "@/components/ui/service-category-selector";
 import {
   Card,
   CardContent,
@@ -105,6 +106,7 @@ const pullSchema = z.object({
   instructions: z
     .string()
     .min(10, "Instructions must be at least 10 characters"),
+  serviceCategoryId: z.string().optional(),
 });
 
 type PullFormData = z.infer<typeof pullSchema>;
@@ -192,6 +194,7 @@ export default function ApplicationQueuePage() {
       officerId: defaultOfficerId,
       priority: 2,
       instructions: "",
+      serviceCategoryId: "",
     });
   };
 
@@ -210,6 +213,7 @@ export default function ApplicationQueuePage() {
           officerId: data.officerId,
           priority: data.priority,
           instructions: data.instructions,
+          serviceCategoryId: data.serviceCategoryId,
         }),
       });
 
@@ -785,6 +789,26 @@ export default function ApplicationQueuePage() {
                         )}
                       />
                     )}
+
+                    <FormField
+                      control={form.control}
+                      name="serviceCategoryId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Service Category (Optional)</FormLabel>
+                          <FormControl>
+                            <ServiceCategorySelector
+                              value={field.value}
+                              onValueChangeAction={field.onChange}
+                              canCreate={true}
+                              placeholder="Select or create service category..."
+                              disabled={pulling}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
                     <FormField
                       control={form.control}

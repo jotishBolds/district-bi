@@ -149,20 +149,25 @@ function OtpVerificationContent() {
           return;
         }
 
-        // For login verification, create a session
-        const signInResult = await signIn("credentials", {
-          email,
-          password: "verified-by-otp",
-          redirect: false,
-          callbackUrl: "/dashboard",
-        });
+        // For login verification, create a session using the special auth method
+        // First, clear the OTP verification requirement
+        if (data.clearOtpFlag) {
+          const signInResult = await signIn("credentials", {
+            email,
+            password: "verified-by-otp",
+            redirect: false,
+            callbackUrl: "/dashboard",
+          });
 
-        if (signInResult?.error) {
-          throw new Error(signInResult.error || "Session creation failed");
+          if (signInResult?.error) {
+            throw new Error(signInResult.error || "Session creation failed");
+          }
+
+          toast.success("Authentication successful!");
+          router.push("/dashboard");
+        } else {
+          throw new Error("OTP verification incomplete");
         }
-
-        toast.success("Authentication successful!");
-        router.push("/dashboard");
       } else if (verificationType === "PASSWORD_RESET") {
         toast.success("Verification successful!");
 
