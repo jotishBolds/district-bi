@@ -78,7 +78,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       icon: ClipboardList,
     },
 
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const frontDeskLinks = [
@@ -118,12 +118,12 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
             icon: ClipboardList,
           },
         ]),
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const adminLinks = [
     { name: "Dashboard", href: "/admin", icon: Home },
-    { name: "Applications", href: "/dashboard/applications", icon: FileText },
+
     { name: "User Management", href: "/admin/user-management", icon: Users },
     {
       name: "Service Categories",
@@ -140,9 +140,9 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       href: "/admin/frontdesk-management",
       icon: Shield,
     },
-    { name: "System Settings", href: "/admin/settings", icon: Settings },
-    { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
+    // { name: "System Settings", href: "/admin/settings", icon: Settings },
+    // { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const dcLinks = [
@@ -158,7 +158,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       icon: ClipboardList,
     },
 
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const dispatchLinks = [
@@ -170,7 +170,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
     },
     { name: "Applications", href: "/dashboard/applications", icon: FileText },
     { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const getLinks = () => {

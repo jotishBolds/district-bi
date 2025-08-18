@@ -133,7 +133,10 @@ export default function UserNav() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/help" className="flex items-center cursor-pointer">
+          <Link
+            href="/dashboard/help"
+            className="flex items-center cursor-pointer"
+          >
             <HelpCircle className="mr-2 h-4 w-4" />
             Help & Support
           </Link>

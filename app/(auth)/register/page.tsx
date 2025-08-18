@@ -11,6 +11,7 @@ import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   Card,
   CardContent,
@@ -334,11 +335,10 @@ export default function RegisterPage() {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          type="password"
+                        <PasswordInput
                           placeholder="Create a secure password"
                           disabled={isLoading}
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -353,11 +353,10 @@ export default function RegisterPage() {
                     <FormItem>
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          type="password"
+                        <PasswordInput
                           placeholder="Confirm your password"
                           disabled={isLoading}
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />

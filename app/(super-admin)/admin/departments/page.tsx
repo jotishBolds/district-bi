@@ -150,7 +150,14 @@ export default function DepartmentManagement() {
         if (!response.ok) throw new Error("Failed to fetch departments");
 
         const data = await response.json();
-        setDepartments(data.departments);
+        // Support both array and object response
+        if (Array.isArray(data)) {
+          setDepartments(data);
+        } else if (Array.isArray(data.departments)) {
+          setDepartments(data.departments);
+        } else {
+          setDepartments([]);
+        }
       } catch (error) {
         toast.error("Failed to load departments. Please try again.");
         console.error("Error fetching departments:", error);
@@ -235,12 +242,26 @@ export default function DepartmentManagement() {
         throw new Error(error.message || "Failed to update department");
       }
 
-      const updatedDepartment = await response.json();
+      const updatedDepartmentResponse = await response.json();
+      // Support both object and direct department response
+      let updatedDepartment =
+        updatedDepartmentResponse.department || updatedDepartmentResponse;
+      if (!updatedDepartment || !updatedDepartment.id) {
+        throw new Error("Invalid department data returned from API");
+      }
+      // Defensive: ensure _count.applications is always defined
+      if (
+        !updatedDepartment._count ||
+        typeof updatedDepartment._count.applications !== "number"
+      ) {
+        updatedDepartment = {
+          ...updatedDepartment,
+          _count: { applications: 0 },
+        };
+      }
       setDepartments((prev) =>
         prev.map((dept) =>
-          dept.id === selectedDepartment.id
-            ? updatedDepartment.department
-            : dept
+          dept.id === selectedDepartment.id ? updatedDepartment : dept
         )
       );
       toast.success("Department has been updated successfully.");

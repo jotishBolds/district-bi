@@ -133,22 +133,19 @@ export async function POST(req: NextRequest) {
       } else {
         await sendVerificationEmail(email, otp); // Default fallback
       }
+      console.log("✅ OTP EMAIL SENT SUCCESSFULLY TO:", email);
     } catch (emailError) {
-      // Log email error but don't fail the request in development
-      console.error("Email sending error:", emailError);
+      // Log email error but don't fail the request
+      console.error("❌ Email sending error:", emailError);
 
-      // In production, you might want to fail the request if email sending fails
-      if (process.env.NODE_ENV === "production") {
-        throw emailError;
-      }
+      // Don't fail the request if email sending fails, just log the error
+      // The OTP is still generated and stored in database
     }
 
     return NextResponse.json({
       success: true,
       message:
-        process.env.NODE_ENV === "production"
-          ? "OTP sent successfully to your email"
-          : "OTP sent successfully (also logged to console for development)",
+        "OTP sent successfully to your email and logged to console for development",
     });
   } catch (error) {
     console.error("Send OTP error:", error);

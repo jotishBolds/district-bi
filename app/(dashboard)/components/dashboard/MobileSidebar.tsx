@@ -58,7 +58,7 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       icon: FileText,
     },
     { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const officerLinks: SidebarLink[] = [
@@ -70,7 +70,7 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       icon: ClipboardList,
     },
     { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const dcLinks: SidebarLink[] = [
@@ -86,12 +86,12 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       icon: ClipboardList,
     },
 
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const adminLinks: SidebarLink[] = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
-    { name: "Applications", href: "/applications", icon: FileText },
+
     { name: "User Management", href: "/admin/user-management", icon: Users },
     {
       name: "Service Categories",
@@ -103,9 +103,9 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       href: "/admin/departments",
       icon: Building2,
     },
-    { name: "System Settings", href: "/admin/settings", icon: Settings },
-    { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
+    // { name: "System Settings", href: "/admin/settings", icon: Settings },
+    // { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
   const dispatchLinks: SidebarLink[] = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -116,7 +116,7 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     },
     { name: "Applications", href: "/dashboard/applications", icon: FileText },
     { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const getLinks = () => {

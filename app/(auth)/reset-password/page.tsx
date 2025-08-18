@@ -11,6 +11,7 @@ import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   Card,
   CardContent,
@@ -151,8 +152,7 @@ const ResetPasswordFormContent = () => {
                   <FormItem>
                     <FormLabel>New Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
+                      <PasswordInput
                         placeholder="••••••••"
                         disabled={isLoading}
                         {...field}
@@ -174,8 +174,7 @@ const ResetPasswordFormContent = () => {
                   <FormItem>
                     <FormLabel>Confirm New Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
+                      <PasswordInput
                         placeholder="••••••••"
                         disabled={isLoading}
                         {...field}

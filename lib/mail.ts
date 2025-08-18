@@ -28,13 +28,10 @@ function logOTPInDevelopment(email: string, otp: string, type: string) {
 export async function sendOTPEmail(to: string, otp: string) {
   const emailType = "GENERAL_OTP";
 
-  if (!isProduction) {
-    // Development: Log to console
-    logOTPInDevelopment(to, otp, emailType);
-    return Promise.resolve({ messageId: "dev-mode" });
-  }
+  // Always log to console for development and debugging
+  logOTPInDevelopment(to, otp, emailType);
 
-  // Production: Send actual email
+  // Send actual email in both development and production
   const mailOptions = {
     from: process.env.EMAIL_FROM,
     to,
@@ -64,13 +61,10 @@ export async function sendOTPEmail(to: string, otp: string) {
 export async function sendVerificationEmail(to: string, otp: string) {
   const emailType = "EMAIL_VERIFICATION";
 
-  if (!isProduction) {
-    // Development: Log to console
-    logOTPInDevelopment(to, otp, emailType);
-    return Promise.resolve({ messageId: "dev-mode" });
-  }
+  // Always log to console for development and debugging
+  logOTPInDevelopment(to, otp, emailType);
 
-  // Production: Send actual email
+  // Send actual email in both development and production
   const mailOptions = {
     from: process.env.EMAIL_FROM,
     to,
@@ -100,13 +94,10 @@ export async function sendVerificationEmail(to: string, otp: string) {
 export async function sendPasswordResetEmail(to: string, otp: string) {
   const emailType = "PASSWORD_RESET";
 
-  if (!isProduction) {
-    // Development: Log to console
-    logOTPInDevelopment(to, otp, emailType);
-    return Promise.resolve({ messageId: "dev-mode" });
-  }
+  // Always log to console for development and debugging
+  logOTPInDevelopment(to, otp, emailType);
 
-  // Production: Send actual email
+  // Send actual email in both development and production
   const mailOptions = {
     from: process.env.EMAIL_FROM,
     to,
@@ -136,13 +127,10 @@ export async function sendPasswordResetEmail(to: string, otp: string) {
 export async function sendLoginOTPEmail(to: string, otp: string) {
   const emailType = "LOGIN_OTP";
 
-  if (!isProduction) {
-    // Development: Log to console
-    logOTPInDevelopment(to, otp, emailType);
-    return Promise.resolve({ messageId: "dev-mode" });
-  }
+  // Always log to console for development and debugging
+  logOTPInDevelopment(to, otp, emailType);
 
-  // Production: Send actual email
+  // Send actual email in both development and production
   const mailOptions = {
     from: process.env.EMAIL_FROM,
     to,

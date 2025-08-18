@@ -54,6 +54,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -975,16 +976,16 @@ export default function UserManagement() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password (optional)</FormLabel>
+                      <FormLabel>Password </FormLabel>
                       <FormControl>
-                        <Input
-                          type="password"
+                        <PasswordInput
                           placeholder="Leave blank to auto-generate"
                           {...field}
                         />
                       </FormControl>
                       <FormDescription className="text-xs">
-                        If left blank, a random password will be generated
+                        If new password enter new password else enter old
+                        password
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -1296,16 +1297,16 @@ export default function UserManagement() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password (optional)</FormLabel>
+                      <FormLabel>Password </FormLabel>
                       <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="Leave blank to keep current password"
+                        <PasswordInput
+                          placeholder="Enter Password"
                           {...field}
                         />
                       </FormControl>
                       <FormDescription className="text-xs">
-                        Only fill this to change the user&apos;s password
+                        If entering a new password, it must be at least 8
+                        characters long. Else enter old password
                       </FormDescription>
                       <FormMessage />
                     </FormItem>

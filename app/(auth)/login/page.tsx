@@ -13,6 +13,7 @@ import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
   Card,
   CardContent,
@@ -290,8 +291,7 @@ function GovernmentLoginForm() {
                         </Link>
                       </div>
                       <FormControl>
-                        <Input
-                          type="password"
+                        <PasswordInput
                           placeholder="••••••••"
                           disabled={isLoading || isLocked}
                           {...field}

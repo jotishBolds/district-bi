@@ -118,13 +118,23 @@ export const authOptions: AuthOptions = {
           },
         });
 
-        // Console log OTP instead of sending email
+        // Always log to console and send OTP email
         console.log("=".repeat(50));
         console.log("🔐 LOGIN OTP GENERATED");
         console.log("📧 EMAIL:", user.email);
         console.log("🔐 OTP CODE:", otp);
         console.log("⏰ EXPIRES IN: 10 minutes");
         console.log("=".repeat(50));
+
+        // Send OTP email using the sendLoginOTPEmail function
+        try {
+          const { sendLoginOTPEmail } = await import("@/lib/mail");
+          await sendLoginOTPEmail(user.email, otp);
+          console.log("✅ LOGIN OTP EMAIL SENT SUCCESSFULLY");
+        } catch (emailError) {
+          console.error("❌ Failed to send login OTP email:", emailError);
+          // Don't fail the authentication if email sending fails
+        }
 
         // Return user with OTP required flag
         // This creates a temporary session that requires OTP verification
