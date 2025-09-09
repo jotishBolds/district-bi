@@ -48,7 +48,6 @@ interface QueuedApplication {
   createdAt: string;
   serviceCategory: {
     name: string;
-    slaDays: number;
   };
   documents: Array<{
     id: string;
@@ -361,10 +360,6 @@ export default function GeneralFrontdeskQueueView() {
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-gray-200 gap-2">
-                {/* <div className="flex items-center gap-2 text-sm text-amber-600">
-                  <AlertCircle className="h-4 w-4" />
-                  <span>SLA: {application.serviceCategory.slaDays} days</span>
-                </div> */}
                 <Badge className="bg-yellow-100 text-yellow-800 self-start sm:self-auto">
                   Waiting for Assignment
                 </Badge>
@@ -437,9 +432,6 @@ export default function GeneralFrontdeskQueueView() {
                         <Badge variant="outline" className="w-fit">
                           {application.serviceCategory.name}
                         </Badge>
-                        <div className="text-xs text-gray-500 mt-1">
-                          SLA: {application.serviceCategory.slaDays} days
-                        </div>
                       </div>
                     </TableCell>
                     <TableCell className="px-3 sm:px-6 py-4">
@@ -600,22 +592,6 @@ export default function GeneralFrontdeskQueueView() {
                                   In Queue Since:
                                 </span>
                                 <span>{formatDate(application.createdAt)}</span>
-                              </div>
-                              <div className="flex items-center gap-2 text-amber-600">
-                                <AlertCircle className="h-4 w-4" />
-                                <span className="font-medium">
-                                  SLA Deadline:
-                                </span>
-                                <span>
-                                  {new Date(
-                                    new Date(application.createdAt).getTime() +
-                                      application.serviceCategory.slaDays *
-                                        24 *
-                                        60 *
-                                        60 *
-                                        1000
-                                  ).toLocaleDateString()}
-                                </span>
                               </div>
                             </div>
                           </div>

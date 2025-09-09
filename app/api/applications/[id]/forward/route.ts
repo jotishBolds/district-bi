@@ -31,7 +31,10 @@ export async function POST(
       );
     }
 
-    const { assignedToId, instructions, priority = 2 } = await request.json();
+    const {
+      assignedToId,
+      instructions /* priority is always HIGH (1) - removed from UI */,
+    } = await request.json();
 
     if (!assignedToId || !instructions) {
       return NextResponse.json(
@@ -85,7 +88,9 @@ export async function POST(
     }
 
     // Check level-based hierarchy: current user can only forward to same level or lower
-    if (!canAssignTo(session.user.role, targetOfficer.role)) {
+    // Exception: Allow self-forwarding (forwarding to oneself)
+    const isSelfForward = assignedToId === session.user.id;
+    if (!isSelfForward && !canAssignTo(session.user.role, targetOfficer.role)) {
       const currentLevel = getLevelPriority(session.user.role);
       const targetLevel = getLevelPriority(targetOfficer.role);
       return NextResponse.json(
@@ -125,7 +130,7 @@ export async function POST(
           assignedById: session.user.id,
           assignedToId,
           instructions,
-          priority,
+          priority: 1, // Always HIGH priority
         },
       });
 
@@ -136,7 +141,7 @@ export async function POST(
           fromOfficerId: session.user.id,
           toOfficerId: assignedToId,
           instructions,
-          priority,
+          priority: 1, // Always HIGH priority
           isActive: true,
           forwardedAt: new Date(),
         },
@@ -149,7 +154,9 @@ export async function POST(
           fromStatus: application.status,
           toStatus: application.status, // Status remains same, just holder changes
           changedById: session.user.id,
-          comments: `Application forwarded to ${targetOfficer.officerProfile?.fullName}: ${instructions}`,
+          comments: isSelfForward
+            ? `Application self-forwarded with instructions: ${instructions}`
+            : `Application forwarded to ${targetOfficer.officerProfile?.fullName}: ${instructions}`,
         },
       });
 
@@ -164,31 +171,50 @@ export async function POST(
         },
       });
 
-      // Create notification for target officer
-      await tx.notification.create({
-        data: {
-          userId: assignedToId,
-          notificationType: "STATUS_CHANGED",
-          applicationId,
-          title: "New Application Assigned",
-          message: `Application ${
-            application.rrNumber || application.id
-          } has been forwarded to you by ${session.user.email}`,
-          isRead: false,
-        },
-      });
+      // Create notification for target officer (only if not self-forwarding)
+      if (!isSelfForward) {
+        await tx.notification.create({
+          data: {
+            userId: assignedToId,
+            notificationType: "STATUS_CHANGED",
+            applicationId,
+            title: "New Application Assigned",
+            message: `Application ${
+              application.rrNumber || application.id
+            } has been forwarded to you by ${session.user.email}`,
+            isRead: false,
+          },
+        });
+      } else {
+        // For self-forward, create a self-reminder notification
+        await tx.notification.create({
+          data: {
+            userId: assignedToId,
+            notificationType: "STATUS_CHANGED",
+            applicationId,
+            title: "Self-Forward Reminder",
+            message: `Self-forwarded application ${
+              application.rrNumber || application.id
+            } with instructions: ${instructions}`,
+            isRead: false,
+          },
+        });
+      }
 
       return updatedApplication;
     });
 
     return NextResponse.json({
-      message: "Application forwarded successfully",
+      message: isSelfForward
+        ? "Application self-forwarded successfully"
+        : "Application forwarded successfully",
       application: result,
       forwardedTo: {
         id: targetOfficer.id,
         name: targetOfficer.officerProfile?.fullName,
         designation: targetOfficer.officerProfile?.designation,
       },
+      isSelfForward,
     });
   } catch (error) {
     console.error("Error forwarding application:", error);

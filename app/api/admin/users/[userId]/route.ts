@@ -26,8 +26,10 @@ const updateUserSchema = z.object({
   sectionId: z.string().optional(),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .optional(),
+    .optional()
+    .refine((val) => !val || val.length >= 8, {
+      message: "Password must be at least 8 characters if provided",
+    }),
 });
 
 // Helper function to check officer role

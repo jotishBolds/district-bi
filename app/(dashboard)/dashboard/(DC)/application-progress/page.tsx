@@ -3674,26 +3674,9 @@ const DCDashboard = () => {
                             <span>
                               Size: {(doc.fileSize / 1024).toFixed(1)} KB
                             </span>
-                            <span
-                              className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
-                                doc.isVerified
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-yellow-100 text-yellow-800"
-                              }`}
-                            >
-                              {doc.isVerified
-                                ? "Verified"
-                                : "Pending Verification"}
-                            </span>
                             <span>Uploaded: {formatDate(doc.createdAt)}</span>
                           </div>
-                          {doc.verificationNotes && (
-                            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                              <p className="text-sm text-gray-700">
-                                <strong>Notes:</strong> {doc.verificationNotes}
-                              </p>
-                            </div>
-                          )}
+                          {/* Document verification removed - not needed */}
                         </div>
                         <div className="ml-4 flex items-center gap-2 flex-shrink-0">
                           <FilePreviewButton

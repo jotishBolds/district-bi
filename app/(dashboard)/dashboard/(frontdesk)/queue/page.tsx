@@ -102,10 +102,8 @@ interface AssignedOfficer {
 
 const pullSchema = z.object({
   officerId: z.string().min(1, "Officer selection is required"),
-  priority: z.number().min(1).max(3),
-  instructions: z
-    .string()
-    .min(10, "Instructions must be at least 10 characters"),
+  // priority: z.number().min(1).max(3), // Always HIGH priority - removed from UI
+  instructions: z.string().optional(),
   serviceCategoryId: z.string().optional(),
 });
 
@@ -132,7 +130,7 @@ export default function ApplicationQueuePage() {
     resolver: zodResolver(pullSchema),
     defaultValues: {
       officerId: "",
-      priority: 2,
+      // priority: 1, // Always HIGH priority - removed from UI
       instructions: "",
     },
   });
@@ -192,7 +190,7 @@ export default function ApplicationQueuePage() {
 
     form.reset({
       officerId: defaultOfficerId,
-      priority: 2,
+      // priority: 1, // Always HIGH priority - removed from UI
       instructions: "",
       serviceCategoryId: "",
     });
@@ -211,7 +209,7 @@ export default function ApplicationQueuePage() {
         body: JSON.stringify({
           applicationId: selectedApplication.id,
           officerId: data.officerId,
-          priority: data.priority,
+          // priority: 1, // Always HIGH priority - removed from UI
           instructions: data.instructions,
           serviceCategoryId: data.serviceCategoryId,
         }),
@@ -549,19 +547,16 @@ export default function ApplicationQueuePage() {
                       {application.documents.map((doc) => (
                         <Badge
                           key={doc.id}
-                          variant={doc.isVerified ? "default" : "secondary"}
+                          variant="default"
                           className="text-xs"
                         >
                           {getDocumentTypeLabel(doc.documentType)}
-                          {doc.isVerified && " ✓"}
                         </Badge>
                       ))}
                     </div>
                   </div>
 
-                  {/* SLA Warning */}
-                  <div className="flex items-center gap-2 text-sm text-amber-600">
-                    <AlertCircle className="h-4 w-4" />
+                  <div className="flex items-center gap-2 text-sm text-blue-600">
                     <span>Category: {application.serviceCategory.name}</span>
                   </div>
                 </CardContent>
@@ -592,7 +587,6 @@ export default function ApplicationQueuePage() {
                     <TableHead>Service Category</TableHead>
                     <TableHead>Documents</TableHead>
                     <TableHead>Submitted</TableHead>
-                    <TableHead>SLA Days</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -649,11 +643,10 @@ export default function ApplicationQueuePage() {
                           {application.documents.slice(0, 2).map((doc) => (
                             <Badge
                               key={doc.id}
-                              variant={doc.isVerified ? "default" : "secondary"}
+                              variant="default"
                               className="text-xs"
                             >
                               {getDocumentTypeLabel(doc.documentType)}
-                              {doc.isVerified && " ✓"}
                             </Badge>
                           ))}
                           {application.documents.length > 2 && (
@@ -669,12 +662,6 @@ export default function ApplicationQueuePage() {
                         </div>
                         <div className="text-xs text-gray-500">
                           {formatDate(application.submittedAt)}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1 text-sm text-amber-600">
-                          <AlertCircle className="h-3 w-3" />
-                          {application.serviceCategory.name}
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
@@ -810,61 +797,14 @@ export default function ApplicationQueuePage() {
                       )}
                     />
 
-                    <FormField
-                      control={form.control}
-                      name="priority"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Priority</FormLabel>
-                          <Select
-                            onValueChange={(value) =>
-                              field.onChange(parseInt(value))
-                            }
-                            defaultValue={field.value.toString()}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="1">
-                                <div className="flex items-center gap-2">
-                                  <Badge className={getPriorityColor(1)}>
-                                    High
-                                  </Badge>
-                                  <span>Urgent</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="2">
-                                <div className="flex items-center gap-2">
-                                  <Badge className={getPriorityColor(2)}>
-                                    Medium
-                                  </Badge>
-                                  <span>Normal</span>
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="3">
-                                <div className="flex items-center gap-2">
-                                  <Badge className={getPriorityColor(3)}>
-                                    Low
-                                  </Badge>
-                                  <span>Can wait</span>
-                                </div>
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {/* Priority is always HIGH - removed from UI */}
 
                     <FormField
                       control={form.control}
                       name="instructions"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Instructions for Officer *</FormLabel>
+                          <FormLabel>Instructions for Officer</FormLabel>
                           <FormControl>
                             <Textarea
                               placeholder="Provide detailed instructions for handling this application..."

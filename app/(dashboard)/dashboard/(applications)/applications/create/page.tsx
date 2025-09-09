@@ -632,7 +632,12 @@ export default function ApplicationCreation() {
                   </CardHeader>
                   <CardContent className="space-y-6">
                     {/* File Upload Area */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
+                    <div
+                      className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors cursor-pointer"
+                      onClick={() =>
+                        document.getElementById("file-upload")?.click()
+                      }
+                    >
                       <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
                       <h3 className="text-lg font-medium text-gray-900 mb-2">
                         Upload Documents

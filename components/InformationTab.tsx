@@ -54,7 +54,7 @@ export default function InformationTab() {
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
+    <div className="bg-card rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 h-full">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -123,7 +123,7 @@ export default function InformationTab() {
                       </div>
                     </div>
 
-                    <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="bg-muted/50 p-3 rounded-lg">
                       <h5 className="text-xs font-semibold text-gray-700 mb-1">
                         Required Documents
                       </h5>

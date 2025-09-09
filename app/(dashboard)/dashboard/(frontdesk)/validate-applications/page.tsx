@@ -36,7 +36,6 @@ interface CitizenProfile {
 
 interface ServiceCategory {
   name: string;
-  slaDays: number;
 }
 
 interface Document {
@@ -161,7 +160,7 @@ const FrontDeskDashboard = () => {
     comments: "",
     rejectionReason: "",
     forwardToOfficerId: "",
-    priority: 2,
+    // priority: 1, // Always HIGH priority - removed from UI
     instructions: "",
   });
 
@@ -298,9 +297,6 @@ const FrontDeskDashboard = () => {
         if (!actionForm.forwardToOfficerId) {
           throw new Error("Please select an officer to forward to");
         }
-        if (!actionForm.instructions) {
-          throw new Error("Please provide instructions for the officer");
-        }
         if (!targetOfficer?.fullName) {
           throw new Error("Selected officer details not found");
         }
@@ -310,8 +306,9 @@ const FrontDeskDashboard = () => {
       const payload = {
         action: "forward", // Use standard forward action
         forwardToOfficerId: actionForm.forwardToOfficerId,
-        priority: actionForm.priority,
-        instructions: actionForm.instructions,
+        // priority: 1, // Always HIGH priority - removed from UI
+        instructions:
+          actionForm.instructions || "No specific instructions provided",
         targetOfficerName: targetOfficer?.fullName,
         // Include current assigned officer info for notification
         currentAssignedOfficer:
@@ -347,7 +344,7 @@ const FrontDeskDashboard = () => {
         comments: "",
         rejectionReason: "",
         forwardToOfficerId: "",
-        priority: 2,
+        // priority: 1, // Always HIGH priority - removed from UI
         instructions: "",
       });
 
@@ -702,13 +699,8 @@ const FrontDeskDashboard = () => {
                           {app?.documents?.length || 0} docs
                         </div>
                         <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          <span className="hidden sm:inline">
-                            Estimated Time: {app?.serviceCategory?.slaDays || 0}{" "}
-                            days
-                          </span>
-                          <span className="sm:hidden">
-                            {app?.serviceCategory?.slaDays || 0}d
+                          <span className="text-sm text-gray-600">
+                            Service: {app?.serviceCategory?.name}
                           </span>
                         </div>
                       </div>
@@ -777,10 +769,6 @@ const FrontDeskDashboard = () => {
                           </span>
                         </p>
                       )}
-                      <p>
-                        <strong>Estimated Time:</strong>{" "}
-                        {selectedApp.serviceCategory.slaDays} days
-                      </p>
                       <p className="break-words">
                         <strong>Submitted:</strong>{" "}
                         <span className="hidden sm:inline">
@@ -945,28 +933,7 @@ const FrontDeskDashboard = () => {
                           </div>
                         )}
 
-                        {/* Priority Selection for Forward */}
-                        {actionForm.action === "forward" && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Priority
-                            </label>
-                            <select
-                              value={actionForm.priority}
-                              onChange={(e) =>
-                                setActionForm({
-                                  ...actionForm,
-                                  priority: parseInt(e.target.value),
-                                })
-                              }
-                              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
-                            >
-                              <option value={1}>High</option>
-                              <option value={2}>Medium</option>
-                              <option value={3}>Low</option>
-                            </select>
-                          </div>
-                        )}
+                        {/* Priority is always HIGH - removed from UI */}
 
                         {/* Comments/Instructions */}
                         <div>
@@ -978,7 +945,7 @@ const FrontDeskDashboard = () => {
                                 instructions: e.target.value,
                               })
                             }
-                            placeholder="Instructions for the assigned officer"
+                            placeholder="Instructions for the assigned officer (optional)"
                             rows={3}
                             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                           />
@@ -1217,20 +1184,7 @@ const FrontDeskDashboard = () => {
                           {formatDateTime(previewDocument.createdAt)}
                         </span>
                       </div>
-                      <div>
-                        <span className="font-medium text-gray-700">
-                          Verification:
-                        </span>
-                        <span
-                          className={`ml-2 px-2 py-1 rounded text-xs ${
-                            previewDocument.isVerified
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          }`}
-                        >
-                          {previewDocument.isVerified ? "Verified" : "Pending"}
-                        </span>
-                      </div>
+                      {/* Document verification removed - not needed */}
                     </div>
                   </div>
                 </div>

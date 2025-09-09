@@ -6,6 +6,7 @@ import {
   getContentTypeFromExtension,
 } from "@/lib/s3-storage";
 import prisma from "@/lib/prisma";
+import { isOfficerOrOfficial, isAdminRole } from "@/lib/officer-roles";
 
 export async function GET(
   request: NextRequest,
@@ -68,11 +69,11 @@ export async function GET(
       document.application.frontdeskForwardings
     );
 
-    // Check authorization - allow DC and ADMIN roles access to all documents
+    // Check authorization - allow all officers and admin roles access to documents
+    // Officers need to view documents to process applications
     const isAuthorized =
-      session.user.role === "DC" ||
-      session.user.role === "ADMIN" ||
-      session.user.role === "SUPER_ADMIN" ||
+      isAdminRole(session.user.role) ||
+      isOfficerOrOfficial(session.user.role) ||
       document.application.currentHolderId === session.user.id ||
       document.application.officerAssignments.some(
         (assignment) =>
@@ -92,18 +93,35 @@ export async function GET(
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
-    // Generate S3 presigned URL with proper content type
+    // Generate S3 presigned URL with proper content type and extended expiry
     const s3Key = extractS3Key(document.filePath);
     const contentType = getContentTypeFromExtension(document.fileName);
-    const presignedUrl = await getPresignedUrl(s3Key, 3600, contentType);
+
+    // Check if user wants direct file serving (no expiration)
+    const directServe = request.nextUrl.searchParams.get("direct") === "true";
+
+    if (directServe) {
+      // Redirect to the direct file serving endpoint (no expiration)
+      const fileUrl = new URL(`/api/documents/${documentId}/file`, request.url);
+      // Preserve download parameter if present
+      if (request.nextUrl.searchParams.get("download") === "true") {
+        fileUrl.searchParams.set("download", "true");
+      }
+      return NextResponse.redirect(fileUrl.toString());
+    }
+
+    // Generate presigned URL with 7 days expiry
+    const presignedUrl = await getPresignedUrl(s3Key, 604800, contentType);
 
     // For API usage, return the URL with metadata
     const response = NextResponse.json({
       url: presignedUrl,
+      directUrl: `/api/documents/${documentId}/file`, // URL for permanent access
       fileName: document.fileName,
       contentType: contentType,
       size: document.fileSize,
       documentType: document.documentType,
+      expiresAt: new Date(Date.now() + 604800 * 1000).toISOString(), // 7 days from now
     });
 
     // Add CORS headers for browser compatibility

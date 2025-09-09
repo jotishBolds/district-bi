@@ -437,8 +437,8 @@ export default function TrackApplicationPage() {
     const config = statusConfig[status] || {
       color: "secondary" as const,
       icon: AlertCircle,
-      bgColor: "bg-gray-100",
-      textColor: "text-gray-700",
+      bgColor: "bg-muted",
+      textColor: "text-muted-foreground",
     };
     const Icon = config.icon;
 
@@ -1141,9 +1141,9 @@ export default function TrackApplicationPage() {
   };
 
   return (
-    <div className="min-h-[83vh]  flex items-center justify-center ">
+    <div className="min-h-[83vh] bg-background text-foreground flex items-center justify-center">
       <div className="w-full max-w-6xl">
-        <Card className="border-0 shadow-none bg-white rounded-3xl mb-8">
+        <Card className="border-0 shadow-none bg-card rounded-3xl mb-8">
           <CardContent className="p-4 sm:p-10">
             {step === "input" && (
               <div className="space-y-6 -mb-4 -mt-8">
@@ -1155,10 +1155,10 @@ export default function TrackApplicationPage() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <h1 className="text-3xl sm:text-4xl font-light text-slate-900">
+                    <h1 className="text-3xl sm:text-4xl font-light text-foreground">
                       Track Application
                     </h1>
-                    <p className="text-slate-600 text-lg font-normal">
+                    <p className="text-muted-foreground text-lg font-normal">
                       Check the status of your application in real-time
                     </p>
                   </div>
@@ -1168,7 +1168,7 @@ export default function TrackApplicationPage() {
                   <div className="space-y-3">
                     <Label
                       htmlFor="smartInput"
-                      className="text-slate-500 font-sans text-md text-center block"
+                      className="text-muted-foreground font-sans text-md text-center block"
                     >
                       Enter your RR number or phone number to track your
                       application
@@ -1287,19 +1287,19 @@ export default function TrackApplicationPage() {
 
                     {/* Help Text - More subtle */}
                     {!inputType && !validationErrors.identifier && (
-                      <div className="bg-slate-50 rounded-2xl font-sans p-4 space-y-3 border border-slate-200">
-                        <p className="text-xs text-slate-600 font-medium text-center">
+                      <div className="bg-muted/50 rounded-2xl font-sans p-4 space-y-3 border border-border">
+                        <p className="text-xs text-muted-foreground font-medium text-center">
                           Supported formats:
                         </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-500">
-                          <div className="flex items-center justify-center gap-2 bg-white rounded-xl p-3 border border-slate-100">
-                            <FileText className="w-4 h-4 text-blue-600" />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-muted-foreground">
+                          <div className="flex items-center justify-center gap-2 bg-card rounded-xl p-3 border border-border">
+                            <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                             <span>
                               <strong>RR Number:</strong> RR-202X-XXXX
                             </span>
                           </div>
-                          <div className="flex items-center justify-center gap-2 bg-white rounded-xl p-3 border border-slate-100">
-                            <Phone className="w-4 h-4 text-green-600" />
+                          <div className="flex items-center justify-center gap-2 bg-card rounded-xl p-3 border border-border">
+                            <Phone className="w-4 h-4 text-green-600 dark:text-green-400" />
                             <span>
                               <strong>Phone:</strong> 99XX22XX44
                             </span>

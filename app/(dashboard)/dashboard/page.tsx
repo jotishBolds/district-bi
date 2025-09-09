@@ -108,21 +108,21 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-background">
       <div className="container   mx-auto max-w-full">
         {/* Header Section */}
-        <div className="rounded-lg border shadow-sm p-6 mb-6 bg-gradient-to-r from-lime-50 via-emerald-50 to-cyan-50 border-emerald-100">
+        <div className="rounded-lg border shadow-sm p-6 mb-6 bg-gradient-to-r from-lime-50 via-emerald-50 to-cyan-50 dark:from-lime-950 dark:via-emerald-950 dark:to-cyan-950 border-emerald-100 dark:border-emerald-800">
           <PageHeader className="pb-0">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full">
               <div>
-                <div className="flex items-center space-x-2 text-sm font-medium mb-2 text-emerald-700">
+                <div className="flex items-center space-x-2 text-sm font-medium mb-2 text-emerald-700 dark:text-emerald-300">
                   <CalendarDays size={16} />
                   <span>{today}</span>
                 </div>
-                <PageHeaderHeading className="text-2xl md:text-3xl text-emerald-900">
+                <PageHeaderHeading className="text-2xl md:text-3xl text-emerald-900 dark:text-emerald-100">
                   {renderGreeting()}
                 </PageHeaderHeading>
-                <PageHeaderDescription className="mt-2 text-emerald-800">
+                <PageHeaderDescription className="mt-2 text-emerald-800 dark:text-emerald-200">
                   {renderRoleSpecificText()}
                 </PageHeaderDescription>
               </div>
@@ -132,7 +132,7 @@ export default async function DashboardPage() {
 
         {/* Status Cards Section */}
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          <h2 className="text-lg font-semibold text-foreground mb-4">
             Status Overview
           </h2>
           <StatusCards userRole={session.user?.role} />
@@ -164,7 +164,7 @@ export default async function DashboardPage() {
 
         {/* Footer Section */}
         <footer className="mt-12 text-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Government Services Portal | All rights
             reserved
           </p>

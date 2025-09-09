@@ -57,15 +57,10 @@ const FilePreviewModal = ({
     setError(null);
 
     try {
-      // Use the new serve endpoint that handles CORS better
-      const response = await fetch(`/api/documents/${document.id}/serve`);
-
-      if (!response.ok) {
-        throw new Error("Failed to load file");
-      }
-
-      const data = await response.json();
-      setPreviewUrl(data.url);
+      // Use the new permanent file serving endpoint (no expiration)
+      // This endpoint streams files directly from S3 without expiration issues
+      const permanentUrl = `/api/documents/${document.id}/file`;
+      setPreviewUrl(permanentUrl);
     } catch (err) {
       console.error("Error loading file preview:", err);
       setError("Failed to load file preview");
@@ -76,13 +71,11 @@ const FilePreviewModal = ({
   };
 
   const handleDownload = async () => {
-    if (!previewUrl) {
-      await loadPreview();
-      return;
-    }
-
     try {
-      const response = await fetch(previewUrl);
+      // Use the permanent file serving endpoint with download flag
+      const downloadUrl = `/api/documents/${document.id}/file?download=true`;
+
+      const response = await fetch(downloadUrl);
       if (!response.ok) {
         throw new Error("Failed to download file");
       }

@@ -31,12 +31,7 @@ export async function GET() {
               isAvailable: true,
             },
           },
-          {
-            // Exclude the currently logged in officer
-            id: {
-              not: session.user.id,
-            },
-          },
+          // Don't exclude current user anymore - allow self-forwarding
         ],
       },
       include: {
@@ -54,24 +49,30 @@ export async function GET() {
     // Filter officers based on user type:
     // - Front desk users can see ALL officers
     // - Officers can only assign to same or lower level based on hierarchy
+    // - Always include current user for self-forwarding
     let officers;
     if (session.user.role === UserRole.FRONT_DESK) {
       // Frontdesk can forward to any officer
       officers = allOfficers;
     } else {
-      // Officers can only assign to same or lower level
-      officers = allOfficers.filter((officer) =>
-        canAssignTo(session.user.role, officer.role)
+      // Officers can only assign to same or lower level + themselves
+      officers = allOfficers.filter(
+        (officer) =>
+          officer.id === session.user.id ||
+          canAssignTo(session.user.role, officer.role)
       );
     }
 
     // Transform the data to match the expected format in the component
     const formattedOfficers = officers.map((officer) => {
       const roleMapping = getRoleMapping(officer.role);
+      const isCurrentUser = officer.id === session.user.id;
       return {
         id: officer.id,
         role: officer.role,
-        fullName: officer.officerProfile?.fullName || "",
+        fullName:
+          (officer.officerProfile?.fullName || "") +
+          (isCurrentUser ? " (You)" : ""),
         designation:
           officer.officerProfile?.designation || roleMapping?.fullName || "",
         department:
@@ -81,6 +82,7 @@ export async function GET() {
         officeLocation: officer.officerProfile?.officeLocation || "",
         level: roleMapping?.level || 0,
         userType: roleMapping?.userType || "Officer",
+        isCurrentUser,
       };
     });
 

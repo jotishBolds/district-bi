@@ -15,13 +15,13 @@ export default function Footer() {
               className="w-8 h-8 flex-shrink-0"
             />
             <h6 className="text-sm font-semibold text-white">
-              District Administration Centre
+              District Administrative Centre
             </h6>
           </div>
 
           {/* Copyright */}
-          <p className="text-xs text-gray-400 text-center sm:text-right">
-            © {new Date().getFullYear()} District Administration Centre, East
+          <p className="text-xs text-muted-foreground text-center sm:text-right">
+            © {new Date().getFullYear()} District Administrative Centre, East
             Sikkim. All Rights Reserved.
           </p>
         </div>

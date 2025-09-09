@@ -13,7 +13,7 @@ export default function NewsHighlights() {
     {
       id: 2,
       title:
-        "District Administration Centre to remain closed on July 5th for system maintenance",
+        "District Administrative Centre to remain closed on July 5th for system maintenance",
       date: "June 21, 2025",
       category: "Notice",
     },
@@ -44,20 +44,20 @@ export default function NewsHighlights() {
       case "Update":
         return "bg-amber-100 text-amber-800";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-muted text-muted-foreground";
     }
   };
 
   return (
-    <div className="w-full bg-gray-50 py-8 sm:py-12">
+    <div className="w-full bg-muted/30 py-8 sm:py-12">
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           {/* News Box */}
-          <div className="w-full lg:w-1/2 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="w-full lg:w-1/2 bg-card rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="p-6">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                <h3 className="text-xl sm:text-2xl font-bold text-foreground">
                   News Highlights
                 </h3>
                 <div className="w-8 h-8 bg-[#1170CD] rounded-full flex items-center justify-center">
@@ -92,11 +92,11 @@ export default function NewsHighlights() {
                           >
                             {item.category}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-muted-foreground">
                             {item.date}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-700 leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
+                        <p className="text-sm text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors duration-300">
                           {item.title}
                         </p>
                       </div>

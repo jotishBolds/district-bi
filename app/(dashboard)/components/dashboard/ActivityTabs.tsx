@@ -146,10 +146,10 @@ export default function ActivityTabs({ userRole }: ActivityTabsProps) {
         {items.map((item) => (
           <div
             key={item.id}
-            className={`flex items-start space-x-3 p-3 rounded-lg border transition-colors hover:bg-gray-50 ${
+            className={`flex items-start space-x-3 p-3 rounded-lg border transition-colors hover:bg-muted/50 ${
               item.unread
-                ? "bg-blue-50 border-blue-200"
-                : "bg-white border-gray-200"
+                ? "bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800"
+                : "bg-card border-border"
             }`}
           >
             <div className="flex-shrink-0 mt-1">{getIcon(item.title)}</div>
@@ -158,19 +158,21 @@ export default function ActivityTabs({ userRole }: ActivityTabsProps) {
                 <div className="flex-1">
                   <h4
                     className={`text-sm font-medium ${
-                      item.unread ? "text-gray-900" : "text-gray-700"
+                      item.unread
+                        ? "text-foreground font-semibold"
+                        : "text-foreground"
                     }`}
                   >
                     {item.title}
                     {item.unread && (
-                      <span className="ml-2 inline-block w-2 h-2 bg-blue-600 rounded-full"></span>
+                      <span className="ml-2 inline-block w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full"></span>
                     )}
                   </h4>
-                  <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2 font-medium">
                     {item.description}
                   </p>
                 </div>
-                <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                <span className="text-xs text-muted-foreground ml-2 flex-shrink-0 font-medium">
                   {formatRelativeTime(item.date)}
                 </span>
               </div>
@@ -182,10 +184,10 @@ export default function ActivityTabs({ userRole }: ActivityTabsProps) {
   };
 
   return (
-    <Card className="border border-gray-200 shadow-sm">
-      <CardHeader className="pb-3 border-b border-gray-100">
-        <CardTitle className="text-lg font-semibold flex items-center">
-          <Activity className="h-5 w-5 mr-2 text-blue-600" />
+    <Card className="border border-border shadow-sm bg-card">
+      <CardHeader className="pb-3 border-b border-border">
+        <CardTitle className="text-lg font-semibold flex items-center text-foreground">
+          <Activity className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
           Activity & Notifications
         </CardTitle>
       </CardHeader>

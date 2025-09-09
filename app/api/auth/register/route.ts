@@ -119,6 +119,8 @@ export async function POST(req: NextRequest) {
         userId: user.id,
         email: user.email,
         role: user.role,
+        // Return password for admin-created accounts (will be used for email notification)
+        password: password,
       },
       { status: 201 }
     );

@@ -213,9 +213,10 @@ const OfficerDashboard = () => {
     newStatus: "",
     message: "",
     forwardToOfficerId: "",
-    priority: 2,
+    // priority: 1, // Always HIGH priority - removed from UI
     instructions: "",
   });
+  const [isSelfForward, setIsSelfForward] = useState(false);
 
   // Additional state for enhanced search and view modes
   const [searchQuery, setSearchQuery] = useState("");
@@ -279,13 +280,13 @@ const OfficerDashboard = () => {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "HIGH":
-        return "bg-red-100 text-red-800";
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100";
       case "MEDIUM":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100";
       case "LOW":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-secondary text-secondary-foreground";
     }
   };
 
@@ -596,7 +597,7 @@ const OfficerDashboard = () => {
         return {
           label: "Change Status",
           icon: RefreshCw,
-          bgColor: "bg-gray-600 hover:bg-gray-700",
+          bgColor: "bg-muted hover:bg-muted/80",
           description: "Update the application status.",
         };
     }
@@ -652,9 +653,10 @@ const OfficerDashboard = () => {
         newStatus: "",
         message: "",
         forwardToOfficerId: "",
-        priority: 2,
+        // priority: 1, // Always HIGH priority - removed from UI
         instructions: "",
       });
+      setIsSelfForward(false);
       setSelectedApp(null);
       setShowDetails(null);
       fetchApplications();
@@ -671,8 +673,8 @@ const OfficerDashboard = () => {
   const handleForwardApplication = async (
     applicationId: string,
     forwardToOfficerId: string,
-    instructions: string,
-    priority: number
+    instructions: string
+    // priority: number - Always HIGH priority - removed from UI
   ) => {
     try {
       setProcessing(true);
@@ -686,7 +688,7 @@ const OfficerDashboard = () => {
           body: JSON.stringify({
             assignedToId: forwardToOfficerId,
             instructions: instructions,
-            priority: priority,
+            // priority: 1, // Always HIGH priority - removed from UI
           }),
         }
       );
@@ -695,15 +697,17 @@ const OfficerDashboard = () => {
         throw new Error(error.error || "Forward failed");
       }
 
-      toast.success("Application forwarded successfully");
+      const result = await response.json();
+      toast.success(result.message || "Application forwarded successfully");
       setActionForm({
         action: "",
         newStatus: "",
         message: "",
         forwardToOfficerId: "",
-        priority: 2,
+        // priority: 1, // Always HIGH priority - removed from UI
         instructions: "",
       });
+      setIsSelfForward(false);
       setSelectedApp(null);
       setShowDetails(null);
       fetchApplications();
@@ -791,32 +795,32 @@ const OfficerDashboard = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "VALIDATED":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+        return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-100 dark:border-yellow-800";
       case "IN_PROGRESS":
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:border-blue-800";
       case "RESOLVED":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-800";
       case "CLOSED":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100 dark:border-red-800";
       case "REOPENED":
-        return "bg-purple-100 text-purple-800 border-purple-200";
+        return "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-100 dark:border-purple-800";
       case "APPROVED":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-800";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-secondary text-secondary-foreground border-border";
     }
   };
 
   const getPriorityColorByNumber = (priority: number) => {
     switch (priority) {
       case 1:
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100 dark:border-red-800";
       case 2:
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+        return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-100 dark:border-yellow-800";
       case 3:
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:border-blue-800";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-secondary text-secondary-foreground border-border";
     }
   };
 
@@ -890,10 +894,10 @@ const OfficerDashboard = () => {
         return (
           <div
             key={app.id}
-            className={`bg-white rounded-lg shadow-sm border transition-all ${
+            className={`bg-card rounded-lg shadow-sm border transition-all ${
               isSelected
                 ? "border-blue-300 shadow-md"
-                : "border-gray-200 hover:shadow-md"
+                : "border-border hover:shadow-md"
             }`}
           >
             {/* Main Card Content */}
@@ -925,8 +929,8 @@ const OfficerDashboard = () => {
 
                     {app.department && (
                       <>
-                        <span className="text-gray-400">•</span>
-                        <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                        <span className="text-muted-foreground">•</span>
+                        <span className="text-sm font-medium text-blue-600 bg-blue-50 dark:bg-blue-900 dark:text-blue-100 px-2 py-1 rounded">
                           {app.department.name}
                         </span>
                       </>
@@ -934,7 +938,7 @@ const OfficerDashboard = () => {
 
                     {app.applicationSource && (
                       <>
-                        <span className="text-gray-400">•</span>
+                        <span className="text-muted-foreground">•</span>
                         <span
                           className={`text-xs font-medium px-2 py-1 rounded-md ${
                             app.applicationSource === "PUBLIC"
@@ -952,16 +956,16 @@ const OfficerDashboard = () => {
                   {/* Name, Phone, Date in responsive layout */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 text-xs sm:text-sm">
                     <div className="flex items-center gap-1 sm:gap-2">
-                      <User className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 flex-shrink-0" />
-                      <span className="font-medium text-gray-900 break-words truncate">
+                      <User className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
+                      <span className="font-medium text-foreground break-words truncate">
                         {citizenData.fullName}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+                    <div className="flex items-center gap-1 sm:gap-2 text-muted-foreground">
                       <Phone className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                       <span className="break-words">{citizenData.phone}</span>
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+                    <div className="flex items-center gap-1 sm:gap-2 text-muted-foreground">
                       <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                       <span className="break-words">
                         {app.submittedAt
@@ -969,7 +973,7 @@ const OfficerDashboard = () => {
                           : "Not submitted"}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+                    <div className="flex items-center gap-1 sm:gap-2 text-muted-foreground">
                       <Paperclip className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                       <span>{app.documents.length} documents</span>
                     </div>
@@ -1008,7 +1012,7 @@ const OfficerDashboard = () => {
 
                   {/* RR Number */}
                   {app.rrNumber && (
-                    <span className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                    <span className="inline-flex items-center px-2 py-1 bg-muted text-muted-foreground rounded text-xs">
                       RR: {app.rrNumber}
                     </span>
                   )}
@@ -1021,7 +1025,7 @@ const OfficerDashboard = () => {
                           actionDropdownOpen === app.id ? null : app.id
                         )
                       }
-                      className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200"
+                      className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors border border-border"
                       title="Actions"
                     >
                       <MoreHorizontal className="w-5 h-5" />
@@ -1029,7 +1033,7 @@ const OfficerDashboard = () => {
 
                     {/* Actions Dropdown Menu */}
                     {actionDropdownOpen === app.id && (
-                      <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-20">
+                      <div className="absolute right-0 top-full mt-2 w-56 bg-card rounded-lg shadow-lg border border-border z-20">
                         <div className="py-2">
                           {/* View Details */}
                           <button
@@ -1037,7 +1041,7 @@ const OfficerDashboard = () => {
                               setShowDetails(showingDetails ? null : app.id);
                               setActionDropdownOpen(null);
                             }}
-                            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors"
                           >
                             <Eye className="w-4 h-4" />
                             {showingDetails ? "Hide Details" : "View Details"}
@@ -1051,7 +1055,7 @@ const OfficerDashboard = () => {
                                 View only mode
                               </div>
                               {app.currentHolder && (
-                                <div className="text-xs text-gray-600">
+                                <div className="text-xs text-muted-foreground">
                                   Currently held by:{" "}
                                   {app.currentHolder.officerProfile?.fullName ||
                                     "Unknown Officer"}
@@ -1096,7 +1100,7 @@ const OfficerDashboard = () => {
                                 app.status === "REOPENED") && (
                                 <>
                                   <hr className="my-1" />
-                                  <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                  <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                                     Change Status
                                   </div>
 
@@ -1253,8 +1257,8 @@ const OfficerDashboard = () => {
               {forwardingFilter === "FORWARDED_BY_ME" &&
                 app.officerForwardings &&
                 app.officerForwardings.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <h4 className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       Forwarding Timeline
                     </h4>
@@ -1282,7 +1286,7 @@ const OfficerDashboard = () => {
                                 className={`flex-shrink-0 w-3 h-3 rounded-full mt-1 ${
                                   forwarding.isActive
                                     ? "bg-green-500"
-                                    : "bg-gray-400"
+                                    : "bg-muted"
                                 }`}
                               />
                               {/* Timeline content */}
@@ -1292,7 +1296,7 @@ const OfficerDashboard = () => {
                                     className={`text-sm ${
                                       isCurrentUserAction
                                         ? "font-medium text-orange-800"
-                                        : "text-gray-800"
+                                        : "text-foreground"
                                     }`}
                                   >
                                     <span className="font-medium">
@@ -1316,7 +1320,7 @@ const OfficerDashboard = () => {
                                         Active
                                       </span>
                                     )}
-                                    <span className="text-xs text-gray-500">
+                                    <span className="text-xs text-muted-foreground">
                                       {new Date(
                                         forwarding.forwardedAt ||
                                           forwarding.createdAt
@@ -1330,13 +1334,13 @@ const OfficerDashboard = () => {
                                 </div>
                                 {/* Instructions */}
                                 {forwarding.instructions && (
-                                  <p className="text-sm text-gray-600 mt-1 italic">
+                                  <p className="text-sm text-muted-foreground mt-1 italic">
                                     &quot;{forwarding.instructions}&quot;
                                   </p>
                                 )}
                                 {/* Completion info */}
                                 {forwarding.completedAt && (
-                                  <p className="text-xs text-gray-500 mt-1">
+                                  <p className="text-xs text-muted-foreground mt-1">
                                     Completed on{" "}
                                     {new Date(
                                       forwarding.completedAt
@@ -1364,25 +1368,27 @@ const OfficerDashboard = () => {
                         <div className="text-2xl font-bold text-blue-600">
                           {app.documents.length}
                         </div>
-                        <div className="text-gray-600">Documents</div>
+                        <div className="text-muted-foreground">Documents</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-purple-600">
                           {app.officerAssignments?.length || 0}
                         </div>
-                        <div className="text-gray-600">Assignments</div>
+                        <div className="text-muted-foreground">Assignments</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-orange-600">
                           {app.frontdeskForwardings?.length || 0}
                         </div>
-                        <div className="text-gray-600">Forwardings</div>
+                        <div className="text-muted-foreground">Forwardings</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-green-600">
                           {app.workflow?.length || 0}
                         </div>
-                        <div className="text-gray-600">Workflow Steps</div>
+                        <div className="text-muted-foreground">
+                          Workflow Steps
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1395,9 +1401,9 @@ const OfficerDashboard = () => {
                         onClick={() =>
                           toggleSection(app.id, "application-info")
                         }
-                        className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
+                        className="w-full px-4 py-3 bg-muted hover:bg-muted/80 transition-colors flex items-center justify-between text-left"
                       >
-                        <span className="font-medium text-gray-900 flex items-center gap-2">
+                        <span className="font-medium text-foreground flex items-center gap-2">
                           <Info className="w-4 h-4" />
                           Application Information
                         </span>
@@ -1408,11 +1414,11 @@ const OfficerDashboard = () => {
                         )}
                       </button>
                       {isSectionExpanded(app.id, "application-info") && (
-                        <div className="p-4 bg-white border-t">
+                        <div className="p-4 bg-card border-t">
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <div className="space-y-3 text-sm">
                               <div>
-                                <span className="text-gray-500">
+                                <span className="text-muted-foreground">
                                   Application ID:
                                 </span>
                                 <span className="block font-mono text-xs mt-1">
@@ -1421,7 +1427,7 @@ const OfficerDashboard = () => {
                               </div>
                               {app.rrNumber && (
                                 <div>
-                                  <span className="text-gray-500">
+                                  <span className="text-muted-foreground">
                                     RR Number:
                                   </span>
                                   <span className="block font-semibold mt-1">
@@ -1430,19 +1436,19 @@ const OfficerDashboard = () => {
                                 </div>
                               )}
                               <div>
-                                <span className="text-gray-500">
+                                <span className="text-muted-foreground">
                                   Service Category:
                                 </span>
                                 <span className="block font-medium mt-1">
                                   {app.serviceCategory.name}
                                 </span>
-                                <span className="text-xs text-gray-400">
+                                <span className="text-xs text-muted-foreground">
                                   Category: {app.serviceCategory.name}
                                 </span>
                               </div>
                               {app.subject && (
                                 <div>
-                                  <span className="text-gray-500">
+                                  <span className="text-muted-foreground">
                                     Subject:
                                   </span>
                                   <span className="block font-medium text-blue-600 mt-1">
@@ -1451,7 +1457,7 @@ const OfficerDashboard = () => {
                                 </div>
                               )}
                               <div>
-                                <span className="text-gray-500">
+                                <span className="text-muted-foreground">
                                   Current Status:
                                 </span>
                                 <span
@@ -1465,14 +1471,16 @@ const OfficerDashboard = () => {
                             </div>
                             <div className="space-y-3 text-sm">
                               <div>
-                                <span className="text-gray-500">Created:</span>
+                                <span className="text-muted-foreground">
+                                  Created:
+                                </span>
                                 <span className="block mt-1">
                                   {formatDate(app.createdAt)}
                                 </span>
                               </div>
                               {app.submittedAt && (
                                 <div>
-                                  <span className="text-gray-500">
+                                  <span className="text-muted-foreground">
                                     Submitted:
                                   </span>
                                   <span className="block mt-1">
@@ -1482,7 +1490,7 @@ const OfficerDashboard = () => {
                               )}
                               {app.validatedAt && (
                                 <div>
-                                  <span className="text-gray-500">
+                                  <span className="text-muted-foreground">
                                     Validated:
                                   </span>
                                   <span className="block mt-1">
@@ -1492,7 +1500,7 @@ const OfficerDashboard = () => {
                               )}
                               {app.completedAt && (
                                 <div>
-                                  <span className="text-gray-500">
+                                  <span className="text-muted-foreground">
                                     Completed:
                                   </span>
                                   <span className="block mt-1">
@@ -1510,9 +1518,9 @@ const OfficerDashboard = () => {
                     <div className="border rounded-lg overflow-hidden">
                       <button
                         onClick={() => toggleSection(app.id, "citizen-details")}
-                        className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between text-left"
+                        className="w-full px-4 py-3 bg-muted hover:bg-muted/80 transition-colors flex items-center justify-between text-left"
                       >
-                        <span className="font-medium text-gray-900 flex items-center gap-2">
+                        <span className="font-medium text-foreground flex items-center gap-2">
                           <User className="w-4 h-4" />
                           Complete Citizen Details
                         </span>
@@ -1523,23 +1531,29 @@ const OfficerDashboard = () => {
                         )}
                       </button>
                       {isSectionExpanded(app.id, "citizen-details") && (
-                        <div className="p-4 bg-white border-t">
+                        <div className="p-4 bg-card border-t">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
-                              <span className="text-gray-500">Full Name:</span>
+                              <span className="text-muted-foreground">
+                                Full Name:
+                              </span>
                               <span className="block font-medium mt-1">
                                 {citizenData.fullName}
                               </span>
                             </div>
                             <div>
-                              <span className="text-gray-500">Phone:</span>
+                              <span className="text-muted-foreground">
+                                Phone:
+                              </span>
                               <span className="block mt-1">
                                 {citizenData.phone}
                               </span>
                             </div>
                             {app.citizenEmail && (
                               <div>
-                                <span className="text-gray-500">Email:</span>
+                                <span className="text-muted-foreground">
+                                  Email:
+                                </span>
                                 <span className="block mt-1">
                                   {app.citizenEmail}
                                 </span>
@@ -1547,21 +1561,25 @@ const OfficerDashboard = () => {
                             )}
                             {app.citizenGender && (
                               <div>
-                                <span className="text-gray-500">Gender:</span>
+                                <span className="text-muted-foreground">
+                                  Gender:
+                                </span>
                                 <span className="block mt-1">
                                   {app.citizenGender}
                                 </span>
                               </div>
                             )}
                             <div className="md:col-span-2">
-                              <span className="text-gray-500">Address:</span>
+                              <span className="text-muted-foreground">
+                                Address:
+                              </span>
                               <span className="block mt-1">
                                 {citizenData.address}
                               </span>
                             </div>
                             {citizenData.aadhaarNumber && (
                               <div>
-                                <span className="text-gray-500">
+                                <span className="text-muted-foreground">
                                   Aadhaar Number:
                                 </span>
                                 <span className="block font-mono mt-1">
@@ -1636,23 +1654,7 @@ const OfficerDashboard = () => {
                                         </span>
                                       </div>
                                     </div>
-                                    <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                      <div>
-                                        <span className="text-gray-500">
-                                          Verification Status:
-                                        </span>
-                                        <span
-                                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${
-                                            doc.isVerified
-                                              ? "bg-green-100 text-green-800"
-                                              : "bg-yellow-100 text-yellow-800"
-                                          }`}
-                                        >
-                                          {doc.isVerified
-                                            ? "Verified"
-                                            : "Pending Verification"}
-                                        </span>
-                                      </div>
+                                    <div className="mt-3 grid grid-cols-1 gap-4">
                                       <div>
                                         <span className="text-gray-500">
                                           Last Updated:
@@ -1662,16 +1664,7 @@ const OfficerDashboard = () => {
                                         </span>
                                       </div>
                                     </div>
-                                    {doc.verificationNotes && (
-                                      <div className="mt-3">
-                                        <span className="text-gray-500">
-                                          Verification Notes:
-                                        </span>
-                                        <div className="bg-blue-50 rounded p-2 mt-1 text-sm">
-                                          {doc.verificationNotes}
-                                        </div>
-                                      </div>
-                                    )}
+                                    {/* Document verification removed - not needed */}
                                   </div>
                                   <div className="ml-4 flex flex-col gap-2">
                                     <FilePreviewButton
@@ -1681,14 +1674,7 @@ const OfficerDashboard = () => {
                                       size="icon"
                                       className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg"
                                     />
-                                    {!doc.isVerified && (
-                                      <button
-                                        className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
-                                        title="Mark as Verified"
-                                      >
-                                        <CheckCircle className="w-4 h-4" />
-                                      </button>
-                                    )}
+                                    {/* Document verification button removed - not needed */}
                                   </div>
                                 </div>
                               </div>
@@ -1697,6 +1683,112 @@ const OfficerDashboard = () => {
                         </div>
                       )}
                     </div>
+
+                    {/* Workflow History */}
+                    {app.workflow && app.workflow.length > 0 && (
+                      <div className="border rounded-lg overflow-hidden">
+                        <button
+                          onClick={() => toggleSection(app.id, "workflow")}
+                          className="w-full px-4 py-3 bg-muted hover:bg-muted/80 transition-colors flex items-center justify-between text-left"
+                        >
+                          <span className="font-medium text-foreground flex items-center gap-2">
+                            <History className="w-4 h-4" />
+                            Application Workflow History ({app.workflow.length})
+                          </span>
+                          {isSectionExpanded(app.id, "workflow") ? (
+                            <ChevronUp className="w-4 h-4" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4" />
+                          )}
+                        </button>
+                        {isSectionExpanded(app.id, "workflow") && (
+                          <div className="p-4 bg-card border-t">
+                            <div className="space-y-3">
+                              {app.workflow.map((entry, index) => (
+                                <div
+                                  key={index}
+                                  className="bg-muted rounded-lg p-4 text-sm"
+                                >
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                          <span className="text-muted-foreground">
+                                            Status Change:
+                                          </span>
+                                          <div className="mt-1 flex items-center gap-2">
+                                            {entry.fromStatus && (
+                                              <span
+                                                className={`px-2 py-1 rounded text-xs ${getStatusColor(
+                                                  entry.fromStatus
+                                                )}`}
+                                              >
+                                                {entry.fromStatus}
+                                              </span>
+                                            )}
+                                            {entry.fromStatus && (
+                                              <span className="text-muted-foreground">
+                                                →
+                                              </span>
+                                            )}
+                                            <span
+                                              className={`px-2 py-1 rounded text-xs ${getStatusColor(
+                                                entry.toStatus
+                                              )}`}
+                                            >
+                                              {entry.toStatus}
+                                            </span>
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <span className="text-muted-foreground">
+                                            Changed By:
+                                          </span>
+                                          <span className="block font-medium mt-1">
+                                            {entry.changedBy.officerProfile
+                                              ?.fullName ||
+                                              entry.changedBy.citizenProfile
+                                                ?.fullName ||
+                                              "System"}
+                                          </span>
+                                          {entry.changedBy.officerProfile
+                                            ?.designation && (
+                                            <span className="text-xs text-muted-foreground">
+                                              {
+                                                entry.changedBy.officerProfile
+                                                  .designation
+                                              }
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                      <div className="mt-2">
+                                        <span className="text-muted-foreground">
+                                          Date:
+                                        </span>
+                                        <span className="block mt-1">
+                                          {formatDate(entry.createdAt)}
+                                        </span>
+                                      </div>
+                                      {entry.comments && (
+                                        <div className="mt-2">
+                                          <span className="text-muted-foreground">
+                                            Comments:
+                                          </span>
+                                          <div className="bg-blue-50 dark:bg-blue-900/20 rounded p-2 mt-1 text-sm">
+                                            {entry.comments}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -1709,35 +1801,35 @@ const OfficerDashboard = () => {
 
   // Render Table View
   const renderTableView = () => (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div className="bg-card rounded-lg shadow-sm border border-border">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-muted">
             <tr>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Application
               </th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Citizen
               </th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Source
               </th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Date
               </th>
               <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Documents
               </th>
-              <th className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-card divide-y divide-border">
             {filteredApplications.map((app) => {
               const citizenData = getCitizenData(app);
               const isForwardedByMe = isForwardedByCurrentUser(app);
@@ -1746,7 +1838,7 @@ const OfficerDashboard = () => {
 
               return (
                 <React.Fragment key={app.id}>
-                  <tr className="hover:bg-gray-50">
+                  <tr className="hover:bg-muted/50">
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-col">
                         <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
@@ -1858,7 +1950,7 @@ const OfficerDashboard = () => {
                           {/* Actions Dropdown Menu - Fixed z-index and positioning */}
                           {actionDropdownOpen === app.id && (
                             <div
-                              className="fixed bg-white rounded-lg shadow-lg border border-gray-200 z-50 min-w-[200px]"
+                              className="fixed bg-card rounded-lg shadow-lg border border-border z-50 min-w-[200px]"
                               style={{
                                 top: `${
                                   Math.min(
@@ -1885,7 +1977,7 @@ const OfficerDashboard = () => {
                                     );
                                     setActionDropdownOpen(null);
                                   }}
-                                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-foreground hover:bg-muted/50 transition-colors"
                                 >
                                   <Eye className="w-4 h-4" />
                                   {showingDetails
@@ -2534,23 +2626,7 @@ const OfficerDashboard = () => {
                                                   </span>
                                                 </div>
                                               </div>
-                                              <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                  <span className="text-gray-500">
-                                                    Verification Status:
-                                                  </span>
-                                                  <span
-                                                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1 ${
-                                                      doc.isVerified
-                                                        ? "bg-green-100 text-green-800"
-                                                        : "bg-yellow-100 text-yellow-800"
-                                                    }`}
-                                                  >
-                                                    {doc.isVerified
-                                                      ? "Verified"
-                                                      : "Pending Verification"}
-                                                  </span>
-                                                </div>
+                                              <div className="mt-3 grid grid-cols-1 gap-4">
                                                 <div>
                                                   <span className="text-gray-500">
                                                     Last Updated:
@@ -2560,16 +2636,7 @@ const OfficerDashboard = () => {
                                                   </span>
                                                 </div>
                                               </div>
-                                              {doc.verificationNotes && (
-                                                <div className="mt-3">
-                                                  <span className="text-gray-500">
-                                                    Verification Notes:
-                                                  </span>
-                                                  <div className="bg-blue-50 rounded p-2 mt-1 text-sm">
-                                                    {doc.verificationNotes}
-                                                  </div>
-                                                </div>
-                                              )}
+                                              {/* Document verification removed - not needed */}
                                             </div>
                                             <div className="ml-4 flex flex-col gap-2">
                                               <FilePreviewButton
@@ -2579,14 +2646,7 @@ const OfficerDashboard = () => {
                                                 size="icon"
                                                 className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg"
                                               />
-                                              {!doc.isVerified && (
-                                                <button
-                                                  className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
-                                                  title="Mark as Verified"
-                                                >
-                                                  <CheckCircle className="w-4 h-4" />
-                                                </button>
-                                              )}
+                                              {/* Document verification button removed - not needed */}
                                             </div>
                                           </div>
                                         </div>
@@ -2831,16 +2891,16 @@ const OfficerDashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-card border-b border-border sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground">
                 Officer Dashboard
               </h1>
-              <p className="text-sm sm:text-base text-gray-600">
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Manage and process applications assigned to you
               </p>
             </div>
@@ -2859,7 +2919,7 @@ const OfficerDashboard = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-card border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           {/* Enhanced Search and Controls */}
           <div className="space-y-4">
@@ -2867,7 +2927,7 @@ const OfficerDashboard = () => {
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                   <input
                     type="text"
                     placeholder="Search by RR number, citizen name, subject, service, phone, or email..."
@@ -2918,13 +2978,13 @@ const OfficerDashboard = () => {
               </div>
 
               {/* View Mode Toggle */}
-              <div className="flex bg-gray-100 rounded-lg p-1">
+              <div className="flex bg-muted rounded-lg p-1">
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     viewMode === "grid"
-                      ? "bg-white text-blue-600 shadow-sm"
-                      : "text-gray-600 hover:text-gray-800"
+                      ? "bg-card text-blue-600 shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <Grid3X3 className="w-4 h-4" />
@@ -2934,8 +2994,8 @@ const OfficerDashboard = () => {
                   onClick={() => setViewMode("table")}
                   className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     viewMode === "table"
-                      ? "bg-white text-blue-600 shadow-sm"
-                      : "text-gray-600 hover:text-gray-800"
+                      ? "bg-card text-blue-600 shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <List className="w-4 h-4" />
@@ -3035,14 +3095,14 @@ const OfficerDashboard = () => {
       {/* Applications Feed */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
         {loading ? (
-          <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-            <RefreshCw className="w-8 h-8 animate-spin mx-auto text-gray-400 mb-2" />
-            <p className="text-gray-600">Loading applications...</p>
+          <div className="bg-card rounded-lg shadow-sm p-8 text-center">
+            <RefreshCw className="w-8 h-8 animate-spin mx-auto text-muted-foreground mb-2" />
+            <p className="text-muted-foreground">Loading applications...</p>
           </div>
         ) : filteredApplications.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-            <FileText className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-            <p className="text-gray-600">No applications found</p>
+          <div className="bg-card rounded-lg shadow-sm p-8 text-center">
+            <FileText className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
+            <p className="text-muted-foreground">No applications found</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -3083,12 +3143,13 @@ const OfficerDashboard = () => {
                 <button
                   onClick={() => {
                     setSelectedApp(null);
+                    setIsSelfForward(false);
                     setActionForm({
                       action: "",
                       newStatus: "",
                       message: "",
                       forwardToOfficerId: "",
-                      priority: 2,
+                      // priority: 1, // Always HIGH priority - removed from UI
                       instructions: "",
                     });
                   }}
@@ -3139,73 +3200,75 @@ const OfficerDashboard = () => {
                 {/* Forward Officer Selection */}
                 {actionForm.action === "forward" && (
                   <>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        Select Officer to Forward To
-                      </label>
-                      <select
-                        value={actionForm.forwardToOfficerId}
-                        onChange={(e) =>
+                    {/* Self-Forward Checkbox */}
+                    <div className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <input
+                        type="checkbox"
+                        id="selfForward"
+                        checked={isSelfForward}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setIsSelfForward(checked);
                           setActionForm({
                             ...actionForm,
-                            forwardToOfficerId: e.target.value,
-                          })
-                        }
-                        className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 focus:border-purple-500 focus:ring-purple-500 text-sm"
-                      >
-                        <option value="">Choose an officer...</option>
-                        {availableOfficers.map((officer) => (
-                          <option key={officer.id} value={officer.id}>
-                            {officer.fullName} ({officer.designation})
-                          </option>
-                        ))}
-                      </select>
+                            forwardToOfficerId: checked
+                              ? session?.user?.id || ""
+                              : "",
+                          });
+                        }}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label htmlFor="selfForward" className="flex-1 text-sm">
+                        <span className="font-medium text-blue-800">
+                          Self-forward
+                        </span>
+                        <p className="text-blue-700 text-xs mt-1">
+                          Forward this application to myself with instructions
+                          for future action
+                        </p>
+                      </label>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        Priority Level
-                      </label>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        {[
-                          {
-                            value: 1,
-                            label: "High",
-                            color: "border-red-300 bg-red-50 text-red-700",
-                          },
-                          {
-                            value: 2,
-                            label: "Medium",
-                            color:
-                              "border-yellow-300 bg-yellow-50 text-yellow-700",
-                          },
-                          {
-                            value: 3,
-                            label: "Low",
-                            color:
-                              "border-green-300 bg-green-50 text-green-700",
-                          },
-                        ].map((priority) => (
-                          <button
-                            key={priority.value}
-                            type="button"
-                            onClick={() =>
-                              setActionForm({
-                                ...actionForm,
-                                priority: priority.value,
-                              })
-                            }
-                            className={`p-3 border-2 rounded-lg text-sm font-medium transition-all ${
-                              actionForm.priority === priority.value
-                                ? priority.color
-                                : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
-                            }`}
-                          >
-                            {priority.label} Priority
-                          </button>
-                        ))}
+                    {!isSelfForward && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                          Select Officer to Forward To
+                        </label>
+                        <select
+                          value={actionForm.forwardToOfficerId}
+                          onChange={(e) =>
+                            setActionForm({
+                              ...actionForm,
+                              forwardToOfficerId: e.target.value,
+                            })
+                          }
+                          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 focus:border-purple-500 focus:ring-purple-500 text-sm"
+                        >
+                          <option value="">Choose an officer...</option>
+                          {availableOfficers.map((officer) => (
+                            <option key={officer.id} value={officer.id}>
+                              {officer.fullName} ({officer.designation})
+                            </option>
+                          ))}
+                        </select>
                       </div>
-                    </div>
+                    )}
+
+                    {isSelfForward && (
+                      <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-center gap-2 text-green-800">
+                          <User className="w-4 h-4" />
+                          <span className="font-medium">
+                            Self-forwarding to:
+                          </span>
+                        </div>
+                        <p className="text-green-700 text-sm mt-1">
+                          {session?.user?.email} (You)
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Priority is always HIGH - removed from UI */}
                   </>
                 )}
 
@@ -3213,10 +3276,15 @@ const OfficerDashboard = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     {actionForm.action === "forward"
-                      ? "Instructions for Officer"
+                      ? isSelfForward
+                        ? "Instructions for Self-Forward (Required)"
+                        : "Instructions for Officer"
                       : actionForm.action === "change_status"
                       ? "Message (Required)"
                       : "Comments"}
+                    {actionForm.action === "forward" && isSelfForward && (
+                      <span className="text-red-500 text-sm ml-1">*</span>
+                    )}
                   </label>
                   <textarea
                     value={
@@ -3234,7 +3302,9 @@ const OfficerDashboard = () => {
                     }
                     placeholder={
                       actionForm.action === "forward"
-                        ? "Provide detailed instructions for the assigned officer..."
+                        ? isSelfForward
+                          ? "Provide detailed instructions for yourself (required for self-forward)..."
+                          : "Provide detailed instructions for the assigned officer..."
                         : actionForm.action === "change_status"
                         ? "Provide a reason for this status change..."
                         : "Add your comments regarding this action..."
@@ -3289,12 +3359,13 @@ const OfficerDashboard = () => {
               <button
                 onClick={() => {
                   setSelectedApp(null);
+                  setIsSelfForward(false);
                   setActionForm({
                     action: "",
                     newStatus: "",
                     message: "",
                     forwardToOfficerId: "",
-                    priority: 2,
+                    // priority: 1, // Always HIGH priority - removed from UI
                     instructions: "",
                   });
                 }}
@@ -3314,8 +3385,8 @@ const OfficerDashboard = () => {
                     handleForwardApplication(
                       selectedApp.id,
                       actionForm.forwardToOfficerId,
-                      actionForm.instructions,
-                      actionForm.priority
+                      actionForm.instructions
+                      // priority: 1 - Always HIGH priority - removed from UI
                     );
                   }
                 }}
@@ -3325,7 +3396,8 @@ const OfficerDashboard = () => {
                     (!actionForm.newStatus || !actionForm.message)) ||
                   (actionForm.action === "forward" &&
                     (!actionForm.forwardToOfficerId ||
-                      !actionForm.instructions))
+                      (isSelfForward && !actionForm.instructions) ||
+                      (!isSelfForward && !actionForm.instructions)))
                 }
                 className={`w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 rounded-lg text-white font-medium disabled:opacity-50 transition-colors ${
                   actionForm.action === "change_status"

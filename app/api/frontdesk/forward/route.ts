@@ -36,7 +36,19 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (currentFrontdeskAssignments.length === 0) {
+    // Check if this is a general frontdesk (no specific assignments)
+    const allAssignments = await prisma.frontdeskOfficer.findMany({
+      where: {
+        frontdeskUserId: session.user.id,
+      },
+    });
+
+    const isGeneralFrontdesk =
+      allAssignments.length === 0 ||
+      allAssignments.every((assignment) => assignment.officerId === null);
+
+    // If it's not a general frontdesk and has no specific assignments, deny access
+    if (!isGeneralFrontdesk && currentFrontdeskAssignments.length === 0) {
       return NextResponse.json(
         { error: "You are not assigned to any specific officers" },
         { status: 403 }
@@ -69,28 +81,32 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (!targetFrontdeskAssignment) {
-      return NextResponse.json(
-        { error: "No frontdesk user found for the target officer" },
-        { status: 404 }
+    // For general frontdesk users, we don't require a target frontdesk assignment
+    // For specific frontdesk users, we also allow forwarding to officers without frontdesk assignments
+    // Only show error if we can't find any valid forwarding path
+    if (!isGeneralFrontdesk && !targetFrontdeskAssignment) {
+      console.log(
+        "Warning: No frontdesk assignment found for target officer, proceeding with direct assignment"
       );
     }
 
-    // Get the User IDs for officers assigned to this frontdesk
-    const officerProfiles = await prisma.officerProfile.findMany({
-      where: {
-        id: {
-          in: currentFrontdeskAssignments.map(
-            (assignment) => assignment.officerId!
-          ),
+    // Get the User IDs for officers assigned to this frontdesk (only for specific frontdesk)
+    let officerUserIds: string[] = [];
+    if (!isGeneralFrontdesk) {
+      const officerProfiles = await prisma.officerProfile.findMany({
+        where: {
+          id: {
+            in: currentFrontdeskAssignments.map(
+              (assignment) => assignment.officerId!
+            ),
+          },
         },
-      },
-      select: {
-        userId: true,
-      },
-    });
-
-    const officerUserIds = officerProfiles.map((profile) => profile.userId);
+        select: {
+          userId: true,
+        },
+      });
+      officerUserIds = officerProfiles.map((profile) => profile.userId);
+    }
 
     // Verify the application exists and check if this frontdesk can forward it
     const application = await prisma.application.findUnique({
@@ -141,25 +157,27 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if this frontdesk has permission to forward this application
-    // Either the application is currently held by one of their officers
-    // OR this frontdesk received the application via forwarding
-    const isAssignedToMyOfficers = application.currentHolderId
-      ? officerUserIds.includes(application.currentHolderId)
-      : false;
+    // General frontdesk can forward any application
+    // Specific frontdesk can only forward applications held by their officers or received via forwarding
+    if (!isGeneralFrontdesk) {
+      const isAssignedToMyOfficers = application.currentHolderId
+        ? officerUserIds.includes(application.currentHolderId)
+        : false;
 
-    const receivedByMe = await prisma.frontdeskForwarding.findFirst({
-      where: {
-        applicationId,
-        toFrontdeskId: session.user.id,
-        isActive: true,
-      },
-    });
+      const receivedByMe = await prisma.frontdeskForwarding.findFirst({
+        where: {
+          applicationId,
+          toFrontdeskId: session.user.id,
+          isActive: true,
+        },
+      });
 
-    if (!isAssignedToMyOfficers && !receivedByMe) {
-      return NextResponse.json(
-        { error: "You don't have permission to forward this application" },
-        { status: 403 }
-      );
+      if (!isAssignedToMyOfficers && !receivedByMe) {
+        return NextResponse.json(
+          { error: "You don't have permission to forward this application" },
+          { status: 403 }
+        );
+      }
     }
 
     const result = await prisma.$transaction(async (tx) => {
@@ -183,18 +201,20 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // Create frontdesk forwarding record
-      await tx.frontdeskForwarding.create({
-        data: {
-          applicationId,
-          fromFrontdeskId: session.user.id,
-          toFrontdeskId: targetFrontdeskAssignment.frontdeskUserId,
-          fromOfficerId: application.currentHolderId!, // Current User ID
-          toOfficerId: targetOfficerProfile.id, // Target User ID
-          instructions: instructions || "Application forwarded",
-          isActive: true,
-        },
-      });
+      // Create frontdesk forwarding record (only if target frontdesk exists)
+      if (targetFrontdeskAssignment) {
+        await tx.frontdeskForwarding.create({
+          data: {
+            applicationId,
+            fromFrontdeskId: session.user.id,
+            toFrontdeskId: targetFrontdeskAssignment.frontdeskUserId,
+            fromOfficerId: application.currentHolderId!, // Current User ID
+            toOfficerId: targetOfficerProfile.id, // Target User ID
+            instructions: instructions || "Application forwarded",
+            isActive: true,
+          },
+        });
+      }
 
       // Create officer assignment record
       await tx.officerAssignment.create({
@@ -203,7 +223,7 @@ export async function POST(request: NextRequest) {
           assignedById: session.user.id,
           assignedToId: targetOfficerProfile.id, // Use User ID
           instructions: instructions || "Application forwarded by frontdesk",
-          priority: 2,
+          priority: 1, // Always HIGH priority
         },
       });
 
@@ -229,19 +249,21 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // Create notification for target frontdesk
-      await tx.notification.create({
-        data: {
-          userId: targetFrontdeskAssignment.frontdeskUserId,
-          notificationType: "STATUS_CHANGED",
-          applicationId,
-          title: "Application Forwarded to Your Officer",
-          message: `Application ${
-            application.rrNumber || application.id
-          } has been forwarded to another officer`,
-          isRead: false,
-        },
-      });
+      // Create notification for target frontdesk (only if target frontdesk exists)
+      if (targetFrontdeskAssignment) {
+        await tx.notification.create({
+          data: {
+            userId: targetFrontdeskAssignment.frontdeskUserId,
+            notificationType: "STATUS_CHANGED",
+            applicationId,
+            title: "Application Forwarded to Your Officer",
+            message: `Application ${
+              application.rrNumber || application.id
+            } has been forwarded to another officer`,
+            isRead: false,
+          },
+        });
+      }
 
       return updatedApplication;
     });
@@ -250,7 +272,9 @@ export async function POST(request: NextRequest) {
       message: "Application forwarded successfully",
       application: result,
       forwardedTo: {
-        frontdesk: targetFrontdeskAssignment.frontdeskUser.email,
+        frontdesk:
+          targetFrontdeskAssignment?.frontdeskUser?.email ||
+          "General forwarding",
       },
     });
   } catch (error) {

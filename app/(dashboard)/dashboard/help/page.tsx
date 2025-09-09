@@ -110,7 +110,7 @@ const HelpPage = () => {
     {
       question: "Can I submit applications online?",
       answer:
-        "Currently, applications must be submitted through authorized frontdesk offices to ensure proper document verification and security.",
+        "Currently, applications must be submitted through authorized frontdesk offices to ensure proper processing and security.",
       category: "Submission",
     },
     {
@@ -171,15 +171,15 @@ const HelpPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200">
+      <div className="bg-card border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-slate-900 mb-4">
+            <h1 className="text-4xl font-bold text-foreground mb-4">
               Help & Support Center
             </h1>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Find answers to your questions, learn how to use the system, and
               get the support you need
             </p>
@@ -223,7 +223,7 @@ const HelpPage = () => {
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="flex items-center space-x-3">
-                          <div className="p-2 bg-blue-100 rounded-lg">
+                          <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
                             <Icon className="h-6 w-6 text-blue-600" />
                           </div>
                           <div>
@@ -271,29 +271,35 @@ const HelpPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
-                    <Video className="h-8 w-8 text-blue-600" />
+                  <div className="flex items-center space-x-3 p-3 bg-muted rounded-lg">
+                    <Video className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                     <div>
-                      <h4 className="font-medium">Video Tutorials</h4>
-                      <p className="text-sm text-slate-600">
+                      <h4 className="font-medium text-foreground">
+                        Video Tutorials
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
                         Step-by-step video guides
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
-                    <Download className="h-8 w-8 text-green-600" />
+                  <div className="flex items-center space-x-3 p-3 bg-muted rounded-lg">
+                    <Download className="h-8 w-8 text-green-600 dark:text-green-400" />
                     <div>
-                      <h4 className="font-medium">Download Forms</h4>
-                      <p className="text-sm text-slate-600">
+                      <h4 className="font-medium text-foreground">
+                        Download Forms
+                      </h4>
+                      <p className="text-sm text-muted-foreground">
                         Printable application forms
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
-                    <HelpCircle className="h-8 w-8 text-purple-600" />
+                  <div className="flex items-center space-x-3 p-3 bg-muted rounded-lg">
+                    <HelpCircle className="h-8 w-8 text-purple-600 dark:text-purple-400" />
                     <div>
-                      <h4 className="font-medium">Live Chat</h4>
-                      <p className="text-sm text-slate-600">Get instant help</p>
+                      <h4 className="font-medium text-foreground">Live Chat</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Get instant help
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -380,7 +386,7 @@ const HelpPage = () => {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-4">
-                    <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-medium">
+                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center font-medium">
                       1
                     </div>
                     <div className="flex-1">
@@ -392,17 +398,17 @@ const HelpPage = () => {
                     <ArrowRight className="h-4 w-4 text-slate-400" />
                   </div>
                   <div className="flex items-center space-x-4">
-                    <div className="w-8 h-8 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center font-medium">
+                    <div className="w-8 h-8 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 rounded-full flex items-center justify-center font-medium">
                       2
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium">Document Verification</h4>
+                      <h4 className="font-medium">Document Processing</h4>
                       <p className="text-sm text-slate-600">1-2 working days</p>
                     </div>
                     <ArrowRight className="h-4 w-4 text-slate-400" />
                   </div>
                   <div className="flex items-center space-x-4">
-                    <div className="w-8 h-8 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-medium">
+                    <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-400 rounded-full flex items-center justify-center font-medium">
                       3
                     </div>
                     <div className="flex-1">
@@ -414,7 +420,7 @@ const HelpPage = () => {
                     <ArrowRight className="h-4 w-4 text-slate-400" />
                   </div>
                   <div className="flex items-center space-x-4">
-                    <div className="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center font-medium">
+                    <div className="w-8 h-8 bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center font-medium">
                       4
                     </div>
                     <div className="flex-1">

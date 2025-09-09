@@ -100,10 +100,29 @@ export async function GET(
           return NextResponse.json({ error: "Access denied" }, { status: 403 });
         }
 
-        // Generate S3 presigned URL with proper content type
+        // Generate S3 presigned URL with proper content type and extended expiry
         const s3Key = extractS3Key(document.filePath);
         const contentType = getContentTypeFromExtension(document.fileName);
-        const presignedUrl = await getPresignedUrl(s3Key, 3600, contentType);
+
+        // Check if user wants direct file serving (no expiration)
+        const directServe =
+          request.nextUrl.searchParams.get("direct") === "true";
+
+        if (directServe) {
+          // Redirect to the direct file serving endpoint (no expiration)
+          const fileUrl = new URL(
+            `/api/documents/${document.id}/file`,
+            request.url
+          );
+          // Preserve download parameter if present
+          if (request.nextUrl.searchParams.get("download") === "true") {
+            fileUrl.searchParams.set("download", "true");
+          }
+          return NextResponse.redirect(fileUrl.toString());
+        }
+
+        // Generate presigned URL with 7 days expiry
+        const presignedUrl = await getPresignedUrl(s3Key, 604800, contentType);
 
         // For direct file access, redirect to presigned URL
         if (request.nextUrl.searchParams.get("download") === "true") {
@@ -113,9 +132,11 @@ export async function GET(
         // For preview/inline display, return the URL with proper CORS headers
         const response = NextResponse.json({
           url: presignedUrl,
+          directUrl: `/api/documents/${document.id}/file`, // URL for permanent access
           fileName: document.fileName,
           contentType: contentType,
           size: document.fileSize,
+          expiresAt: new Date(Date.now() + 604800 * 1000).toISOString(), // 7 days from now
         });
 
         // Add CORS headers

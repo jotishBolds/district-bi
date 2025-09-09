@@ -17,6 +17,7 @@ import {
   ListChecks,
   BarChart3,
   Building2,
+  ArrowDownToLine,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -76,6 +77,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       name: "Assigned Applications",
       href: "/dashboard/officers-verify",
       icon: ClipboardList,
+    },
+    {
+      name: "Pull Applications",
+      href: "/dashboard/pull-requests",
+      icon: ArrowDownToLine,
     },
 
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
@@ -157,6 +163,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       href: "/dashboard/officers-verify",
       icon: ClipboardList,
     },
+    {
+      name: "Pull Applications",
+      href: "/dashboard/pull-requests",
+      icon: ArrowDownToLine,
+    },
 
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
@@ -195,20 +206,32 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
   };
 
   const getRoleBadge = () => {
-    if (!userRole) return { text: "User", color: "bg-gray-100 text-gray-800" };
+    if (!userRole)
+      return { text: "User", color: "bg-secondary text-secondary-foreground" };
 
     switch (userRole) {
       case UserRole.FRONT_DESK:
-        return { text: "Front Desk", color: "bg-green-100 text-green-800" };
+        return {
+          text: "Front Desk",
+          color:
+            "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100",
+        };
       case UserRole.DISPATCH_HANDLER:
         return {
           text: "Dispatch Handler",
-          color: "bg-orange-100 text-orange-800",
+          color:
+            "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-100",
         };
       case UserRole.ADMIN:
-        return { text: "Admin", color: "bg-red-100 text-red-800" };
+        return {
+          text: "Admin",
+          color: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100",
+        };
       case UserRole.SUPER_ADMIN:
-        return { text: "Super Admin", color: "bg-gray-800 text-white" };
+        return {
+          text: "Super Admin",
+          color: "bg-primary text-primary-foreground",
+        };
       default:
         // Check if it's an officer or official role and get the mapping
         if (isOfficerOrOfficial(userRole)) {
@@ -217,17 +240,30 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
           const level = roleMapping?.level ?? 0;
 
           // Color based on officer level (higher level = more important = different color)
-          let color = "bg-blue-100 text-blue-800"; // Default officer color
+          let color =
+            "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100"; // Default officer color
           if (level === 0)
-            color = "bg-purple-100 text-purple-800"; // Highest level (DC)
+            color =
+              "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100";
+          // Highest level (DC)
           else if (level <= 2)
-            color = "bg-indigo-100 text-indigo-800"; // High level
-          else if (level <= 4) color = "bg-cyan-100 text-cyan-800"; // Mid level
-          else color = "bg-amber-100 text-amber-800"; // Lower level
+            color =
+              "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-100";
+          // High level
+          else if (level <= 4)
+            color =
+              "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-100";
+          // Mid level
+          else
+            color =
+              "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-100"; // Lower level
 
           return { text: displayText, color };
         }
-        return { text: userRole, color: "bg-gray-100 text-gray-800" };
+        return {
+          text: userRole,
+          color: "bg-secondary text-secondary-foreground",
+        };
     }
   };
 
@@ -242,15 +278,26 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
   };
 
   return (
-    <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:block lg:w-72 lg:bg-white lg:border-r lg:border-gray-200">
-      <div className="flex h-16 shrink-0 items-center px-6 border-b border-gray-200">
-        <div className="h-8 w-8 bg-blue-700 rounded-md flex items-center justify-center text-white font-bold">
-          GP
+    <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:block lg:w-72 lg:bg-background lg:border-r lg:border-border">
+      <div className="flex h-16 shrink-0 items-center px-4 sm:px-6 border-b border-border">
+        <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center">
+          <img
+            src="/assets/seal_of_sikkim.png"
+            alt="Government of Sikkim Logo"
+            className="h-10 w-10 object-contain"
+          />
         </div>
-        <span className="ml-2 font-semibold text-lg">District Portal</span>
+        <div className="ml-3 min-w-0 flex-1">
+          <h1 className="font-semibold text-base sm:text-lg text-foreground leading-tight">
+            DAC, Gangtok
+          </h1>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            Government of Sikkim
+          </p>
+        </div>
       </div>
 
-      <div className="px-6 py-4 border-b border-gray-100">
+      <div className="px-6 py-4 border-b border-border">
         <div className="flex items-center space-x-3">
           <Avatar className="h-10 w-10">
             <AvatarFallback className={getRoleBadge().color}>
@@ -274,7 +321,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       </div>
 
       <div className="px-3 py-4">
-        <div className="mb-2 px-3 py-1.5 text-xs font-medium text-gray-500 uppercase">
+        <div className="mb-2 px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase">
           Main Navigation
         </div>
         <nav>
@@ -286,8 +333,8 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
                     pathname === link.href
-                      ? "bg-blue-50 text-blue-700"
-                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                      ? "bg-accent text-accent-foreground"
+                      : "text-foreground hover:bg-accent/50 hover:text-accent-foreground"
                   )}
                 >
                   <link.icon className="h-4 w-4 flex-shrink-0" />
@@ -300,37 +347,23 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
 
         <Separator className="my-4" />
 
-        <div className="mb-2 px-3 py-1.5 text-xs font-medium text-gray-500 uppercase">
+        <div className="mb-2 px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase">
           Account
         </div>
         <nav>
           <ul className="space-y-1">
             <li>
               <Link
-                href="/profile"
+                href="/dashboard/profile"
                 className={cn(
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                  pathname === "/profile"
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                  pathname === "/dashboard/profile"
+                    ? "bg-accent text-accent-foreground"
+                    : "text-foreground hover:bg-accent/50 hover:text-accent-foreground"
                 )}
               >
                 <Users className="h-4 w-4" />
                 Profile
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/settings"
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                  pathname === "/settings"
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-                )}
-              >
-                <Settings className="h-4 w-4" />
-                Settings
               </Link>
             </li>
           </ul>

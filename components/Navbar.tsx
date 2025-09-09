@@ -15,7 +15,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="bg-white shadow-sm border-b">
+    <div className="bg-background shadow-sm border-b border-border">
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between h-16 sm:h-20">
           {/* Left: Logo and Title */}
@@ -31,7 +31,7 @@ export default function Navbar() {
             </div>
             <div className="ml-2 sm:ml-3 min-w-0">
               <h1 className="font-bold text-sm sm:text-base lg:text-lg text-[#1170CD] leading-tight truncate">
-                District Administration Centre, Gangtok
+                District Administrative Centre, Gangtok
               </h1>
               <p className="font-light text-[#658cf9] text-xs sm:text-sm lg:text-base hidden sm:block">
                 Government of Sikkim
@@ -94,7 +94,7 @@ export default function Navbar() {
                 asChild
                 variant="outline"
                 size="default"
-                className="group relative border-2 border-[#1170CD] bg-white text-[#1170CD] hover:bg-[#1170CD] hover:text-white font-medium px-6 py-2.5 sm:px-7 sm:py-3 transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#1170CD]/20 hover:border-[#0d5aa7] focus:ring-2 focus:ring-[#1170CD]/30 focus:ring-offset-2 rounded-lg"
+                className="group relative border-2 border-[#1170CD] bg-card text-[#1170CD] hover:bg-[#1170CD] hover:text-white font-medium px-6 py-2.5 sm:px-7 sm:py-3 transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#1170CD]/20 hover:border-[#0d5aa7] focus:ring-2 focus:ring-[#1170CD]/30 focus:ring-offset-2 rounded-lg"
               >
                 <Link href="/login" className="flex items-center space-x-2.5">
                   <LogIn className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:scale-105" />
@@ -112,7 +112,7 @@ export default function Navbar() {
               onClick={toggleMobileMenu}
               variant="ghost"
               size="sm"
-              className="p-2 text-[#1170CD] hover:bg-gray-100"
+              className="p-2 text-[#1170CD] hover:bg-muted/50"
             >
               {isMobileMenuOpen ? (
                 <X className="w-5 h-5" />
@@ -131,7 +131,7 @@ export default function Navbar() {
               : "max-h-0 opacity-0 overflow-hidden"
           }`}
         >
-          <div className="py-4 px-2 bg-gray-50">
+          <div className="py-4 px-2 bg-muted/30">
             <div className="flex flex-col items-center space-y-4">
               {/* Three rounded images in mobile */}
               <div className="flex items-center space-x-3">
@@ -190,7 +190,7 @@ export default function Navbar() {
                   asChild
                   variant="outline"
                   size="default"
-                  className="group relative border-2 border-[#1170CD] bg-white text-[#1170CD] hover:bg-[#1170CD] hover:text-white font-medium px-6 py-2.5 transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#1170CD]/20 hover:border-[#0d5aa7] focus:ring-2 focus:ring-[#1170CD]/30 focus:ring-offset-2 rounded-lg w-full max-w-xs"
+                  className="group relative border-2 border-[#1170CD] bg-card text-[#1170CD] hover:bg-[#1170CD] hover:text-white font-medium px-6 py-2.5 transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#1170CD]/20 hover:border-[#0d5aa7] focus:ring-2 focus:ring-[#1170CD]/30 focus:ring-offset-2 rounded-lg w-full max-w-xs"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Link

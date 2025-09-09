@@ -1665,28 +1665,6 @@ const DCDashboard = () => {
                               </span>
                             </div>
                           </div>
-                          {doc.verifiedBy && (
-                            <div className="mt-4 text-sm bg-green-50 p-3 rounded-lg border border-green-200">
-                              <span className="font-semibold text-green-800">
-                                Verified by:
-                              </span>{" "}
-                              <span className="font-medium text-green-900">
-                                {doc.verifiedBy.officerProfile?.fullName ||
-                                  "Unknown Officer"}{" "}
-                                ({doc.verifiedBy.officerProfile?.designation})
-                              </span>
-                            </div>
-                          )}
-                          {doc.verificationNotes && (
-                            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
-                              <span className="font-semibold text-blue-800">
-                                Notes:
-                              </span>{" "}
-                              <span className="text-blue-900 font-medium">
-                                {doc.verificationNotes}
-                              </span>
-                            </div>
-                          )}
                         </div>
                         <div className="ml-6 flex items-center gap-2">
                           <FilePreviewButton

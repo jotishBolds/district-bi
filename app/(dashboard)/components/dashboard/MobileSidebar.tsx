@@ -19,6 +19,7 @@ import {
   BarChart3,
   ListChecks,
   Building2,
+  ArrowDownToLine,
 } from "lucide-react";
 import {
   SheetContent,
@@ -66,8 +67,13 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     { name: "Applications", href: "/applications", icon: FileText },
     {
       name: "Assigned Applications",
-      href: "/officer/assignments",
+      href: "/dashboard/officers-verify",
       icon: ClipboardList,
+    },
+    {
+      name: "Pull Applications",
+      href: "/dashboard/pull-requests",
+      icon: ArrowDownToLine,
     },
     { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
@@ -84,6 +90,11 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       name: "Assigned Applications",
       href: "/dashboard/officers-verify",
       icon: ClipboardList,
+    },
+    {
+      name: "Pull Applications",
+      href: "/dashboard/pull-requests",
+      icon: ArrowDownToLine,
     },
 
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
@@ -200,17 +211,21 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
   return (
     <SheetContent side="left" className="w-72 p-0 max-w-full">
       <div className="h-full flex flex-col">
-        <SheetHeader className="p-6 border-b">
-          <div className="flex items-center">
-            <div
-              className={`h-10 w-10 ${getRoleColor()} rounded-md flex items-center justify-center text-white font-bold mr-3`}
-            >
-              GP
+        <SheetHeader className="p-4 border-b">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center">
+              <img
+                src="/assets/seal_of_sikkim.png"
+                alt="Government of Sikkim Logo"
+                className="h-10 w-10 object-contain"
+              />
             </div>
-            <div>
-              <SheetTitle className="text-lg">District Portal</SheetTitle>
-              <SheetDescription className="text-sm">
-                {getRoleName()} Dashboard
+            <div className="min-w-0 flex-1">
+              <SheetTitle className="text-base leading-tight">
+                DAC, Gangtok
+              </SheetTitle>
+              <SheetDescription className="text-xs">
+                Government of Sikkim • {getRoleName()}
               </SheetDescription>
             </div>
           </div>
@@ -218,7 +233,7 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
 
         <div className="flex-1 overflow-auto py-2">
           <div className="px-3 py-2">
-            <div className="mb-2 px-4 py-1.5 text-xs font-medium text-gray-500 uppercase">
+            <div className="mb-2 px-4 py-1.5 text-xs font-medium text-muted-foreground uppercase">
               Main Navigation
             </div>
             <div className="space-y-1">
@@ -251,7 +266,7 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
           <Separator className="my-2" />
 
           <div className="px-3 py-2">
-            <div className="mb-2 px-4 py-1.5 text-xs font-medium text-gray-500 uppercase">
+            <div className="mb-2 px-4 py-1.5 text-xs font-medium text-muted-foreground uppercase">
               Account
             </div>
             <div className="space-y-1">
@@ -261,21 +276,9 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
                   className="w-full justify-start"
                   asChild
                 >
-                  <Link href="/profile">
+                  <Link href="/dashboard/profile">
                     <User className="h-4 w-4 mr-3" />
                     Profile
-                  </Link>
-                </Button>
-              </SheetClose>
-              <SheetClose asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start"
-                  asChild
-                >
-                  <Link href="/settings">
-                    <Settings className="h-4 w-4 mr-3" />
-                    Settings
                   </Link>
                 </Button>
               </SheetClose>

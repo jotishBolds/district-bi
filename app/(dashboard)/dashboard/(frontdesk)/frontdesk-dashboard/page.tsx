@@ -45,6 +45,7 @@ import { toast } from "sonner";
 import { formatDistance } from "date-fns";
 import { ServiceCategoryBadge } from "@/components/ui/service-category-badge";
 import { ServiceCategoryEditModal } from "@/components/ui/service-category-edit-modal";
+import { FilePreviewButton } from "@/components/FilePreview";
 import {
   getRoleMapping,
   getLevelPriority,
@@ -73,6 +74,8 @@ interface Application {
     id: string;
     fileName: string;
     documentType: string;
+    isVerified: boolean;
+    fileSize?: number;
   }>;
   citizenProfile?: {
     fullName: string;
@@ -472,8 +475,8 @@ export default function FrontdeskDashboard() {
   ]);
 
   const handleForward = async () => {
-    if (!forwardingApp || !selectedOfficer || !instructions.trim()) {
-      toast.error("Please select an officer and provide instructions");
+    if (!forwardingApp || !selectedOfficer) {
+      toast.error("Please select an officer");
       return;
     }
 
@@ -486,7 +489,8 @@ export default function FrontdeskDashboard() {
         body: JSON.stringify({
           applicationId: forwardingApp.id,
           toOfficerId: selectedOfficer,
-          instructions: instructions.trim(),
+          instructions:
+            instructions.trim() || "No specific instructions provided",
         }),
       });
 
@@ -547,11 +551,11 @@ export default function FrontdeskDashboard() {
       case "RESOLVED":
         return "bg-green-100 text-green-800 border-green-200";
       case "CLOSED":
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-muted text-muted-foreground border-border";
       case "REOPENED":
         return "bg-yellow-100 text-yellow-800 border-yellow-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-muted text-muted-foreground border-border";
     }
   };
 
@@ -569,55 +573,60 @@ export default function FrontdeskDashboard() {
       <CardHeader className="pb-3">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-lg font-semibold text-gray-900 mb-1">
-              {application.citizenProfile?.fullName ||
-                application.citizenName ||
-                "N/A"}
-            </CardTitle>
-            <CardDescription className="space-y-1">
-              <div className="flex items-center gap-2">
-                <ServiceCategoryBadge
-                  category={{
+            {application.subject && (
+              <CardTitle className="text-lg font-semibold text-gray-900 mb-2">
+                <span className="text-sm text-gray-600 font-normal">
+                  Subject -{" "}
+                </span>
+                {application.subject}
+              </CardTitle>
+            )}
+            <CardDescription className="space-y-2">
+              <div className="text-blue-600 font-medium">
+                <span className="text-gray-600 font-normal">
+                  Applicant Name -{" "}
+                </span>
+                {application.citizenProfile?.fullName ||
+                  application.citizenName ||
+                  "N/A"}
+              </div>
+            </CardDescription>
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Badge
+                className={`${getStatusColor(
+                  application.status
+                )} border font-medium`}
+              >
+                {application.status.replace("_", " ")}
+              </Badge>
+              {application.rrNumber && (
+                <Badge
+                  variant="outline"
+                  className="bg-blue-50 text-blue-700 border-blue-200 font-medium"
+                >
+                  {application.rrNumber}
+                </Badge>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <ServiceCategoryBadge
+                category={{
+                  id: application.serviceCategory.id,
+                  name: application.serviceCategory.name,
+                  color: application.serviceCategory.color || undefined,
+                }}
+                clickable={true}
+                onClick={() =>
+                  handleCategoryEdit(application.id, {
                     id: application.serviceCategory.id,
                     name: application.serviceCategory.name,
                     color: application.serviceCategory.color || undefined,
-                  }}
-                  clickable={true}
-                  onClick={() =>
-                    handleCategoryEdit(application.id, {
-                      id: application.serviceCategory.id,
-                      name: application.serviceCategory.name,
-                      color: application.serviceCategory.color || undefined,
-                    })
-                  }
-
-                  // No variant or className override here
-                />
-              </div>
-
-              {application.subject && (
-                <div className="text-blue-600 font-medium">
-                  {application.subject}
-                </div>
-              )}
-            </CardDescription>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <Badge
-              className={`${getStatusColor(
-                application.status
-              )} border font-medium`}
-            >
-              {application.status.replace("_", " ")}
-            </Badge>
-            {application.rrNumber && (
-              <Badge
-                variant="outline"
-                className="bg-blue-50 text-blue-700 border-blue-200 font-medium"
-              >
-                {application.rrNumber}
-              </Badge>
-            )}
+                  })
+                }
+              />
+            </div>
           </div>
         </div>
       </CardHeader>
@@ -657,10 +666,6 @@ export default function FrontdeskDashboard() {
               <span className="font-medium">
                 {application.documents?.length || 0} documents
               </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-orange-500" />
-              <span className="font-medium">Standard SLA</span>
             </div>
           </div>
 
@@ -708,6 +713,52 @@ export default function FrontdeskDashboard() {
               </div>
             </div>
           </div>
+
+          {/* Documents section */}
+          {application.documents && application.documents.length > 0 && (
+            <div className="space-y-2">
+              <h4 className="font-medium text-gray-900 text-sm">
+                Application Documents ({application.documents.length})
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {application.documents.map((document) => (
+                  <div
+                    key={document.id}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                  >
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <FileText className="w-4 h-4 text-green-500 flex-shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {document.fileName}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {document.documentType}
+                          {document.isVerified && (
+                            <span className="ml-2 text-green-600">
+                              ✓ Verified
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                    <FilePreviewButton
+                      document={{
+                        id: document.id,
+                        fileName: document.fileName,
+                        documentType: document.documentType,
+                        isVerified: document.isVerified,
+                        fileSize: document.fileSize || 0,
+                      }}
+                      applicationId={application.id}
+                      variant="ghost"
+                      size="sm"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Forwarding information */}
           {application.frontdeskForwardings &&

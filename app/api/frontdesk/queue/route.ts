@@ -109,16 +109,15 @@ export async function POST(request: NextRequest) {
     const {
       applicationId,
       officerId,
-      priority = 2,
+      // priority is always HIGH (1) - removed from UI
       instructions,
       serviceCategoryId,
     } = await request.json();
 
-    if (!applicationId || !officerId || !instructions) {
+    if (!applicationId || !officerId) {
       return NextResponse.json(
         {
-          error:
-            "Missing required fields: applicationId, officerId, instructions",
+          error: "Missing required fields: applicationId, officerId",
         },
         { status: 400 }
       );
@@ -212,7 +211,9 @@ export async function POST(request: NextRequest) {
           fromStatus: ApplicationStatus.OPEN,
           toStatus: ApplicationStatus.IN_PROGRESS,
           changedById: session.user.id,
-          comments: `Application pulled from queue and assigned to ${frontdeskAssignment.officer?.fullName}: ${instructions}`,
+          comments: `Application pulled from queue and assigned to ${
+            frontdeskAssignment.officer?.fullName
+          }${instructions ? `: ${instructions}` : ""}`,
         },
       });
 
@@ -222,8 +223,8 @@ export async function POST(request: NextRequest) {
           applicationId,
           assignedById: session.user.id,
           assignedToId: officer.id,
-          priority,
-          instructions,
+          priority: 1, // Always HIGH priority
+          instructions: instructions || "No specific instructions provided",
         },
       });
 

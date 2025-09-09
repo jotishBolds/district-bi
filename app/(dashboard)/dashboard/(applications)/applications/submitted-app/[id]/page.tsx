@@ -137,13 +137,13 @@ const PROCESS_STEPS = [
     key: "PENDING",
     label: "Pending Validation",
     icon: Clock4,
-    description: "Awaiting document verification",
+    description: "Awaiting validation",
   },
   {
     key: "VALIDATED",
     label: "Validated",
     icon: FileCheck,
-    description: "Documents verified and approved",
+    description: "Documents approved",
   },
   {
     key: "IN_PROGRESS",
@@ -736,35 +736,19 @@ export default function ApplicationDetailsPage({ params }: PageProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {application.documents.map((doc) => (
                 <Card key={doc.id} className="overflow-hidden">
-                  <CardHeader
-                    className={`py-3 px-4 ${
-                      doc.isVerified
-                        ? "bg-green-50 border-b border-green-100"
-                        : "bg-yellow-50 border-b border-yellow-100"
-                    }`}
-                  >
+                  <CardHeader className="py-3 px-4 bg-green-50 border-b border-green-100">
                     <CardTitle className="text-sm font-medium flex items-center justify-between">
                       <div className="flex items-center">
                         <FileText className="h-4 w-4 mr-2" />
                         {doc.documentType}
                       </div>
-                      {doc.isVerified ? (
-                        <Badge
-                          variant="outline"
-                          className="bg-green-100 text-green-800 border-green-200"
-                        >
-                          <CheckCircle2 className="h-3 w-3 mr-1" />
-                          Verified
-                        </Badge>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="bg-yellow-100 text-yellow-800 border-yellow-200"
-                        >
-                          <Clock className="h-3 w-3 mr-1" />
-                          Pending
-                        </Badge>
-                      )}
+                      <Badge
+                        variant="outline"
+                        className="bg-green-100 text-green-800 border-green-200"
+                      >
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        Approved
+                      </Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 p-4">
@@ -797,14 +781,6 @@ export default function ApplicationDetailsPage({ params }: PageProps) {
                             doc.uploadedBy.officerProfile?.fullName}
                         </span>
                       </div>
-                      {doc.isVerified && doc.verifiedBy && (
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-500">Verified by</span>
-                          <span className="font-medium text-green-700">
-                            {doc.verifiedBy.officerProfile.fullName}
-                          </span>
-                        </div>
-                      )}
                       <div className="flex justify-between items-center">
                         <span className="text-gray-500">Upload date</span>
                         <span className="font-medium text-gray-700">

@@ -1433,21 +1433,18 @@ export default function CreateApplicationPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors">
+                  <div
+                    className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors cursor-pointer"
+                    onClick={() => documentUploadRef.current?.click()}
+                  >
                     <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
                     <div>
-                      <Label
-                        htmlFor="document-upload"
-                        className="cursor-pointer"
-                      >
-                        <span className="text-base font-medium text-gray-900 hover:text-blue-600 transition-colors">
-                          Click to upload documents
-                        </span>
-                        <p className="mt-2 text-sm text-gray-500">
-                          PNG, JPG, PDF up to 5MB each. Multiple files
-                          supported.
-                        </p>
-                      </Label>
+                      <span className="text-base font-medium text-gray-900 hover:text-blue-600 transition-colors">
+                        Click to upload documents
+                      </span>
+                      <p className="mt-2 text-sm text-gray-500">
+                        PNG, JPG, PDF up to 5MB each. Multiple files supported.
+                      </p>
                       <Input
                         ref={documentUploadRef}
                         id="document-upload"

@@ -224,6 +224,34 @@ export default function FrontdeskManagementPage() {
         await handleAssignOfficer(userId);
       }
 
+      // Send account creation email
+      try {
+        const emailResponse = await fetch("/api/admin/send-account-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fullName: data.fullName,
+            email: data.email,
+            password: result.password || data.password, // Use returned password or form password
+            role: "FRONT_DESK",
+            designation: "Front Desk Officer",
+            department: "General",
+          }),
+        });
+
+        if (!emailResponse.ok) {
+          throw new Error("Failed to send account creation email");
+        }
+
+        console.log("Account creation email sent successfully");
+      } catch (emailError) {
+        console.error("Failed to send account creation email:", emailError);
+        // Don't fail the entire process if email fails
+        toast.error("User created but failed to send email notification");
+      }
+
       toast.success("Frontdesk user created successfully");
       setIsCreateDialogOpen(false);
       form.reset();

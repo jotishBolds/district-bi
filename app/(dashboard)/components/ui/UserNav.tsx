@@ -121,17 +121,20 @@ export default function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/profile" className="flex items-center cursor-pointer">
+          <Link
+            href="/dashboard/profile"
+            className="flex items-center cursor-pointer"
+          >
             <User className="mr-2 h-4 w-4" />
             Profile
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
+        {/* <DropdownMenuItem asChild>
           <Link href="/settings" className="flex items-center cursor-pointer">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem asChild>
           <Link
             href="/dashboard/help"

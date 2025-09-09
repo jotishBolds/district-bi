@@ -14,7 +14,7 @@ export default async function DashboardLayout({
   const session = await getServerAuthSession();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Sheet>
         <MobileSidebar />
       </Sheet>

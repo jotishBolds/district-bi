@@ -953,7 +953,7 @@ async function handleForwardApplication(
 
   const {
     forwardToOfficerId,
-    priority = 2,
+    // priority is always HIGH (1) - removed from UI
     instructions,
     forwardedBy,
     currentAssignedOfficer,
@@ -1015,7 +1015,7 @@ async function handleForwardApplication(
         applicationId: application.id,
         assignedById: session.user.id,
         assignedToId: forwardToOfficerId,
-        priority,
+        priority: 1, // Always HIGH priority
         instructions,
       },
     });

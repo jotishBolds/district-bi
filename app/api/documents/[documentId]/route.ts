@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerAuthSession } from "@/lib/auth";
 import { getPresignedUrl, extractS3Key } from "@/lib/s3-storage";
 import prisma from "@/lib/prisma";
+import { isOfficerOrOfficial, isAdminRole } from "@/lib/officer-roles";
 
 export async function GET(
   request: NextRequest,
@@ -56,12 +57,11 @@ export async function GET(
       );
     }
 
-    // Check authorization - user must be involved with the application or be a DC/Admin
+    // Check authorization - allow all officers and admin roles access to documents
+    // Officers need to view documents to process applications
     const isAuthorized =
-      // DC and Admin have access to all documents
-      session.user.role === "DC" ||
-      session.user.role === "ADMIN" ||
-      // User is involved with the application
+      isAdminRole(session.user.role) ||
+      isOfficerOrOfficial(session.user.role) ||
       document.application.currentHolderId === session.user.id ||
       document.application.officerAssignments.some(
         (assignment) =>
@@ -82,21 +82,38 @@ export async function GET(
       // Extract S3 key from filePath
       const s3Key = extractS3Key(document.filePath);
 
-      // Generate presigned URL
-      const presignedUrl = await getPresignedUrl(s3Key, 3600); // 1 hour expiry
+      // Check if user wants direct file serving (no expiration)
+      const directServe = request.nextUrl.searchParams.get("direct") === "true";
+
+      if (directServe) {
+        // Redirect to the direct file serving endpoint (no expiration)
+        const fileUrl = new URL(
+          `/api/documents/${documentId}/file`,
+          request.url
+        );
+        // Preserve download parameter if present
+        if (request.nextUrl.searchParams.get("download") === "true") {
+          fileUrl.searchParams.set("download", "true");
+        }
+        return NextResponse.redirect(fileUrl.toString());
+      }
+
+      // Generate presigned URL with extended expiry (7 days)
+      const presignedUrl = await getPresignedUrl(s3Key, 604800); // 7 days instead of 1 hour
 
       return NextResponse.json(
         {
           url: presignedUrl,
+          directUrl: `/api/documents/${documentId}/file`, // URL for permanent access
           fileName: document.fileName,
           fileSize: document.fileSize,
           documentType: document.documentType,
+          expiresAt: new Date(Date.now() + 604800 * 1000).toISOString(), // 7 days from now
         },
         {
           headers: {
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            Pragma: "no-cache",
-            Expires: "0",
+            "Cache-Control": "public, max-age=3600", // Cache response for 1 hour
+            Pragma: "public",
           },
         }
       );

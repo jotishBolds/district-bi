@@ -28,7 +28,7 @@ export default function HomeSearch() {
                   placeholder="Search for government services, certificates, applications..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 sm:py-4 text-sm sm:text-base bg-white border-none focus:outline-none focus:ring-0 placeholder-gray-500"
+                  className="w-full pl-10 pr-4 py-3 sm:py-4 text-sm sm:text-base bg-card border-none focus:outline-none focus:ring-0 placeholder-muted-foreground text-foreground"
                 />
               </div>
               <button className="bg-amber-500 hover:bg-amber-400 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 transition-colors duration-300 flex items-center gap-2">

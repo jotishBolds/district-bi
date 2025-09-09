@@ -85,24 +85,24 @@ export default function StatusCards({ userRole }: StatusCardsProps) {
   const getBadgeColor = (badge: string): string => {
     switch (badge.toLowerCase()) {
       case "pending":
-        return "bg-amber-100 text-amber-800 border-amber-200";
+        return "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-100 dark:border-amber-800";
       case "validated":
       case "resolved":
       case "healthy":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-800";
       case "processing":
       case "assigned":
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:border-blue-800";
       case "overdue":
       case "issues":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100 dark:border-red-800";
       case "queue":
-        return "bg-orange-100 text-orange-800 border-orange-200";
+        return "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-100 dark:border-orange-800";
       case "total":
       case "active":
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-secondary text-secondary-foreground border-border";
       default:
-        return "bg-slate-100 text-slate-800 border-slate-200";
+        return "bg-muted text-muted-foreground border-border";
     }
   };
 
@@ -112,16 +112,16 @@ export default function StatusCards({ userRole }: StatusCardsProps) {
         {[1, 2, 3, 4].map((i) => (
           <Card
             key={i}
-            className="border border-gray-200 shadow-sm animate-pulse"
+            className="border border-border shadow-sm animate-pulse"
           >
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-2">
-                  <div className="h-4 bg-gray-200 rounded w-24"></div>
-                  <div className="h-8 bg-gray-200 rounded w-16"></div>
-                  <div className="h-3 bg-gray-200 rounded w-32"></div>
+                  <div className="h-4 bg-muted rounded w-24"></div>
+                  <div className="h-8 bg-muted rounded w-16"></div>
+                  <div className="h-3 bg-muted rounded w-32"></div>
                 </div>
-                <div className="h-12 w-12 bg-gray-200 rounded"></div>
+                <div className="h-12 w-12 bg-muted rounded"></div>
               </div>
             </CardContent>
           </Card>
@@ -133,11 +133,11 @@ export default function StatusCards({ userRole }: StatusCardsProps) {
   if (error) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="border border-red-200 shadow-sm">
+        <Card className="border border-destructive/20 shadow-sm bg-destructive/5">
           <CardContent className="p-6">
-            <div className="flex items-center justify-center text-red-600">
+            <div className="flex items-center justify-center text-destructive">
               <AlertTriangle className="h-6 w-6 mr-2" />
-              <span className="text-sm">{error}</span>
+              <span className="text-sm font-medium">{error}</span>
             </div>
           </CardContent>
         </Card>
@@ -150,26 +150,30 @@ export default function StatusCards({ userRole }: StatusCardsProps) {
       {cards.map((card, index) => (
         <Card
           key={index}
-          className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+          className="border border-border shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] bg-card"
         >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <p className="text-sm font-medium text-gray-600">
+                  <p className="text-sm font-medium text-foreground">
                     {card.title}
                   </p>
                   <Badge
                     variant="outline"
-                    className={`text-xs px-2 py-0.5 ${getBadgeColor(
+                    className={`text-xs px-2 py-0.5 font-medium ${getBadgeColor(
                       card.badge
                     )}`}
                   >
                     {card.badge}
                   </Badge>
                 </div>
-                <p className="text-2xl font-bold text-gray-900">{card.value}</p>
-                <p className="text-xs text-gray-500">{card.description}</p>
+                <p className="text-2xl font-bold text-foreground">
+                  {card.value}
+                </p>
+                <p className="text-xs text-muted-foreground font-medium">
+                  {card.description}
+                </p>
               </div>
               <div className="flex-shrink-0">{getIcon(card.title)}</div>
             </div>

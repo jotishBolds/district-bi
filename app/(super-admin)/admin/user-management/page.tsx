@@ -152,11 +152,14 @@ const formSchema = z.object({
   department: z.string().optional(),
   officeLocation: z.string().optional(),
   sectionId: z.string().optional(),
-  // Password is optional - if not provided, a random one will be generated
+  // Password is optional - if not provided, a random one will be generated for CREATE
+  // For EDIT, if not provided, the old password is kept
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .optional(),
+    .optional()
+    .refine((val) => !val || val.length >= 8, {
+      message: "Password must be at least 8 characters if provided",
+    }),
 });
 
 // Helper function to get role badge variant
@@ -325,6 +328,35 @@ export default function UserManagement() {
 
       const newUser = await response.json();
       setUsers((prev) => [...prev, newUser.user]);
+
+      // Send account creation email
+      try {
+        const emailResponse = await fetch("/api/admin/send-account-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fullName: values.fullName,
+            email: values.email,
+            password: newUser.password || values.password, // Use auto-generated password or form password
+            role: values.role,
+            designation: values.designation || undefined,
+            department: values.department || undefined,
+          }),
+        });
+
+        if (!emailResponse.ok) {
+          throw new Error("Failed to send account creation email");
+        }
+
+        console.log("Account creation email sent successfully");
+      } catch (emailError) {
+        console.error("Failed to send account creation email:", emailError);
+        // Don't fail the entire process if email fails
+        toast.error("User created but failed to send email notification");
+      }
+
       toast.success("User has been created successfully.");
       setCreateDialogOpen(false);
       form.reset();
@@ -984,8 +1016,7 @@ export default function UserManagement() {
                         />
                       </FormControl>
                       <FormDescription className="text-xs">
-                        If new password enter new password else enter old
-                        password
+                        Leave blank to auto-generate password for new user
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -1300,13 +1331,13 @@ export default function UserManagement() {
                       <FormLabel>Password </FormLabel>
                       <FormControl>
                         <PasswordInput
-                          placeholder="Enter Password"
+                          placeholder="Leave blank to keep current password"
                           {...field}
                         />
                       </FormControl>
                       <FormDescription className="text-xs">
-                        If entering a new password, it must be at least 8
-                        characters long. Else enter old password
+                        Leave blank to keep current password. Enter new password
+                        to update (minimum 8 characters).
                       </FormDescription>
                       <FormMessage />
                     </FormItem>

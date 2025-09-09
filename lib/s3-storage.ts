@@ -122,11 +122,11 @@ export async function uploadFileToS3(
 }
 
 /**
- * Generate a presigned URL for file access (valid for 1 hour)
+ * Generate a presigned URL for file access (with extended expiry)
  */
 export async function getPresignedUrl(
   key: string,
-  expiresIn = 3600,
+  expiresIn = 604800, // 7 days (maximum allowed by S3)
   responseContentType?: string
 ): Promise<string> {
   const getCommand = new GetObjectCommand({
@@ -155,6 +155,39 @@ export async function getPresignedUrl(
   } catch (error) {
     console.error("Error generating presigned URL:", error);
     throw new Error("Failed to generate file access URL");
+  }
+}
+
+/**
+ * Get file data directly from S3 (for server-side streaming without expiration)
+ */
+export async function getFileFromS3(key: string): Promise<{
+  body: ReadableStream;
+  contentType: string;
+  contentLength: number;
+  lastModified: Date;
+}> {
+  const getCommand = new GetObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: key,
+  });
+
+  try {
+    const response = await s3Client.send(getCommand);
+
+    if (!response.Body) {
+      throw new Error("No file body received from S3");
+    }
+
+    return {
+      body: response.Body as ReadableStream,
+      contentType: response.ContentType || "application/octet-stream",
+      contentLength: response.ContentLength || 0,
+      lastModified: response.LastModified || new Date(),
+    };
+  } catch (error) {
+    console.error("Error getting file from S3:", error);
+    throw new Error("Failed to retrieve file from S3");
   }
 }
 
