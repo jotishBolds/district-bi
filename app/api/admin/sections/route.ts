@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({ sections });
+    return NextResponse.json(sections);
   } catch (error) {
     console.error("Error fetching sections:", error);
     return NextResponse.json(
@@ -74,12 +74,16 @@ export async function POST(request: NextRequest) {
 
     const section = await prisma.section.create({
       data: validatedData,
+      include: {
+        _count: {
+          select: {
+            officers: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json({
-      message: "Section created successfully",
-      section,
-    });
+    return NextResponse.json({ section }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

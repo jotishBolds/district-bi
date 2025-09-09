@@ -11,6 +11,50 @@ const updateSectionSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
+// GET - Get specific section
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ sectionId: string }> }
+) {
+  try {
+    const session = await getServerAuthSession();
+
+    if (
+      !session?.user ||
+      (session.user.role !== UserRole.ADMIN &&
+        session.user.role !== UserRole.SUPER_ADMIN &&
+        session.user.role !== UserRole.FRONT_DESK)
+    ) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { sectionId } = await params;
+
+    const section = await prisma.section.findUnique({
+      where: { id: sectionId },
+      include: {
+        _count: {
+          select: {
+            officers: true,
+          },
+        },
+      },
+    });
+
+    if (!section) {
+      return NextResponse.json({ error: "Section not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(section);
+  } catch (error) {
+    console.error("Error fetching section:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
 // PATCH - Update section
 export async function PATCH(
   request: NextRequest,
@@ -60,12 +104,16 @@ export async function PATCH(
     const updatedSection = await prisma.section.update({
       where: { id: sectionId },
       data: validatedData,
+      include: {
+        _count: {
+          select: {
+            officers: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json({
-      message: "Section updated successfully",
-      section: updatedSection,
-    });
+    return NextResponse.json({ section: updatedSection });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

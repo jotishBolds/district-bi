@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
 import {
-  Building2,
+  Layers,
   Plus,
   Edit,
   Trash2,
@@ -79,7 +79,7 @@ import {
 } from "@/components/ui/select";
 import { UserRole } from "@/app/generated/prisma";
 
-interface Department {
+interface Section {
   id: string;
   name: string;
   description: string | null;
@@ -87,7 +87,7 @@ interface Department {
   createdAt: string;
   updatedAt: string;
   _count: {
-    applications: number;
+    officers: number;
   };
 }
 
@@ -100,12 +100,12 @@ type FormData = {
 const formSchema = z.object({
   name: z
     .string()
-    .min(2, { message: "Department name must be at least 2 characters" }),
+    .min(2, { message: "Section name must be at least 2 characters" }),
   description: z.string().optional(),
   isActive: z.boolean(),
 });
 
-export default function DepartmentManagement() {
+export default function SectionManagement() {
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -119,14 +119,13 @@ export default function DepartmentManagement() {
     },
   });
 
-  const [departments, setDepartments] = useState<Department[]>([]);
+  const [sections, setSections] = useState<Section[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] =
-    useState<Department | null>(null);
+  const [selectedSection, setSelectedSection] = useState<Section | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -142,25 +141,25 @@ export default function DepartmentManagement() {
     }
   }, [session, router]);
 
-  // Fetch departments
+  // Fetch sections
   useEffect(() => {
-    const fetchDepartments = async () => {
+    const fetchSections = async () => {
       try {
-        const response = await fetch("/api/admin/departments");
-        if (!response.ok) throw new Error("Failed to fetch departments");
+        const response = await fetch("/api/admin/sections");
+        if (!response.ok) throw new Error("Failed to fetch sections");
 
         const data = await response.json();
         // Support both array and object response
         if (Array.isArray(data)) {
-          setDepartments(data);
-        } else if (Array.isArray(data.departments)) {
-          setDepartments(data.departments);
+          setSections(data);
+        } else if (Array.isArray(data.sections)) {
+          setSections(data.sections);
         } else {
-          setDepartments([]);
+          setSections([]);
         }
       } catch (error) {
-        toast.error("Failed to load departments. Please try again.");
-        console.error("Error fetching departments:", error);
+        toast.error("Failed to load sections. Please try again.");
+        console.error("Error fetching sections:", error);
       } finally {
         setIsLoading(false);
       }
@@ -171,30 +170,30 @@ export default function DepartmentManagement() {
       (session.user.role === UserRole.ADMIN ||
         session.user.role === UserRole.SUPER_ADMIN)
     ) {
-      fetchDepartments();
+      fetchSections();
     }
   }, [session]);
 
-  // Filter departments based on search query and status
-  const filteredDepartments = departments.filter((dept) => {
+  // Filter sections based on search query and status
+  const filteredSections = sections.filter((section) => {
     const matchesSearch =
       searchQuery === "" ||
-      dept.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      dept.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      section.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      section.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesStatus =
       statusFilter === "ALL" ||
-      (statusFilter === "ACTIVE" && dept.isActive) ||
-      (statusFilter === "INACTIVE" && !dept.isActive);
+      (statusFilter === "ACTIVE" && section.isActive) ||
+      (statusFilter === "INACTIVE" && !section.isActive);
 
     return matchesSearch && matchesStatus;
   });
 
-  // Handle form submission for creating a new department
+  // Handle form submission for creating a new section
   const onSubmitCreate = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/admin/departments", {
+      const response = await fetch("/api/admin/sections", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -204,30 +203,36 @@ export default function DepartmentManagement() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to create department");
+        throw new Error(error.message || "Failed to create section");
       }
 
-      const newDepartment = await response.json();
-      setDepartments((prev) => [...prev, newDepartment.department]);
-      toast.success("Department has been created successfully.");
+      const newSectionResponse = await response.json();
+      const newSection = newSectionResponse.section || newSectionResponse;
+
+      setSections((prev) => [...prev, newSection]);
+      toast.success("Section has been created successfully.");
       setCreateDialogOpen(false);
       form.reset();
     } catch (error) {
-      console.error("Error creating department:", error);
+      console.error("Error creating section:", error);
       toast.error(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Handle form submission for editing a department
+  // Handle form submission for editing a section
   const onSubmitEdit = async (values: z.infer<typeof formSchema>) => {
-    if (!selectedDepartment) return;
+    if (!selectedSection) return;
+
+    console.log("Submitting edit for section:", selectedSection.id);
+    console.log("Form values being submitted:", values);
+    console.log("Original section data:", selectedSection);
 
     setIsSubmitting(true);
     try {
       const response = await fetch(
-        `/api/admin/departments/${selectedDepartment.id}`,
+        `/api/admin/sections/${selectedSection.id}`,
         {
           method: "PATCH",
           headers: {
@@ -239,51 +244,57 @@ export default function DepartmentManagement() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to update department");
+        throw new Error(error.message || "Failed to update section");
       }
 
-      const updatedDepartmentResponse = await response.json();
-      // Support both object and direct department response
-      let updatedDepartment =
-        updatedDepartmentResponse.department || updatedDepartmentResponse;
-      if (!updatedDepartment || !updatedDepartment.id) {
-        throw new Error("Invalid department data returned from API");
+      const updatedSectionResponse = await response.json();
+      console.log("API response:", updatedSectionResponse);
+
+      let updatedSection =
+        updatedSectionResponse.section || updatedSectionResponse;
+
+      if (!updatedSection || !updatedSection.id) {
+        throw new Error("Invalid section data returned from API");
       }
-      // Defensive: ensure _count.applications is always defined
+
+      // Defensive: ensure _count.officers is always defined
       if (
-        !updatedDepartment._count ||
-        typeof updatedDepartment._count.applications !== "number"
+        !updatedSection._count ||
+        typeof updatedSection._count.officers !== "number"
       ) {
-        updatedDepartment = {
-          ...updatedDepartment,
-          _count: { applications: 0 },
+        updatedSection = {
+          ...updatedSection,
+          _count: { officers: 0 },
         };
       }
-      setDepartments((prev) =>
-        prev.map((dept) =>
-          dept.id === selectedDepartment.id ? updatedDepartment : dept
+
+      console.log("Updating sections list with:", updatedSection);
+
+      setSections((prev) =>
+        prev.map((section) =>
+          section.id === selectedSection.id ? updatedSection : section
         )
       );
-      toast.success("Department has been updated successfully.");
+      toast.success("Section has been updated successfully.");
       setEditDialogOpen(false);
-      setSelectedDepartment(null);
+      setSelectedSection(null);
       form.reset();
     } catch (error) {
-      console.error("Error updating department:", error);
+      console.error("Error updating section:", error);
       toast.error(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Handle department deletion
-  const handleDeleteDepartment = async () => {
-    if (!selectedDepartment) return;
+  // Handle section deletion
+  const handleDeleteSection = async () => {
+    if (!selectedSection) return;
 
     setIsSubmitting(true);
     try {
       const response = await fetch(
-        `/api/admin/departments/${selectedDepartment.id}`,
+        `/api/admin/sections/${selectedSection.id}`,
         {
           method: "DELETE",
         }
@@ -291,16 +302,16 @@ export default function DepartmentManagement() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to delete department");
+        throw new Error(error.message || "Failed to delete section");
       }
 
-      setDepartments((prev) =>
-        prev.filter((dept) => dept.id !== selectedDepartment.id)
+      setSections((prev) =>
+        prev.filter((section) => section.id !== selectedSection.id)
       );
-      toast.success("Department has been deleted successfully.");
+      toast.success("Section has been deleted successfully.");
       setDeleteDialogOpen(false);
     } catch (error) {
-      console.error("Error deleting department:", error);
+      console.error("Error deleting section:", error);
       toast.error(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsSubmitting(false);
@@ -308,46 +319,61 @@ export default function DepartmentManagement() {
   };
 
   // Open edit dialog and prefill form
-  const handleEditDepartment = (department: Department) => {
-    setSelectedDepartment(department);
-    form.reset({
-      name: department.name,
-      description: department.description || "",
-      isActive: department.isActive,
-    });
+  const handleEditSection = (section: Section) => {
+    console.log("=== OPENING EDIT DIALOG ===");
+    console.log("Selected section:", section);
+    console.log("Current form values before reset:", form.getValues());
+
+    setSelectedSection(section);
     setEditDialogOpen(true);
+
+    // Use setTimeout to ensure dialog is open before setting form values
+    setTimeout(() => {
+      console.log("Setting form values...");
+      form.reset({
+        name: section.name,
+        description: section.description || "",
+        isActive: section.isActive,
+      });
+
+      // Also set individual values to ensure they are set
+      form.setValue("name", section.name);
+      form.setValue("description", section.description || "");
+      form.setValue("isActive", section.isActive);
+
+      console.log("Form values after reset:", form.getValues());
+      console.log("=== EDIT DIALOG SETUP COMPLETE ===");
+    }, 50); // Increased delay slightly
   };
 
-  // Handle toggling department active status
-  const toggleDepartmentStatus = async (department: Department) => {
+  // Handle toggling section active status
+  const toggleSectionStatus = async (section: Section) => {
     try {
-      const response = await fetch(`/api/admin/departments/${department.id}`, {
+      const response = await fetch(`/api/admin/sections/${section.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ isActive: !department.isActive }),
+        body: JSON.stringify({ isActive: !section.isActive }),
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to update department status");
+        throw new Error(error.message || "Failed to update section status");
       }
 
-      setDepartments((prev) =>
-        prev.map((dept) =>
-          dept.id === department.id
-            ? { ...dept, isActive: !dept.isActive }
-            : dept
+      setSections((prev) =>
+        prev.map((sec) =>
+          sec.id === section.id ? { ...sec, isActive: !sec.isActive } : sec
         )
       );
       toast.success(
-        `Department has been ${
-          !department.isActive ? "activated" : "deactivated"
+        `Section has been ${
+          !section.isActive ? "activated" : "deactivated"
         } successfully.`
       );
     } catch (error) {
-      console.error("Error toggling department status:", error);
+      console.error("Error toggling section status:", error);
       toast.error(error instanceof Error ? error.message : "An error occurred");
     }
   };
@@ -357,10 +383,10 @@ export default function DepartmentManagement() {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
-            Department Management
+            Section Management
           </h1>
           <p className="text-muted-foreground">
-            Create and manage departments for application categorization.
+            Create and manage sections for officer organization.
           </p>
         </div>
         <Button
@@ -374,7 +400,7 @@ export default function DepartmentManagement() {
           }}
         >
           <Plus className="mr-2 h-4 w-4" />
-          Create Department
+          Create Section
         </Button>
       </div>
 
@@ -385,7 +411,7 @@ export default function DepartmentManagement() {
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search departments by name or description..."
+              placeholder="Search sections by name or description..."
               className="pl-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -401,29 +427,39 @@ export default function DepartmentManagement() {
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ALL">All Status</SelectItem>
-              <SelectItem value="ACTIVE">Active</SelectItem>
-              <SelectItem value="INACTIVE">Inactive</SelectItem>
+              <SelectItem value="ALL">All Sections</SelectItem>
+              <SelectItem value="ACTIVE">Active Sections</SelectItem>
+              <SelectItem value="INACTIVE">Inactive Sections</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <Card className="shadow-sm">
-        <CardContent className="p-0">
+      {/* Sections Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Layers className="h-5 w-5" />
+            Sections ({filteredSections.length})
+          </CardTitle>
+          <CardDescription>
+            Manage organizational sections and their officer assignments.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           {isLoading ? (
-            <div className="flex justify-center items-center p-8">
-              <Loader2 className="h-6 w-6 animate-spin mr-2" />
-              <span>Loading departments...</span>
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin" />
+              <span className="ml-2">Loading sections...</span>
             </div>
-          ) : filteredDepartments.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-8 text-center">
-              <Building2 className="h-10 w-10 text-muted-foreground mb-2" />
-              <h3 className="font-medium text-lg">No departments found</h3>
+          ) : filteredSections.length === 0 ? (
+            <div className="text-center py-8">
+              <Layers className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-medium">No sections found</h3>
               <p className="text-muted-foreground">
                 {searchQuery || statusFilter !== "ALL"
-                  ? "Try adjusting your filters"
-                  : "Create a new department to get started"}
+                  ? "Try adjusting your search or filter criteria."
+                  : "Get started by creating your first section."}
               </p>
             </div>
           ) : (
@@ -431,119 +467,78 @@ export default function DepartmentManagement() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[250px]">Department</TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Description
-                    </TableHead>
-                    <TableHead className="hidden lg:table-cell">
-                      Applications
-                    </TableHead>
-                    <TableHead className="hidden lg:table-cell">
-                      Created
-                    </TableHead>
-                    <TableHead className="hidden sm:table-cell">
-                      Status
-                    </TableHead>
+                    <TableHead>Section Name</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Officers</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredDepartments.map((department) => (
-                    <TableRow key={department.id} className="hover:bg-muted/50">
+                  {filteredSections.map((section) => (
+                    <TableRow key={section.id}>
+                      <TableCell className="font-medium">
+                        {section.name}
+                      </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="flex-shrink-0">
-                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                              <Building2 className="w-4 h-4 text-blue-600" />
-                            </div>
-                          </div>
-                          <div className="flex flex-col min-w-0">
-                            <span className="font-medium truncate">
-                              {department.name}
-                            </span>
-                            <div className="sm:hidden mt-1">
-                              <Badge
-                                variant={
-                                  department.isActive ? "default" : "secondary"
-                                }
-                                className={
-                                  department.isActive
-                                    ? "bg-green-100 text-green-800 hover:bg-green-100"
-                                    : "bg-gray-100 text-gray-800 hover:bg-gray-100"
-                                }
-                              >
-                                <div className="flex items-center gap-1">
-                                  {department.isActive ? (
-                                    <div className="w-2 h-2 bg-green-500 rounded-full" />
-                                  ) : (
-                                    <div className="w-2 h-2 bg-gray-400 rounded-full" />
-                                  )}
-                                  {department.isActive ? "Active" : "Inactive"}
-                                </div>
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        <span className="text-sm text-muted-foreground">
-                          {department.description || "No description"}
-                        </span>
-                      </TableCell>
-                      <TableCell className="hidden lg:table-cell">
-                        <div className="flex items-center gap-2">
-                          <FileText className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm font-medium">
-                            {department._count.applications}
+                        {section.description || (
+                          <span className="text-muted-foreground italic">
+                            No description
                           </span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Users className="h-4 w-4" />
+                          {section._count.officers}
                         </div>
                       </TableCell>
-                      <TableCell className="hidden lg:table-cell">
-                        <span className="text-sm">
-                          {new Date(department.createdAt).toLocaleDateString()}
-                        </span>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
+                      <TableCell>
                         <Badge
-                          variant={
-                            department.isActive ? "default" : "secondary"
-                          }
+                          variant={section.isActive ? "default" : "secondary"}
                           className={
-                            department.isActive
-                              ? "bg-green-100 text-green-800 hover:bg-green-100"
-                              : "bg-gray-100 text-gray-800 hover:bg-gray-100"
+                            section.isActive
+                              ? "bg-green-100 text-green-800 hover:bg-green-200"
+                              : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                           }
                         >
-                          <div className="flex items-center gap-1">
-                            {department.isActive ? (
-                              <div className="w-2 h-2 bg-green-500 rounded-full" />
-                            ) : (
-                              <div className="w-2 h-2 bg-gray-400 rounded-full" />
-                            )}
-                            {department.isActive ? "Active" : "Inactive"}
-                          </div>
+                          {section.isActive ? (
+                            <>
+                              <Check className="mr-1 h-3 w-3" />
+                              Active
+                            </>
+                          ) : (
+                            <>
+                              <X className="mr-1 h-3 w-3" />
+                              Inactive
+                            </>
+                          )}
                         </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(section.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
+                            <Button variant="ghost" className="h-8 w-8 p-0">
                               <span className="sr-only">Open menu</span>
+                              <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
-                              onClick={() => handleEditDepartment(department)}
+                              onClick={() => handleEditSection(section)}
                             >
                               <Edit className="mr-2 h-4 w-4" />
-                              Edit
+                              Edit Section
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => toggleDepartmentStatus(department)}
+                              onClick={() => toggleSectionStatus(section)}
                             >
-                              {department.isActive ? (
+                              {section.isActive ? (
                                 <>
                                   <X className="mr-2 h-4 w-4" />
                                   Deactivate
@@ -557,15 +552,15 @@ export default function DepartmentManagement() {
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                              className="text-red-600"
                               onClick={() => {
-                                setSelectedDepartment(department);
+                                setSelectedSection(section);
                                 setDeleteDialogOpen(true);
                               }}
-                              disabled={department._count.applications > 0}
+                              className="text-red-600"
+                              disabled={section._count.officers > 0}
                             >
                               <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
+                              Delete Section
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -579,13 +574,16 @@ export default function DepartmentManagement() {
         </CardContent>
       </Card>
 
-      {/* Create Department Dialog */}
+      {/* Create Section Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Create New Department</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Plus className="h-5 w-5" />
+              Create New Section
+            </DialogTitle>
             <DialogDescription>
-              Enter the details to create a new department.
+              Create a new section to organize officers within your department.
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -598,11 +596,12 @@ export default function DepartmentManagement() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Department Name</FormLabel>
+                    <FormLabel>Section Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="e.g., Revenue Department"
+                        placeholder="Enter section name"
                         {...field}
+                        disabled={isSubmitting}
                       />
                     </FormControl>
                     <FormMessage />
@@ -614,13 +613,18 @@ export default function DepartmentManagement() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description (optional)</FormLabel>
+                    <FormLabel>Description (Optional)</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Brief description of the department"
+                        placeholder="Enter section description"
                         {...field}
+                        disabled={isSubmitting}
                       />
                     </FormControl>
+                    <FormDescription>
+                      Provide a brief description of this section&apos;s
+                      purpose.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -629,36 +633,44 @@ export default function DepartmentManagement() {
                 control={form.control}
                 name="isActive"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
+                        disabled={isSubmitting}
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel>Active Department</FormLabel>
+                      <FormLabel>Active Section</FormLabel>
                       <FormDescription>
-                        Only active departments can be selected for applications
+                        Active sections can be assigned officers.
                       </FormDescription>
                     </div>
                   </FormItem>
                 )}
               />
-
-              <DialogFooter className="mt-6">
+              <DialogFooter>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => setCreateDialogOpen(false)}
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </Button>
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Create Section
+                    </>
                   )}
-                  Create Department
                 </Button>
               </DialogFooter>
             </form>
@@ -666,25 +678,29 @@ export default function DepartmentManagement() {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Department Dialog */}
+      {/* Edit Section Dialog */}
       <Dialog
         open={editDialogOpen}
         onOpenChange={(open) => {
-          if (!open) {
+          if (!open && editDialogOpen) {
+            // Only reset when actually closing the dialog
             setEditDialogOpen(false);
-            setSelectedDepartment(null);
+            setSelectedSection(null);
             form.reset();
           }
         }}
       >
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit Department</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5" />
+              Edit Section
+            </DialogTitle>
             <DialogDescription>
-              Update department information.
+              Update the section information.
             </DialogDescription>
           </DialogHeader>
-          <Form {...form}>
+          <Form {...form} key={selectedSection?.id || "edit-form"}>
             <form
               onSubmit={form.handleSubmit(onSubmitEdit)}
               className="space-y-4"
@@ -694,11 +710,12 @@ export default function DepartmentManagement() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Department Name</FormLabel>
+                    <FormLabel>Section Name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="e.g., Revenue Department"
+                        placeholder="Enter section name"
                         {...field}
+                        disabled={isSubmitting}
                       />
                     </FormControl>
                     <FormMessage />
@@ -710,13 +727,18 @@ export default function DepartmentManagement() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description (optional)</FormLabel>
+                    <FormLabel>Description (Optional)</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Brief description of the department"
+                        placeholder="Enter section description"
                         {...field}
+                        disabled={isSubmitting}
                       />
                     </FormControl>
+                    <FormDescription>
+                      Provide a brief description of this section&apos;s
+                      purpose.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -725,40 +747,48 @@ export default function DepartmentManagement() {
                 control={form.control}
                 name="isActive"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
+                        disabled={isSubmitting}
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel>Active Department</FormLabel>
+                      <FormLabel>Active Section</FormLabel>
                       <FormDescription>
-                        Only active departments can be selected for applications
+                        Active sections can be assigned officers.
                       </FormDescription>
                     </div>
                   </FormItem>
                 )}
               />
-
-              <DialogFooter className="mt-6">
+              <DialogFooter>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => {
                     setEditDialogOpen(false);
-                    setSelectedDepartment(null);
+                    setSelectedSection(null);
                     form.reset();
                   }}
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </Button>
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    <>
+                      <Edit className="mr-2 h-4 w-4" />
+                      Update Section
+                    </>
                   )}
-                  Save Changes
                 </Button>
               </DialogFooter>
             </form>
@@ -766,53 +796,59 @@ export default function DepartmentManagement() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
+      {/* Delete Section Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <AlertCircle className="h-5 w-5" />
+              Delete Section
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this department? This action
-              cannot be undone.
+              This action cannot be undone. This will permanently delete the
+              section &quot;{selectedSection?.name}&quot;.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4">
-            <Alert variant="destructive">
+
+          {selectedSection && selectedSection._count.officers > 0 && (
+            <Alert>
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Warning</AlertTitle>
+              <AlertTitle>Cannot Delete Section</AlertTitle>
               <AlertDescription>
-                {selectedDepartment?._count.applications ? (
-                  <>
-                    This department has {selectedDepartment._count.applications}{" "}
-                    applications associated with it. You cannot delete it until
-                    all applications are transferred to another department.
-                  </>
-                ) : (
-                  "Deleting this department will remove it permanently from the system."
-                )}
+                This section has {selectedSection._count.officers} assigned
+                officers. Please reassign or remove these officers before
+                deleting the section.
               </AlertDescription>
             </Alert>
-          </div>
-          <DialogFooter className="mt-6">
+          )}
+
+          <DialogFooter>
             <Button
-              type="button"
               variant="outline"
               onClick={() => setDeleteDialogOpen(false)}
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
             <Button
               variant="destructive"
-              onClick={handleDeleteDepartment}
+              onClick={handleDeleteSection}
               disabled={
                 isSubmitting ||
-                (selectedDepartment?._count.applications || 0) > 0
+                Boolean(selectedSection && selectedSection._count.officers > 0)
               }
             >
-              {isSubmitting && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Section
+                </>
               )}
-              Delete Department
             </Button>
           </DialogFooter>
         </DialogContent>

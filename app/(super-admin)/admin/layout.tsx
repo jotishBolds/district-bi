@@ -5,6 +5,7 @@ import { getServerAuthSession } from "@/lib/auth";
 import MobileSidebar from "@/app/(dashboard)/components/dashboard/MobileSidebar";
 import DesktopSidebar from "@/app/(dashboard)/components/dashboard/DesktopSidebar";
 import DashboardHeader from "@/app/(dashboard)/components/dashboard/DashboardHeader";
+import { Toaster } from "react-hot-toast";
 
 export default async function DashboardLayout({
   children,
@@ -26,6 +27,7 @@ export default async function DashboardLayout({
         <main className="py-10">
           <div className="px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
+        <Toaster />
       </div>
     </div>
   );

@@ -20,6 +20,7 @@ import {
   ListChecks,
   Building2,
   ArrowDownToLine,
+  Layers,
 } from "lucide-react";
 import {
   SheetContent,
@@ -113,6 +114,11 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       name: "Department Management",
       href: "/admin/departments",
       icon: Building2,
+    },
+    {
+      name: "Section Management",
+      href: "/admin/sections",
+      icon: Layers,
     },
     // { name: "System Settings", href: "/admin/settings", icon: Settings },
     // { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },

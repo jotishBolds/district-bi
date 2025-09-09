@@ -85,9 +85,16 @@ export async function POST(request: NextRequest) {
         description: validatedData.description,
         isActive: true,
       },
+      include: {
+        _count: {
+          select: {
+            applications: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json(department, { status: 201 });
+    return NextResponse.json({ department }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

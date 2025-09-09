@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -137,7 +137,7 @@ export default function ServiceCategoryManagement() {
     },
   });
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -162,11 +162,11 @@ export default function ServiceCategoryManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, searchTerm, statusFilter]);
 
   useEffect(() => {
     fetchCategories();
-  }, [pagination.page, searchTerm, statusFilter]);
+  }, [fetchCategories]);
 
   const onSubmit = async (data: FormData) => {
     try {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -121,18 +121,7 @@ export default function DispatchDashboard() {
   const [showDispatchDialog, setShowDispatchDialog] = useState(false);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
 
-  useEffect(() => {
-    if (session?.user?.role !== "DISPATCH_HANDLER") {
-      router.push("/dashboard");
-      return;
-    }
-
-    fetchApplications();
-    fetchDepartments();
-    fetchStats();
-  }, [session, searchTerm, selectedDepartment, dispatchStatus, page]);
-
-  const fetchApplications = async () => {
+  const fetchApplications = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -154,7 +143,18 @@ export default function DispatchDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, searchTerm, selectedDepartment, dispatchStatus]);
+
+  useEffect(() => {
+    if (session?.user?.role !== "DISPATCH_HANDLER") {
+      router.push("/dashboard");
+      return;
+    }
+
+    fetchApplications();
+    fetchDepartments();
+    fetchStats();
+  }, [session, fetchApplications, router]);
 
   const fetchDepartments = async () => {
     try {

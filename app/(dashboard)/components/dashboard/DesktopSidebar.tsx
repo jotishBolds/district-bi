@@ -18,6 +18,7 @@ import {
   BarChart3,
   Building2,
   ArrowDownToLine,
+  Layers,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -140,6 +141,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       name: "Department Management",
       href: "/admin/departments",
       icon: Building2,
+    },
+    {
+      name: "Section Management",
+      href: "/admin/sections",
+      icon: Layers,
     },
     {
       name: "Frontdesk Management",

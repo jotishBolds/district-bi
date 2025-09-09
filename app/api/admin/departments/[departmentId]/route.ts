@@ -112,9 +112,16 @@ export async function PATCH(
     const department = await prisma.department.update({
       where: { id: departmentId },
       data: validatedData,
+      include: {
+        _count: {
+          select: {
+            applications: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json(department);
+    return NextResponse.json({ department });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
