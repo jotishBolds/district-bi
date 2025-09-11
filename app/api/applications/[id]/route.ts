@@ -28,7 +28,7 @@ type ApplicationWithRelations = {
   citizenEmail: string | null;
   citizenAddress: string;
   citizenGender: string | null;
-  citizenAadhaar: string | null;
+  citizenAlternateNumber: string | null;
   status: ApplicationStatus;
   currentHolderId: string | null;
   submittedAt: Date | null;
@@ -503,45 +503,31 @@ async function handleValidateApplication(
     });
   }
 
-  // Generate RR Number
+  // Generate RR Number using format RR-YYMMDD-HHMM-XX
   const currentDate = new Date();
   const year = currentDate.getFullYear().toString().slice(-2);
   const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+  const day = currentDate.getDate().toString().padStart(2, "0");
+  const hour = currentDate.getHours().toString().padStart(2, "0");
+  const minute = currentDate.getMinutes().toString().padStart(2, "0");
 
-  // Get count of applications validated today for sequential numbering
+  // Get count of all applications created today for sequential numbering
   const startOfDay = new Date(currentDate);
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date(currentDate);
   endOfDay.setHours(23, 59, 59, 999);
 
-  // Get the latest application with RR number from today to ensure uniqueness
-  const latestApplication = await prisma.application.findFirst({
+  const applicationsToday = await prisma.application.count({
     where: {
-      validatedAt: {
+      createdAt: {
         gte: startOfDay,
         lte: endOfDay,
       },
-      rrNumber: {
-        not: null,
-        startsWith: `RR${year}${month}`,
-      },
-    },
-    orderBy: {
-      rrNumber: "desc",
     },
   });
 
-  let sequentialNumber;
-  if (latestApplication && latestApplication.rrNumber) {
-    // Extract the sequential number from the latest RR number and increment it
-    const latestSequential = parseInt(latestApplication.rrNumber.slice(-4), 10);
-    sequentialNumber = (latestSequential + 1).toString().padStart(4, "0");
-  } else {
-    // First application of the day
-    sequentialNumber = "0001";
-  }
-
-  const rrNumber = `RR${year}${month}${sequentialNumber}`;
+  const sequentialNumber = (applicationsToday + 1).toString().padStart(2, "0");
+  const rrNumber = `RR-${year}${month}${day}-${hour}${minute}-${sequentialNumber}`;
 
   const result = await prisma.$transaction(async (tx) => {
     // Double-check that the RR number is unique before updating

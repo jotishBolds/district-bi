@@ -37,6 +37,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   FileText,
   Upload,
@@ -105,7 +106,7 @@ const publicApplicationSchemaGeneral = z.object({
   citizenEmail: z.string().email("Invalid email").optional().or(z.literal("")),
   citizenAddress: z.string().min(5, "Address must be at least 5 characters"),
   citizenGender: z.string().optional(),
-  citizenAadhaar: z.string().optional(),
+  citizenAlternateNumber: z.string().optional(),
   assignedOfficerId: z.string().optional(),
   priority: z.number().min(1).max(3),
   instructions: z.string().optional(),
@@ -119,7 +120,7 @@ const publicApplicationSchemaAssigned = z.object({
   citizenEmail: z.string().email("Invalid email").optional().or(z.literal("")),
   citizenAddress: z.string().min(5, "Address must be at least 5 characters"),
   citizenGender: z.string().optional(),
-  citizenAadhaar: z.string().optional(),
+  citizenAlternateNumber: z.string().optional(),
   assignedOfficerId: z.string().optional(),
   priority: z.number().min(1).max(3),
   instructions: z.string().optional(),
@@ -134,7 +135,7 @@ const governmentApplicationSchemaGeneral = z.object({
   citizenEmail: z.string().email("Invalid email").optional().or(z.literal("")),
   citizenAddress: z.string().min(5, "Address must be at least 5 characters"),
   citizenGender: z.string().optional(),
-  citizenAadhaar: z.string().optional(),
+  citizenAlternateNumber: z.string().optional(),
   assignedOfficerId: z.string().optional(),
   priority: z.number().min(1).max(3),
   instructions: z.string().optional(),
@@ -149,7 +150,7 @@ const governmentApplicationSchemaAssigned = z.object({
   citizenEmail: z.string().email("Invalid email").optional().or(z.literal("")),
   citizenAddress: z.string().min(5, "Address must be at least 5 characters"),
   citizenGender: z.string().optional(),
-  citizenAadhaar: z.string().optional(),
+  citizenAlternateNumber: z.string().optional(),
   assignedOfficerId: z.string().optional(),
   priority: z.number().min(1).max(3),
   instructions: z.string().optional(),
@@ -164,7 +165,7 @@ type ApplicationFormData = {
   citizenEmail?: string;
   citizenAddress: string;
   citizenGender?: string;
-  citizenAadhaar?: string;
+  citizenAlternateNumber?: string;
   assignedOfficerId?: string;
   priority: number;
   instructions?: string;
@@ -213,6 +214,7 @@ export default function CreateApplicationPage() {
   const [applicationType, setApplicationType] = useState<
     "PUBLIC" | "GOVERNMENT"
   >("PUBLIC");
+  const [sameAsPhoneNumber, setSameAsPhoneNumber] = useState(false);
 
   // Add refs for each step card
   const stepRefs = [
@@ -246,8 +248,9 @@ export default function CreateApplicationPage() {
   const [uncategorisedCategoryId, setUncategorisedCategoryId] =
     useState<string>("");
 
-  // Initialize form without resolver first
+  // Initialize form with resolver
   const form = useForm<ApplicationFormData>({
+    resolver: zodResolver(getCurrentSchema()),
     defaultValues: {
       serviceCategoryId: "",
       departmentId: "",
@@ -257,7 +260,7 @@ export default function CreateApplicationPage() {
       citizenEmail: "",
       citizenAddress: "",
       citizenGender: "",
-      citizenAadhaar: "",
+      citizenAlternateNumber: "",
       assignedOfficerId: "",
       priority: 1, // Default to HIGH priority
       instructions: "",
@@ -265,6 +268,13 @@ export default function CreateApplicationPage() {
   });
 
   const watchedFields = form.watch();
+
+  // Effect to sync alternate number with phone number when checkbox is checked
+  useEffect(() => {
+    if (sameAsPhoneNumber && watchedFields.citizenPhone) {
+      form.setValue("citizenAlternateNumber", watchedFields.citizenPhone);
+    }
+  }, [watchedFields.citizenPhone, sameAsPhoneNumber, form]);
 
   // Add step validation functions
   const validateStep = (step: number): boolean => {
@@ -705,7 +715,10 @@ export default function CreateApplicationPage() {
       applicationFormData.append("citizenEmail", data.citizenEmail || "");
       applicationFormData.append("citizenAddress", data.citizenAddress);
       applicationFormData.append("citizenGender", data.citizenGender || "");
-      applicationFormData.append("citizenAadhaar", data.citizenAadhaar || "");
+      applicationFormData.append(
+        "citizenAlternateNumber",
+        data.citizenAlternateNumber || ""
+      );
       applicationFormData.append("priority", data.priority.toString());
 
       documents.forEach((document, index) => {
@@ -1337,21 +1350,47 @@ export default function CreateApplicationPage() {
 
                   <FormField
                     control={form.control}
-                    name="citizenAadhaar"
+                    name="citizenAlternateNumber"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-gray-700">
-                          Aadhaar Number
+                          Alternate Number (WhatsApp)
                           <span className="text-gray-400 ml-1">(Optional)</span>
                         </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="1234 5678 9012"
-                            maxLength={12}
-                            className="h-11"
-                            {...field}
-                          />
-                        </FormControl>
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="sameAsPhone"
+                              checked={sameAsPhoneNumber}
+                              onCheckedChange={(checked) => {
+                                setSameAsPhoneNumber(checked as boolean);
+                                if (checked) {
+                                  field.onChange(
+                                    form.getValues("citizenPhone")
+                                  );
+                                } else {
+                                  field.onChange("");
+                                }
+                              }}
+                            />
+                            <Label htmlFor="sameAsPhone" className="text-sm">
+                              Same as phone number
+                            </Label>
+                          </div>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter WhatsApp number"
+                              className="h-11"
+                              disabled={sameAsPhoneNumber}
+                              {...field}
+                              onChange={(e) => {
+                                if (!sameAsPhoneNumber) {
+                                  field.onChange(e.target.value);
+                                }
+                              }}
+                            />
+                          </FormControl>
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}

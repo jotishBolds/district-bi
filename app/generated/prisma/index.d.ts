@@ -13011,12 +13011,12 @@ export namespace Prisma {
     completedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
-    citizenAadhaar: string | null
     citizenAddress: string | null
     citizenEmail: string | null
     citizenGender: string | null
     citizenName: string | null
     citizenPhone: string | null
+    citizenAlternateNumber: string | null
     subject: string | null
     departmentId: string | null
     dispatchedAt: Date | null
@@ -13036,12 +13036,12 @@ export namespace Prisma {
     completedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
-    citizenAadhaar: string | null
     citizenAddress: string | null
     citizenEmail: string | null
     citizenGender: string | null
     citizenName: string | null
     citizenPhone: string | null
+    citizenAlternateNumber: string | null
     subject: string | null
     departmentId: string | null
     dispatchedAt: Date | null
@@ -13061,12 +13061,12 @@ export namespace Prisma {
     completedAt: number
     createdAt: number
     updatedAt: number
-    citizenAadhaar: number
     citizenAddress: number
     citizenEmail: number
     citizenGender: number
     citizenName: number
     citizenPhone: number
+    citizenAlternateNumber: number
     subject: number
     departmentId: number
     dispatchedAt: number
@@ -13088,12 +13088,12 @@ export namespace Prisma {
     completedAt?: true
     createdAt?: true
     updatedAt?: true
-    citizenAadhaar?: true
     citizenAddress?: true
     citizenEmail?: true
     citizenGender?: true
     citizenName?: true
     citizenPhone?: true
+    citizenAlternateNumber?: true
     subject?: true
     departmentId?: true
     dispatchedAt?: true
@@ -13113,12 +13113,12 @@ export namespace Prisma {
     completedAt?: true
     createdAt?: true
     updatedAt?: true
-    citizenAadhaar?: true
     citizenAddress?: true
     citizenEmail?: true
     citizenGender?: true
     citizenName?: true
     citizenPhone?: true
+    citizenAlternateNumber?: true
     subject?: true
     departmentId?: true
     dispatchedAt?: true
@@ -13138,12 +13138,12 @@ export namespace Prisma {
     completedAt?: true
     createdAt?: true
     updatedAt?: true
-    citizenAadhaar?: true
     citizenAddress?: true
     citizenEmail?: true
     citizenGender?: true
     citizenName?: true
     citizenPhone?: true
+    citizenAlternateNumber?: true
     subject?: true
     departmentId?: true
     dispatchedAt?: true
@@ -13236,12 +13236,12 @@ export namespace Prisma {
     completedAt: Date | null
     createdAt: Date
     updatedAt: Date
-    citizenAadhaar: string | null
     citizenAddress: string
     citizenEmail: string | null
     citizenGender: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber: string | null
     subject: string
     departmentId: string | null
     dispatchedAt: Date | null
@@ -13278,12 +13278,12 @@ export namespace Prisma {
     completedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    citizenAadhaar?: boolean
     citizenAddress?: boolean
     citizenEmail?: boolean
     citizenGender?: boolean
     citizenName?: boolean
     citizenPhone?: boolean
+    citizenAlternateNumber?: boolean
     subject?: boolean
     departmentId?: boolean
     dispatchedAt?: boolean
@@ -13318,12 +13318,12 @@ export namespace Prisma {
     completedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    citizenAadhaar?: boolean
     citizenAddress?: boolean
     citizenEmail?: boolean
     citizenGender?: boolean
     citizenName?: boolean
     citizenPhone?: boolean
+    citizenAlternateNumber?: boolean
     subject?: boolean
     departmentId?: boolean
     dispatchedAt?: boolean
@@ -13347,12 +13347,12 @@ export namespace Prisma {
     completedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    citizenAadhaar?: boolean
     citizenAddress?: boolean
     citizenEmail?: boolean
     citizenGender?: boolean
     citizenName?: boolean
     citizenPhone?: boolean
+    citizenAlternateNumber?: boolean
     subject?: boolean
     departmentId?: boolean
     dispatchedAt?: boolean
@@ -13376,12 +13376,12 @@ export namespace Prisma {
     completedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    citizenAadhaar?: boolean
     citizenAddress?: boolean
     citizenEmail?: boolean
     citizenGender?: boolean
     citizenName?: boolean
     citizenPhone?: boolean
+    citizenAlternateNumber?: boolean
     subject?: boolean
     departmentId?: boolean
     dispatchedAt?: boolean
@@ -13390,7 +13390,7 @@ export namespace Prisma {
     applicationSource?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rrNumber" | "serviceCategoryId" | "status" | "currentHolderId" | "submittedAt" | "validatedAt" | "completedAt" | "createdAt" | "updatedAt" | "citizenAadhaar" | "citizenAddress" | "citizenEmail" | "citizenGender" | "citizenName" | "citizenPhone" | "subject" | "departmentId" | "dispatchedAt" | "dispatchedById" | "isDispatched" | "applicationSource", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rrNumber" | "serviceCategoryId" | "status" | "currentHolderId" | "submittedAt" | "validatedAt" | "completedAt" | "createdAt" | "updatedAt" | "citizenAddress" | "citizenEmail" | "citizenGender" | "citizenName" | "citizenPhone" | "citizenAlternateNumber" | "subject" | "departmentId" | "dispatchedAt" | "dispatchedById" | "isDispatched" | "applicationSource", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     auditLogs?: boolean | Application$auditLogsArgs<ExtArgs>
     validation?: boolean | Application$validationArgs<ExtArgs>
@@ -13450,12 +13450,12 @@ export namespace Prisma {
       completedAt: Date | null
       createdAt: Date
       updatedAt: Date
-      citizenAadhaar: string | null
       citizenAddress: string
       citizenEmail: string | null
       citizenGender: string | null
       citizenName: string
       citizenPhone: string
+      citizenAlternateNumber: string | null
       subject: string
       departmentId: string | null
       dispatchedAt: Date | null
@@ -13909,12 +13909,12 @@ export namespace Prisma {
     readonly completedAt: FieldRef<"Application", 'DateTime'>
     readonly createdAt: FieldRef<"Application", 'DateTime'>
     readonly updatedAt: FieldRef<"Application", 'DateTime'>
-    readonly citizenAadhaar: FieldRef<"Application", 'String'>
     readonly citizenAddress: FieldRef<"Application", 'String'>
     readonly citizenEmail: FieldRef<"Application", 'String'>
     readonly citizenGender: FieldRef<"Application", 'String'>
     readonly citizenName: FieldRef<"Application", 'String'>
     readonly citizenPhone: FieldRef<"Application", 'String'>
+    readonly citizenAlternateNumber: FieldRef<"Application", 'String'>
     readonly subject: FieldRef<"Application", 'String'>
     readonly departmentId: FieldRef<"Application", 'String'>
     readonly dispatchedAt: FieldRef<"Application", 'DateTime'>
@@ -30303,12 +30303,12 @@ export namespace Prisma {
     completedAt: 'completedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    citizenAadhaar: 'citizenAadhaar',
     citizenAddress: 'citizenAddress',
     citizenEmail: 'citizenEmail',
     citizenGender: 'citizenGender',
     citizenName: 'citizenName',
     citizenPhone: 'citizenPhone',
+    citizenAlternateNumber: 'citizenAlternateNumber',
     subject: 'subject',
     departmentId: 'departmentId',
     dispatchedAt: 'dispatchedAt',
@@ -31393,12 +31393,12 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
-    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
     citizenAddress?: StringFilter<"Application"> | string
     citizenEmail?: StringNullableFilter<"Application"> | string | null
     citizenGender?: StringNullableFilter<"Application"> | string | null
     citizenName?: StringFilter<"Application"> | string
     citizenPhone?: StringFilter<"Application"> | string
+    citizenAlternateNumber?: StringNullableFilter<"Application"> | string | null
     subject?: StringFilter<"Application"> | string
     departmentId?: StringNullableFilter<"Application"> | string | null
     dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
@@ -31432,12 +31432,12 @@ export namespace Prisma {
     completedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    citizenAadhaar?: SortOrderInput | SortOrder
     citizenAddress?: SortOrder
     citizenEmail?: SortOrderInput | SortOrder
     citizenGender?: SortOrderInput | SortOrder
     citizenName?: SortOrder
     citizenPhone?: SortOrder
+    citizenAlternateNumber?: SortOrderInput | SortOrder
     subject?: SortOrder
     departmentId?: SortOrderInput | SortOrder
     dispatchedAt?: SortOrderInput | SortOrder
@@ -31474,12 +31474,12 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
-    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
     citizenAddress?: StringFilter<"Application"> | string
     citizenEmail?: StringNullableFilter<"Application"> | string | null
     citizenGender?: StringNullableFilter<"Application"> | string | null
     citizenName?: StringFilter<"Application"> | string
     citizenPhone?: StringFilter<"Application"> | string
+    citizenAlternateNumber?: StringNullableFilter<"Application"> | string | null
     subject?: StringFilter<"Application"> | string
     departmentId?: StringNullableFilter<"Application"> | string | null
     dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
@@ -31513,12 +31513,12 @@ export namespace Prisma {
     completedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    citizenAadhaar?: SortOrderInput | SortOrder
     citizenAddress?: SortOrder
     citizenEmail?: SortOrderInput | SortOrder
     citizenGender?: SortOrderInput | SortOrder
     citizenName?: SortOrder
     citizenPhone?: SortOrder
+    citizenAlternateNumber?: SortOrderInput | SortOrder
     subject?: SortOrder
     departmentId?: SortOrderInput | SortOrder
     dispatchedAt?: SortOrderInput | SortOrder
@@ -31544,12 +31544,12 @@ export namespace Prisma {
     completedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Application"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Application"> | Date | string
-    citizenAadhaar?: StringNullableWithAggregatesFilter<"Application"> | string | null
     citizenAddress?: StringWithAggregatesFilter<"Application"> | string
     citizenEmail?: StringNullableWithAggregatesFilter<"Application"> | string | null
     citizenGender?: StringNullableWithAggregatesFilter<"Application"> | string | null
     citizenName?: StringWithAggregatesFilter<"Application"> | string
     citizenPhone?: StringWithAggregatesFilter<"Application"> | string
+    citizenAlternateNumber?: StringNullableWithAggregatesFilter<"Application"> | string | null
     subject?: StringWithAggregatesFilter<"Application"> | string
     departmentId?: StringNullableWithAggregatesFilter<"Application"> | string | null
     dispatchedAt?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
@@ -33368,12 +33368,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -33405,12 +33405,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -33438,12 +33438,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -33475,12 +33475,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33510,12 +33510,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -33533,12 +33533,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -33556,12 +33556,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35362,12 +35362,12 @@ export namespace Prisma {
     completedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    citizenAadhaar?: SortOrder
     citizenAddress?: SortOrder
     citizenEmail?: SortOrder
     citizenGender?: SortOrder
     citizenName?: SortOrder
     citizenPhone?: SortOrder
+    citizenAlternateNumber?: SortOrder
     subject?: SortOrder
     departmentId?: SortOrder
     dispatchedAt?: SortOrder
@@ -35387,12 +35387,12 @@ export namespace Prisma {
     completedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    citizenAadhaar?: SortOrder
     citizenAddress?: SortOrder
     citizenEmail?: SortOrder
     citizenGender?: SortOrder
     citizenName?: SortOrder
     citizenPhone?: SortOrder
+    citizenAlternateNumber?: SortOrder
     subject?: SortOrder
     departmentId?: SortOrder
     dispatchedAt?: SortOrder
@@ -35412,12 +35412,12 @@ export namespace Prisma {
     completedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    citizenAadhaar?: SortOrder
     citizenAddress?: SortOrder
     citizenEmail?: SortOrder
     citizenGender?: SortOrder
     citizenName?: SortOrder
     citizenPhone?: SortOrder
+    citizenAlternateNumber?: SortOrder
     subject?: SortOrder
     departmentId?: SortOrder
     dispatchedAt?: SortOrder
@@ -38706,12 +38706,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -38741,12 +38741,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -38784,12 +38784,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -38820,12 +38820,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -39455,12 +39455,12 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
     createdAt?: DateTimeFilter<"Application"> | Date | string
     updatedAt?: DateTimeFilter<"Application"> | Date | string
-    citizenAadhaar?: StringNullableFilter<"Application"> | string | null
     citizenAddress?: StringFilter<"Application"> | string
     citizenEmail?: StringNullableFilter<"Application"> | string | null
     citizenGender?: StringNullableFilter<"Application"> | string | null
     citizenName?: StringFilter<"Application"> | string
     citizenPhone?: StringFilter<"Application"> | string
+    citizenAlternateNumber?: StringNullableFilter<"Application"> | string | null
     subject?: StringFilter<"Application"> | string
     departmentId?: StringNullableFilter<"Application"> | string | null
     dispatchedAt?: DateTimeNullableFilter<"Application"> | Date | string | null
@@ -40511,12 +40511,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -40546,12 +40546,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -40761,12 +40761,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -40797,12 +40797,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
@@ -41743,12 +41743,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -41779,12 +41779,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -41896,12 +41896,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -41932,12 +41932,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -42039,12 +42039,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -42075,12 +42075,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -42192,12 +42192,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -42228,12 +42228,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -42335,12 +42335,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -42371,12 +42371,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -42546,12 +42546,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -42582,12 +42582,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -42759,12 +42759,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -42795,12 +42795,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -42981,12 +42981,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -43017,12 +43017,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -43199,12 +43199,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -43235,12 +43235,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -43421,12 +43421,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -43457,12 +43457,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -43639,12 +43639,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -43675,12 +43675,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -43792,12 +43792,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -43828,12 +43828,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -43935,12 +43935,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -43971,12 +43971,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -44088,12 +44088,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -44124,12 +44124,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -44231,12 +44231,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -44267,12 +44267,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -44384,12 +44384,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -44420,12 +44420,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -44527,12 +44527,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -44563,12 +44563,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -44749,12 +44749,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -44785,12 +44785,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -44967,12 +44967,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     isDispatched?: boolean
@@ -45003,12 +45003,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -45189,12 +45189,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -45225,12 +45225,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -45437,12 +45437,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -45462,12 +45462,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -45702,12 +45702,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -45737,12 +45737,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -45771,12 +45771,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -45794,12 +45794,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -45830,12 +45830,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -45864,12 +45864,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -46304,12 +46304,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     departmentId?: string | null
     dispatchedAt?: Date | string | null
@@ -46345,12 +46345,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -46380,12 +46380,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -46414,12 +46414,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -46543,12 +46543,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    citizenAadhaar?: string | null
     citizenAddress: string
     citizenEmail?: string | null
     citizenGender?: string | null
     citizenName: string
     citizenPhone: string
+    citizenAlternateNumber?: string | null
     subject?: string
     dispatchedAt?: Date | string | null
     dispatchedById?: string | null
@@ -46565,12 +46565,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDispatched?: BoolFieldUpdateOperationsInput | boolean
@@ -46601,12 +46601,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46635,12 +46635,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    citizenAadhaar?: NullableStringFieldUpdateOperationsInput | string | null
     citizenAddress?: StringFieldUpdateOperationsInput | string
     citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
     citizenGender?: NullableStringFieldUpdateOperationsInput | string | null
     citizenName?: StringFieldUpdateOperationsInput | string
     citizenPhone?: StringFieldUpdateOperationsInput | string
+    citizenAlternateNumber?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: StringFieldUpdateOperationsInput | string
     dispatchedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dispatchedById?: NullableStringFieldUpdateOperationsInput | string | null

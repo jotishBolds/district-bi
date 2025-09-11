@@ -806,7 +806,9 @@ export async function POST(request: NextRequest) {
     const citizenEmail = formData.get("citizenEmail") as string;
     const citizenAddress = formData.get("citizenAddress") as string;
     const citizenGender = formData.get("citizenGender") as string;
-    const citizenAadhaar = formData.get("citizenAadhaar") as string;
+    const citizenAlternateNumber = formData.get(
+      "citizenAlternateNumber"
+    ) as string;
 
     // Check if this frontdesk user is general (not assigned to any specific officer)
     const frontdeskAssignments = await prisma.frontdeskOfficer.findMany({
@@ -964,10 +966,33 @@ export async function POST(request: NextRequest) {
 
     // Start database transaction
     const result = await prisma.$transaction(async (tx) => {
-      // Generate RR number
-      const year = new Date().getFullYear();
-      const random = Math.floor(1000 + Math.random() * 9000);
-      const rrNumber = `RR-${year}-${random}`;
+      // Generate RR number in format: RR-YYMMDD-HHMM-XX
+      const currentDate = new Date();
+      const year = currentDate.getFullYear().toString().slice(-2);
+      const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+      const day = currentDate.getDate().toString().padStart(2, "0");
+      const hour = currentDate.getHours().toString().padStart(2, "0");
+      const minute = currentDate.getMinutes().toString().padStart(2, "0");
+
+      // Get count of all applications created today for sequential numbering
+      const startOfDay = new Date(currentDate);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(currentDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      const applicationsToday = await tx.application.count({
+        where: {
+          createdAt: {
+            gte: startOfDay,
+            lte: endOfDay,
+          },
+        },
+      });
+
+      const sequentialNumber = (applicationsToday + 1)
+        .toString()
+        .padStart(2, "0");
+      const rrNumber = `RR-${year}${month}${day}-${hour}${minute}-${sequentialNumber}`;
 
       // Determine application status and assignment based on frontdesk type
       const applicationStatus = isGeneralFrontdesk
@@ -986,7 +1011,7 @@ export async function POST(request: NextRequest) {
           citizenEmail,
           citizenAddress,
           citizenGender,
-          citizenAadhaar,
+          citizenAlternateNumber,
           applicationSource: applicationSource as ApplicationSource, // Cast to enum value
           status: applicationStatus,
           currentHolderId,

@@ -303,6 +303,10 @@ export async function DELETE(
 
     const existingUser = await prisma.user.findUnique({
       where: { id: userId },
+      include: {
+        officerProfile: true,
+        citizenProfile: true,
+      },
     });
 
     if (!existingUser) {
@@ -312,6 +316,91 @@ export async function DELETE(
     if (session.user.id === userId) {
       return NextResponse.json(
         { error: "You cannot delete your own account" },
+        { status: 400 }
+      );
+    }
+
+    // Check for any dependencies that would prevent deletion
+    const [
+      currentHolderApplications,
+      dispatchedApplications,
+      changedByWorkflows,
+      validatedApplications,
+      categoryChanges,
+      assignedToAssignments,
+      assignedByAssignments,
+      uploadedDocuments,
+      verifiedDocuments,
+      documentRequests,
+      auditLogs,
+      notifications,
+      frontdeskAssignments,
+    ] = await Promise.all([
+      prisma.application.count({ where: { currentHolderId: userId } }),
+      prisma.application.count({ where: { dispatchedById: userId } }),
+      prisma.applicationWorkflow.count({ where: { changedById: userId } }),
+      prisma.applicationValidation.count({ where: { validatedById: userId } }),
+      prisma.serviceCategoryChange.count({ where: { changedById: userId } }),
+      prisma.officerAssignment.count({ where: { assignedToId: userId } }),
+      prisma.officerAssignment.count({ where: { assignedById: userId } }),
+      prisma.document.count({ where: { uploadedById: userId } }),
+      prisma.document.count({ where: { verifiedById: userId } }),
+      prisma.documentRequest.count({ where: { requestedById: userId } }),
+      prisma.applicationAuditLog.count({ where: { performedById: userId } }),
+      prisma.notification.count({ where: { userId } }),
+      prisma.frontdeskOfficer.count({ where: { frontdeskUserId: userId } }),
+    ]);
+
+    const totalDependencies =
+      currentHolderApplications +
+      dispatchedApplications +
+      changedByWorkflows +
+      validatedApplications +
+      categoryChanges +
+      assignedToAssignments +
+      assignedByAssignments +
+      uploadedDocuments +
+      verifiedDocuments +
+      documentRequests +
+      auditLogs +
+      notifications +
+      frontdeskAssignments;
+
+    if (totalDependencies > 0) {
+      const details = [];
+      if (currentHolderApplications > 0)
+        details.push(
+          `${currentHolderApplications} applications currently held`
+        );
+      if (dispatchedApplications > 0)
+        details.push(`${dispatchedApplications} dispatched applications`);
+      if (changedByWorkflows > 0)
+        details.push(`${changedByWorkflows} workflow changes`);
+      if (validatedApplications > 0)
+        details.push(`${validatedApplications} validated applications`);
+      if (categoryChanges > 0)
+        details.push(`${categoryChanges} category changes`);
+      if (assignedToAssignments > 0)
+        details.push(`${assignedToAssignments} assignments received`);
+      if (assignedByAssignments > 0)
+        details.push(`${assignedByAssignments} assignments made`);
+      if (uploadedDocuments > 0)
+        details.push(`${uploadedDocuments} uploaded documents`);
+      if (verifiedDocuments > 0)
+        details.push(`${verifiedDocuments} verified documents`);
+      if (documentRequests > 0)
+        details.push(`${documentRequests} document requests`);
+      if (auditLogs > 0) details.push(`${auditLogs} audit logs`);
+      if (notifications > 0) details.push(`${notifications} notifications`);
+      if (frontdeskAssignments > 0)
+        details.push(`${frontdeskAssignments} frontdesk assignments`);
+
+      return NextResponse.json(
+        {
+          error: "Cannot delete user with existing data",
+          details: details.slice(0, 3), // Show first 3 dependencies
+          totalDependencies,
+        },
         { status: 400 }
       );
     }
@@ -326,7 +415,10 @@ export async function DELETE(
   } catch (error) {
     console.error("Error deleting user:", error);
     return NextResponse.json(
-      { error: "Failed to delete user" },
+      {
+        error:
+          "Failed to delete user. The user may have associated data that prevents deletion.",
+      },
       { status: 500 }
     );
   }

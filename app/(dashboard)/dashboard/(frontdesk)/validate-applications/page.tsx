@@ -99,7 +99,7 @@ interface Application {
   citizenEmail?: string;
   citizenAddress?: string;
   citizenGender?: string;
-  citizenAadhaar?: string;
+  citizenAlternateNumber?: string;
 }
 
 const VALID_STATUSES = [

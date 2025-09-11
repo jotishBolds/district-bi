@@ -397,6 +397,10 @@ export default function UserManagement() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteDetails, setDeleteDetails] = useState<{
+    details: string[];
+    totalDependencies: number;
+  } | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [roleFilter, setRoleFilter] = useState<string>("ALL");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
@@ -731,12 +735,28 @@ export default function UserManagement() {
         method: "DELETE",
       });
 
-      await handleApiResponse(response);
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.details && errorData.totalDependencies) {
+          // Set deletion details for display
+          setDeleteDetails({
+            details: errorData.details,
+            totalDependencies: errorData.totalDependencies,
+          });
+          toast.error(
+            `Cannot delete user: ${errorData.totalDependencies} dependencies found`,
+            { id: loadingToast, duration: 8000 }
+          );
+          return;
+        }
+        throw new Error(errorData.error || "Failed to delete user");
+      }
 
       setUsers((prev) => prev.filter((user) => user.id !== selectedUser.id));
       toast.success("User deleted successfully!", { id: loadingToast });
       setDeleteDialogOpen(false);
       setSelectedUser(null);
+      setDeleteDetails(null);
     } catch (error) {
       console.error("Error deleting user:", error);
       const errorMessage =
@@ -1177,6 +1197,7 @@ export default function UserManagement() {
                                 className="text-red-600"
                                 onClick={() => {
                                   setSelectedUser(user);
+                                  setDeleteDetails(null);
                                   setDeleteDialogOpen(true);
                                 }}
                               >
@@ -2075,7 +2096,7 @@ export default function UserManagement() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent className="w-[95vw] max-w-md">
+        <DialogContent className="w-[95vw] max-w-lg max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogDescription>
@@ -2083,7 +2104,25 @@ export default function UserManagement() {
               undone.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4">
+
+          <div className="mt-4 space-y-4">
+            {selectedUser && (
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <div className="font-medium">
+                  {selectedUser.officerProfile?.fullName ||
+                    selectedUser.citizenProfile?.fullName ||
+                    "Unknown User"}
+                </div>
+                <div className="text-sm text-gray-600">
+                  {selectedUser.email}
+                </div>
+                <Badge variant="secondary" className="mt-1">
+                  {getRoleMapping(selectedUser.role)?.shortDesignation ||
+                    selectedUser.role}
+                </Badge>
+              </div>
+            )}
+
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Warning</AlertTitle>
@@ -2092,7 +2131,33 @@ export default function UserManagement() {
                 applications, documents, and activity logs.
               </AlertDescription>
             </Alert>
+
+            {deleteDetails && deleteDetails.totalDependencies > 0 && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Cannot Delete - Dependencies Found</AlertTitle>
+                <AlertDescription>
+                  <div className="mt-2">
+                    <div className="font-medium mb-2">
+                      This user has {deleteDetails.totalDependencies}{" "}
+                      dependencies that prevent deletion:
+                    </div>
+                    <ul className="list-disc list-inside space-y-1 text-sm">
+                      {deleteDetails.details.map((detail, index) => (
+                        <li key={index}>{detail}</li>
+                      ))}
+                    </ul>
+                    <div className="mt-3 p-2 bg-yellow-50 rounded text-sm">
+                      <strong>Recommendation:</strong> Instead of deleting,
+                      consider deactivating this user account to preserve data
+                      integrity.
+                    </div>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
+
           <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 mt-6">
             <Button
               type="button"
@@ -2100,22 +2165,39 @@ export default function UserManagement() {
               onClick={() => {
                 setDeleteDialogOpen(false);
                 setSelectedUser(null);
+                setDeleteDetails(null);
               }}
               className="w-full sm:w-auto"
             >
               Cancel
             </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDeleteUser}
-              disabled={isSubmitting}
-              className="w-full sm:w-auto"
-            >
-              {isSubmitting && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Delete User
-            </Button>
+            {!deleteDetails || deleteDetails.totalDependencies === 0 ? (
+              <Button
+                variant="destructive"
+                onClick={handleDeleteUser}
+                disabled={isSubmitting}
+                className="w-full sm:w-auto"
+              >
+                {isSubmitting && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Delete User
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (selectedUser) {
+                    toggleUserStatus(selectedUser);
+                    setDeleteDialogOpen(false);
+                    setDeleteDetails(null);
+                  }
+                }}
+                className="w-full sm:w-auto"
+              >
+                Deactivate Instead
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -410,31 +410,31 @@ async function handleValidationTransition(
     validationNotes,
   } = additionalData;
 
-  // Generate RR Number
+  // Generate RR Number using format RR-YYMMDD-HHMM-XX
   const currentDate = new Date();
   const year = currentDate.getFullYear().toString().slice(-2);
   const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+  const day = currentDate.getDate().toString().padStart(2, "0");
+  const hour = currentDate.getHours().toString().padStart(2, "0");
+  const minute = currentDate.getMinutes().toString().padStart(2, "0");
 
-  // Get count of applications validated today for sequential numbering
+  // Get count of all applications created today for sequential numbering
   const startOfDay = new Date(currentDate);
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date(currentDate);
   endOfDay.setHours(23, 59, 59, 999);
 
-  const dailyCount = await prisma.application.count({
+  const applicationsToday = await prisma.application.count({
     where: {
-      validatedAt: {
+      createdAt: {
         gte: startOfDay,
         lte: endOfDay,
-      },
-      rrNumber: {
-        not: null,
       },
     },
   });
 
-  const sequentialNumber = (dailyCount + 1).toString().padStart(4, "0");
-  const rrNumber = `RR${year}${month}${sequentialNumber}`;
+  const sequentialNumber = (applicationsToday + 1).toString().padStart(2, "0");
+  const rrNumber = `RR-${year}${month}${day}-${hour}${minute}-${sequentialNumber}`;
 
   // Get the preferred officer from assignments
   const preferredOfficer = application.officerAssignments[0]?.assignedTo;

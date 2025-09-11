@@ -182,6 +182,13 @@ interface Stats {
     medium: number;
     old: number;
   };
+  advancedAgeStats: {
+    days14: number;
+    month1: number;
+    month3: number;
+    month6: number;
+    year1: number;
+  };
   pagination: {
     page: number;
     limit: number;
@@ -277,6 +284,7 @@ const DCDashboard = () => {
     { id: string; name: string; color?: string }[]
   >([]);
   const [ageFilter, setAgeFilter] = useState<string>("");
+  const [advancedAgeFilter, setAdvancedAgeFilter] = useState<string>("all");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [currentPage, setCurrentPage] = useState(1);
@@ -316,6 +324,13 @@ const DCDashboard = () => {
       medium: 0,
       old: 0,
     },
+    advancedAgeStats: {
+      days14: 0,
+      month1: 0,
+      month3: 0,
+      month6: 0,
+      year1: 0,
+    },
     pagination: {
       page: 1,
       limit: 10,
@@ -349,6 +364,8 @@ const DCDashboard = () => {
               ? ""
               : selectedApplicationSource,
           ageFilter: ageFilter,
+          advancedAgeFilter:
+            advancedAgeFilter === "all" ? "" : advancedAgeFilter,
           startDate: startDate ? format(startDate, "yyyy-MM-dd") : "",
           endDate: endDate ? format(endDate, "yyyy-MM-dd") : "",
           page: page.toString(),
@@ -377,6 +394,13 @@ const DCDashboard = () => {
             closed: 0,
             reopened: 0,
             ageStats: { recent: 0, medium: 0, old: 0 },
+            advancedAgeStats: {
+              days14: 0,
+              month1: 0,
+              month3: 0,
+              month6: 0,
+              year1: 0,
+            },
             pagination: {
               page: 1,
               limit: 10,
@@ -414,6 +438,7 @@ const DCDashboard = () => {
       selectedServiceCategory,
       selectedApplicationSource,
       ageFilter,
+      advancedAgeFilter,
       startDate,
       endDate,
     ]
@@ -441,6 +466,13 @@ const DCDashboard = () => {
           closed: 0,
           reopened: 0,
           ageStats: { recent: 0, medium: 0, old: 0 },
+          advancedAgeStats: {
+            days14: 0,
+            month1: 0,
+            month3: 0,
+            month6: 0,
+            year1: 0,
+          },
           pagination: data.stats?.pagination || {
             page: 1,
             limit: 5,
@@ -504,6 +536,7 @@ const DCDashboard = () => {
     selectedServiceCategory,
     selectedApplicationSource,
     ageFilter,
+    advancedAgeFilter,
     startDate,
     endDate,
     fetchApplications,
@@ -555,6 +588,7 @@ const DCDashboard = () => {
     setSelectedServiceCategory("all");
     setSelectedApplicationSource("all");
     setAgeFilter("");
+    setAdvancedAgeFilter("all");
     setStartDate(undefined);
     setEndDate(undefined);
     setSelectedStatus("all"); // Changed from "ALL" to "all" for consistency
@@ -1113,6 +1147,7 @@ const DCDashboard = () => {
       (selectedServiceCategory && selectedServiceCategory !== "all") ||
       (selectedApplicationSource && selectedApplicationSource !== "all") ||
       ageFilter ||
+      (advancedAgeFilter && advancedAgeFilter !== "all") ||
       startDate ||
       endDate;
 
@@ -1238,7 +1273,7 @@ const DCDashboard = () => {
           </div>
 
           {/* Filter Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
             {/* Officer Filter */}
             <div className="space-y-2">
               <Label className="text-xs font-medium text-gray-700 flex items-center gap-1">
@@ -1348,6 +1383,67 @@ const DCDashboard = () => {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Advanced Age Filter - Only for OPEN and IN_PROGRESS */}
+            {(selectedStatus === "OPEN" ||
+              selectedStatus === "IN_PROGRESS") && (
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-gray-700 flex items-center gap-1">
+                  Age Filter <span className="text-gray-500">(Optional)</span>
+                </Label>
+                <Select
+                  value={advancedAgeFilter}
+                  onValueChange={setAdvancedAgeFilter}
+                >
+                  <SelectTrigger className="h-9 border-gray-200 text-sm">
+                    <SelectValue placeholder="Filter by age" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Ages</SelectItem>
+                    <SelectItem value="days14">
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-sm">14+ Days</span>
+                        <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                          {stats.advancedAgeStats.days14}
+                        </span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="month1">
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-sm">1+ Month</span>
+                        <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">
+                          {stats.advancedAgeStats.month1}
+                        </span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="month3">
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-sm">3+ Months</span>
+                        <span className="ml-2 text-xs bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full">
+                          {stats.advancedAgeStats.month3}
+                        </span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="month6">
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-sm">6+ Months</span>
+                        <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded-full">
+                          {stats.advancedAgeStats.month6}
+                        </span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="year1">
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-sm">1+ Year</span>
+                        <span className="ml-2 text-xs bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full">
+                          {stats.advancedAgeStats.year1}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
 
           {/* Date Range Filters */}
@@ -1566,6 +1662,67 @@ const DCDashboard = () => {
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* Advanced Age Filter - Only for OPEN and IN_PROGRESS */}
+              {(selectedStatus === "OPEN" ||
+                selectedStatus === "IN_PROGRESS") && (
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-gray-700">
+                    Application Age
+                  </Label>
+                  <Select
+                    value={advancedAgeFilter}
+                    onValueChange={setAdvancedAgeFilter}
+                  >
+                    <SelectTrigger className="h-10 border-gray-200">
+                      <SelectValue placeholder="Filter by age" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Ages</SelectItem>
+                      <SelectItem value="days14">
+                        <div className="flex items-center justify-between w-full">
+                          <span>14+ Days</span>
+                          <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+                            {stats.advancedAgeStats.days14}
+                          </span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="month1">
+                        <div className="flex items-center justify-between w-full">
+                          <span>1+ Month</span>
+                          <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">
+                            {stats.advancedAgeStats.month1}
+                          </span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="month3">
+                        <div className="flex items-center justify-between w-full">
+                          <span>3+ Months</span>
+                          <span className="ml-2 text-xs bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full">
+                            {stats.advancedAgeStats.month3}
+                          </span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="month6">
+                        <div className="flex items-center justify-between w-full">
+                          <span>6+ Months</span>
+                          <span className="ml-2 text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded-full">
+                            {stats.advancedAgeStats.month6}
+                          </span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="year1">
+                        <div className="flex items-center justify-between w-full">
+                          <span>1+ Year</span>
+                          <span className="ml-2 text-xs bg-gray-100 text-gray-800 px-2 py-0.5 rounded-full">
+                            {stats.advancedAgeStats.year1}
+                          </span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
               {/* Mobile Date Filters */}
               <div className="space-y-3 pt-4 border-t border-gray-200">

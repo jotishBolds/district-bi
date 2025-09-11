@@ -138,8 +138,8 @@ export default function TrackApplicationPage() {
     const trimmedValue = value.trim();
     if (!trimmedValue) return null;
 
-    // Check if it's an RR number format
-    const rrPattern = /^RR-\d{4}-\d{4}$/i;
+    // Check if it's an RR number format (supports both old and new formats)
+    const rrPattern = /^RR-(\d{4}-\d{4}|\d{6}-\d{4}-\d{2})$/i;
     if (rrPattern.test(trimmedValue)) {
       return "RR_NUMBER";
     }
@@ -168,10 +168,10 @@ export default function TrackApplicationPage() {
     if (!rrNumber.trim()) {
       return "RR number is required";
     }
-    // RR number format: RR-YYYY-NNNN (e.g., RR-2025-6834)
-    const rrPattern = /^RR-\d{4}-\d{4}$/i;
+    // RR number format: supports both old (RR-YYYY-NNNN) and new (RR-YYMMDD-HHMM-XX) formats
+    const rrPattern = /^RR-(\d{4}-\d{4}|\d{6}-\d{4}-\d{2})$/i;
     if (!rrPattern.test(rrNumber.trim())) {
-      return "RR number must be in format: RR-YYYY-NNNN (e.g., RR-2025-XXXX)";
+      return "RR number must be in format: RR-YYMMDD-HHMM-XX";
     }
     return null;
   };
@@ -1295,7 +1295,7 @@ export default function TrackApplicationPage() {
                           <div className="flex items-center justify-center gap-2 bg-card rounded-xl p-3 border border-border">
                             <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                             <span>
-                              <strong>RR Number:</strong> RR-202X-XXXX
+                              <strong>RR Number:</strong> RR-25XXXX-XXXX-XX
                             </span>
                           </div>
                           <div className="flex items-center justify-center gap-2 bg-card rounded-xl p-3 border border-border">

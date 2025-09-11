@@ -50,7 +50,15 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Plus, User, UserPlus, Settings } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Trash2,
+  Plus,
+  User,
+  UserPlus,
+  Settings,
+  AlertCircle,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -99,6 +107,19 @@ const frontdeskSchema = z.object({
   assignedOfficerId: z.string().optional(),
 });
 
+const editFrontdeskSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  password: z
+    .string()
+    .optional()
+    .refine((val) => !val || val.length >= 6, {
+      message: "Password must be at least 6 characters if provided",
+    }),
+  fullName: z.string().min(2, "Full name is required").optional(),
+  assignedOfficerId: z.string().optional(),
+});
+
 type FrontdeskFormData = z.infer<typeof frontdeskSchema>;
 
 export default function FrontdeskManagementPage() {
@@ -108,9 +129,16 @@ export default function FrontdeskManagementPage() {
   const [officers, setOfficers] = useState<Officer[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
   const [selectedFrontdeskUser, setSelectedFrontdeskUser] =
     useState<FrontdeskUser | null>(null);
+  const [userToDelete, setUserToDelete] = useState<FrontdeskUser | null>(null);
+  const [deleteDetails, setDeleteDetails] = useState<{
+    details: string[];
+    totalDependencies: number;
+  } | null>(null);
 
   const form = useForm<FrontdeskFormData>({
     resolver: zodResolver(frontdeskSchema),
@@ -327,6 +355,105 @@ export default function FrontdeskManagementPage() {
     }
   };
 
+  const handleEditUser = (user: FrontdeskUser) => {
+    setSelectedFrontdeskUser(user);
+    form.reset({
+      email: user.email,
+      phone: user.phone || "",
+      password: "",
+      fullName: "",
+      assignedOfficerId: user.frontdeskAssignments[0]?.officerId || "",
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const onEditSubmit = async (data: FrontdeskFormData) => {
+    if (!selectedFrontdeskUser) return;
+
+    try {
+      const updateData: Record<string, string> = {
+        email: data.email,
+        phone: data.phone,
+      };
+
+      // Only include password if provided
+      if (data.password) {
+        updateData.password = data.password;
+      }
+
+      const response = await fetch(
+        `/api/admin/users/${selectedFrontdeskUser.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+
+      if (!response.ok) {
+        const result = await response.json();
+        throw new Error(result.error || "Failed to update user");
+      }
+
+      toast.success("User updated successfully");
+      setIsEditDialogOpen(false);
+      setSelectedFrontdeskUser(null);
+      form.reset();
+      fetchFrontdeskUsers();
+    } catch (error) {
+      console.error("Error updating user:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update user"
+      );
+    }
+  };
+
+  const handleDeleteUser = (user: FrontdeskUser) => {
+    setUserToDelete(user);
+    setDeleteDetails(null);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteUser = async () => {
+    if (!userToDelete) return;
+
+    try {
+      const response = await fetch(`/api/admin/users/${userToDelete.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        if (result.details && result.totalDependencies) {
+          // Set deletion details for display
+          setDeleteDetails({
+            details: result.details,
+            totalDependencies: result.totalDependencies,
+          });
+          toast.error(
+            `Cannot delete user: ${result.totalDependencies} dependencies found`,
+            { duration: 8000 }
+          );
+          return;
+        }
+        throw new Error(result.error || "Failed to delete user");
+      }
+
+      toast.success("User deleted successfully");
+      setIsDeleteDialogOpen(false);
+      setUserToDelete(null);
+      setDeleteDetails(null);
+      fetchFrontdeskUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete user"
+      );
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -441,14 +568,32 @@ export default function FrontdeskManagementPage() {
                         <Button
                           variant="outline"
                           size="sm"
+                          onClick={() => handleEditUser(user)}
+                          className="flex items-center gap-1"
+                        >
+                          <Settings size={14} />
+                          <span className="hidden sm:inline">Edit</span>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => {
                             setSelectedFrontdeskUser(user);
                             setIsAssignDialogOpen(true);
                           }}
                           className="flex items-center gap-1"
                         >
-                          <Settings size={14} />
+                          <User size={14} />
                           <span className="hidden sm:inline">Assign</span>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteUser(user)}
+                          className="flex items-center gap-1 text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 size={14} />
+                          <span className="hidden sm:inline">Delete</span>
                         </Button>
                         <Switch
                           checked={user.isActive}
@@ -759,6 +904,180 @@ export default function FrontdeskManagementPage() {
             >
               Cancel
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit User Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit Frontdesk User</DialogTitle>
+            <DialogDescription>
+              Update the frontdesk user information. Leave password empty to
+              keep current password.
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onEditSubmit)}
+              className="space-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="user@example.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl>
+                      <Input placeholder="1234567890" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>New Password (Optional)</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        placeholder="Leave empty to keep current password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setIsEditDialogOpen(false);
+                    setSelectedFrontdeskUser(null);
+                    form.reset();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit">Update User</Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete User Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-lg max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Delete Frontdesk User</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this frontdesk user? This action
+              cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 mt-4">
+            {userToDelete && (
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <div className="font-medium">{userToDelete.email}</div>
+                <div className="text-sm text-gray-600">
+                  {userToDelete.frontdeskAssignments?.[0]?.officer?.fullName ||
+                    "No assigned officer"}
+                </div>
+                <Badge variant="secondary" className="mt-1">
+                  Frontdesk User
+                </Badge>
+              </div>
+            )}
+
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Warning</AlertTitle>
+              <AlertDescription>
+                Deleting a frontdesk user will remove all associated data
+                including applications, documents, and activity logs.
+              </AlertDescription>
+            </Alert>
+
+            {deleteDetails && deleteDetails.totalDependencies > 0 && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Cannot Delete - Dependencies Found</AlertTitle>
+                <AlertDescription>
+                  <div className="mt-2">
+                    <div className="font-medium mb-2">
+                      This user has {deleteDetails.totalDependencies}{" "}
+                      dependencies that prevent deletion:
+                    </div>
+                    <ul className="list-disc list-inside space-y-1 text-sm">
+                      {deleteDetails.details.map((detail, index) => (
+                        <li key={index}>{detail}</li>
+                      ))}
+                    </ul>
+                    <div className="mt-3 p-2 bg-yellow-50 rounded text-sm">
+                      <strong>Recommendation:</strong> Instead of deleting,
+                      consider deactivating this user account to preserve data
+                      integrity.
+                    </div>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+
+          <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 mt-6">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setUserToDelete(null);
+                setDeleteDetails(null);
+              }}
+            >
+              Cancel
+            </Button>
+            {!deleteDetails || deleteDetails.totalDependencies === 0 ? (
+              <Button variant="destructive" onClick={confirmDeleteUser}>
+                Delete User
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (userToDelete) {
+                    // Toggle user status to deactivate
+                    toggleUserStatus(userToDelete.id, userToDelete.isActive);
+                    setIsDeleteDialogOpen(false);
+                    setDeleteDetails(null);
+                  }
+                }}
+              >
+                Deactivate Instead
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

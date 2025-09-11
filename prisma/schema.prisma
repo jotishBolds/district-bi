@@ -164,12 +164,12 @@ model Application {
   completedAt            DateTime?
   createdAt              DateTime                   @default(now())
   updatedAt              DateTime                   @updatedAt
-  citizenAadhaar         String?
   citizenAddress         String
   citizenEmail           String?
   citizenGender          String?
   citizenName            String
   citizenPhone           String
+  citizenAlternateNumber String?
   subject                String                     @default("Application Subject")
   departmentId           String?
   dispatchedAt           DateTime?

@@ -41,7 +41,8 @@ interface CitizenProfile {
   fullName: string;
   phone: string;
   address: string;
-  aadhaarNumber?: string;
+  aadhaarNumber?: string; // Legacy field
+  alternateNumber?: string;
 }
 
 interface ServiceCategory {
@@ -170,7 +171,7 @@ interface Application {
   citizenEmail?: string;
   citizenAddress?: string;
   citizenGender?: string;
-  citizenAadhaar?: string;
+  citizenAlternateNumber?: string;
   documents: Document[];
   officerAssignments: OfficerAssignment[];
   validation?: ApplicationValidation;
@@ -446,14 +447,19 @@ const OfficerDashboard = () => {
         fullName: app.citizen.citizenProfile.fullName,
         phone: app.citizen.citizenProfile.phone,
         address: app.citizen.citizenProfile.address,
-        aadhaarNumber: app.citizen.citizenProfile.aadhaarNumber,
+        aadhaarNumber: app.citizen.citizenProfile.aadhaarNumber, // Legacy profile field
+        alternateNumber: (
+          app.citizen.citizenProfile as CitizenProfile & {
+            alternateNumber?: string;
+          }
+        )?.alternateNumber, // If profile has alternate number
       };
     } else {
       return {
         fullName: app.citizenName || "N/A",
         phone: app.citizenPhone || "N/A",
         address: app.citizenAddress || "N/A",
-        aadhaarNumber: app.citizenAadhaar,
+        alternateNumber: app.citizenAlternateNumber, // New application field
       };
     }
   };
@@ -1577,13 +1583,13 @@ const OfficerDashboard = () => {
                                 {citizenData.address}
                               </span>
                             </div>
-                            {citizenData.aadhaarNumber && (
+                            {citizenData.alternateNumber && (
                               <div>
                                 <span className="text-muted-foreground">
-                                  Aadhaar Number:
+                                  Alternate Number:
                                 </span>
                                 <span className="block font-mono mt-1">
-                                  {citizenData.aadhaarNumber}
+                                  {citizenData.alternateNumber}
                                 </span>
                               </div>
                             )}
@@ -2544,13 +2550,13 @@ const OfficerDashboard = () => {
                                           {citizenData.address}
                                         </span>
                                       </div>
-                                      {citizenData.aadhaarNumber && (
+                                      {citizenData.alternateNumber && (
                                         <div>
                                           <span className="text-gray-500">
-                                            Aadhaar Number:
+                                            Alternate Number:
                                           </span>
                                           <span className="block font-mono mt-1">
-                                            {citizenData.aadhaarNumber}
+                                            {citizenData.alternateNumber}
                                           </span>
                                         </div>
                                       )}

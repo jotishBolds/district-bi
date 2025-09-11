@@ -20,6 +20,7 @@ export async function GET(request: Request) {
     const serviceCategoryId = searchParams.get("serviceCategoryId") || "";
     const applicationSource = searchParams.get("applicationSource") || "";
     const ageFilter = searchParams.get("ageFilter") || "";
+    const advancedAgeFilter = searchParams.get("advancedAgeFilter") || "";
     const startDate = searchParams.get("startDate") || "";
     const endDate = searchParams.get("endDate") || "";
     const page = parseInt(searchParams.get("page") || "1");
@@ -96,6 +97,39 @@ export async function GET(request: Request) {
         case "old": // > 7 days
           dateThreshold = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
           where.submittedAt = { lt: dateThreshold };
+          break;
+      }
+    }
+
+    // Advanced Age filter (only for OPEN and IN_PROGRESS status)
+    if (
+      advancedAgeFilter &&
+      advancedAgeFilter !== "all" &&
+      (status === "OPEN" || status === "IN_PROGRESS" || status === "ALL")
+    ) {
+      const now = new Date();
+      let dateThreshold: Date;
+
+      switch (advancedAgeFilter) {
+        case "days14": // 14+ days
+          dateThreshold = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+          where.submittedAt = { lte: dateThreshold };
+          break;
+        case "month1": // 1+ month
+          dateThreshold = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          where.submittedAt = { lte: dateThreshold };
+          break;
+        case "month3": // 3+ months
+          dateThreshold = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+          where.submittedAt = { lte: dateThreshold };
+          break;
+        case "month6": // 6+ months
+          dateThreshold = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
+          where.submittedAt = { lte: dateThreshold };
+          break;
+        case "year1": // 1+ year
+          dateThreshold = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+          where.submittedAt = { lte: dateThreshold };
           break;
       }
     }
@@ -373,6 +407,61 @@ export async function GET(request: Request) {
       }),
     ]);
 
+    // Get advanced age-wise stats for OPEN and IN_PROGRESS
+    const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const threeMonthsAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+    const sixMonthsAgo = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
+    const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+
+    const advancedAgeStats = await Promise.all([
+      // 14+ days for OPEN and IN_PROGRESS
+      prisma.application.count({
+        where: {
+          status: {
+            in: [ApplicationStatus.OPEN, ApplicationStatus.IN_PROGRESS],
+          },
+          submittedAt: { lte: fourteenDaysAgo },
+        },
+      }),
+      // 1+ month for OPEN and IN_PROGRESS
+      prisma.application.count({
+        where: {
+          status: {
+            in: [ApplicationStatus.OPEN, ApplicationStatus.IN_PROGRESS],
+          },
+          submittedAt: { lte: oneMonthAgo },
+        },
+      }),
+      // 3+ months for OPEN and IN_PROGRESS
+      prisma.application.count({
+        where: {
+          status: {
+            in: [ApplicationStatus.OPEN, ApplicationStatus.IN_PROGRESS],
+          },
+          submittedAt: { lte: threeMonthsAgo },
+        },
+      }),
+      // 6+ months for OPEN and IN_PROGRESS
+      prisma.application.count({
+        where: {
+          status: {
+            in: [ApplicationStatus.OPEN, ApplicationStatus.IN_PROGRESS],
+          },
+          submittedAt: { lte: sixMonthsAgo },
+        },
+      }),
+      // 1+ year for OPEN and IN_PROGRESS
+      prisma.application.count({
+        where: {
+          status: {
+            in: [ApplicationStatus.OPEN, ApplicationStatus.IN_PROGRESS],
+          },
+          submittedAt: { lte: oneYearAgo },
+        },
+      }),
+    ]);
+
     // Get officers with application counts
     const officersWithCounts = await prisma.user.findMany({
       where: {
@@ -459,6 +548,13 @@ export async function GET(request: Request) {
         recent: ageStats[0],
         medium: ageStats[1],
         old: ageStats[2],
+      },
+      advancedAgeStats: {
+        days14: advancedAgeStats[0],
+        month1: advancedAgeStats[1],
+        month3: advancedAgeStats[2],
+        month6: advancedAgeStats[3],
+        year1: advancedAgeStats[4],
       },
       pagination: {
         page,
