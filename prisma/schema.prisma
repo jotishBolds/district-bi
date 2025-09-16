@@ -359,6 +359,22 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
+model SmsOtp {
+  id               String   @id @default(uuid())
+  phone            String
+  otp              String
+  status           String   // SENT, FAILED, USED
+  providerResponse String?  // JSON string for storing provider response
+  type             String   @default("VERIFICATION") // VERIFICATION, LOGIN, PASSWORD_RESET
+  attempts         Int      @default(0)
+  isUsed           Boolean  @default(false)
+  expires          DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("sms_otps")
+}
+
 model ApplicationTrackingOTP {
   id         String   @id @default(uuid())
   identifier String

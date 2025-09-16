@@ -205,6 +205,7 @@ interface Application {
   status: string;
   citizenName: string;
   citizenPhone: string;
+  citizenAlternateNumber?: string;
   citizenEmail?: string;
   citizenAddress: string;
   subject?: string;
@@ -1911,7 +1912,14 @@ const DCDashboard = () => {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  <span>{app.citizenPhone}</span>
+                  <div className="space-y-0.5">
+                    <span>{app.citizenPhone}</span>
+                    {app.citizenAlternateNumber && (
+                      <div className="text-xs text-gray-500">
+                        Alt: {app.citizenAlternateNumber}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 {app.citizenEmail && (
                   <div className="flex items-center gap-2 text-sm text-gray-600">

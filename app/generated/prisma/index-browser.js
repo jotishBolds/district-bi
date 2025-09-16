@@ -360,6 +360,20 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
   metadata: 'metadata'
 };
 
+exports.Prisma.SmsOtpScalarFieldEnum = {
+  id: 'id',
+  phone: 'phone',
+  otp: 'otp',
+  status: 'status',
+  providerResponse: 'providerResponse',
+  type: 'type',
+  attempts: 'attempts',
+  isUsed: 'isUsed',
+  expires: 'expires',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.ApplicationTrackingOTPScalarFieldEnum = {
   id: 'id',
   identifier: 'identifier',
@@ -502,6 +516,7 @@ exports.Prisma.ModelName = {
   DailyReport: 'DailyReport',
   SystemSetting: 'SystemSetting',
   VerificationToken: 'VerificationToken',
+  SmsOtp: 'SmsOtp',
   ApplicationTrackingOTP: 'ApplicationTrackingOTP',
   FrontdeskForwarding: 'FrontdeskForwarding',
   OfficerForwardingHistory: 'OfficerForwardingHistory'

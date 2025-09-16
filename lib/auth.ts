@@ -25,6 +25,11 @@ export const authOptions: AuthOptions = {
 
         // Special case for OTP verification
         if (credentials.password === "verified-by-otp") {
+          console.log(
+            "🔐 Processing OTP verification signin for:",
+            credentials.email
+          );
+
           const user = await prisma.user.findUnique({
             where: {
               email: credentials.email,
@@ -40,8 +45,14 @@ export const authOptions: AuthOptions = {
           });
 
           if (!user || !user.isActive) {
+            console.log("❌ User not found or inactive:", {
+              found: !!user,
+              isActive: user?.isActive,
+            });
             return null;
           }
+
+          console.log("✅ User found and active, creating session");
 
           // Update last login time
           await prisma.user.update({
@@ -108,12 +119,13 @@ export const authOptions: AuthOptions = {
             identifier: user.email,
             token: otp,
             expires: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
-            type: "EMAIL_VERIFICATION",
+            type: "LOGIN_OTP",
             // Store user ID securely for session creation after OTP verification
             metadata: JSON.stringify({
               userId: user.id,
               preAuthValidated: true,
               timestamp: Date.now(),
+              phone: user.phone, // Include phone for enhanced verification
             }),
           },
         });
@@ -122,7 +134,8 @@ export const authOptions: AuthOptions = {
         console.log("=".repeat(50));
         console.log("🔐 LOGIN OTP GENERATED");
         console.log("📧 EMAIL:", user.email);
-        console.log("🔐 OTP CODE:", otp);
+        console.log("� PHONE:", user.phone || "Not provided");
+        console.log("�🔐 OTP CODE:", otp);
         console.log("⏰ EXPIRES IN: 10 minutes");
         console.log("=".repeat(50));
 
@@ -136,11 +149,72 @@ export const authOptions: AuthOptions = {
           // Don't fail the authentication if email sending fails
         }
 
+        // Also send SMS OTP if user has a phone number
+        if (user.phone) {
+          try {
+            const { sendSms, generateOTPMessage } = await import(
+              "@/lib/thundersms.server"
+            );
+            const message = generateOTPMessage(otp, 10);
+
+            // Store SMS OTP record
+            await prisma.smsOtp.create({
+              data: {
+                phone: user.phone,
+                otp,
+                status: "SENT", // Will be updated based on actual send result
+                type: "LOGIN_OTP",
+                expires: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+                attempts: 1,
+              },
+            });
+
+            const smsResult = await sendSms(user.phone, message, {
+              templateId: process.env.THUNDERSMS_TEMPLATE_ID,
+              custRef: `login_${Date.now()}`,
+            });
+
+            if (smsResult.success) {
+              console.log("✅ LOGIN OTP SMS SENT SUCCESSFULLY");
+              // Update SMS OTP status to SENT
+              await prisma.smsOtp.updateMany({
+                where: { phone: user.phone, otp, type: "LOGIN_OTP" },
+                data: {
+                  status: "SENT",
+                  providerResponse: JSON.stringify(smsResult.raw),
+                },
+              });
+            } else {
+              console.error("❌ Failed to send login OTP SMS:", smsResult.desc);
+              // Update SMS OTP status to FAILED
+              await prisma.smsOtp.updateMany({
+                where: { phone: user.phone, otp, type: "LOGIN_OTP" },
+                data: {
+                  status: "FAILED",
+                  providerResponse: JSON.stringify(smsResult.raw),
+                },
+              });
+            }
+          } catch (smsError) {
+            console.error("❌ Failed to send login OTP SMS:", smsError);
+            // Update SMS OTP status to FAILED if it was created
+            try {
+              await prisma.smsOtp.updateMany({
+                where: { phone: user.phone, otp, type: "LOGIN_OTP" },
+                data: { status: "FAILED" },
+              });
+            } catch (updateError) {
+              console.error("❌ Failed to update SMS OTP status:", updateError);
+            }
+          }
+        }
+
         // Return user with OTP required flag
         // This creates a temporary session that requires OTP verification
         return {
           id: user.id,
           email: user.email,
+          phone: user.phone,
           role: user.role,
           isActive: user.isActive,
           needsOtp: true,

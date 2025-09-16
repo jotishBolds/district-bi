@@ -182,8 +182,14 @@ function GovernmentLoginForm() {
       localStorage.setItem("loginAttempts", "0");
 
       // Redirect to OTP verification page (no session created yet)
-      toast.success("Credentials verified. Please check your email for OTP.");
-      router.push("/verify-otp?email=" + encodeURIComponent(data.email));
+      toast.success(
+        "Credentials verified. Please verify your identity via OTP."
+      );
+      router.push(
+        "/verify-otp?email=" +
+          encodeURIComponent(data.email) +
+          "&type=LOGIN_OTP"
+      );
     } catch (error) {
       console.error("Login error:", error);
       setLoginError("An unexpected error occurred. Please try again later.");

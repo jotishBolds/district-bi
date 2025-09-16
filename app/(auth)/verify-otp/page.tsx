@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { Loader2, ShieldCheck, AlertCircle } from "lucide-react";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
@@ -23,8 +23,9 @@ import { Separator } from "@/components/ui/separator";
 function OtpVerificationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: session, status } = useSession();
   const email = searchParams.get("email") || "";
-  const verificationType = searchParams.get("type") || "EMAIL_VERIFICATION";
+  const verificationType = searchParams.get("type") || "LOGIN_OTP";
   const [isLoading, setIsLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -32,6 +33,7 @@ function OtpVerificationContent() {
   const [verificationError, setVerificationError] = useState<string | null>(
     null
   );
+  const [userPhone, setUserPhone] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -39,6 +41,23 @@ function OtpVerificationContent() {
       router.push("/login");
       return;
     }
+
+    // Fetch user phone number
+    const fetchUserPhone = async () => {
+      try {
+        const response = await fetch(
+          `/api/user/phone?email=${encodeURIComponent(email)}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setUserPhone(data.phone);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user phone:", error);
+      }
+    };
+
+    fetchUserPhone();
 
     // Focus on first input
     if (inputRefs.current[0]) {
@@ -52,6 +71,15 @@ function OtpVerificationContent() {
 
     return () => clearInterval(interval);
   }, [email, router]);
+
+  // Watch for session changes after successful login
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      console.log("✅ Session established, redirecting to dashboard");
+      toast.success("Authentication successful!");
+      router.push("/dashboard");
+    }
+  }, [status, session, router]);
 
   const handleInputChange = (index: number, value: string) => {
     if (value.length > 1) {
@@ -122,6 +150,12 @@ function OtpVerificationContent() {
     }
 
     try {
+      console.log("Sending OTP verification request:", {
+        email,
+        otp: otpValue,
+        type: verificationType,
+      }); // Debug log
+
       const response = await fetch("/api/auth/verify-otp", {
         method: "POST",
         headers: {
@@ -135,23 +169,22 @@ function OtpVerificationContent() {
       });
 
       const data = await response.json();
+      console.log("Verify OTP Response:", data); // Debug log
 
       if (!response.ok) {
         throw new Error(data.error || "Verification failed");
       }
 
       // OTP verification successful
-      if (verificationType === "EMAIL_VERIFICATION") {
-        // If this was a registration verification, redirect to login
-        if (searchParams.get("fromRegister") === "true") {
-          toast.success("Email verified successfully. Please log in.");
-          router.push("/login");
-          return;
-        }
-
-        // For login verification, create a session using the special auth method
-        // First, clear the OTP verification requirement
+      if (
+        verificationType === "EMAIL_VERIFICATION" ||
+        verificationType === "login" ||
+        verificationType === "LOGIN_OTP"
+      ) {
+        // For login verification, create a session using NextAuth
         if (data.clearOtpFlag) {
+          console.log("Attempting NextAuth signIn..."); // Debug log
+
           const signInResult = await signIn("credentials", {
             email,
             password: "verified-by-otp",
@@ -159,12 +192,27 @@ function OtpVerificationContent() {
             callbackUrl: "/dashboard",
           });
 
+          console.log("SignIn Result:", signInResult); // Debug log
+
           if (signInResult?.error) {
+            console.error("SignIn Error:", signInResult.error); // Debug log
             throw new Error(signInResult.error || "Session creation failed");
           }
 
-          toast.success("Authentication successful!");
-          router.push("/dashboard");
+          if (signInResult?.ok) {
+            // Don't redirect immediately, let the session useEffect handle it
+            console.log("✅ SignIn successful, waiting for session...");
+
+            // Set a timeout in case session doesn't establish
+            setTimeout(() => {
+              if (status !== "authenticated") {
+                console.log("⏰ Session timeout, forcing redirect");
+                router.push("/dashboard");
+              }
+            }, 3000); // 3 second timeout
+          } else {
+            throw new Error("Session creation failed - unknown error");
+          }
         } else {
           throw new Error("OTP verification incomplete");
         }
@@ -247,8 +295,18 @@ function OtpVerificationContent() {
               Security Verification
             </CardTitle>
             <CardDescription className="text-center">
-              We&apos;ve sent a verification code to{" "}
-              <span className="font-medium">{email}</span>
+              We&apos;ve sent a verification code to:
+              <div className="mt-2 space-y-1">
+                <div className="font-medium text-blue-600">📧 {email}</div>
+                {userPhone && (
+                  <div className="font-medium text-blue-600">
+                    📱 +91 {userPhone}
+                  </div>
+                )}
+              </div>
+              <div className="text-xs text-gray-500 mt-2">
+                Enter the same 6-digit code from either email or SMS
+              </div>
             </CardDescription>
           </CardHeader>
 
@@ -288,7 +346,7 @@ function OtpVerificationContent() {
                   ))}
                 </div>
                 <div className="text-xs text-gray-500 mt-2 text-center">
-                  Please enter the verification code sent to your email address
+                  Please enter the verification code sent to your email or phone
                 </div>
               </div>
             </CardContent>

@@ -9,6 +9,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { email, otp, type = "EMAIL_VERIFICATION" } = body;
 
+    console.log("🔍 OTP Verification Debug:", { email, otp, type });
+
     if (!email || !otp) {
       return NextResponse.json(
         { error: "Email and OTP are required" },
@@ -16,7 +18,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Find the verification token
+    // Find the verification token - check both email and SMS OTP
     const verificationToken = await prisma.verificationToken.findFirst({
       where: {
         identifier: email,
@@ -28,15 +30,70 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    console.log("📧 Email verification token found:", !!verificationToken);
+    if (verificationToken) {
+      console.log("📧 Token details:", {
+        id: verificationToken.id,
+        token: verificationToken.token,
+        type: verificationToken.type,
+        expires: verificationToken.expires,
+        hasMetadata: !!verificationToken.metadata,
+      });
+    }
+
+    // If not found in email verification, check SMS OTP table
+    let smsOtpRecord = null;
     if (!verificationToken) {
+      // Get user's phone number
+      const user = await prisma.user.findUnique({
+        where: { email },
+        select: { phone: true },
+      });
+
+      if (user?.phone) {
+        smsOtpRecord = await prisma.smsOtp.findFirst({
+          where: {
+            phone: user.phone,
+            otp: otp,
+            status: "SENT", // Check for SENT status instead of PENDING
+            type: type === "login" ? "LOGIN_OTP" : type, // Handle legacy 'login' type
+            expires: {
+              gt: new Date(),
+            },
+          },
+        });
+
+        console.log("📱 SMS OTP record found:", !!smsOtpRecord);
+        if (smsOtpRecord) {
+          console.log("📱 SMS OTP details:", {
+            id: smsOtpRecord.id,
+            otp: smsOtpRecord.otp,
+            status: smsOtpRecord.status,
+            isUsed: smsOtpRecord.isUsed,
+            expires: smsOtpRecord.expires,
+          });
+        }
+      }
+    }
+
+    // If OTP not found in either table, return error
+    if (!verificationToken && !smsOtpRecord) {
+      console.log("❌ No valid OTP found in either email or SMS tables");
       return NextResponse.json(
         { error: "Invalid or expired OTP" },
         { status: 400 }
       );
     }
 
-    // Validate pre-auth metadata for login OTP
-    if (type === "EMAIL_VERIFICATION" && verificationToken.metadata) {
+    console.log("✅ Valid OTP found - proceeding with verification");
+
+    // Validate pre-auth metadata for login OTP (only for email verification token)
+    // Skip metadata validation if using SMS OTP or if email token has no metadata
+    if (
+      type === "EMAIL_VERIFICATION" &&
+      verificationToken &&
+      verificationToken.metadata
+    ) {
       try {
         const metadata = JSON.parse(verificationToken.metadata);
         if (!metadata.preAuthValidated || !metadata.userId) {
@@ -63,7 +120,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Handle different verification types
-    if (type === "EMAIL_VERIFICATION") {
+    if (
+      type === "EMAIL_VERIFICATION" ||
+      type === "login" ||
+      type === "LOGIN_OTP"
+    ) {
       // For login OTP verification - verify user exists and is valid
       const user = await prisma.user.findUnique({
         where: { email },
@@ -90,12 +151,26 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // Delete the used token
-      await prisma.verificationToken.delete({
-        where: {
-          id: verificationToken.id,
-        },
-      });
+      // Delete the used token(s)
+      if (verificationToken) {
+        await prisma.verificationToken.delete({
+          where: {
+            id: verificationToken.id,
+          },
+        });
+      }
+
+      if (smsOtpRecord) {
+        await prisma.smsOtp.update({
+          where: {
+            id: smsOtpRecord.id,
+          },
+          data: {
+            status: "USED",
+            isUsed: true,
+          },
+        });
+      }
 
       // Return success with user data for session creation
       return NextResponse.json({
@@ -115,6 +190,14 @@ export async function POST(req: NextRequest) {
         },
       });
     } else if (type === "PASSWORD_RESET") {
+      // For password reset, only use email verification token
+      if (!verificationToken) {
+        return NextResponse.json(
+          { error: "Password reset requires email verification" },
+          { status: 400 }
+        );
+      }
+
       // For password reset, generate a secure reset token
       const resetToken = uuidv4();
 

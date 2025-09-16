@@ -114,6 +114,11 @@ export type SystemSetting = $Result.DefaultSelection<Prisma.$SystemSettingPayloa
  */
 export type VerificationToken = $Result.DefaultSelection<Prisma.$VerificationTokenPayload>
 /**
+ * Model SmsOtp
+ * 
+ */
+export type SmsOtp = $Result.DefaultSelection<Prisma.$SmsOtpPayload>
+/**
  * Model ApplicationTrackingOTP
  * 
  */
@@ -545,6 +550,16 @@ export class PrismaClient<
     * ```
     */
   get verificationToken(): Prisma.VerificationTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.smsOtp`: Exposes CRUD operations for the **SmsOtp** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SmsOtps
+    * const smsOtps = await prisma.smsOtp.findMany()
+    * ```
+    */
+  get smsOtp(): Prisma.SmsOtpDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.applicationTrackingOTP`: Exposes CRUD operations for the **ApplicationTrackingOTP** model.
@@ -1035,6 +1050,7 @@ export namespace Prisma {
     DailyReport: 'DailyReport',
     SystemSetting: 'SystemSetting',
     VerificationToken: 'VerificationToken',
+    SmsOtp: 'SmsOtp',
     ApplicationTrackingOTP: 'ApplicationTrackingOTP',
     FrontdeskForwarding: 'FrontdeskForwarding',
     OfficerForwardingHistory: 'OfficerForwardingHistory'
@@ -1056,7 +1072,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "userSettings" | "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "serviceCategoryChange" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory"
+      modelProps: "userSettings" | "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "serviceCategoryChange" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "smsOtp" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2540,6 +2556,80 @@ export namespace Prisma {
           }
         }
       }
+      SmsOtp: {
+        payload: Prisma.$SmsOtpPayload<ExtArgs>
+        fields: Prisma.SmsOtpFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SmsOtpFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SmsOtpFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload>
+          }
+          findFirst: {
+            args: Prisma.SmsOtpFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SmsOtpFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload>
+          }
+          findMany: {
+            args: Prisma.SmsOtpFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload>[]
+          }
+          create: {
+            args: Prisma.SmsOtpCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload>
+          }
+          createMany: {
+            args: Prisma.SmsOtpCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SmsOtpCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload>[]
+          }
+          delete: {
+            args: Prisma.SmsOtpDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload>
+          }
+          update: {
+            args: Prisma.SmsOtpUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload>
+          }
+          deleteMany: {
+            args: Prisma.SmsOtpDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SmsOtpUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SmsOtpUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload>[]
+          }
+          upsert: {
+            args: Prisma.SmsOtpUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SmsOtpPayload>
+          }
+          aggregate: {
+            args: Prisma.SmsOtpAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSmsOtp>
+          }
+          groupBy: {
+            args: Prisma.SmsOtpGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SmsOtpGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SmsOtpCountArgs<ExtArgs>
+            result: $Utils.Optional<SmsOtpCountAggregateOutputType> | number
+          }
+        }
+      }
       ApplicationTrackingOTP: {
         payload: Prisma.$ApplicationTrackingOTPPayload<ExtArgs>
         fields: Prisma.ApplicationTrackingOTPFieldRefs
@@ -2874,6 +2964,7 @@ export namespace Prisma {
     dailyReport?: DailyReportOmit
     systemSetting?: SystemSettingOmit
     verificationToken?: VerificationTokenOmit
+    smsOtp?: SmsOtpOmit
     applicationTrackingOTP?: ApplicationTrackingOTPOmit
     frontdeskForwarding?: FrontdeskForwardingOmit
     officerForwardingHistory?: OfficerForwardingHistoryOmit
@@ -26782,6 +26873,1113 @@ export namespace Prisma {
 
 
   /**
+   * Model SmsOtp
+   */
+
+  export type AggregateSmsOtp = {
+    _count: SmsOtpCountAggregateOutputType | null
+    _avg: SmsOtpAvgAggregateOutputType | null
+    _sum: SmsOtpSumAggregateOutputType | null
+    _min: SmsOtpMinAggregateOutputType | null
+    _max: SmsOtpMaxAggregateOutputType | null
+  }
+
+  export type SmsOtpAvgAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type SmsOtpSumAggregateOutputType = {
+    attempts: number | null
+  }
+
+  export type SmsOtpMinAggregateOutputType = {
+    id: string | null
+    phone: string | null
+    otp: string | null
+    status: string | null
+    providerResponse: string | null
+    type: string | null
+    attempts: number | null
+    isUsed: boolean | null
+    expires: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SmsOtpMaxAggregateOutputType = {
+    id: string | null
+    phone: string | null
+    otp: string | null
+    status: string | null
+    providerResponse: string | null
+    type: string | null
+    attempts: number | null
+    isUsed: boolean | null
+    expires: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SmsOtpCountAggregateOutputType = {
+    id: number
+    phone: number
+    otp: number
+    status: number
+    providerResponse: number
+    type: number
+    attempts: number
+    isUsed: number
+    expires: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SmsOtpAvgAggregateInputType = {
+    attempts?: true
+  }
+
+  export type SmsOtpSumAggregateInputType = {
+    attempts?: true
+  }
+
+  export type SmsOtpMinAggregateInputType = {
+    id?: true
+    phone?: true
+    otp?: true
+    status?: true
+    providerResponse?: true
+    type?: true
+    attempts?: true
+    isUsed?: true
+    expires?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SmsOtpMaxAggregateInputType = {
+    id?: true
+    phone?: true
+    otp?: true
+    status?: true
+    providerResponse?: true
+    type?: true
+    attempts?: true
+    isUsed?: true
+    expires?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SmsOtpCountAggregateInputType = {
+    id?: true
+    phone?: true
+    otp?: true
+    status?: true
+    providerResponse?: true
+    type?: true
+    attempts?: true
+    isUsed?: true
+    expires?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SmsOtpAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SmsOtp to aggregate.
+     */
+    where?: SmsOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsOtps to fetch.
+     */
+    orderBy?: SmsOtpOrderByWithRelationInput | SmsOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SmsOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsOtps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SmsOtps
+    **/
+    _count?: true | SmsOtpCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SmsOtpAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SmsOtpSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SmsOtpMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SmsOtpMaxAggregateInputType
+  }
+
+  export type GetSmsOtpAggregateType<T extends SmsOtpAggregateArgs> = {
+        [P in keyof T & keyof AggregateSmsOtp]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSmsOtp[P]>
+      : GetScalarType<T[P], AggregateSmsOtp[P]>
+  }
+
+
+
+
+  export type SmsOtpGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SmsOtpWhereInput
+    orderBy?: SmsOtpOrderByWithAggregationInput | SmsOtpOrderByWithAggregationInput[]
+    by: SmsOtpScalarFieldEnum[] | SmsOtpScalarFieldEnum
+    having?: SmsOtpScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SmsOtpCountAggregateInputType | true
+    _avg?: SmsOtpAvgAggregateInputType
+    _sum?: SmsOtpSumAggregateInputType
+    _min?: SmsOtpMinAggregateInputType
+    _max?: SmsOtpMaxAggregateInputType
+  }
+
+  export type SmsOtpGroupByOutputType = {
+    id: string
+    phone: string
+    otp: string
+    status: string
+    providerResponse: string | null
+    type: string
+    attempts: number
+    isUsed: boolean
+    expires: Date
+    createdAt: Date
+    updatedAt: Date
+    _count: SmsOtpCountAggregateOutputType | null
+    _avg: SmsOtpAvgAggregateOutputType | null
+    _sum: SmsOtpSumAggregateOutputType | null
+    _min: SmsOtpMinAggregateOutputType | null
+    _max: SmsOtpMaxAggregateOutputType | null
+  }
+
+  type GetSmsOtpGroupByPayload<T extends SmsOtpGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SmsOtpGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SmsOtpGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SmsOtpGroupByOutputType[P]>
+            : GetScalarType<T[P], SmsOtpGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SmsOtpSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    phone?: boolean
+    otp?: boolean
+    status?: boolean
+    providerResponse?: boolean
+    type?: boolean
+    attempts?: boolean
+    isUsed?: boolean
+    expires?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["smsOtp"]>
+
+  export type SmsOtpSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    phone?: boolean
+    otp?: boolean
+    status?: boolean
+    providerResponse?: boolean
+    type?: boolean
+    attempts?: boolean
+    isUsed?: boolean
+    expires?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["smsOtp"]>
+
+  export type SmsOtpSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    phone?: boolean
+    otp?: boolean
+    status?: boolean
+    providerResponse?: boolean
+    type?: boolean
+    attempts?: boolean
+    isUsed?: boolean
+    expires?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["smsOtp"]>
+
+  export type SmsOtpSelectScalar = {
+    id?: boolean
+    phone?: boolean
+    otp?: boolean
+    status?: boolean
+    providerResponse?: boolean
+    type?: boolean
+    attempts?: boolean
+    isUsed?: boolean
+    expires?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SmsOtpOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "phone" | "otp" | "status" | "providerResponse" | "type" | "attempts" | "isUsed" | "expires" | "createdAt" | "updatedAt", ExtArgs["result"]["smsOtp"]>
+
+  export type $SmsOtpPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SmsOtp"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      phone: string
+      otp: string
+      status: string
+      providerResponse: string | null
+      type: string
+      attempts: number
+      isUsed: boolean
+      expires: Date
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["smsOtp"]>
+    composites: {}
+  }
+
+  type SmsOtpGetPayload<S extends boolean | null | undefined | SmsOtpDefaultArgs> = $Result.GetResult<Prisma.$SmsOtpPayload, S>
+
+  type SmsOtpCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SmsOtpFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SmsOtpCountAggregateInputType | true
+    }
+
+  export interface SmsOtpDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SmsOtp'], meta: { name: 'SmsOtp' } }
+    /**
+     * Find zero or one SmsOtp that matches the filter.
+     * @param {SmsOtpFindUniqueArgs} args - Arguments to find a SmsOtp
+     * @example
+     * // Get one SmsOtp
+     * const smsOtp = await prisma.smsOtp.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SmsOtpFindUniqueArgs>(args: SelectSubset<T, SmsOtpFindUniqueArgs<ExtArgs>>): Prisma__SmsOtpClient<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SmsOtp that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SmsOtpFindUniqueOrThrowArgs} args - Arguments to find a SmsOtp
+     * @example
+     * // Get one SmsOtp
+     * const smsOtp = await prisma.smsOtp.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SmsOtpFindUniqueOrThrowArgs>(args: SelectSubset<T, SmsOtpFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SmsOtpClient<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SmsOtp that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsOtpFindFirstArgs} args - Arguments to find a SmsOtp
+     * @example
+     * // Get one SmsOtp
+     * const smsOtp = await prisma.smsOtp.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SmsOtpFindFirstArgs>(args?: SelectSubset<T, SmsOtpFindFirstArgs<ExtArgs>>): Prisma__SmsOtpClient<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SmsOtp that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsOtpFindFirstOrThrowArgs} args - Arguments to find a SmsOtp
+     * @example
+     * // Get one SmsOtp
+     * const smsOtp = await prisma.smsOtp.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SmsOtpFindFirstOrThrowArgs>(args?: SelectSubset<T, SmsOtpFindFirstOrThrowArgs<ExtArgs>>): Prisma__SmsOtpClient<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SmsOtps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsOtpFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SmsOtps
+     * const smsOtps = await prisma.smsOtp.findMany()
+     * 
+     * // Get first 10 SmsOtps
+     * const smsOtps = await prisma.smsOtp.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const smsOtpWithIdOnly = await prisma.smsOtp.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SmsOtpFindManyArgs>(args?: SelectSubset<T, SmsOtpFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SmsOtp.
+     * @param {SmsOtpCreateArgs} args - Arguments to create a SmsOtp.
+     * @example
+     * // Create one SmsOtp
+     * const SmsOtp = await prisma.smsOtp.create({
+     *   data: {
+     *     // ... data to create a SmsOtp
+     *   }
+     * })
+     * 
+     */
+    create<T extends SmsOtpCreateArgs>(args: SelectSubset<T, SmsOtpCreateArgs<ExtArgs>>): Prisma__SmsOtpClient<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SmsOtps.
+     * @param {SmsOtpCreateManyArgs} args - Arguments to create many SmsOtps.
+     * @example
+     * // Create many SmsOtps
+     * const smsOtp = await prisma.smsOtp.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SmsOtpCreateManyArgs>(args?: SelectSubset<T, SmsOtpCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SmsOtps and returns the data saved in the database.
+     * @param {SmsOtpCreateManyAndReturnArgs} args - Arguments to create many SmsOtps.
+     * @example
+     * // Create many SmsOtps
+     * const smsOtp = await prisma.smsOtp.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SmsOtps and only return the `id`
+     * const smsOtpWithIdOnly = await prisma.smsOtp.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SmsOtpCreateManyAndReturnArgs>(args?: SelectSubset<T, SmsOtpCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SmsOtp.
+     * @param {SmsOtpDeleteArgs} args - Arguments to delete one SmsOtp.
+     * @example
+     * // Delete one SmsOtp
+     * const SmsOtp = await prisma.smsOtp.delete({
+     *   where: {
+     *     // ... filter to delete one SmsOtp
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SmsOtpDeleteArgs>(args: SelectSubset<T, SmsOtpDeleteArgs<ExtArgs>>): Prisma__SmsOtpClient<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SmsOtp.
+     * @param {SmsOtpUpdateArgs} args - Arguments to update one SmsOtp.
+     * @example
+     * // Update one SmsOtp
+     * const smsOtp = await prisma.smsOtp.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SmsOtpUpdateArgs>(args: SelectSubset<T, SmsOtpUpdateArgs<ExtArgs>>): Prisma__SmsOtpClient<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SmsOtps.
+     * @param {SmsOtpDeleteManyArgs} args - Arguments to filter SmsOtps to delete.
+     * @example
+     * // Delete a few SmsOtps
+     * const { count } = await prisma.smsOtp.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SmsOtpDeleteManyArgs>(args?: SelectSubset<T, SmsOtpDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SmsOtps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsOtpUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SmsOtps
+     * const smsOtp = await prisma.smsOtp.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SmsOtpUpdateManyArgs>(args: SelectSubset<T, SmsOtpUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SmsOtps and returns the data updated in the database.
+     * @param {SmsOtpUpdateManyAndReturnArgs} args - Arguments to update many SmsOtps.
+     * @example
+     * // Update many SmsOtps
+     * const smsOtp = await prisma.smsOtp.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SmsOtps and only return the `id`
+     * const smsOtpWithIdOnly = await prisma.smsOtp.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SmsOtpUpdateManyAndReturnArgs>(args: SelectSubset<T, SmsOtpUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SmsOtp.
+     * @param {SmsOtpUpsertArgs} args - Arguments to update or create a SmsOtp.
+     * @example
+     * // Update or create a SmsOtp
+     * const smsOtp = await prisma.smsOtp.upsert({
+     *   create: {
+     *     // ... data to create a SmsOtp
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SmsOtp we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SmsOtpUpsertArgs>(args: SelectSubset<T, SmsOtpUpsertArgs<ExtArgs>>): Prisma__SmsOtpClient<$Result.GetResult<Prisma.$SmsOtpPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SmsOtps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsOtpCountArgs} args - Arguments to filter SmsOtps to count.
+     * @example
+     * // Count the number of SmsOtps
+     * const count = await prisma.smsOtp.count({
+     *   where: {
+     *     // ... the filter for the SmsOtps we want to count
+     *   }
+     * })
+    **/
+    count<T extends SmsOtpCountArgs>(
+      args?: Subset<T, SmsOtpCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SmsOtpCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SmsOtp.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsOtpAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SmsOtpAggregateArgs>(args: Subset<T, SmsOtpAggregateArgs>): Prisma.PrismaPromise<GetSmsOtpAggregateType<T>>
+
+    /**
+     * Group by SmsOtp.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SmsOtpGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SmsOtpGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SmsOtpGroupByArgs['orderBy'] }
+        : { orderBy?: SmsOtpGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SmsOtpGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSmsOtpGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SmsOtp model
+   */
+  readonly fields: SmsOtpFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SmsOtp.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SmsOtpClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SmsOtp model
+   */
+  interface SmsOtpFieldRefs {
+    readonly id: FieldRef<"SmsOtp", 'String'>
+    readonly phone: FieldRef<"SmsOtp", 'String'>
+    readonly otp: FieldRef<"SmsOtp", 'String'>
+    readonly status: FieldRef<"SmsOtp", 'String'>
+    readonly providerResponse: FieldRef<"SmsOtp", 'String'>
+    readonly type: FieldRef<"SmsOtp", 'String'>
+    readonly attempts: FieldRef<"SmsOtp", 'Int'>
+    readonly isUsed: FieldRef<"SmsOtp", 'Boolean'>
+    readonly expires: FieldRef<"SmsOtp", 'DateTime'>
+    readonly createdAt: FieldRef<"SmsOtp", 'DateTime'>
+    readonly updatedAt: FieldRef<"SmsOtp", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SmsOtp findUnique
+   */
+  export type SmsOtpFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * Filter, which SmsOtp to fetch.
+     */
+    where: SmsOtpWhereUniqueInput
+  }
+
+  /**
+   * SmsOtp findUniqueOrThrow
+   */
+  export type SmsOtpFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * Filter, which SmsOtp to fetch.
+     */
+    where: SmsOtpWhereUniqueInput
+  }
+
+  /**
+   * SmsOtp findFirst
+   */
+  export type SmsOtpFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * Filter, which SmsOtp to fetch.
+     */
+    where?: SmsOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsOtps to fetch.
+     */
+    orderBy?: SmsOtpOrderByWithRelationInput | SmsOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SmsOtps.
+     */
+    cursor?: SmsOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsOtps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SmsOtps.
+     */
+    distinct?: SmsOtpScalarFieldEnum | SmsOtpScalarFieldEnum[]
+  }
+
+  /**
+   * SmsOtp findFirstOrThrow
+   */
+  export type SmsOtpFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * Filter, which SmsOtp to fetch.
+     */
+    where?: SmsOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsOtps to fetch.
+     */
+    orderBy?: SmsOtpOrderByWithRelationInput | SmsOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SmsOtps.
+     */
+    cursor?: SmsOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsOtps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SmsOtps.
+     */
+    distinct?: SmsOtpScalarFieldEnum | SmsOtpScalarFieldEnum[]
+  }
+
+  /**
+   * SmsOtp findMany
+   */
+  export type SmsOtpFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * Filter, which SmsOtps to fetch.
+     */
+    where?: SmsOtpWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SmsOtps to fetch.
+     */
+    orderBy?: SmsOtpOrderByWithRelationInput | SmsOtpOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SmsOtps.
+     */
+    cursor?: SmsOtpWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SmsOtps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SmsOtps.
+     */
+    skip?: number
+    distinct?: SmsOtpScalarFieldEnum | SmsOtpScalarFieldEnum[]
+  }
+
+  /**
+   * SmsOtp create
+   */
+  export type SmsOtpCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SmsOtp.
+     */
+    data: XOR<SmsOtpCreateInput, SmsOtpUncheckedCreateInput>
+  }
+
+  /**
+   * SmsOtp createMany
+   */
+  export type SmsOtpCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SmsOtps.
+     */
+    data: SmsOtpCreateManyInput | SmsOtpCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SmsOtp createManyAndReturn
+   */
+  export type SmsOtpCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * The data used to create many SmsOtps.
+     */
+    data: SmsOtpCreateManyInput | SmsOtpCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SmsOtp update
+   */
+  export type SmsOtpUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SmsOtp.
+     */
+    data: XOR<SmsOtpUpdateInput, SmsOtpUncheckedUpdateInput>
+    /**
+     * Choose, which SmsOtp to update.
+     */
+    where: SmsOtpWhereUniqueInput
+  }
+
+  /**
+   * SmsOtp updateMany
+   */
+  export type SmsOtpUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SmsOtps.
+     */
+    data: XOR<SmsOtpUpdateManyMutationInput, SmsOtpUncheckedUpdateManyInput>
+    /**
+     * Filter which SmsOtps to update
+     */
+    where?: SmsOtpWhereInput
+    /**
+     * Limit how many SmsOtps to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SmsOtp updateManyAndReturn
+   */
+  export type SmsOtpUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * The data used to update SmsOtps.
+     */
+    data: XOR<SmsOtpUpdateManyMutationInput, SmsOtpUncheckedUpdateManyInput>
+    /**
+     * Filter which SmsOtps to update
+     */
+    where?: SmsOtpWhereInput
+    /**
+     * Limit how many SmsOtps to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SmsOtp upsert
+   */
+  export type SmsOtpUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SmsOtp to update in case it exists.
+     */
+    where: SmsOtpWhereUniqueInput
+    /**
+     * In case the SmsOtp found by the `where` argument doesn't exist, create a new SmsOtp with this data.
+     */
+    create: XOR<SmsOtpCreateInput, SmsOtpUncheckedCreateInput>
+    /**
+     * In case the SmsOtp was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SmsOtpUpdateInput, SmsOtpUncheckedUpdateInput>
+  }
+
+  /**
+   * SmsOtp delete
+   */
+  export type SmsOtpDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+    /**
+     * Filter which SmsOtp to delete.
+     */
+    where: SmsOtpWhereUniqueInput
+  }
+
+  /**
+   * SmsOtp deleteMany
+   */
+  export type SmsOtpDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SmsOtps to delete
+     */
+    where?: SmsOtpWhereInput
+    /**
+     * Limit how many SmsOtps to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SmsOtp without action
+   */
+  export type SmsOtpDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SmsOtp
+     */
+    select?: SmsOtpSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SmsOtp
+     */
+    omit?: SmsOtpOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model ApplicationTrackingOTP
    */
 
@@ -30475,6 +31673,23 @@ export namespace Prisma {
   export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
 
 
+  export const SmsOtpScalarFieldEnum: {
+    id: 'id',
+    phone: 'phone',
+    otp: 'otp',
+    status: 'status',
+    providerResponse: 'providerResponse',
+    type: 'type',
+    attempts: 'attempts',
+    isUsed: 'isUsed',
+    expires: 'expires',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SmsOtpScalarFieldEnum = (typeof SmsOtpScalarFieldEnum)[keyof typeof SmsOtpScalarFieldEnum]
+
+
   export const ApplicationTrackingOTPScalarFieldEnum: {
     id: 'id',
     identifier: 'identifier',
@@ -32365,6 +33580,90 @@ export namespace Prisma {
     expires?: DateTimeWithAggregatesFilter<"VerificationToken"> | Date | string
     type?: StringWithAggregatesFilter<"VerificationToken"> | string
     metadata?: StringNullableWithAggregatesFilter<"VerificationToken"> | string | null
+  }
+
+  export type SmsOtpWhereInput = {
+    AND?: SmsOtpWhereInput | SmsOtpWhereInput[]
+    OR?: SmsOtpWhereInput[]
+    NOT?: SmsOtpWhereInput | SmsOtpWhereInput[]
+    id?: StringFilter<"SmsOtp"> | string
+    phone?: StringFilter<"SmsOtp"> | string
+    otp?: StringFilter<"SmsOtp"> | string
+    status?: StringFilter<"SmsOtp"> | string
+    providerResponse?: StringNullableFilter<"SmsOtp"> | string | null
+    type?: StringFilter<"SmsOtp"> | string
+    attempts?: IntFilter<"SmsOtp"> | number
+    isUsed?: BoolFilter<"SmsOtp"> | boolean
+    expires?: DateTimeFilter<"SmsOtp"> | Date | string
+    createdAt?: DateTimeFilter<"SmsOtp"> | Date | string
+    updatedAt?: DateTimeFilter<"SmsOtp"> | Date | string
+  }
+
+  export type SmsOtpOrderByWithRelationInput = {
+    id?: SortOrder
+    phone?: SortOrder
+    otp?: SortOrder
+    status?: SortOrder
+    providerResponse?: SortOrderInput | SortOrder
+    type?: SortOrder
+    attempts?: SortOrder
+    isUsed?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SmsOtpWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SmsOtpWhereInput | SmsOtpWhereInput[]
+    OR?: SmsOtpWhereInput[]
+    NOT?: SmsOtpWhereInput | SmsOtpWhereInput[]
+    phone?: StringFilter<"SmsOtp"> | string
+    otp?: StringFilter<"SmsOtp"> | string
+    status?: StringFilter<"SmsOtp"> | string
+    providerResponse?: StringNullableFilter<"SmsOtp"> | string | null
+    type?: StringFilter<"SmsOtp"> | string
+    attempts?: IntFilter<"SmsOtp"> | number
+    isUsed?: BoolFilter<"SmsOtp"> | boolean
+    expires?: DateTimeFilter<"SmsOtp"> | Date | string
+    createdAt?: DateTimeFilter<"SmsOtp"> | Date | string
+    updatedAt?: DateTimeFilter<"SmsOtp"> | Date | string
+  }, "id">
+
+  export type SmsOtpOrderByWithAggregationInput = {
+    id?: SortOrder
+    phone?: SortOrder
+    otp?: SortOrder
+    status?: SortOrder
+    providerResponse?: SortOrderInput | SortOrder
+    type?: SortOrder
+    attempts?: SortOrder
+    isUsed?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SmsOtpCountOrderByAggregateInput
+    _avg?: SmsOtpAvgOrderByAggregateInput
+    _max?: SmsOtpMaxOrderByAggregateInput
+    _min?: SmsOtpMinOrderByAggregateInput
+    _sum?: SmsOtpSumOrderByAggregateInput
+  }
+
+  export type SmsOtpScalarWhereWithAggregatesInput = {
+    AND?: SmsOtpScalarWhereWithAggregatesInput | SmsOtpScalarWhereWithAggregatesInput[]
+    OR?: SmsOtpScalarWhereWithAggregatesInput[]
+    NOT?: SmsOtpScalarWhereWithAggregatesInput | SmsOtpScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SmsOtp"> | string
+    phone?: StringWithAggregatesFilter<"SmsOtp"> | string
+    otp?: StringWithAggregatesFilter<"SmsOtp"> | string
+    status?: StringWithAggregatesFilter<"SmsOtp"> | string
+    providerResponse?: StringNullableWithAggregatesFilter<"SmsOtp"> | string | null
+    type?: StringWithAggregatesFilter<"SmsOtp"> | string
+    attempts?: IntWithAggregatesFilter<"SmsOtp"> | number
+    isUsed?: BoolWithAggregatesFilter<"SmsOtp"> | boolean
+    expires?: DateTimeWithAggregatesFilter<"SmsOtp"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"SmsOtp"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SmsOtp"> | Date | string
   }
 
   export type ApplicationTrackingOTPWhereInput = {
@@ -34404,6 +35703,104 @@ export namespace Prisma {
     metadata?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type SmsOtpCreateInput = {
+    id?: string
+    phone: string
+    otp: string
+    status: string
+    providerResponse?: string | null
+    type?: string
+    attempts?: number
+    isUsed?: boolean
+    expires: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SmsOtpUncheckedCreateInput = {
+    id?: string
+    phone: string
+    otp: string
+    status: string
+    providerResponse?: string | null
+    type?: string
+    attempts?: number
+    isUsed?: boolean
+    expires: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SmsOtpUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    otp?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    providerResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SmsOtpUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    otp?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    providerResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SmsOtpCreateManyInput = {
+    id?: string
+    phone: string
+    otp: string
+    status: string
+    providerResponse?: string | null
+    type?: string
+    attempts?: number
+    isUsed?: boolean
+    expires: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SmsOtpUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    otp?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    providerResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SmsOtpUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    otp?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    providerResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    attempts?: IntFieldUpdateOperationsInput | number
+    isUsed?: BoolFieldUpdateOperationsInput | boolean
+    expires?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ApplicationTrackingOTPCreateInput = {
     id?: string
     identifier: string
@@ -35958,6 +37355,56 @@ export namespace Prisma {
     expires?: SortOrder
     type?: SortOrder
     metadata?: SortOrder
+  }
+
+  export type SmsOtpCountOrderByAggregateInput = {
+    id?: SortOrder
+    phone?: SortOrder
+    otp?: SortOrder
+    status?: SortOrder
+    providerResponse?: SortOrder
+    type?: SortOrder
+    attempts?: SortOrder
+    isUsed?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SmsOtpAvgOrderByAggregateInput = {
+    attempts?: SortOrder
+  }
+
+  export type SmsOtpMaxOrderByAggregateInput = {
+    id?: SortOrder
+    phone?: SortOrder
+    otp?: SortOrder
+    status?: SortOrder
+    providerResponse?: SortOrder
+    type?: SortOrder
+    attempts?: SortOrder
+    isUsed?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SmsOtpMinOrderByAggregateInput = {
+    id?: SortOrder
+    phone?: SortOrder
+    otp?: SortOrder
+    status?: SortOrder
+    providerResponse?: SortOrder
+    type?: SortOrder
+    attempts?: SortOrder
+    isUsed?: SortOrder
+    expires?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SmsOtpSumOrderByAggregateInput = {
+    attempts?: SortOrder
   }
 
   export type ApplicationTrackingOTPCountOrderByAggregateInput = {

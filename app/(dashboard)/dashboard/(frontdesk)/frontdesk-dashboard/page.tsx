@@ -40,6 +40,8 @@ import {
   ArrowRight,
   ArrowLeft,
   Activity,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistance } from "date-fns";
@@ -59,6 +61,7 @@ interface Application {
   rrNumber?: string;
   citizenName: string;
   citizenPhone: string;
+  citizenAlternateNumber?: string;
   citizenAddress?: string;
   subject?: string;
   status: string;
@@ -169,6 +172,15 @@ export default function FrontdeskDashboard() {
   const [editingCurrentCategory, setEditingCurrentCategory] = useState<
     { id: string; name: string; color?: string } | undefined
   >(undefined);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<Record<string, number>>({
+    active: 1,
+    forwardedOut: 1,
+    received: 1,
+    completed: 1,
+  });
+  const itemsPerPage = 10;
 
   const fetchFrontdeskAssignments = async (
     availableOfficersForRef?: Officer[]
@@ -458,6 +470,131 @@ export default function FrontdeskDashboard() {
     );
   };
 
+  // Helper functions to get filtered counts for tab badges
+  const getFilteredCount = (applications: Application[]) => {
+    return filterApplicationsByCategory(applications).length;
+  };
+
+  const paginateApplications = (
+    applications: Application[],
+    tabKey: string
+  ) => {
+    const page = currentPage[tabKey] || 1;
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return applications.slice(startIndex, endIndex);
+  };
+
+  const getTotalPages = (totalItems: number) => {
+    return Math.ceil(totalItems / itemsPerPage);
+  };
+
+  const handlePageChange = (tabKey: string, page: number) => {
+    setCurrentPage((prev) => ({
+      ...prev,
+      [tabKey]: page,
+    }));
+  };
+
+  // Reset pagination when category filter changes
+  useEffect(() => {
+    setCurrentPage({
+      active: 1,
+      forwardedOut: 1,
+      received: 1,
+      completed: 1,
+    });
+  }, [selectedCategoryFilter]);
+
+  const PaginationComponent = ({
+    tabKey,
+    totalItems,
+    filteredItemsCount,
+  }: {
+    tabKey: string;
+    totalItems: number;
+    filteredItemsCount: number;
+  }) => {
+    const totalPages = getTotalPages(filteredItemsCount);
+    const currentPageNum = currentPage[tabKey] || 1;
+
+    if (totalPages <= 1) return null;
+
+    const getPageNumbers = () => {
+      const pages = [];
+      const maxVisiblePages = 5;
+
+      if (totalPages <= maxVisiblePages) {
+        for (let i = 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        const start = Math.max(1, currentPageNum - 2);
+        const end = Math.min(totalPages, start + maxVisiblePages - 1);
+
+        for (let i = start; i <= end; i++) {
+          pages.push(i);
+        }
+      }
+
+      return pages;
+    };
+
+    return (
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
+        <p className="text-sm text-gray-600">
+          Showing{" "}
+          {Math.min(
+            (currentPageNum - 1) * itemsPerPage + 1,
+            filteredItemsCount
+          )}{" "}
+          to {Math.min(currentPageNum * itemsPerPage, filteredItemsCount)} of{" "}
+          {filteredItemsCount} results
+          {filteredItemsCount !== totalItems && (
+            <span className="text-gray-500">
+              {" "}
+              (filtered from {totalItems} total)
+            </span>
+          )}
+        </p>
+
+        <div className="flex items-center space-x-1">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(tabKey, currentPageNum - 1)}
+            disabled={currentPageNum === 1}
+            className="h-8 w-8 p-0"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+
+          {getPageNumbers().map((pageNum) => (
+            <Button
+              key={pageNum}
+              variant={pageNum === currentPageNum ? "default" : "outline"}
+              size="sm"
+              onClick={() => handlePageChange(tabKey, pageNum)}
+              className="h-8 w-8 p-0"
+            >
+              {pageNum}
+            </Button>
+          ))}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handlePageChange(tabKey, currentPageNum + 1)}
+            disabled={currentPageNum === totalPages}
+            className="h-8 w-8 p-0"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
   useEffect(() => {
     fetchData();
     fetchServiceCategories();
@@ -677,13 +814,20 @@ export default function FrontdeskDashboard() {
               </h4>
               {(application.citizenProfile?.phone ||
                 application.citizenPhone) && (
-                <p className="flex items-center gap-2 text-sm">
-                  <Phone className="w-4 h-4 text-blue-500" />
-                  <span>
-                    {application.citizenProfile?.phone ||
-                      application.citizenPhone}
-                  </span>
-                </p>
+                <div className="space-y-1">
+                  <p className="flex items-center gap-2 text-sm">
+                    <Phone className="w-4 h-4 text-blue-500" />
+                    <span>
+                      {application.citizenProfile?.phone ||
+                        application.citizenPhone}
+                    </span>
+                  </p>
+                  {application.citizenAlternateNumber && (
+                    <p className="flex items-center gap-2 text-sm text-slate-600 ml-6">
+                      <span>Alt: {application.citizenAlternateNumber}</span>
+                    </p>
+                  )}
+                </div>
               )}
               {(application.citizenProfile?.address ||
                 application.citizenAddress) && (
@@ -1057,7 +1201,7 @@ export default function FrontdeskDashboard() {
         </Card>
       </div>
 
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <div className="flex items-center gap-4">
           <Label htmlFor="category-filter" className="text-sm font-medium">
             Filter by Category:
@@ -1087,7 +1231,7 @@ export default function FrontdeskDashboard() {
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </div> */}
 
       <Tabs defaultValue="active" className="w-full">
         <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto p-1 bg-gray-100 rounded-lg">
@@ -1098,7 +1242,12 @@ export default function FrontdeskDashboard() {
             <div className="flex flex-col items-center gap-1">
               <span>Active</span>
               <Badge variant="secondary" className="text-xs">
-                {data?.summary?.active || 0}
+                {data ? getFilteredCount(data.activeApplications) : 0}
+                {selectedCategoryFilter !== "all" && data && (
+                  <span className="text-gray-500">
+                    /{data.activeApplications.length}
+                  </span>
+                )}
               </Badge>
             </div>
           </TabsTrigger>
@@ -1109,7 +1258,12 @@ export default function FrontdeskDashboard() {
             <div className="flex flex-col items-center gap-1">
               <span>Forwarded</span>
               <Badge variant="secondary" className="text-xs">
-                {data?.summary?.forwardedOut || 0}
+                {data ? getFilteredCount(data.forwardedOutByMe) : 0}
+                {selectedCategoryFilter !== "all" && data && (
+                  <span className="text-gray-500">
+                    /{data.forwardedOutByMe.length}
+                  </span>
+                )}
               </Badge>
             </div>
           </TabsTrigger>
@@ -1120,7 +1274,12 @@ export default function FrontdeskDashboard() {
             <div className="flex flex-col items-center gap-1">
               <span>Received</span>
               <Badge variant="secondary" className="text-xs">
-                {data?.summary?.received || 0}
+                {data ? getFilteredCount(data.receivedByMe) : 0}
+                {selectedCategoryFilter !== "all" && data && (
+                  <span className="text-gray-500">
+                    /{data.receivedByMe.length}
+                  </span>
+                )}
               </Badge>
             </div>
           </TabsTrigger>
@@ -1131,7 +1290,12 @@ export default function FrontdeskDashboard() {
             <div className="flex flex-col items-center gap-1">
               <span>Completed</span>
               <Badge variant="secondary" className="text-xs">
-                {data?.summary?.completed || 0}
+                {data ? getFilteredCount(data.completedApplications || []) : 0}
+                {selectedCategoryFilter !== "all" && data && (
+                  <span className="text-gray-500">
+                    /{data.completedApplications?.length || 0}
+                  </span>
+                )}
               </Badge>
             </div>
           </TabsTrigger>
@@ -1160,17 +1324,27 @@ export default function FrontdeskDashboard() {
                 </p>
               </Card>
             ) : (
-              <div className="space-y-4">
-                {filterApplicationsByCategory(data.activeApplications).map(
-                  (app) => (
+              <>
+                <div className="space-y-4">
+                  {paginateApplications(
+                    filterApplicationsByCategory(data.activeApplications),
+                    "active"
+                  ).map((app) => (
                     <ApplicationCard
                       key={app.id}
                       application={app}
                       showForwardButton={true}
                     />
-                  )
-                )}
-              </div>
+                  ))}
+                </div>
+                <PaginationComponent
+                  tabKey="active"
+                  totalItems={data.activeApplications.length}
+                  filteredItemsCount={
+                    filterApplicationsByCategory(data.activeApplications).length
+                  }
+                />
+              </>
             )}
           </div>
         </TabsContent>
@@ -1199,17 +1373,27 @@ export default function FrontdeskDashboard() {
                 </p>
               </Card>
             ) : (
-              <div className="space-y-4">
-                {filterApplicationsByCategory(data.forwardedOutByMe).map(
-                  (app: Application) => (
+              <>
+                <div className="space-y-4">
+                  {paginateApplications(
+                    filterApplicationsByCategory(data.forwardedOutByMe),
+                    "forwardedOut"
+                  ).map((app: Application) => (
                     <ForwardedHistoryCard
                       key={app.id}
                       application={app}
                       type="outgoing"
                     />
-                  )
-                )}
-              </div>
+                  ))}
+                </div>
+                <PaginationComponent
+                  tabKey="forwardedOut"
+                  totalItems={data.forwardedOutByMe.length}
+                  filteredItemsCount={
+                    filterApplicationsByCategory(data.forwardedOutByMe).length
+                  }
+                />
+              </>
             )}
           </div>
         </TabsContent>
@@ -1238,17 +1422,27 @@ export default function FrontdeskDashboard() {
                 </p>
               </Card>
             ) : (
-              <div className="space-y-4">
-                {filterApplicationsByCategory(data.receivedByMe).map(
-                  (app: Application) => (
+              <>
+                <div className="space-y-4">
+                  {paginateApplications(
+                    filterApplicationsByCategory(data.receivedByMe),
+                    "received"
+                  ).map((app: Application) => (
                     <ForwardedHistoryCard
                       key={app.id}
                       application={app}
                       type="incoming"
                     />
-                  )
-                )}
-              </div>
+                  ))}
+                </div>
+                <PaginationComponent
+                  tabKey="received"
+                  totalItems={data.receivedByMe.length}
+                  filteredItemsCount={
+                    filterApplicationsByCategory(data.receivedByMe).length
+                  }
+                />
+              </>
             )}
           </div>
         </TabsContent>
@@ -1277,17 +1471,31 @@ export default function FrontdeskDashboard() {
                 </p>
               </Card>
             ) : (
-              <div className="space-y-4">
-                {filterApplicationsByCategory(
-                  data?.completedApplications || []
-                ).map((app: Application) => (
-                  <ApplicationCard
-                    key={app.id}
-                    application={app}
-                    showForwardButton={false}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="space-y-4">
+                  {paginateApplications(
+                    filterApplicationsByCategory(
+                      data?.completedApplications || []
+                    ),
+                    "completed"
+                  ).map((app: Application) => (
+                    <ApplicationCard
+                      key={app.id}
+                      application={app}
+                      showForwardButton={false}
+                    />
+                  ))}
+                </div>
+                <PaginationComponent
+                  tabKey="completed"
+                  totalItems={data?.completedApplications?.length || 0}
+                  filteredItemsCount={
+                    filterApplicationsByCategory(
+                      data?.completedApplications || []
+                    ).length
+                  }
+                />
+              </>
             )}
           </div>
         </TabsContent>

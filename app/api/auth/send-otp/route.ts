@@ -75,6 +75,7 @@ import {
   sendPasswordResetEmail,
   sendLoginOTPEmail,
 } from "@/lib/mail-new";
+import { sendOtp as sendSMSOtp } from "@/lib/thundersms.server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -88,6 +89,10 @@ export async function POST(req: NextRequest) {
     // Check if user exists
     const user = await prisma.user.findUnique({
       where: { email },
+      include: {
+        officerProfile: true,
+        citizenProfile: true,
+      },
     });
 
     if (!user) {
@@ -137,15 +142,35 @@ export async function POST(req: NextRequest) {
     } catch (emailError) {
       // Log email error but don't fail the request
       console.error("❌ Email sending error:", emailError);
-
-      // Don't fail the request if email sending fails, just log the error
-      // The OTP is still generated and stored in database
     }
+
+    // Also send SMS if user has a phone number
+    let smsResult = null;
+    if (user.phone) {
+      try {
+        console.log("📱 Attempting to send SMS OTP to:", user.phone);
+        smsResult = await sendSMSOtp(user.phone, user.id, type);
+
+        if (smsResult.success) {
+          console.log("✅ SMS OTP SENT SUCCESSFULLY TO:", user.phone);
+        } else {
+          console.error("❌ SMS sending failed:", smsResult.error);
+        }
+      } catch (smsError) {
+        console.error("❌ SMS sending error:", smsError);
+      }
+    }
+
+    const successMessage = user.phone
+      ? "OTP sent successfully to your email and phone number"
+      : "OTP sent successfully to your email";
 
     return NextResponse.json({
       success: true,
-      message:
-        "OTP sent successfully to your email and logged to console for development",
+      message: successMessage,
+      emailSent: true,
+      smsSent: smsResult?.success || false,
+      phone: user.phone ? user.phone.replace(/(\d{6})\d{4}/, "$1****") : null, // Mask phone for security
     });
   } catch (error) {
     console.error("Send OTP error:", error);

@@ -43,6 +43,7 @@ interface ApplicationData {
   status: string;
   citizenName: string;
   citizenPhone: string;
+  citizenAlternateNumber?: string | null;
   serviceCategoryName: string;
   departmentName: string;
   submittedAt: string | null;
@@ -382,90 +383,117 @@ export default function TrackApplicationPage() {
         icon: typeof FileText;
         bgColor: string;
         textColor: string;
+        borderColor: string;
       }
     > = {
       DRAFT: {
         color: "secondary",
         icon: FileText,
-        bgColor: "bg-slate-100",
+        bgColor: "bg-slate-50",
         textColor: "text-slate-700",
+        borderColor: "border-slate-200",
       },
       PENDING: {
         color: "outline",
         icon: Clock,
-        bgColor: "bg-amber-100",
+        bgColor: "bg-amber-50",
         textColor: "text-amber-700",
+        borderColor: "border-amber-200",
       },
       VALIDATED: {
         color: "secondary",
         icon: CheckCircle,
-        bgColor: "bg-blue-100",
+        bgColor: "bg-blue-50",
         textColor: "text-blue-700",
+        borderColor: "border-blue-200",
       },
       OPEN: {
         color: "outline",
         icon: Clock,
-        bgColor: "bg-purple-100",
+        bgColor: "bg-purple-50",
         textColor: "text-purple-700",
+        borderColor: "border-purple-200",
       },
       IN_PROGRESS: {
         color: "secondary",
         icon: Clock,
-        bgColor: "bg-blue-100",
-        textColor: "text-blue-700",
+        bgColor: "bg-cyan-50",
+        textColor: "text-cyan-700",
+        borderColor: "border-cyan-200",
       },
       RESOLVED: {
         color: "default",
         icon: CheckCircle,
-        bgColor: "bg-green-100",
+        bgColor: "bg-green-50",
         textColor: "text-green-700",
+        borderColor: "border-green-200",
       },
       CLOSED: {
         color: "destructive",
         icon: XCircle,
-        bgColor: "bg-red-100",
+        bgColor: "bg-red-50",
         textColor: "text-red-700",
+        borderColor: "border-red-200",
       },
       REOPENED: {
         color: "secondary",
         icon: RotateCcw,
-        bgColor: "bg-yellow-100",
+        bgColor: "bg-yellow-50",
         textColor: "text-yellow-700",
+        borderColor: "border-yellow-200",
       },
     };
 
     const config = statusConfig[status] || {
       color: "secondary" as const,
       icon: AlertCircle,
-      bgColor: "bg-muted",
-      textColor: "text-muted-foreground",
+      bgColor: "bg-slate-50",
+      textColor: "text-slate-600",
+      borderColor: "border-slate-200",
     };
     const Icon = config.icon;
 
     return (
       <div
-        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${config.bgColor} ${config.textColor}`}
+        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${config.bgColor} ${config.textColor} ${config.borderColor} shadow-sm`}
       >
         <Icon size={14} />
-        {status.replace(/_/g, " ")}
+        <span className="capitalize">
+          {status.replace(/_/g, " ").toLowerCase()}
+        </span>
       </div>
     );
   };
 
   const getProgressValue = (status: string) => {
     // Progress mapping based on ApplicationStatus in schema.prisma
-    // DRAFT: 10, PENDING: 25, VALIDATED: 40, OPEN: 50, IN_PROGRESS: 60, RESOLVED: 90, CLOSED: 100, REOPENED: 60
+    // DRAFT: 10, PENDING: 25, VALIDATED: 40, OPEN: 50, IN_PROGRESS: 60, RESOLVED: 100, CLOSED: 100, REOPENED: 60
     const progressMap: Record<string, number> = {
       DRAFT: 10,
       PENDING: 25,
       VALIDATED: 40,
       OPEN: 50,
       IN_PROGRESS: 60,
-      RESOLVED: 90,
+      RESOLVED: 100,
       CLOSED: 100,
       REOPENED: 60,
     };
     return progressMap[status] || 0;
+  };
+
+  const getProgressBarColor = (status: string) => {
+    // Color mapping for progress bars
+    const colorMap: Record<string, string> = {
+      DRAFT: "#64748b", // slate
+      PENDING: "#f59e0b", // amber
+      VALIDATED: "#3b82f6", // blue
+      OPEN: "#8b5cf6", // purple
+      IN_PROGRESS: "#06b6d4", // cyan
+      RESOLVED: "#10b981", // green
+      CLOSED: "#ef4444", // red
+      REOPENED: "#f59e0b", // amber
+    };
+    return colorMap[status] || "#64748b";
   };
 
   // Applications list view for phone number tracking
@@ -550,20 +578,20 @@ export default function TrackApplicationPage() {
               {applicationsData.map((app) => (
                 <Card
                   key={app.id}
-                  className="border-0 shadow-lg bg-white hover:shadow-xl transition-all duration-300 cursor-pointer group"
+                  className="border border-slate-200 shadow-md bg-white hover:shadow-xl hover:border-blue-300 transition-all duration-300 cursor-pointer group rounded-xl overflow-hidden"
                   onClick={() => handleSelectApplication(app.id)}
                 >
-                  <CardHeader className="pb-4">
+                  <CardHeader className="pb-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <CardTitle className="text-lg text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                        <CardTitle className="text-lg text-slate-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
                           {app.serviceCategoryName}
                         </CardTitle>
                         <p className="text-emerald-600 font-medium mb-2 text-sm">
                           Department: {app.departmentName}
                         </p>
                         {app.subject && (
-                          <p className="text-blue-600 font-medium mb-2 text-sm">
+                          <p className="text-blue-600 font-medium mb-2 text-sm line-clamp-1">
                             {app.subject}
                           </p>
                         )}
@@ -576,19 +604,21 @@ export default function TrackApplicationPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {/* Progress Bar */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-slate-600">Progress</span>
-                        <span className="font-medium text-slate-900">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-600 font-medium">
+                          Progress
+                        </span>
+                        <span className="font-semibold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-full text-xs">
                           {getProgressValue(app.status)}%
                         </span>
                       </div>
-                      <div className="w-full bg-slate-200 rounded-full h-2">
+                      <div className="w-full bg-slate-200 rounded-full h-2.5 shadow-inner">
                         <div
-                          className="h-2 rounded-full transition-all duration-300"
+                          className="h-2.5 rounded-full transition-all duration-500 ease-out shadow-sm"
                           style={{
                             width: `${getProgressValue(app.status)}%`,
-                            backgroundColor: "#1170cd",
+                            backgroundColor: getProgressBarColor(app.status),
                           }}
                         />
                       </div>
@@ -643,7 +673,7 @@ export default function TrackApplicationPage() {
               {applicationsData.map((app) => (
                 <Card
                   key={app.id}
-                  className="border-0 shadow-lg bg-white hover:shadow-xl transition-all duration-300 cursor-pointer group"
+                  className="border border-slate-200 shadow-md bg-white hover:shadow-xl hover:border-blue-300 transition-all duration-300 cursor-pointer group rounded-xl"
                   onClick={() => handleSelectApplication(app.id)}
                 >
                   <CardContent className="p-6">
@@ -717,7 +747,9 @@ export default function TrackApplicationPage() {
                                   className="h-2 rounded-full transition-all duration-300"
                                   style={{
                                     width: `${getProgressValue(app.status)}%`,
-                                    backgroundColor: "#1170cd",
+                                    backgroundColor: getProgressBarColor(
+                                      app.status
+                                    ),
                                   }}
                                 />
                               </div>
@@ -803,8 +835,8 @@ export default function TrackApplicationPage() {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Status Overview Card */}
-              <Card className="border-0 shadow-lg bg-white">
-                <CardHeader className="pb-4">
+              <Card className="border border-slate-200 shadow-lg bg-white rounded-xl overflow-hidden">
+                <CardHeader className="pb-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                       <CardTitle className="text-xl text-slate-900">
@@ -827,19 +859,23 @@ export default function TrackApplicationPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Progress Bar */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-600">Progress</span>
-                      <span className="font-medium text-slate-900">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-slate-600 font-medium">
+                        Progress
+                      </span>
+                      <span className="font-semibold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-full text-xs">
                         {getProgressValue(applicationData.status)}%
                       </span>
                     </div>
-                    <div className="w-full bg-slate-200 rounded-full h-2">
+                    <div className="w-full bg-slate-200 rounded-full h-3 shadow-inner">
                       <div
-                        className="h-2 rounded-full transition-all duration-300"
+                        className="h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
                         style={{
                           width: `${getProgressValue(applicationData.status)}%`,
-                          backgroundColor: "#1170cd",
+                          backgroundColor: getProgressBarColor(
+                            applicationData.status
+                          ),
                         }}
                       />
                     </div>
@@ -861,9 +897,16 @@ export default function TrackApplicationPage() {
                         <Phone className="w-4 h-4" />
                         Contact Number
                       </div>
-                      <p className="font-semibold text-slate-900">
-                        {applicationData.citizenPhone}
-                      </p>
+                      <div className="space-y-1">
+                        <p className="font-semibold text-slate-900">
+                          {applicationData.citizenPhone}
+                        </p>
+                        {applicationData.citizenAlternateNumber && (
+                          <p className="text-sm text-slate-600">
+                            Alt: {applicationData.citizenAlternateNumber}
+                          </p>
+                        )}
+                      </div>
                     </div>
                     <div className="space-y-1">
                       <div className="flex items-center gap-2 text-slate-600 text-sm">
@@ -933,10 +976,10 @@ export default function TrackApplicationPage() {
               </Card>
 
               {/* Timeline Card */}
-              <Card className="border-0 shadow-lg bg-white">
-                <CardHeader>
+              <Card className="border border-slate-200 shadow-lg bg-white rounded-xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
                   <CardTitle className="flex items-center gap-2 text-xl text-slate-900">
-                    <Clock className="w-5 h-5" />
+                    <Clock className="w-5 h-5 text-blue-600" />
                     Application Timeline
                   </CardTitle>
                   <CardDescription>
@@ -1047,8 +1090,8 @@ export default function TrackApplicationPage() {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Quick Actions */}
-              <Card className="border-0 shadow-lg bg-white">
-                <CardHeader>
+              <Card className="border border-slate-200 shadow-lg bg-white rounded-xl">
+                <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
                   <CardTitle className="text-lg text-slate-900">
                     Quick Actions
                   </CardTitle>
@@ -1077,8 +1120,8 @@ export default function TrackApplicationPage() {
 
               {/* Validation Details */}
               {applicationData.validation && (
-                <Card className="border-0 shadow-lg bg-white">
-                  <CardHeader>
+                <Card className="border border-slate-200 shadow-lg bg-white rounded-xl">
+                  <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
                     <CardTitle className="text-lg text-slate-900">
                       Validation Details
                     </CardTitle>

@@ -69,6 +69,7 @@ export async function GET(
         status: application.status,
         citizenName: application.citizenName,
         citizenPhone: application.citizenPhone,
+        citizenAlternateNumber: application.citizenAlternateNumber,
         serviceCategoryName: application.serviceCategory.name,
         submittedAt: application.submittedAt,
         validatedAt: application.validatedAt,

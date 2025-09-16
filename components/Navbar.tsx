@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { User, Menu, X, LogIn } from "lucide-react";
+import { User, Menu, X, LogIn, HelpCircle } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
@@ -41,6 +41,19 @@ export default function Navbar() {
 
           {/* Desktop: Three Images and Login/UserNav */}
           <div className="hidden sm:flex items-center space-x-4 flex-shrink-0">
+            {/* Support Link */}
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="text-[#1170CD] hover:bg-[#1170CD]/10 font-medium"
+            >
+              <Link href="/support" className="flex items-center space-x-2">
+                <HelpCircle className="w-4 h-4" />
+                <span className="hidden lg:inline">Support</span>
+              </Link>
+            </Button>
+
             {/* Three rounded images */}
             <div className="flex items-center space-x-2">
               <Image
@@ -174,6 +187,21 @@ export default function Navbar() {
                     </Link>
                   </Button>
                   <Button
+                    asChild
+                    variant="ghost"
+                    size="default"
+                    className="text-[#1170CD] font-medium w-full max-w-xs"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Link
+                      href="/support"
+                      className="w-full text-center flex items-center justify-center space-x-2"
+                    >
+                      <HelpCircle className="w-4 h-4" />
+                      <span>Support</span>
+                    </Link>
+                  </Button>
+                  <Button
                     variant="outline"
                     size="default"
                     className="border-[#1170CD] text-[#1170CD] hover:bg-[#1170CD] hover:text-white font-medium w-full max-w-xs"
@@ -186,23 +214,40 @@ export default function Navbar() {
                   </Button>
                 </div>
               ) : (
-                <Button
-                  asChild
-                  variant="outline"
-                  size="default"
-                  className="group relative border-2 border-[#1170CD] bg-card text-[#1170CD] hover:bg-[#1170CD] hover:text-white font-medium px-6 py-2.5 transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#1170CD]/20 hover:border-[#0d5aa7] focus:ring-2 focus:ring-[#1170CD]/30 focus:ring-offset-2 rounded-lg w-full max-w-xs"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Link
-                    href="/login"
-                    className="flex items-center justify-center space-x-2.5"
+                <div className="w-full flex flex-col items-center space-y-3">
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="default"
+                    className="text-[#1170CD] font-medium w-full max-w-xs"
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <LogIn className="w-4 h-4 transition-transform duration-300 group-hover:scale-105" />
-                    <span className="text-sm font-medium tracking-wide">
-                      Portal Login
-                    </span>
-                  </Link>
-                </Button>
+                    <Link
+                      href="/support"
+                      className="w-full text-center flex items-center justify-center space-x-2"
+                    >
+                      <HelpCircle className="w-4 h-4" />
+                      <span>Support</span>
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="default"
+                    className="group relative border-2 border-[#1170CD] bg-card text-[#1170CD] hover:bg-[#1170CD] hover:text-white font-medium px-6 py-2.5 transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-[#1170CD]/20 hover:border-[#0d5aa7] focus:ring-2 focus:ring-[#1170CD]/30 focus:ring-offset-2 rounded-lg w-full max-w-xs"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Link
+                      href="/login"
+                      className="flex items-center justify-center space-x-2.5"
+                    >
+                      <LogIn className="w-4 h-4 transition-transform duration-300 group-hover:scale-105" />
+                      <span className="text-sm font-medium tracking-wide">
+                        Portal Login
+                      </span>
+                    </Link>
+                  </Button>
+                </div>
               )}
             </div>
           </div>
