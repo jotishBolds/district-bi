@@ -252,6 +252,13 @@ export const authOptions: AuthOptions = {
           token.designation = undefined;
         }
       }
+      
+      // Clear OTP verification requirement after successful OTP verification
+      if (token.requiresOtpVerification && user?.requiresOtpVerification === false) {
+        token.requiresOtpVerification = false;
+        token.requiresOtp = false;
+      }
+      
       return token;
     },
     async session({ session, token }) {

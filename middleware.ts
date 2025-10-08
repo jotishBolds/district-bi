@@ -20,8 +20,8 @@ export async function middleware(request: NextRequest) {
   ];
   const isPublicPath = publicPaths.includes(path);
 
-  // Special handling for OTP verification
-  if (path === "/verify-otp") {
+  // Special handling for OTP verification paths
+  if (path === "/verify-otp" || path === "/verify-otp-enhanced") {
     // Only allow access to verify-otp if coming from login or with email query param
     const email = request.nextUrl.searchParams.get("email");
     const referer = request.headers.get("referer") || "";

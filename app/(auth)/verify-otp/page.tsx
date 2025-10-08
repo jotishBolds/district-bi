@@ -72,14 +72,7 @@ function OtpVerificationContent() {
     return () => clearInterval(interval);
   }, [email, router]);
 
-  // Watch for session changes after successful login
-  useEffect(() => {
-    if (status === "authenticated" && session) {
-      console.log("✅ Session established, redirecting to dashboard");
-      toast.success("Authentication successful!");
-      router.push("/dashboard");
-    }
-  }, [status, session, router]);
+  // Removed session watcher to prevent redirect loops
 
   const handleInputChange = (index: number, value: string) => {
     if (value.length > 1) {
@@ -200,16 +193,12 @@ function OtpVerificationContent() {
           }
 
           if (signInResult?.ok) {
-            // Don't redirect immediately, let the session useEffect handle it
-            console.log("✅ SignIn successful, waiting for session...");
-
-            // Set a timeout in case session doesn't establish
-            setTimeout(() => {
-              if (status !== "authenticated") {
-                console.log("⏰ Session timeout, forcing redirect");
-                router.push("/dashboard");
-              }
-            }, 3000); // 3 second timeout
+            console.log("✅ SignIn successful, redirecting immediately...");
+            toast.success("Login successful! Redirecting to dashboard...");
+            
+            // Force immediate redirect to dashboard
+            await router.push("/dashboard");
+            return;
           } else {
             throw new Error("Session creation failed - unknown error");
           }

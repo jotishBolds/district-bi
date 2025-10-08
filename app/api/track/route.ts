@@ -123,72 +123,92 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Send OTP via SMS/Email
-    const targetContact =
-      type === "RR_NUMBER"
-        ? application.citizenEmail || application.citizenPhone
-        : application.citizenPhone;
+    // Send OTP via SMS/Email - prioritize sending to both when both exist
+    let emailSent = false;
+    let smsSent = false;
+    const targetContacts = [];
+
+    if (type === "RR_NUMBER") {
+      // For RR tracking, send to both email and phone if both exist
+      if (application.citizenEmail) {
+        targetContacts.push({ type: "email", contact: application.citizenEmail });
+      }
+      if (application.citizenPhone) {
+        targetContacts.push({ type: "phone", contact: application.citizenPhone });
+      }
+    } else {
+      // For phone tracking, only send to phone
+      if (application.citizenPhone) {
+        targetContacts.push({ type: "phone", contact: application.citizenPhone });
+      }
+    }
 
     // Console log for debugging
     console.log("=".repeat(50));
     console.log("🔐 APPLICATION TRACKING OTP");
     console.log("📱 IDENTIFIER:", identifier);
-    console.log("📧 SENT TO:", targetContact);
-    console.log("� OTP CODE:", otp);
+    console.log("📧 SENDING TO:", targetContacts.map(tc => `${tc.type}: ${tc.contact}`).join(', '));
+    console.log("🔐 OTP CODE:", otp);
     console.log("⏰ EXPIRES IN: 10 minutes");
     console.log("=".repeat(50));
 
     try {
-      // Send SMS if phone number
-      if (targetContact && /^\d{10}$/.test(targetContact.replace(/\D/g, ""))) {
-        const { sendSms, generateOTPMessage } = await import(
-          "@/lib/thundersms.server"
-        );
-        const message = generateOTPMessage(otp, 10);
-        const smsResult = await sendSms(targetContact, message, {
-          templateId: process.env.THUNDERSMS_TEMPLATE_ID,
-          custRef: `track_${Date.now()}`,
-        });
+      // Send SMS to all phone numbers
+      for (const target of targetContacts.filter(t => t.type === "phone")) {
+        if (target.contact && /^\d{10}$/.test(target.contact.replace(/\D/g, ""))) {
+          const { sendSms, generateOTPMessage } = await import(
+            "@/lib/thundersms.server"
+          );
+          const message = generateOTPMessage(otp, 10);
+          const smsResult = await sendSms(target.contact, message, {
+            templateId: process.env.THUNDERSMS_TEMPLATE_ID,
+            custRef: `track_${Date.now()}`,
+          });
 
-        if (smsResult.success) {
-          console.log("✅ SMS OTP SENT SUCCESSFULLY TO:", targetContact);
-        } else {
-          console.error("❌ SMS sending failed:", smsResult);
+          if (smsResult.success) {
+            console.log("✅ SMS OTP SENT SUCCESSFULLY TO:", target.contact);
+            smsSent = true;
+          } else {
+            console.error("❌ SMS sending failed:", smsResult);
+          }
         }
       }
 
-      // Send Email if email address
-      if (
-        targetContact &&
-        targetContact.includes("@") &&
-        application.citizenEmail
-      ) {
-        const { sendOTPEmail } = await import("@/lib/mail-new");
-        await sendOTPEmail(application.citizenEmail, otp);
-        console.log(
-          "✅ EMAIL OTP SENT SUCCESSFULLY TO:",
-          application.citizenEmail
-        );
+      // Send Email to all email addresses
+      for (const target of targetContacts.filter(t => t.type === "email")) {
+        if (target.contact && target.contact.includes("@")) {
+          const { sendOTPEmail } = await import("@/lib/mail-new");
+          await sendOTPEmail(target.contact, otp);
+          console.log("✅ EMAIL OTP SENT SUCCESSFULLY TO:", target.contact);
+          emailSent = true;
+        }
       }
     } catch (error) {
       console.error("❌ Error sending OTP:", error);
       // Don't fail the request if sending fails, OTP is still valid
     }
 
+    // Determine sent method for response
+    let sentToType = "none";
+    if (emailSent && smsSent) {
+      sentToType = "both";
+    } else if (emailSent) {
+      sentToType = "email";
+    } else if (smsSent) {
+      sentToType = "phone";
+    }
+
     return NextResponse.json({
       message: "OTP sent successfully",
-      sentTo:
-        type === "RR_NUMBER"
-          ? application.citizenEmail
-            ? "email"
-            : "phone"
-          : "phone",
+      sentTo: sentToType,
       maskedContact:
         type === "RR_NUMBER"
-          ? application.citizenEmail
-            ? application.citizenEmail.replace(/(.{2}).*(@.*)/, "$1***$2")
-            : application.citizenPhone.replace(/(.{2}).*(.{2})/, "$1***$2")
-          : application.citizenPhone.replace(/(.{2}).*(.{2})/, "$1***$2"),
+          ? targetContacts.length > 1
+            ? "email and phone"
+            : targetContacts[0]?.type === "email"
+            ? application.citizenEmail?.replace(/(.{2}).*(@.*)/, "$1***$2")
+            : application.citizenPhone?.replace(/(.{2}).*(.{2})/, "$1***$2")
+          : application.citizenPhone?.replace(/(.{2}).*(.{2})/, "$1***$2"),
     });
   } catch (error) {
     console.error("Error in track OTP request:", error);

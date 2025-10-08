@@ -64,22 +64,30 @@ function OtpVerificationContent() {
         // For login, we need to complete the authentication flow
         const result = await signIn("credentials", {
           email,
-          password: "", // Password already verified
+          password: "verified-by-otp", // Use the special password to trigger OTP verification flow
           redirect: false,
           callbackUrl: "/dashboard",
         });
 
         if (result?.error) {
+          console.error("Login completion failed:", result.error);
           toast.error("Failed to complete login");
           return;
         }
 
-        toast.success(
-          `Login successful via ${
-            method === OtpMethod.EMAIL ? "Email" : "SMS"
-          }!`
-        );
-        router.push("/dashboard");
+        if (result?.ok) {
+          toast.success(
+            `Login successful via ${
+              method === OtpMethod.EMAIL ? "Email" : "SMS"
+            }!`
+          );
+          // Force immediate redirect
+          await router.push("/dashboard");
+          return;
+        } else {
+          toast.error("Failed to establish session");
+          return;
+        }
       } else {
         // For other verification types, redirect accordingly
         toast.success(
