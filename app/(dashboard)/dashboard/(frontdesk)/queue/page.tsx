@@ -64,6 +64,7 @@ import {
   List,
   Filter,
   X,
+  Info,
 } from "lucide-react";
 
 interface QueuedApplication {
@@ -553,6 +554,22 @@ export default function ApplicationQueuePage() {
                           {getDocumentTypeLabel(doc.documentType)}
                         </Badge>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* Frontdesk Assigned User Notice */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div className="flex items-start">
+                      <Info className="h-4 w-4 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
+                      <div className="text-sm text-blue-800">
+                        <p className="font-medium mb-1">Document Access</p>
+                        <p>
+                          Documents can be viewed after pulling the application.
+                          This ensures proper assignment tracking and maintains
+                          data security by only allowing access to applications
+                          you&apos;re actively handling.
+                        </p>
+                      </div>
                     </div>
                   </div>
 

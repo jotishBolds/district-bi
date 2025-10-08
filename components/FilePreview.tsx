@@ -16,7 +16,6 @@ interface Document {
   fileName: string;
   fileSize: number;
   documentType: string;
-  isVerified: boolean;
 }
 
 interface FilePreviewModalProps {
@@ -116,24 +115,10 @@ const FilePreviewModal = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
         <DialogHeader className="flex-shrink-0">
-          <DialogTitle className="flex items-center justify-between">
-            <span className="truncate">{document.fileName}</span>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
-          </DialogTitle>
+          <DialogTitle className="truncate">{document.fileName}</DialogTitle>
           <div className="flex items-center gap-4 text-sm text-muted-foreground text-left">
             <span>Size: {formatFileSize(document.fileSize)}</span>
             <span>Type: {document.documentType.replace("_", " ")}</span>
-            <span
-              className={`px-2 py-1 rounded-full text-xs ${
-                document.isVerified
-                  ? "bg-green-100 text-green-800"
-                  : "bg-yellow-100 text-yellow-800"
-              }`}
-            >
-              {document.isVerified ? "Verified" : "Pending Verification"}
-            </span>
           </div>
         </DialogHeader>
 

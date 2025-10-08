@@ -123,20 +123,57 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // In production, send SMS/Email here
-    // For now, console log the OTP
+    // Send OTP via SMS/Email
+    const targetContact =
+      type === "RR_NUMBER"
+        ? application.citizenEmail || application.citizenPhone
+        : application.citizenPhone;
+
+    // Console log for debugging
     console.log("=".repeat(50));
     console.log("🔐 APPLICATION TRACKING OTP");
     console.log("📱 IDENTIFIER:", identifier);
-    console.log(
-      "📧 SENT TO:",
-      type === "RR_NUMBER"
-        ? application.citizenEmail || application.citizenPhone
-        : application.citizenPhone
-    );
-    console.log("🔐 OTP CODE:", otp);
+    console.log("📧 SENT TO:", targetContact);
+    console.log("� OTP CODE:", otp);
     console.log("⏰ EXPIRES IN: 10 minutes");
     console.log("=".repeat(50));
+
+    try {
+      // Send SMS if phone number
+      if (targetContact && /^\d{10}$/.test(targetContact.replace(/\D/g, ""))) {
+        const { sendSms, generateOTPMessage } = await import(
+          "@/lib/thundersms.server"
+        );
+        const message = generateOTPMessage(otp, 10);
+        const smsResult = await sendSms(targetContact, message, {
+          templateId: process.env.THUNDERSMS_TEMPLATE_ID,
+          custRef: `track_${Date.now()}`,
+        });
+
+        if (smsResult.success) {
+          console.log("✅ SMS OTP SENT SUCCESSFULLY TO:", targetContact);
+        } else {
+          console.error("❌ SMS sending failed:", smsResult);
+        }
+      }
+
+      // Send Email if email address
+      if (
+        targetContact &&
+        targetContact.includes("@") &&
+        application.citizenEmail
+      ) {
+        const { sendOTPEmail } = await import("@/lib/mail-new");
+        await sendOTPEmail(application.citizenEmail, otp);
+        console.log(
+          "✅ EMAIL OTP SENT SUCCESSFULLY TO:",
+          application.citizenEmail
+        );
+      }
+    } catch (error) {
+      console.error("❌ Error sending OTP:", error);
+      // Don't fail the request if sending fails, OTP is still valid
+    }
 
     return NextResponse.json({
       message: "OTP sent successfully",

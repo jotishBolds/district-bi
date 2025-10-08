@@ -370,7 +370,6 @@ export default function OfficerPullRequestsPage() {
                                 id: document.id,
                                 fileName: document.fileName,
                                 documentType: document.documentType,
-                                isVerified: true,
                                 fileSize: 0,
                               }}
                               applicationId={application.id}
@@ -466,7 +465,6 @@ export default function OfficerPullRequestsPage() {
                                   id: document.id,
                                   fileName: document.fileName,
                                   documentType: document.documentType,
-                                  isVerified: true,
                                   fileSize: 0,
                                 }}
                                 applicationId={selectedApplication.id}

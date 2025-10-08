@@ -19,6 +19,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Get search and pagination parameters
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search") || "";
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const serviceCategory = searchParams.get("serviceCategory") || "";
+    const skip = (page - 1) * limit;
+
     // Check if this frontdesk user is assigned to specific officers
     const frontdeskAssignments = await prisma.frontdeskOfficer.findMany({
       where: {
@@ -59,33 +67,71 @@ export async function GET(request: NextRequest) {
     console.log("Debug - Officer profiles:", officerProfiles);
     console.log("Debug - Officer User IDs:", officerUserIds);
 
+    // Build search conditions
+    const searchConditions = search
+      ? {
+          OR: [
+            {
+              rrNumber: {
+                contains: search,
+                mode: "insensitive" as const,
+              },
+            },
+            {
+              citizenName: {
+                contains: search,
+                mode: "insensitive" as const,
+              },
+            },
+            {
+              citizenPhone: {
+                contains: search,
+              },
+            },
+            {
+              subject: {
+                contains: search,
+                mode: "insensitive" as const,
+              },
+            },
+          ],
+        }
+      : {};
+
     // Get all applications assigned to this frontdesk's officers OR forwarded to this frontdesk
     const applications = await prisma.application.findMany({
       where: {
-        OR: [
-          // Applications currently held by this frontdesk's officers
+        AND: [
           {
-            currentHolderId: {
-              in: officerUserIds,
-            },
-          },
-          // Applications forwarded to this frontdesk (but not yet forwarded out)
-          {
-            frontdeskForwardings: {
-              some: {
-                toFrontdeskId: session.user.id,
-                isActive: true,
+            OR: [
+              // Applications currently held by this frontdesk's officers
+              {
+                currentHolderId: {
+                  in: officerUserIds,
+                },
               },
+              // Applications forwarded to this frontdesk (but not yet forwarded out)
+              {
+                frontdeskForwardings: {
+                  some: {
+                    toFrontdeskId: session.user.id,
+                    isActive: true,
+                  },
+                },
+              },
+            ],
+            status: {
+              in: [ApplicationStatus.IN_PROGRESS, ApplicationStatus.REOPENED],
             },
           },
+          searchConditions,
+          ...(serviceCategory ? [{ serviceCategoryId: serviceCategory }] : []),
         ],
-        status: {
-          in: [ApplicationStatus.IN_PROGRESS, ApplicationStatus.REOPENED],
-        },
       },
       include: {
         serviceCategory: {
           select: {
+            id: true,
             name: true,
             color: true,
           },
@@ -195,10 +241,11 @@ export async function GET(request: NextRequest) {
         : false;
 
       // Check if this application was forwarded TO this frontdesk (received)
-      const forwardedToMe = app.frontdeskForwardings.some(
-        (forwarding) =>
-          forwarding.toFrontdeskId === session.user.id && forwarding.isActive
-      );
+      const forwardedToMe =
+        app.frontdeskForwardings?.some(
+          (forwarding) =>
+            forwarding.toFrontdeskId === session.user.id && forwarding.isActive
+        ) || false;
 
       // Application is active if it's held by my officers OR forwarded to me
       // Even if it was previously forwarded by me, if it's back with my officers, it's active
@@ -208,12 +255,17 @@ export async function GET(request: NextRequest) {
     // Get applications forwarded OUT by this frontdesk (complete history)
     const forwardedOutByMe = await prisma.application.findMany({
       where: {
-        frontdeskForwardings: {
-          some: {
-            fromFrontdeskId: session.user.id,
-            // Don't filter by isActive - show complete history
+        AND: [
+          {
+            frontdeskForwardings: {
+              some: {
+                fromFrontdeskId: session.user.id,
+                // Don't filter by isActive - show complete history
+              },
+            },
           },
-        },
+          searchConditions,
+        ],
       },
       include: {
         serviceCategory: {
@@ -250,12 +302,17 @@ export async function GET(request: NextRequest) {
     // Get applications forwarded TO this frontdesk (complete history)
     const receivedByMe = await prisma.application.findMany({
       where: {
-        frontdeskForwardings: {
-          some: {
-            toFrontdeskId: session.user.id,
-            // Don't filter by isActive - show complete history
+        AND: [
+          {
+            frontdeskForwardings: {
+              some: {
+                toFrontdeskId: session.user.id,
+                // Don't filter by isActive - show complete history
+              },
+            },
           },
-        },
+          searchConditions,
+        ],
       },
       include: {
         serviceCategory: {
@@ -297,25 +354,30 @@ export async function GET(request: NextRequest) {
     // Get completed/closed applications for this frontdesk
     const completedApplications = await prisma.application.findMany({
       where: {
-        OR: [
-          // Applications currently held by this frontdesk's officers
+        AND: [
           {
-            currentHolderId: {
-              in: officerUserIds,
-            },
-          },
-          // Applications that were forwarded to this frontdesk
-          {
-            frontdeskForwardings: {
-              some: {
-                toFrontdeskId: session.user.id,
+            OR: [
+              // Applications currently held by this frontdesk's officers
+              {
+                currentHolderId: {
+                  in: officerUserIds,
+                },
               },
+              // Applications that were forwarded to this frontdesk
+              {
+                frontdeskForwardings: {
+                  some: {
+                    toFrontdeskId: session.user.id,
+                  },
+                },
+              },
+            ],
+            status: {
+              in: [ApplicationStatus.RESOLVED, ApplicationStatus.CLOSED],
             },
           },
+          searchConditions,
         ],
-        status: {
-          in: [ApplicationStatus.RESOLVED, ApplicationStatus.CLOSED],
-        },
       },
       include: {
         serviceCategory: {

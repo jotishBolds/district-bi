@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -393,6 +393,8 @@ export default function UserManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [sections, setSections] = useState<{ id: string; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [dataFetched, setDataFetched] = useState(false);
+  const loadingToastShown = useRef(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -419,10 +421,7 @@ export default function UserManagement() {
       session.user.role !== UserRole.SUPER_ADMIN
     ) {
       router.push("/dashboard");
-      toast.error("You don't have permission to access this page.", {
-        duration: 4000,
-        position: "top-center",
-      });
+      // Removed toast since we're redirecting anyway
     }
   }, [session, router]);
 
@@ -466,6 +465,19 @@ export default function UserManagement() {
   // Fetch data with enhanced error handling
   useEffect(() => {
     const fetchData = async () => {
+      if (dataFetched || !session?.user || loadingToastShown.current) return; // Prevent multiple fetches and ensure session exists
+
+      // Double check authorization
+      if (
+        session.user.role !== UserRole.ADMIN &&
+        session.user.role !== UserRole.SUPER_ADMIN
+      ) {
+        return; // Don't fetch if not authorized
+      }
+
+      setDataFetched(true); // Mark as fetching to prevent duplicate calls
+      loadingToastShown.current = true; // Mark toast as shown
+
       const loadingToast = toast.loading("Loading users and sections...");
 
       try {
@@ -518,14 +530,8 @@ export default function UserManagement() {
       }
     };
 
-    if (
-      session?.user &&
-      (session.user.role === UserRole.ADMIN ||
-        session.user.role === UserRole.SUPER_ADMIN)
-    ) {
-      fetchData();
-    }
-  }, [session]);
+    fetchData();
+  }, [session?.user?.id]); // Removed dataFetched from dependencies since we handle it internally
 
   // Auto-populate role-based fields
   useEffect(() => {

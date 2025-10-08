@@ -58,6 +58,7 @@ import {
   UserPlus,
   Settings,
   AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -454,17 +455,6 @@ export default function FrontdeskManagementPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading frontdesk management...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-8">
@@ -494,122 +484,12 @@ export default function FrontdeskManagementPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="min-w-[200px]">
-                    User Information
-                  </TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Contact
-                  </TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="min-w-[150px]">
-                    Officer Assignment
-                  </TableHead>
-                  <TableHead className="hidden lg:table-cell">
-                    Created
-                  </TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {(frontdeskUsers || []).map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium">{user.email}</div>
-                        <div className="text-sm text-gray-500 md:hidden">
-                          {user.phone || "No phone"}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      <div className="text-sm">
-                        {user.phone || (
-                          <span className="text-gray-400">No phone</span>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={user.isActive ? "default" : "secondary"}>
-                        {user.isActive ? "Active" : "Inactive"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {user.frontdeskAssignments &&
-                      user.frontdeskAssignments.length > 0 ? (
-                        <div className="space-y-1">
-                          {(user.frontdeskAssignments || []).map(
-                            (assignment) => (
-                              <Badge
-                                key={assignment.id}
-                                variant="outline"
-                                className="block w-fit"
-                              >
-                                {assignment.officer?.fullName ||
-                                  "General Frontdesk"}
-                              </Badge>
-                            )
-                          )}
-                        </div>
-                      ) : (
-                        <Badge variant="secondary">Unassigned</Badge>
-                      )}
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell">
-                      <div className="text-sm text-gray-500">
-                        {new Date(user.createdAt).toLocaleDateString()}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEditUser(user)}
-                          className="flex items-center gap-1"
-                        >
-                          <Settings size={14} />
-                          <span className="hidden sm:inline">Edit</span>
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedFrontdeskUser(user);
-                            setIsAssignDialogOpen(true);
-                          }}
-                          className="flex items-center gap-1"
-                        >
-                          <User size={14} />
-                          <span className="hidden sm:inline">Assign</span>
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDeleteUser(user)}
-                          className="flex items-center gap-1 text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 size={14} />
-                          <span className="hidden sm:inline">Delete</span>
-                        </Button>
-                        <Switch
-                          checked={user.isActive}
-                          onCheckedChange={() =>
-                            toggleUserStatus(user.id, user.isActive)
-                          }
-                        />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-
-          {(frontdeskUsers || []).length === 0 && (
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin" />
+              <span className="ml-2">Loading frontdesk users...</span>
+            </div>
+          ) : (frontdeskUsers || []).length === 0 ? (
             <div className="text-center py-12">
               <UserPlus className="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -622,6 +502,123 @@ export default function FrontdeskManagementPage() {
                 <UserPlus size={16} className="mr-2" />
                 Create Frontdesk User
               </Button>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="min-w-[200px]">
+                      User Information
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Contact
+                    </TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="min-w-[150px]">
+                      Officer Assignment
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell">
+                      Created
+                    </TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {(frontdeskUsers || []).map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell>
+                        <div className="space-y-1">
+                          <div className="font-medium">{user.email}</div>
+                          <div className="text-sm text-gray-500 md:hidden">
+                            {user.phone || "No phone"}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <div className="text-sm">
+                          {user.phone || (
+                            <span className="text-gray-400">No phone</span>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={user.isActive ? "default" : "secondary"}
+                        >
+                          {user.isActive ? "Active" : "Inactive"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {user.frontdeskAssignments &&
+                        user.frontdeskAssignments.length > 0 ? (
+                          <div className="space-y-1">
+                            {(user.frontdeskAssignments || []).map(
+                              (assignment) => (
+                                <Badge
+                                  key={assignment.id}
+                                  variant="outline"
+                                  className="block w-fit"
+                                >
+                                  {assignment.officer?.fullName ||
+                                    "General Frontdesk"}
+                                </Badge>
+                              )
+                            )}
+                          </div>
+                        ) : (
+                          <Badge variant="secondary">Unassigned</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        <div className="text-sm text-gray-500">
+                          {new Date(user.createdAt).toLocaleDateString()}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditUser(user)}
+                            className="flex items-center gap-1"
+                          >
+                            <Settings size={14} />
+                            <span className="hidden sm:inline">Edit</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedFrontdeskUser(user);
+                              setIsAssignDialogOpen(true);
+                            }}
+                            className="flex items-center gap-1"
+                          >
+                            <User size={14} />
+                            <span className="hidden sm:inline">Assign</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDeleteUser(user)}
+                            className="flex items-center gap-1 text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 size={14} />
+                            <span className="hidden sm:inline">Delete</span>
+                          </Button>
+                          <Switch
+                            checked={user.isActive}
+                            onCheckedChange={() =>
+                              toggleUserStatus(user.id, user.isActive)
+                            }
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           )}
         </CardContent>

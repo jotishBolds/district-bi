@@ -19,6 +19,7 @@ import {
   Building2,
   ArrowDownToLine,
   Layers,
+  Search,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -84,7 +85,6 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       href: "/dashboard/pull-requests",
       icon: ArrowDownToLine,
     },
-
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
@@ -115,6 +115,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
             name: "Queue Management",
             href: "/dashboard/queue",
             icon: ListChecks,
+          },
+          {
+            name: "Track Applications",
+            href: "/dashboard/tracking",
+            icon: Search,
           },
         ]
       : [
@@ -174,7 +179,6 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       href: "/dashboard/pull-requests",
       icon: ArrowDownToLine,
     },
-
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
@@ -327,6 +331,22 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       </div>
 
       <div className="px-3 py-4">
+        {/* Home Button */}
+        <div className="mb-4">
+          <Link
+            href="/"
+            className={cn(
+              "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
+              pathname === "/"
+                ? "bg-accent text-accent-foreground"
+                : "text-foreground hover:bg-accent/50 hover:text-accent-foreground"
+            )}
+          >
+            <Home className="h-4 w-4 flex-shrink-0" />
+            <span className="flex-1">Home</span>
+          </Link>
+        </div>
+
         <div className="mb-2 px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase">
           Main Navigation
         </div>

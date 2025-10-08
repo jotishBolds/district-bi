@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,6 +9,12 @@ import { HelpCircle, X, MessageCircle, Phone, Mail } from "lucide-react";
 
 const FloatingSupport = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const pathname = usePathname();
+
+  // Hide floating support on home page and support page
+  if (pathname === "/" || pathname === "/support") {
+    return null;
+  }
 
   const quickActions = [
     {

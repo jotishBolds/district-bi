@@ -58,7 +58,6 @@ interface Application {
     id: string;
     documentType: string;
     fileName: string;
-    isVerified: boolean;
   }>;
 }
 

@@ -3,6 +3,7 @@ import { CalendarDays, FileText, Bell } from "lucide-react";
 import { UserRole } from "@/app/generated/prisma";
 import { getServerAuthSession } from "@/lib/auth";
 import { isOfficerRole, isOfficerOrOfficial } from "@/lib/officer-roles";
+import { getGreetingIST, formatIST } from "@/lib/timezone";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -23,7 +24,8 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const today = new Date().toLocaleDateString("en-US", {
+  // Use IST timezone for date display
+  const today = formatIST(new Date(), {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -31,10 +33,8 @@ export default async function DashboardPage() {
   });
 
   const renderGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 18) return "Good afternoon";
-    return "Good evening";
+    // Use IST-based greeting
+    return getGreetingIST();
   };
 
   const renderRoleSpecificText = () => {

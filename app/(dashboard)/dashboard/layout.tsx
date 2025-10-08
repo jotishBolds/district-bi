@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Sheet } from "@/components/ui/sheet";
 import MobileSidebar from "../components/dashboard/MobileSidebar";
 import DesktopSidebar from "../components/dashboard/DesktopSidebar";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
@@ -15,9 +14,6 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-background">
-      <Sheet>
-        <MobileSidebar />
-      </Sheet>
       <DesktopSidebar userRole={session?.user?.role} />
 
       <div className="lg:pl-72">

@@ -199,12 +199,24 @@ export default function ProfilePage() {
   const handleSaveProfile = async () => {
     try {
       setSaving(true);
+
+      // Only send basic information fields that users can edit
+      const updateData = {
+        fullName: formData.fullName,
+        phone: formData.phone,
+        // Include citizen-specific fields only if user is a citizen
+        ...(profile?.citizenProfile && {
+          address: formData.address,
+          aadhaarNumber: formData.aadhaarNumber,
+        }),
+      };
+
       const response = await fetch("/api/profile", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updateData),
       });
 
       if (response.ok) {
@@ -520,97 +532,54 @@ export default function ProfilePage() {
             </div>
 
             {isOfficer ? (
-              /* Officer-specific fields */
+              /* Officer-specific fields - Read-only */
               <div className="space-y-4">
-                <h3 className="text-lg font-medium">Officer Information</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-medium">Officer Information</h3>
+                  <Badge variant="outline" className="text-xs">
+                    Read-only
+                  </Badge>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="designation">Designation</Label>
-                    {editing ? (
-                      <Input
-                        id="designation"
-                        value={formData.designation}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            designation: e.target.value,
-                          })
-                        }
-                        placeholder="Enter your designation"
-                      />
-                    ) : (
-                      <div className="p-2 bg-muted rounded-md">
-                        {formData.designation || "Not provided"}
-                      </div>
-                    )}
+                    <div className="p-2 bg-muted rounded-md">
+                      {formData.designation || "Not provided"}
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="department">Department</Label>
-                    {editing ? (
-                      <Input
-                        id="department"
-                        value={formData.department}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            department: e.target.value,
-                          })
-                        }
-                        placeholder="Enter your department"
-                      />
-                    ) : (
-                      <div className="p-2 bg-muted rounded-md">
-                        {formData.department || "Not provided"}
-                      </div>
-                    )}
+                    <div className="p-2 bg-muted rounded-md">
+                      {formData.department || "Not provided"}
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="officeLocation">Office Location</Label>
-                    {editing ? (
-                      <Input
-                        id="officeLocation"
-                        value={formData.officeLocation}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            officeLocation: e.target.value,
-                          })
-                        }
-                        placeholder="Enter your office location"
-                      />
-                    ) : (
-                      <div className="p-2 bg-muted rounded-md">
-                        {formData.officeLocation || "Not provided"}
-                      </div>
-                    )}
+                    <div className="p-2 bg-muted rounded-md">
+                      {formData.officeLocation || "Not provided"}
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="sectionId">Section</Label>
-                    {editing ? (
-                      <Select
-                        value={formData.sectionId}
-                        onValueChange={(value) =>
-                          setFormData({ ...formData, sectionId: value })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select section" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {sections.map((section) => (
-                            <SelectItem key={section.id} value={section.id}>
-                              {section.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <div className="p-2 bg-muted rounded-md">
-                        {profile.officerProfile?.section?.name ||
-                          "Not assigned"}
-                      </div>
-                    )}
+                    <div className="p-2 bg-muted rounded-md">
+                      {profile.officerProfile?.section?.name ? (
+                        <span className="flex items-center gap-2">
+                          <Building className="h-4 w-4 text-muted-foreground" />
+                          {profile.officerProfile.section.name}
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2 text-amber-600">
+                          <AlertCircle className="h-4 w-4" />
+                          Section not assigned
+                        </span>
+                      )}
+                    </div>
                   </div>
+                </div>
+                <div className="text-sm text-muted-foreground bg-blue-50 border border-blue-200 rounded-md p-3">
+                  <Shield className="h-4 w-4 inline mr-2" />
+                  Officer information can only be updated by an administrator.
+                  Contact your admin if changes are needed.
                 </div>
               </div>
             ) : (

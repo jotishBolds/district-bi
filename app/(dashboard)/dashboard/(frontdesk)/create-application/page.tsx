@@ -1120,14 +1120,7 @@ export default function CreateApplicationPage() {
                                     key={department.id}
                                     value={department.id}
                                   >
-                                    <div className="flex flex-col items-start">
-                                      <span>{department.name}</span>
-                                      {department.description && (
-                                        <span className="text-xs text-muted-foreground">
-                                          {department.description}
-                                        </span>
-                                      )}
-                                    </div>
+                                    {department.name}
                                   </SelectItem>
                                 ))}
                               </SelectContent>
@@ -1603,40 +1596,26 @@ export default function CreateApplicationPage() {
                     <div className="flex space-x-2">
                       {currentStep === 3 && (
                         <>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => goToStep(2)}
-                            size="sm"
-                          >
-                            Back
-                          </Button>
-                          {validateStep(3) && (
+                          {!allStepsCompleted() && (
                             <Button
                               type="button"
-                              onClick={() => {
-                                if (isGeneralFrontdesk) {
-                                  // For general frontdesk, scroll to submit section
-                                  const submitCard = document.querySelector(
-                                    ".bg-white\\/80.backdrop-blur-sm:last-of-type"
-                                  );
-                                  if (submitCard) {
-                                    submitCard.scrollIntoView({
-                                      behavior: "smooth",
-                                      block: "center",
-                                    });
-                                  }
-                                } else {
-                                  goToStep(4);
-                                }
-                              }}
+                              variant="outline"
+                              onClick={() => goToStep(2)}
                               size="sm"
-                              className="bg-blue-600 hover:bg-blue-700"
                             >
-                              {isGeneralFrontdesk
-                                ? "Ready to Submit"
-                                : "Next: Assignment"}
+                              Back
                             </Button>
+                          )}
+                          {validateStep(3) && (
+                            <div className="text-center py-4">
+                              <div className="inline-flex items-center space-x-2 bg-green-50 border border-green-200 rounded-lg px-4 py-2">
+                                <CheckCircle className="h-5 w-5 text-green-600" />
+                                <span className="text-sm font-medium text-green-800">
+                                  All steps completed! Click below to create
+                                  application.
+                                </span>
+                              </div>
+                            </div>
                           )}
                         </>
                       )}

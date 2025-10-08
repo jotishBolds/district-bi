@@ -78,7 +78,6 @@ interface Document {
   fileName: string;
   filePath: string;
   fileSize: number;
-  isVerified: boolean;
   verificationNotes?: string;
   createdAt: string;
   uploadedBy?: {
@@ -87,14 +86,6 @@ interface Document {
     email: string;
     citizenProfile?: {
       fullName: string;
-    };
-  };
-  verifiedBy?: {
-    id: string;
-    role: string;
-    officerProfile?: {
-      fullName: string;
-      designation: string;
     };
   };
 }

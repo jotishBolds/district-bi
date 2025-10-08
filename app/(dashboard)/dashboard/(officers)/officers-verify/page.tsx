@@ -1812,25 +1812,25 @@ const OfficerDashboard = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-muted">
             <tr>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-1/4">
                 Application
               </th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-1/6">
                 Citizen
               </th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-1/8">
                 Source
               </th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-1/6">
                 Status
               </th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-1/8">
                 Date
               </th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
                 Documents
               </th>
-              <th className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              <th className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider w-1/6">
                 Actions
               </th>
             </tr>
@@ -1845,7 +1845,7 @@ const OfficerDashboard = () => {
               return (
                 <React.Fragment key={app.id}>
                   <tr className="hover:bg-muted/50">
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap w-1/4">
                       <div className="flex flex-col">
                         <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
                           {app.subject || app.serviceCategory.name}
@@ -1872,7 +1872,7 @@ const OfficerDashboard = () => {
                         )}
                       </div>
                     </td>
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap w-1/6">
                       <div className="flex flex-col">
                         <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
                           {citizenData.fullName}
@@ -1882,7 +1882,7 @@ const OfficerDashboard = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap w-1/8">
                       {app.applicationSource && (
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${
@@ -1897,7 +1897,7 @@ const OfficerDashboard = () => {
                         </span>
                       )}
                     </td>
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap w-1/6">
                       <div className="flex flex-col gap-1">
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
@@ -1914,18 +1914,18 @@ const OfficerDashboard = () => {
                         )}
                       </div>
                     </td>
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-1/8">
                       {app.submittedAt
                         ? new Date(app.submittedAt).toLocaleDateString()
                         : "Not submitted"}
                     </td>
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-1/12">
                       <div className="flex items-center gap-1">
                         <Paperclip className="w-4 h-4" />
                         {app.documents.length}
                       </div>
                     </td>
-                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium w-1/6">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() =>
@@ -2200,7 +2200,7 @@ const OfficerDashboard = () => {
                   {/* Expanded Details Row for Table View - Same as Grid View */}
                   {showingDetails && (
                     <tr>
-                      <td colSpan={6} className="px-0 py-0">
+                      <td colSpan={7} className="px-0 py-0">
                         <div className="bg-gray-50 border-t border-gray-200 p-4 sm:p-6">
                           <div className="space-y-4">
                             {/* Forwarding Timeline - Show when "Forwarded by Me" filter is active */}

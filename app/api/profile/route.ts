@@ -10,8 +10,11 @@ import * as bcrypt from "bcryptjs";
 const updateProfileSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   phone: z.string().optional(),
+  // Citizen-specific fields
   address: z.string().optional(),
   aadhaarNumber: z.string().optional(),
+  // Officer-specific fields - these are accepted but ignored for officer users
+  // Only admins can update these through admin endpoints
   designation: z.string().optional(),
   department: z.string().optional(),
   officeLocation: z.string().optional(),
@@ -175,23 +178,13 @@ export async function PATCH(request: NextRequest) {
         });
 
         if (isOfficer) {
-          // Update officer profile
+          // Update officer profile - only allow basic information updates
           await tx.officerProfile.update({
             where: { userId: session.user.id },
             data: {
               fullName: validatedData.fullName,
-              ...(validatedData.designation && {
-                designation: validatedData.designation,
-              }),
-              ...(validatedData.department && {
-                department: validatedData.department,
-              }),
-              ...(validatedData.officeLocation && {
-                officeLocation: validatedData.officeLocation,
-              }),
-              ...(validatedData.sectionId && {
-                sectionId: validatedData.sectionId,
-              }),
+              // Officer-specific fields (designation, department, officeLocation, sectionId)
+              // are intentionally excluded - only admins can update these
               updatedAt: new Date(),
             },
           });

@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
 import {
   Home,
   FileText,
@@ -21,6 +22,7 @@ import {
   Building2,
   ArrowDownToLine,
   Layers,
+  Search,
 } from "lucide-react";
 import {
   SheetContent,
@@ -51,6 +53,38 @@ interface SidebarLink {
 export default function MobileSidebar({ userRole }: MobileSidebarProps) {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const [isGeneralFrontdesk, setIsGeneralFrontdesk] = useState<boolean | null>(
+    null
+  );
+
+  // Fetch frontdesk assignments to determine if user is general frontdesk
+  useEffect(() => {
+    const fetchFrontdeskType = async () => {
+      if (userRole !== "FRONT_DESK") return;
+
+      try {
+        const response = await fetch("/api/frontdesk/assignments");
+        if (!response.ok) return;
+
+        const data = await response.json();
+        if (data && Array.isArray(data.assignments)) {
+          // Determine if this is a general frontdesk user
+          const hasSpecificAssignments = data.assignments.some(
+            (assignment: { officerId: string | null }) =>
+              assignment.officerId !== null
+          );
+          setIsGeneralFrontdesk(!hasSpecificAssignments);
+        } else {
+          setIsGeneralFrontdesk(true); // Default to general if no assignments
+        }
+      } catch (error) {
+        console.error("Error fetching frontdesk type:", error);
+        setIsGeneralFrontdesk(true); // Default to general on error
+      }
+    };
+
+    fetchFrontdeskType();
+  }, [userRole]);
 
   const citizenLinks: SidebarLink[] = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -65,7 +99,6 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
 
   const officerLinks: SidebarLink[] = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
-    { name: "Applications", href: "/applications", icon: FileText },
     {
       name: "Assigned Applications",
       href: "/dashboard/officers-verify",
@@ -76,14 +109,52 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       href: "/dashboard/pull-requests",
       icon: ArrowDownToLine,
     },
-    { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
+    { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
+  ];
+
+  const frontDeskLinks: SidebarLink[] = [
+    { name: "Dashboard", href: "/dashboard", icon: Home },
+    ...(isGeneralFrontdesk === true
+      ? [
+          {
+            name: "Queue Overview",
+            href: "/dashboard/frontdesk-dashboard",
+            icon: ListChecks,
+          },
+        ]
+      : isGeneralFrontdesk === false
+      ? [
+          {
+            name: "Manage applications",
+            href: "/dashboard/frontdesk-dashboard",
+            icon: ClipboardList,
+          },
+          {
+            name: "Queue Management",
+            href: "/dashboard/queue",
+            icon: ListChecks,
+          },
+          {
+            name: "Track Applications",
+            href: "/dashboard/tracking",
+            icon: Search,
+          },
+        ]
+      : [
+          // Loading state - show basic links
+          {
+            name: "Validate Applications",
+            href: "/dashboard/validate-applications",
+            icon: ClipboardList,
+          },
+        ]),
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const dcLinks: SidebarLink[] = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
     {
-      name: "Application Progress",
+      name: "Application Status Report",
       href: "/dashboard/application-progress",
       icon: BarChart3,
     },
@@ -97,12 +168,11 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       href: "/dashboard/pull-requests",
       icon: ArrowDownToLine,
     },
-
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
   const adminLinks: SidebarLink[] = [
-    { name: "Dashboard", href: "/dashboard", icon: Home },
+    { name: "Dashboard", href: "/admin", icon: Home },
 
     { name: "User Management", href: "/admin/user-management", icon: Users },
     {
@@ -120,8 +190,11 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       href: "/admin/sections",
       icon: Layers,
     },
-    // { name: "System Settings", href: "/admin/settings", icon: Settings },
-    // { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
+    {
+      name: "Frontdesk Management",
+      href: "/admin/frontdesk-management",
+      icon: Shield,
+    },
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
   const dispatchLinks: SidebarLink[] = [
@@ -148,10 +221,11 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       return dispatchLinks;
     }
 
-    if (
-      userRole === UserRole.FRONT_DESK ||
-      (userRole && isOfficerOrOfficial(userRole))
-    ) {
+    if (userRole === UserRole.FRONT_DESK) {
+      return frontDeskLinks;
+    }
+
+    if (userRole && isOfficerOrOfficial(userRole)) {
       return officerLinks;
     }
 
@@ -238,6 +312,26 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
         </SheetHeader>
 
         <div className="flex-1 overflow-auto py-2">
+          {/* Home Button */}
+          <div className="px-3 py-2">
+            <SheetClose asChild>
+              <Button
+                variant={pathname === "/" ? "secondary" : "ghost"}
+                className={`w-full justify-start ${
+                  pathname === "/"
+                    ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
+                    : ""
+                }`}
+                asChild
+              >
+                <Link href="/">
+                  <Home className="h-4 w-4 mr-3" />
+                  Home
+                </Link>
+              </Button>
+            </SheetClose>
+          </div>
+
           <div className="px-3 py-2">
             <div className="mb-2 px-4 py-1.5 text-xs font-medium text-muted-foreground uppercase">
               Main Navigation

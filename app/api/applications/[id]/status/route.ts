@@ -179,8 +179,13 @@ export async function PATCH(
       case ApplicationStatus.RESOLVED:
         if (
           isOfficerRole(session.user.role) &&
-          application.status === ApplicationStatus.IN_PROGRESS &&
-          application.currentHolderId === session.user.id
+          (application.status === ApplicationStatus.IN_PROGRESS ||
+            application.status === ApplicationStatus.REOPENED) &&
+          (application.currentHolderId === session.user.id ||
+            (application.status === ApplicationStatus.REOPENED &&
+              application.officerAssignments.some(
+                (assignment) => assignment.assignedTo.id === session.user.id
+              )))
         ) {
           result = await handleResolutionTransition(
             application,
@@ -197,8 +202,13 @@ export async function PATCH(
         if (
           isOfficerRole(session.user.role) &&
           (application.status === ApplicationStatus.IN_PROGRESS ||
-            application.status === ApplicationStatus.RESOLVED) &&
-          application.currentHolderId === session.user.id
+            application.status === ApplicationStatus.RESOLVED ||
+            application.status === ApplicationStatus.REOPENED) &&
+          (application.currentHolderId === session.user.id ||
+            (application.status === ApplicationStatus.REOPENED &&
+              application.officerAssignments.some(
+                (assignment) => assignment.assignedTo.id === session.user.id
+              )))
         ) {
           result = await handleClosureTransition(
             application,
@@ -288,8 +298,14 @@ async function checkStatusChangePermission(
 
   // Officers can process their assigned applications
   if (isOfficerRole(user.role)) {
+    // Check if officer is assigned to this application
+    const isAssigned = application.officerAssignments.some(
+      (assignment) => assignment.assignedTo.id === user.id
+    );
+
     return (
-      application.currentHolderId === user.id &&
+      (application.currentHolderId === user.id ||
+        (application.status === ApplicationStatus.REOPENED && isAssigned)) &&
       // OPEN/REOPENED -> IN_PROGRESS
       (((application.status === ApplicationStatus.OPEN ||
         application.status === ApplicationStatus.REOPENED) &&
@@ -315,7 +331,11 @@ async function checkStatusChangePermission(
           )) ||
         // CLOSED -> REOPENED
         (application.status === ApplicationStatus.CLOSED &&
-          newStatus === ApplicationStatus.REOPENED))
+          newStatus === ApplicationStatus.REOPENED) ||
+        // REOPENED -> RESOLVED (allow assigned officers to resolve reopened applications)
+        (application.status === ApplicationStatus.REOPENED &&
+          newStatus === ApplicationStatus.RESOLVED &&
+          isAssigned))
     );
   }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -19,53 +19,61 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, FileText, Filter } from "lucide-react";
+import { Search, FileText, Filter, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 
-// Mock data - In a real app, you'd fetch this from your API
-const MOCK_APPLICATIONS = [
-  {
-    id: "APP-1234",
-    title: "Passport Application",
-    type: "PASSPORT",
-    status: "PENDING",
-    createdAt: new Date(2025, 4, 5),
-    updatedAt: new Date(2025, 4, 5),
-  },
-  {
-    id: "APP-2345",
-    title: "Drivers License Renewal",
-    type: "DRIVERS_LICENSE",
-    status: "APPROVED",
-    createdAt: new Date(2025, 4, 1),
-    updatedAt: new Date(2025, 4, 3),
-  },
-  {
-    id: "APP-3456",
-    title: "Business Registration",
-    type: "BUSINESS",
-    status: "PROCESSING",
-    createdAt: new Date(2025, 3, 25),
-    updatedAt: new Date(2025, 4, 2),
-  },
-  {
-    id: "APP-4567",
-    title: "Tax Registration",
-    type: "TAX",
-    status: "CLOSED_WITH_ACTION",
-    createdAt: new Date(2025, 3, 20),
-    updatedAt: new Date(2025, 4, 1),
-  },
-];
+interface Application {
+  id: string;
+  rrNumber?: string;
+  citizenName: string;
+  subject?: string;
+  status: string;
+  createdAt: string;
+  serviceCategory: {
+    name: string;
+  };
+}
 
 export default function ApplicationsList() {
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filteredApplications, setFilteredApplications] = useState<
+    Application[]
+  >([]);
 
-  const filteredApplications = MOCK_APPLICATIONS.filter(
-    (app) =>
-      app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      app.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/tracking?page=1&limit=50");
+        if (!response.ok) {
+          throw new Error("Failed to fetch applications");
+        }
+        const data = await response.json();
+        setApplications(data.applications || []);
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplications();
+  }, []);
+
+  useEffect(() => {
+    const filtered = applications.filter(
+      (app) =>
+        app.rrNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        app.citizenName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        app.subject?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        app.serviceCategory.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+    );
+    setFilteredApplications(filtered);
+  }, [applications, searchQuery]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -132,10 +140,12 @@ export default function ApplicationsList() {
             <TableHeader>
               <TableRow>
                 <TableHead>ID</TableHead>
-                <TableHead>Application</TableHead>
+                <TableHead>RR Number</TableHead>
+                <TableHead>Citizen Name</TableHead>
+                <TableHead>Subject</TableHead>
+                <TableHead>Service Category</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Created</TableHead>
-                <TableHead>Last Updated</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -146,13 +156,13 @@ export default function ApplicationsList() {
                     <TableCell className="font-medium">
                       {application.id}
                     </TableCell>
-                    <TableCell>{application.title}</TableCell>
+                    <TableCell>{application.rrNumber || "N/A"}</TableCell>
+                    <TableCell>{application.citizenName}</TableCell>
+                    <TableCell>{application.subject || "N/A"}</TableCell>
+                    <TableCell>{application.serviceCategory.name}</TableCell>
                     <TableCell>{getStatusBadge(application.status)}</TableCell>
                     <TableCell>
-                      {format(application.createdAt, "MMM dd, yyyy")}
-                    </TableCell>
-                    <TableCell>
-                      {format(application.updatedAt, "MMM dd, yyyy")}
+                      {format(new Date(application.createdAt), "MMM dd, yyyy")}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="outline" size="sm" asChild>
@@ -167,7 +177,7 @@ export default function ApplicationsList() {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={6}
+                    colSpan={8}
                     className="text-center py-6 text-gray-500"
                   >
                     No applications found that match your search.

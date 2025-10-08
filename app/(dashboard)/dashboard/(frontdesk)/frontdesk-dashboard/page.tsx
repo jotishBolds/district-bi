@@ -20,6 +20,19 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -27,6 +40,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Calendar,
@@ -42,6 +56,11 @@ import {
   Activity,
   ChevronLeft,
   ChevronRight,
+  Search,
+  X,
+  Filter,
+  ChevronsUpDown,
+  Check,
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistance } from "date-fns";
@@ -55,6 +74,7 @@ import {
 } from "@/lib/officer-roles";
 import { UserRole } from "@/app/generated/prisma";
 import { useSession } from "next-auth/react";
+import { cn } from "@/lib/utils";
 
 interface Application {
   id: string;
@@ -77,7 +97,6 @@ interface Application {
     id: string;
     fileName: string;
     documentType: string;
-    isVerified: boolean;
     fileSize?: number;
   }>;
   citizenProfile?: {
@@ -158,6 +177,7 @@ export default function FrontdeskDashboard() {
     FrontdeskAssignment[]
   >([]);
   const [loading, setLoading] = useState(true);
+  const [forwarding, setForwarding] = useState(false);
   const [selectedOfficer, setSelectedOfficer] = useState<string>("");
   const [instructions, setInstructions] = useState("");
   const [forwardingApp, setForwardingApp] = useState<Application | null>(null);
@@ -172,6 +192,11 @@ export default function FrontdeskDashboard() {
   const [editingCurrentCategory, setEditingCurrentCategory] = useState<
     { id: string; name: string; color?: string } | undefined
   >(undefined);
+
+  // Search state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<Record<string, number>>({
@@ -270,7 +295,12 @@ export default function FrontdeskDashboard() {
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = async (
+    search?: string,
+    page?: number,
+    limit?: number,
+    category?: string
+  ) => {
     try {
       setLoading(true);
 
@@ -283,8 +313,17 @@ export default function FrontdeskDashboard() {
       // Fetch frontdesk assignments with officers data for cross-reference
       await fetchFrontdeskAssignments(officersData);
 
-      // Fetch frontdesk applications
-      const response = await fetch("/api/frontdesk/applications");
+      // Fetch frontdesk applications with search and pagination
+      const params = new URLSearchParams();
+      if (search) params.append("search", search);
+      if (page) params.append("page", page.toString());
+      if (limit) params.append("limit", limit.toString());
+      if (category && category !== "all")
+        params.append("serviceCategory", category);
+
+      const response = await fetch(
+        `/api/frontdesk/applications?${params.toString()}`
+      );
       if (!response.ok) throw new Error("Failed to fetch applications");
       const applicationData = await response.json();
       setData(applicationData);
@@ -298,9 +337,33 @@ export default function FrontdeskDashboard() {
     }
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Reset pagination when searching
+    setCurrentPage({
+      active: 1,
+      forwardedOut: 1,
+      received: 1,
+      completed: 1,
+    });
+    fetchData(searchTerm, undefined, undefined, selectedCategoryFilter);
+  };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSelectedCategoryFilter("all");
+    setCurrentPage({
+      active: 1,
+      forwardedOut: 1,
+      received: 1,
+      completed: 1,
+    });
+    fetchData(); // Clear search by calling without search term
+  };
+
   const fetchServiceCategories = async () => {
     try {
-      const response = await fetch("/api/frontdesk/service-categories");
+      const response = await fetch("/api/service-categories");
       if (response.ok) {
         const categories = await response.json();
         setServiceCategories(Array.isArray(categories) ? categories : []);
@@ -462,12 +525,8 @@ export default function FrontdeskDashboard() {
   };
 
   const filterApplicationsByCategory = (applications: Application[]) => {
-    if (selectedCategoryFilter === "all") {
-      return applications;
-    }
-    return applications.filter(
-      (app) => app.serviceCategory?.id === selectedCategoryFilter
-    );
+    // Server-side filtering is now used, so applications are already filtered
+    return applications;
   };
 
   // Helper functions to get filtered counts for tab badges
@@ -504,6 +563,13 @@ export default function FrontdeskDashboard() {
       received: 1,
       completed: 1,
     });
+  }, [selectedCategoryFilter]);
+
+  // Fetch data when category filter changes
+  useEffect(() => {
+    if (session?.user && selectedCategoryFilter !== undefined) {
+      fetchData(searchTerm, undefined, undefined, selectedCategoryFilter);
+    }
   }, [selectedCategoryFilter]);
 
   const PaginationComponent = ({
@@ -596,9 +662,11 @@ export default function FrontdeskDashboard() {
   };
 
   useEffect(() => {
-    fetchData();
-    fetchServiceCategories();
-  }, []);
+    if (session?.user) {
+      fetchData();
+      fetchServiceCategories();
+    }
+  }, [session]);
 
   useEffect(() => {
     if (availableOfficers.length > 0) {
@@ -618,6 +686,7 @@ export default function FrontdeskDashboard() {
     }
 
     try {
+      setForwarding(true);
       const response = await fetch("/api/frontdesk/forward", {
         method: "POST",
         headers: {
@@ -646,6 +715,8 @@ export default function FrontdeskDashboard() {
     } catch (error) {
       console.error("Error forwarding application:", error);
       toast.error("Error forwarding application");
+    } finally {
+      setForwarding(false);
     }
   };
 
@@ -878,11 +949,6 @@ export default function FrontdeskDashboard() {
                         </p>
                         <p className="text-xs text-gray-500">
                           {document.documentType}
-                          {document.isVerified && (
-                            <span className="ml-2 text-green-600">
-                              ✓ Verified
-                            </span>
-                          )}
                         </p>
                       </div>
                     </div>
@@ -891,7 +957,6 @@ export default function FrontdeskDashboard() {
                         id: document.id,
                         fileName: document.fileName,
                         documentType: document.documentType,
-                        isVerified: document.isVerified,
                         fileSize: document.fileSize || 0,
                       }}
                       applicationId={application.id}
@@ -1301,6 +1366,178 @@ export default function FrontdeskDashboard() {
           </TabsTrigger>
         </TabsList>
 
+        <div className="mt-4 flex justify-end">
+          <Button
+            variant="outline"
+            onClick={() => setShowFilters(!showFilters)}
+            className="flex items-center gap-2 bg-white hover:bg-gray-50 border-gray-200 text-sm"
+          >
+            <Filter className="w-4 h-4" />
+            <span className="hidden sm:inline">Filters</span>
+            {(searchTerm || selectedCategoryFilter !== "all") && (
+              <Badge
+                variant="secondary"
+                className="ml-1 bg-orange-100 text-orange-800 text-xs"
+              >
+                {
+                  [
+                    searchTerm,
+                    selectedCategoryFilter !== "all" && selectedCategoryFilter,
+                  ].filter(Boolean).length
+                }
+              </Badge>
+            )}
+          </Button>
+        </div>
+
+        {/* Search and Filters */}
+        {showFilters && (
+          <Card className="mt-6">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-base md:text-xl flex items-center gap-2">
+                    <Search className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+                    Search & Filters
+                  </CardTitle>
+                  <CardDescription className="text-xs md:text-sm mt-1">
+                    Find specific applications
+                  </CardDescription>
+                </div>
+                {(searchTerm || selectedCategoryFilter !== "all") && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 text-xs md:text-sm"
+                  >
+                    <X className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+                    Clear All
+                  </Button>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 md:p-6">
+              <form onSubmit={handleSearch} className="space-y-4 md:space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="search" className="text-sm font-medium">
+                      Search
+                    </Label>
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                      <Input
+                        id="search"
+                        type="text"
+                        placeholder="RR number, name, phone, subject..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="category-filter"
+                      className="text-sm font-medium"
+                    >
+                      Service Category
+                    </Label>
+                    <Popover open={categoryOpen} onOpenChange={setCategoryOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={categoryOpen}
+                          className="w-full justify-between focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus:outline-none"
+                        >
+                          {selectedCategoryFilter === "all"
+                            ? "All Categories"
+                            : serviceCategories.find(
+                                (category) =>
+                                  category.id === selectedCategoryFilter
+                              )?.name || "All Categories"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0" align="start">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search categories..."
+                            className="focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus:outline-none"
+                          />
+                          <CommandList className="max-h-48">
+                            <CommandEmpty>No category found.</CommandEmpty>
+                            <CommandGroup>
+                              <CommandItem
+                                value="all"
+                                onSelect={() => {
+                                  setSelectedCategoryFilter("all");
+                                  setCategoryOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    selectedCategoryFilter === "all"
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                All Categories
+                              </CommandItem>
+                              {serviceCategories.map((category) => (
+                                <CommandItem
+                                  key={category.id}
+                                  value={category.name}
+                                  onSelect={() => {
+                                    setSelectedCategoryFilter(
+                                      selectedCategoryFilter === category.id
+                                        ? "all"
+                                        : category.id
+                                    );
+                                    setCategoryOpen(false);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      selectedCategoryFilter === category.id
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  <div className="flex items-center gap-2">
+                                    {category.color && (
+                                      <div
+                                        className="w-3 h-3 rounded-full border"
+                                        style={{
+                                          backgroundColor: category.color,
+                                        }}
+                                      />
+                                    )}
+                                    {category.name}
+                                  </div>
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div className="flex items-end">
+                    <Button type="submit" className="w-full">
+                      <Search className="w-4 h-4 mr-2" />
+                      Search
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        )}
+
         <TabsContent value="active" className="mt-6">
           <div className="space-y-6">
             <div className="flex items-center gap-3">
@@ -1539,7 +1776,19 @@ export default function FrontdeskDashboard() {
                   value={selectedOfficer}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Choose an officer" />
+                    <SelectValue placeholder="Choose an officer">
+                      {selectedOfficer &&
+                        (() => {
+                          const officer = filteredOfficers.find(
+                            (o) => o.id === selectedOfficer
+                          );
+                          return officer ? (
+                            <span className="truncate">{officer.fullName}</span>
+                          ) : (
+                            "Choose an officer"
+                          );
+                        })()}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {filteredOfficers
@@ -1551,8 +1800,8 @@ export default function FrontdeskDashboard() {
                         const roleMapping = getRoleMapping(officer.role);
                         return (
                           <SelectItem key={officer.id} value={officer.id}>
-                            <div className="flex flex-col items-start">
-                              <span className="font-medium">
+                            <div className="flex flex-col items-start w-full">
+                              <span className="font-medium text-sm">
                                 {officer.fullName}
                               </span>
                               <span className="text-xs text-gray-500">
@@ -1560,7 +1809,7 @@ export default function FrontdeskDashboard() {
                                   officer.designation}{" "}
                                 - Level {officer.level}
                               </span>
-                              <span className="text-xs text-gray-400">
+                              <span className="text-xs text-gray-400 truncate">
                                 {officer.department}
                               </span>
                             </div>
@@ -1595,12 +1844,22 @@ export default function FrontdeskDashboard() {
               disabled={
                 !selectedOfficer ||
                 !instructions.trim() ||
-                filteredOfficers.length === 0
+                filteredOfficers.length === 0 ||
+                forwarding
               }
               className="bg-blue-600 hover:bg-blue-700"
             >
-              <Send className="w-4 h-4 mr-2" />
-              Forward Application
+              {forwarding ? (
+                <>
+                  <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  Forwarding...
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4 mr-2" />
+                  Forward Application
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

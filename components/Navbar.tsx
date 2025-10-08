@@ -20,23 +20,28 @@ export default function Navbar() {
         <nav className="flex items-center justify-between h-16 sm:h-20">
           {/* Left: Logo and Title */}
           <div className="flex items-center min-w-0 flex-1">
-            <div className="flex-shrink-0">
-              <Image
-                src="/assets/seal_of_sikkim.png"
-                width={40}
-                height={40}
-                alt="Seal of Sikkim"
-                className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12"
-              />
-            </div>
-            <div className="ml-2 sm:ml-3 min-w-0">
-              <h1 className="font-bold text-sm sm:text-base lg:text-lg text-[#1170CD] leading-tight truncate">
-                District Administrative Centre, Gangtok
-              </h1>
-              <p className="font-light text-[#658cf9] text-xs sm:text-sm lg:text-base hidden sm:block">
-                Government of Sikkim
-              </p>
-            </div>
+            <Link
+              href="/"
+              className="flex items-center min-w-0 flex-1 cursor-pointer"
+            >
+              <div className="flex-shrink-0">
+                <Image
+                  src="/assets/seal_of_sikkim.png"
+                  width={40}
+                  height={40}
+                  alt="Seal of Sikkim"
+                  className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12"
+                />
+              </div>
+              <div className="ml-2 sm:ml-3 min-w-0">
+                <h1 className="font-bold text-sm sm:text-base lg:text-lg text-[#1170CD] leading-tight truncate">
+                  District Administrative Centre, Gangtok
+                </h1>
+                <p className="font-light text-[#658cf9] text-xs sm:text-sm lg:text-base hidden sm:block">
+                  Government of Sikkim
+                </p>
+              </div>
+            </Link>
           </div>
 
           {/* Desktop: Three Images and Login/UserNav */}

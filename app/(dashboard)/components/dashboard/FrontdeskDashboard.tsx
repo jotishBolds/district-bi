@@ -8,8 +8,6 @@ import {
   FileText,
   Users,
   Clock,
-  AlertCircle,
-  TrendingUp,
   CheckCircle,
   Forward,
 } from "lucide-react";
@@ -35,10 +33,15 @@ interface FrontdeskAssignment {
 }
 
 interface DashboardStats {
-  totalApplications: number;
-  queuedApplications: number;
-  inProgress: number;
-  completedToday: number;
+  pendingValidation: number;
+  validated: number;
+  inQueue: number;
+  totalProcessed: number;
+}
+
+interface DashboardCard {
+  title: string;
+  value: number;
 }
 
 export default function FrontdeskDashboard() {
@@ -49,10 +52,10 @@ export default function FrontdeskDashboard() {
   >([]);
   const [isGeneralFrontdesk, setIsGeneralFrontdesk] = useState(false);
   const [stats, setStats] = useState<DashboardStats>({
-    totalApplications: 0,
-    queuedApplications: 0,
-    inProgress: 0,
-    completedToday: 0,
+    pendingValidation: 0,
+    validated: 0,
+    inQueue: 0,
+    totalProcessed: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -93,16 +96,45 @@ export default function FrontdeskDashboard() {
 
   const fetchStats = async () => {
     try {
-      // In a real app, you'd have an API endpoint for dashboard stats
-      // For now, we'll use mock data
-      setStats({
-        totalApplications: 145,
-        queuedApplications: 12,
-        inProgress: 23,
-        completedToday: 8,
-      });
+      const response = await fetch("/api/dashboard/stats");
+      if (!response.ok) {
+        throw new Error("Failed to fetch dashboard stats");
+      }
+      const data = await response.json();
+
+      if (data.cards && Array.isArray(data.cards)) {
+        const statsMap = data.cards.reduce(
+          (acc: DashboardStats, card: DashboardCard) => {
+            if (card.title === "Pending Validation") {
+              acc.pendingValidation = card.value;
+            } else if (card.title === "Validated") {
+              acc.validated = card.value;
+            } else if (card.title === "In Queue") {
+              acc.inQueue = card.value;
+            } else if (card.title === "Total Processed") {
+              acc.totalProcessed = card.value;
+            }
+            return acc;
+          },
+          {
+            pendingValidation: 0,
+            validated: 0,
+            inQueue: 0,
+            totalProcessed: 0,
+          }
+        );
+
+        setStats(statsMap);
+      }
     } catch (error) {
       console.error("Error fetching stats:", error);
+      // Set default values on error
+      setStats({
+        pendingValidation: 0,
+        validated: 0,
+        inQueue: 0,
+        totalProcessed: 0,
+      });
     }
   };
 
@@ -205,7 +237,7 @@ export default function FrontdeskDashboard() {
                 variant="outline"
                 className="w-full"
               >
-                View Queue ({stats.queuedApplications})
+                View Queue ({stats.inQueue})
               </Button>
             </CardContent>
           </Card>
@@ -228,7 +260,7 @@ export default function FrontdeskDashboard() {
                 variant="outline"
                 className="w-full"
               >
-                View Queue ({stats.queuedApplications})
+                View Queue ({stats.inQueue})
               </Button>
             </CardContent>
           </Card>
@@ -249,7 +281,7 @@ export default function FrontdeskDashboard() {
             </CardHeader>
             <CardContent>
               <Button
-                onClick={() => router.push("/dashboard/validate-applications")}
+                onClick={() => router.push("/dashboard/frontdesk-dashboard")}
                 variant="outline"
                 className="w-full"
               >
@@ -303,89 +335,6 @@ export default function FrontdeskDashboard() {
           </CardContent>
         </Card>
       )}
-
-      {/* Statistics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100">
-                <FileText className="h-4 w-4 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.totalApplications}
-                </p>
-                <p className="text-xs text-gray-500">Total Applications</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {isGeneralFrontdesk ? (
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-100">
-                  <Forward className="h-4 w-4 text-yellow-600" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {stats.queuedApplications}
-                  </p>
-                  <p className="text-xs text-gray-500">In Queue</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100">
-                  <Clock className="h-4 w-4 text-orange-600" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {stats.inProgress}
-                  </p>
-                  <p className="text-xs text-gray-500">In Progress</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-100">
-                <CheckCircle className="h-4 w-4 text-green-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.completedToday}
-                </p>
-                <p className="text-xs text-gray-500">Completed Today</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100">
-                <TrendingUp className="h-4 w-4 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">92%</p>
-                <p className="text-xs text-gray-500">Efficiency</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

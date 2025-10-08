@@ -35,7 +35,6 @@ interface Document {
   fileName: string;
   filePath: string;
   fileSize: number;
-  isVerified: boolean;
   verificationNotes?: string;
   createdAt: string;
   uploadedBy?: {
@@ -44,14 +43,6 @@ interface Document {
     email: string;
     citizenProfile?: {
       fullName: string;
-    };
-  };
-  verifiedBy?: {
-    id: string;
-    role: string;
-    officerProfile?: {
-      fullName: string;
-      designation: string;
     };
   };
 }
@@ -1619,15 +1610,6 @@ const DCDashboard = () => {
                             <h4 className="font-bold text-gray-900 text-lg">
                               {doc.fileName}
                             </h4>
-                            <span
-                              className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold border-2 ${
-                                doc.isVerified
-                                  ? "bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border-green-200"
-                                  : "bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border-yellow-200"
-                              }`}
-                            >
-                              {doc.isVerified ? "Verified" : "Pending"}
-                            </span>
                           </div>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
                             <div className="bg-white p-3 rounded-lg border border-gray-200">

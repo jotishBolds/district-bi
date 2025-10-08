@@ -83,17 +83,11 @@ interface ApplicationDetails {
     documentType: string;
     fileName: string;
     fileSize: number;
-    isVerified: boolean;
     uploadedBy: {
       citizenProfile?: {
         fullName: string;
       };
       officerProfile?: {
-        fullName: string;
-      };
-    };
-    verifiedBy?: {
-      officerProfile: {
         fullName: string;
       };
     };

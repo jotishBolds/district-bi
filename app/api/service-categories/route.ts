@@ -20,6 +20,7 @@ export async function GET() {
         id: true,
         name: true,
         description: true,
+        color: true,
       },
       orderBy: {
         name: "asc",
