@@ -195,7 +195,7 @@ function OtpVerificationContent() {
           if (signInResult?.ok) {
             console.log("✅ SignIn successful, redirecting immediately...");
             toast.success("Login successful! Redirecting to dashboard...");
-            
+
             // Force immediate redirect to dashboard
             await router.push("/dashboard");
             return;

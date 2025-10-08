@@ -131,15 +131,24 @@ export async function POST(request: NextRequest) {
     if (type === "RR_NUMBER") {
       // For RR tracking, send to both email and phone if both exist
       if (application.citizenEmail) {
-        targetContacts.push({ type: "email", contact: application.citizenEmail });
+        targetContacts.push({
+          type: "email",
+          contact: application.citizenEmail,
+        });
       }
       if (application.citizenPhone) {
-        targetContacts.push({ type: "phone", contact: application.citizenPhone });
+        targetContacts.push({
+          type: "phone",
+          contact: application.citizenPhone,
+        });
       }
     } else {
       // For phone tracking, only send to phone
       if (application.citizenPhone) {
-        targetContacts.push({ type: "phone", contact: application.citizenPhone });
+        targetContacts.push({
+          type: "phone",
+          contact: application.citizenPhone,
+        });
       }
     }
 
@@ -147,15 +156,21 @@ export async function POST(request: NextRequest) {
     console.log("=".repeat(50));
     console.log("🔐 APPLICATION TRACKING OTP");
     console.log("📱 IDENTIFIER:", identifier);
-    console.log("📧 SENDING TO:", targetContacts.map(tc => `${tc.type}: ${tc.contact}`).join(', '));
+    console.log(
+      "📧 SENDING TO:",
+      targetContacts.map((tc) => `${tc.type}: ${tc.contact}`).join(", ")
+    );
     console.log("🔐 OTP CODE:", otp);
     console.log("⏰ EXPIRES IN: 10 minutes");
     console.log("=".repeat(50));
 
     try {
       // Send SMS to all phone numbers
-      for (const target of targetContacts.filter(t => t.type === "phone")) {
-        if (target.contact && /^\d{10}$/.test(target.contact.replace(/\D/g, ""))) {
+      for (const target of targetContacts.filter((t) => t.type === "phone")) {
+        if (
+          target.contact &&
+          /^\d{10}$/.test(target.contact.replace(/\D/g, ""))
+        ) {
           const { sendSms, generateOTPMessage } = await import(
             "@/lib/thundersms.server"
           );
@@ -175,7 +190,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Send Email to all email addresses
-      for (const target of targetContacts.filter(t => t.type === "email")) {
+      for (const target of targetContacts.filter((t) => t.type === "email")) {
         if (target.contact && target.contact.includes("@")) {
           const { sendOTPEmail } = await import("@/lib/mail-new");
           await sendOTPEmail(target.contact, otp);

@@ -1382,7 +1382,8 @@ export default function TrackApplicationPage() {
                     <Shield className="w-6 h-6 text-white fill-blue-600" />
                   </div>
                   <p className="text-base text-blue-700 font-medium">
-                    OTP sent to your {otpSentTo === "both" ? "email and phone" : otpSentTo}
+                    OTP sent to your{" "}
+                    {otpSentTo === "both" ? "email and phone" : otpSentTo}
                   </p>
                   <p className="text-sm text-blue-600 mt-2 font-mono bg-white px-3 py-1 rounded-full inline-block">
                     {maskedContact}
