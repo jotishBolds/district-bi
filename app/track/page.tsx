@@ -87,7 +87,8 @@ export default function TrackApplicationPage() {
     {}
   );
   const [otpSentTo, setOtpSentTo] = useState("");
-  const [maskedContact, setMaskedContact] = useState("");
+  const [maskedEmail, setMaskedEmail] = useState<string | null>(null);
+  const [maskedPhone, setMaskedPhone] = useState<string | null>(null);
   const [applicationData, setApplicationData] =
     useState<ApplicationData | null>(null);
   const [applicationsData, setApplicationsData] = useState<ApplicationData[]>(
@@ -130,6 +131,25 @@ export default function TrackApplicationPage() {
           ? `Level ${roleMapping.level}`
           : null,
     };
+  };
+
+  // Helper functions to mask sensitive information
+  const maskEmail = (email: string): string => {
+    if (!email) return "";
+    const [localPart, domain] = email.split("@");
+    if (localPart.length <= 2) return email;
+    return `${localPart.slice(0, 2)}${"*".repeat(
+      localPart.length - 4
+    )}${localPart.slice(-2)}@${domain}`;
+  };
+
+  const maskPhone = (phone: string): string => {
+    if (!phone) return "";
+    const cleanPhone = phone.replace(/\D/g, "");
+    if (cleanPhone.length <= 4) return phone;
+    return `${cleanPhone.slice(0, 2)}${"*".repeat(
+      cleanPhone.length - 4
+    )}${cleanPhone.slice(-2)}`;
   };
 
   // Smart input detection function
@@ -285,7 +305,8 @@ export default function TrackApplicationPage() {
         throw new Error(data.error || "Failed to send OTP");
       }
       setOtpSentTo(data.sentTo);
-      setMaskedContact(data.maskedContact);
+      setMaskedEmail(data.maskedEmail);
+      setMaskedPhone(data.maskedPhone);
       setStep("otp");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -343,7 +364,8 @@ export default function TrackApplicationPage() {
     setApplicationsData([]);
     setSelectedApplicationId(null);
     setOtpSentTo("");
-    setMaskedContact("");
+    setMaskedEmail(null);
+    setMaskedPhone(null);
     setInputType(null);
   };
 
@@ -899,11 +921,12 @@ export default function TrackApplicationPage() {
                       </div>
                       <div className="space-y-1">
                         <p className="font-semibold text-slate-900">
-                          {applicationData.citizenPhone}
+                          {maskPhone(applicationData.citizenPhone)}
                         </p>
                         {applicationData.citizenAlternateNumber && (
                           <p className="text-sm text-slate-600">
-                            Alt: {applicationData.citizenAlternateNumber}
+                            Alt:{" "}
+                            {maskPhone(applicationData.citizenAlternateNumber)}
                           </p>
                         )}
                       </div>
@@ -1375,19 +1398,27 @@ export default function TrackApplicationPage() {
             {step === "otp" && (
               <div className="space-y-6 -mb-4 font-sans">
                 <div className="text-center p-6 bg-blue-50 rounded-2xl border border-blue-200">
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg"
-                    style={{ backgroundColor: "blue" }}
-                  >
-                    <Shield className="w-6 h-6 text-white fill-blue-600" />
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg bg-gray-100">
+                    <Shield className="w-6 h-6" />
                   </div>
                   <p className="text-base text-blue-700 font-medium">
                     OTP sent to your{" "}
                     {otpSentTo === "both" ? "email and phone" : otpSentTo}
                   </p>
-                  <p className="text-sm text-blue-600 mt-2 font-mono bg-white px-3 py-1 rounded-full inline-block">
-                    {maskedContact}
-                  </p>
+                  <div className="mt-3 space-y-2">
+                    {maskedEmail && (
+                      <div className="flex items-center justify-center gap-2 text-sm text-blue-600 font-mono bg-white px-3 py-1 rounded-full">
+                        <MessageSquare className="w-4 h-4" />
+                        {maskedEmail}
+                      </div>
+                    )}
+                    {maskedPhone && (
+                      <div className="flex items-center justify-center gap-2 text-sm text-blue-600 font-mono bg-white px-3 py-1 rounded-full">
+                        <Phone className="w-4 h-4" />
+                        {maskedPhone}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-4">

@@ -224,6 +224,12 @@ export async function POST(request: NextRequest) {
             ? application.citizenEmail?.replace(/(.{2}).*(@.*)/, "$1***$2")
             : application.citizenPhone?.replace(/(.{2}).*(.{2})/, "$1***$2")
           : application.citizenPhone?.replace(/(.{2}).*(.{2})/, "$1***$2"),
+      maskedEmail: emailSent
+        ? application.citizenEmail?.replace(/(.{2}).*(@.*)/, "$1***$2")
+        : null,
+      maskedPhone: smsSent
+        ? application.citizenPhone?.replace(/(.{2}).*(.{2})/, "$1***$2")
+        : null,
     });
   } catch (error) {
     console.error("Error in track OTP request:", error);

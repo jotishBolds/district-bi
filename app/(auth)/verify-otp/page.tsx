@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import { Loader2, ShieldCheck, AlertCircle } from "lucide-react";
+import { Loader2, ShieldCheck, AlertCircle, Mail, Phone } from "lucide-react";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
 
@@ -35,6 +35,25 @@ function OtpVerificationContent() {
   );
   const [userPhone, setUserPhone] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // Helper functions to mask sensitive information
+  const maskEmail = (email: string): string => {
+    if (!email) return "";
+    const [localPart, domain] = email.split("@");
+    if (localPart.length <= 2) return email;
+    return `${localPart.slice(0, 2)}${"*".repeat(
+      localPart.length - 4
+    )}${localPart.slice(-2)}@${domain}`;
+  };
+
+  const maskPhone = (phone: string): string => {
+    if (!phone) return "";
+    const cleanPhone = phone.replace(/\D/g, "");
+    if (cleanPhone.length <= 4) return phone;
+    return `${cleanPhone.slice(0, 2)}${"*".repeat(
+      cleanPhone.length - 4
+    )}${cleanPhone.slice(-2)}`;
+  };
 
   useEffect(() => {
     if (!email) {
@@ -278,7 +297,7 @@ function OtpVerificationContent() {
         <Card className="shadow-lg border-t-4 border-t-blue-700">
           <CardHeader className="space-y-1 pb-2">
             <div className="flex justify-center mb-4">
-              <ShieldCheck className="h-10 w-10 text-blue-700" />
+              <ShieldCheck className="h-10 w-10" />
             </div>
             <CardTitle className="text-2xl font-bold text-center">
               Security Verification
@@ -286,10 +305,14 @@ function OtpVerificationContent() {
             <CardDescription className="text-center">
               We&apos;ve sent a verification code to:
               <div className="mt-2 space-y-1">
-                <div className="font-medium text-blue-600">📧 {email}</div>
+                <div className="font-medium text-blue-600 flex items-center justify-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  {maskEmail(email)}
+                </div>
                 {userPhone && (
-                  <div className="font-medium text-blue-600">
-                    📱 +91 {userPhone}
+                  <div className="font-medium text-blue-600 flex items-center justify-center gap-2">
+                    <Phone className="w-4 h-4" />
+                    +91 {maskPhone(userPhone)}
                   </div>
                 )}
               </div>
