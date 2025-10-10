@@ -21,8 +21,8 @@ export default function Footer() {
 
           {/* Copyright */}
           <p className="text-xs text-muted-foreground text-center sm:text-right">
-            © {new Date().getFullYear()} District Administrative Centre, East
-            Sikkim. All Rights Reserved.
+            © {new Date().getFullYear()} District Administrative Centre,
+            Gangtok. All Rights Reserved.
           </p>
         </div>
       </div>
