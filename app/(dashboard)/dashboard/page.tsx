@@ -161,8 +161,8 @@ export default async function DashboardPage() {
         {/* Footer Section */}
         <footer className="mt-12 text-center">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Government Services Portal | All rights
-            reserved
+            © {new Date().getFullYear()} District Administrative Centre,
+            Gangtok. All Rights Reserved. reserved
           </p>
         </footer>
       </div>

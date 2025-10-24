@@ -60,6 +60,7 @@ function GovernmentLoginForm() {
 
   const errorMessage = searchParams?.get("error");
   const expired = searchParams?.get("expired");
+  const messageParam = searchParams?.get("message");
 
   useEffect(() => {
     if (errorMessage) {
@@ -67,6 +68,15 @@ function GovernmentLoginForm() {
     }
     if (expired === "true") {
       setSessionExpired(true);
+    }
+    if (messageParam === "registration-disabled") {
+      toast(
+        "Registration is currently disabled. Please contact administrator for assistance.",
+        {
+          duration: 5000,
+          icon: "🔒",
+        }
+      );
     }
 
     // Check for previous login attempts from localStorage
@@ -86,7 +96,7 @@ function GovernmentLoginForm() {
         setAttemptCount(parseInt(attempts));
       }
     }
-  }, [errorMessage, expired]);
+  }, [errorMessage, expired, messageParam]);
 
   // Function to start the lock timer
   const startLockTimer = (lockUntil: Date) => {

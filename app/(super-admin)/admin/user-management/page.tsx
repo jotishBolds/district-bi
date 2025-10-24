@@ -890,7 +890,7 @@ export default function UserManagement() {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          <Button
+          {/* <Button
             variant="outline"
             onClick={createTempAdminUser}
             disabled={isSubmitting}
@@ -902,7 +902,7 @@ export default function UserManagement() {
               <UserCog className="mr-2 h-4 w-4" />
             )}
             Create Temp Admin
-          </Button>
+          </Button> */}
           <Button
             onClick={() => {
               resetForm();

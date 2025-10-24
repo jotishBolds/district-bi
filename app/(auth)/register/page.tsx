@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, UserPlus, ShieldAlert, AlertCircle } from "lucide-react";
 import { toast } from "react-hot-toast";
@@ -80,7 +80,31 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isRegistrationEnabled, setIsRegistrationEnabled] = useState<
+    boolean | null
+  >(null);
   const router = useRouter();
+
+  // Check if registration is enabled
+  useEffect(() => {
+    const checkRegistrationStatus = async () => {
+      try {
+        const response = await fetch("/api/auth/register", {
+          method: "GET",
+        });
+
+        if (response.status === 403) {
+          setIsRegistrationEnabled(false);
+        } else {
+          setIsRegistrationEnabled(true);
+        }
+      } catch (error) {
+        setIsRegistrationEnabled(false);
+      }
+    };
+
+    checkRegistrationStatus();
+  }, []);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
@@ -95,6 +119,56 @@ export default function RegisterPage() {
       confirmPassword: "",
     },
   });
+
+  // Show loading state while checking registration status
+  if (isRegistrationEnabled === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardContent className="flex items-center justify-center p-8">
+            <Loader2 className="h-8 w-8 animate-spin" />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show blocked message if registration is disabled
+  if (isRegistrationEnabled === false) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="flex items-center justify-center gap-2 text-red-600">
+              <ShieldAlert className="h-5 w-5" />
+              Registration Disabled
+            </CardTitle>
+            <CardDescription>
+              User registration is currently disabled
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Access Restricted</AlertTitle>
+              <AlertDescription>
+                Registration is currently disabled by the administrator. Please
+                contact support for assistance.
+              </AlertDescription>
+            </Alert>
+            <div className="flex justify-center space-x-2">
+              <Button variant="outline" onClick={() => router.push("/login")}>
+                Go to Login
+              </Button>
+              <Button variant="outline" onClick={() => router.push("/")}>
+                Go Home
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const selectedRole = form.watch("role");
 

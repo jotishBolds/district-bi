@@ -5,8 +5,37 @@ import { generateOTP, isValidEmail, validatePassword } from "@/lib/utils";
 import { sendVerificationEmail } from "@/lib/mail";
 import { UserRole } from "@/app/generated/prisma";
 
+export async function GET() {
+  // Check if registration is enabled
+  const isRegistrationEnabled = process.env.ENABLE_REGISTRATION === "true";
+
+  if (!isRegistrationEnabled) {
+    return NextResponse.json(
+      {
+        error: "Registration is currently disabled",
+      },
+      { status: 403 }
+    );
+  }
+
+  return NextResponse.json({ message: "Registration is enabled" });
+}
+
 export async function POST(req: NextRequest) {
   try {
+    // Check if registration is enabled
+    const isRegistrationEnabled = process.env.ENABLE_REGISTRATION === "true";
+
+    if (!isRegistrationEnabled) {
+      return NextResponse.json(
+        {
+          error:
+            "Registration is currently disabled. Please contact administrator.",
+        },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const {
       email,

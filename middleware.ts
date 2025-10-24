@@ -11,6 +11,13 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
+  // Check if registration is disabled
+  if (path === "/register" && process.env.ENABLE_REGISTRATION !== "true") {
+    return NextResponse.redirect(
+      new URL("/login?message=registration-disabled", request.url)
+    );
+  }
+
   // Public paths that don't require authentication
   const publicPaths = [
     "/login",
