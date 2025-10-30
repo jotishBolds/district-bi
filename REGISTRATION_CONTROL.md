@@ -72,6 +72,17 @@ Registration is controlled by the `ENABLE_REGISTRATION` environment variable:
 2. `/middleware.ts` - Route-level blocking
 3. `/app/(auth)/register/page.tsx` - Frontend blocking with user feedback
 4. `/.env.example` - Environment variable documentation
+5. `/app/(super-admin)/admin/frontdesk-management/page.tsx` - Fixed to use admin API instead of public registration
+
+## Admin User Creation
+
+Admin functions for creating users are **NOT affected** by the registration blocking:
+
+- User Management (`/app/(super-admin)/admin/user-management/page.tsx`) uses `/api/admin/users`
+- Frontdesk Management (`/app/(super-admin)/admin/frontdesk-management/page.tsx`) uses `/api/admin/users`
+- Temp Admin Creation uses `/api/admin/create-temp-admin`
+
+These admin endpoints have their own authorization checks and work independently of the `ENABLE_REGISTRATION` setting.
 
 ## Testing the Block
 

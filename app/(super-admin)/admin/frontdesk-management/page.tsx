@@ -214,8 +214,8 @@ export default function FrontdeskManagementPage() {
 
   const onSubmit = async (data: FrontdeskFormData) => {
     try {
-      // First create the user via registration
-      const response = await fetch("/api/auth/register", {
+      // Create the user via admin endpoint
+      const response = await fetch("/api/admin/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -228,6 +228,7 @@ export default function FrontdeskManagementPage() {
           fullName: data.fullName,
           designation: "Front Desk Officer",
           department: "General",
+          isActive: true,
         }),
       });
 
@@ -238,12 +239,12 @@ export default function FrontdeskManagementPage() {
       }
 
       // Check if the response has the expected structure
-      if (!result || !result.userId) {
+      if (!result || !result.user || !result.user.id) {
         console.error("Unexpected API response structure:", result);
         throw new Error("Invalid response from server. User ID not found.");
       }
 
-      const userId = result.userId;
+      const userId = result.user.id;
 
       // Now assign the officer if one was selected
       if (data.assignedOfficerId && data.assignedOfficerId !== "GENERAL") {

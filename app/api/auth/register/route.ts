@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { generateOTP, isValidEmail, validatePassword } from "@/lib/utils";
 import { sendVerificationEmail } from "@/lib/mail";
 import { UserRole } from "@/app/generated/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function GET() {
   // Check if registration is enabled
@@ -26,7 +28,14 @@ export async function POST(req: NextRequest) {
     // Check if registration is enabled
     const isRegistrationEnabled = process.env.ENABLE_REGISTRATION === "true";
 
-    if (!isRegistrationEnabled) {
+    // Check if request is from authenticated admin (bypass for admin)
+    const session = await getServerSession(authOptions);
+    const isAdminRequest =
+      session &&
+      (session.user.role === UserRole.ADMIN ||
+        session.user.role === UserRole.SUPER_ADMIN);
+
+    if (!isRegistrationEnabled && !isAdminRequest) {
       return NextResponse.json(
         {
           error:
