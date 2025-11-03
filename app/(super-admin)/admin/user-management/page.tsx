@@ -788,7 +788,10 @@ export default function UserManagement() {
       designation: user.officerProfile?.designation || "",
       department: user.officerProfile?.department || "",
       officeLocation: user.officerProfile?.officeLocation || "",
-      sectionId: user.officerProfile?.sectionId || "",
+      sectionId:
+        user.officerProfile?.section?.id ||
+        user.officerProfile?.sectionId ||
+        "",
       password: "",
     });
 

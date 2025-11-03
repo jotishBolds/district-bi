@@ -176,7 +176,7 @@ function GovernmentLoginForm() {
 
     try {
       const result = await signIn("credentials", {
-        email: data.email,
+        email: data.email.trim(),
         password: data.password,
         redirect: false,
       });
@@ -228,6 +228,8 @@ function GovernmentLoginForm() {
                 width={80}
                 height={80}
                 className="object-contain"
+                priority
+                quality={95}
               />
             </div>
             <CardTitle className="text-2xl font-bold text-center">

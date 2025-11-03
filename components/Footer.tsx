@@ -13,6 +13,7 @@ export default function Footer() {
               width={32}
               height={32}
               className="w-8 h-8 flex-shrink-0"
+              quality={95}
             />
             <h6 className="text-sm font-semibold text-white">
               District Administrative Centre

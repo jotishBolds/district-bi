@@ -105,7 +105,11 @@ export async function GET(
       where: { id: userId },
       include: {
         citizenProfile: true,
-        officerProfile: true,
+        officerProfile: {
+          include: {
+            section: true,
+          },
+        },
       },
     });
 
@@ -200,6 +204,9 @@ export async function PATCH(
               ...(validatedData.officeLocation && {
                 officeLocation: validatedData.officeLocation,
               }),
+              ...(validatedData.sectionId !== undefined && {
+                sectionId: validatedData.sectionId || null,
+              }),
             },
           });
         } else {
@@ -213,6 +220,7 @@ export async function PATCH(
               designation: validatedData.designation || "Officer",
               department: validatedData.department || "General",
               officeLocation: validatedData.officeLocation || null,
+              sectionId: validatedData.sectionId || null,
             },
           });
 
@@ -259,7 +267,11 @@ export async function PATCH(
       where: { id: userId },
       include: {
         citizenProfile: true,
-        officerProfile: true,
+        officerProfile: {
+          include: {
+            section: true,
+          },
+        },
       },
     });
 

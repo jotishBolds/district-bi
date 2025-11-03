@@ -5,6 +5,9 @@ import { Toaster } from "sonner";
 import AuthProviders from "./auth/provider";
 import { ThemeProvider } from "../components/theme-provider";
 import FloatingSupport from "../components/FloatingSupport";
+import PWAHandler from "../components/PWAHandler";
+import PWAInstallPrompt from "../components/PWAInstallPrompt";
+import ServiceWorkerRegistration from "../components/ServiceWorkerRegistration";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,36 +29,92 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Track my application - Gangtok District",
+  title: "My Application - District Administrative Centre",
   description:
-    "District-level government application tracking, management, and citizen services portal.",
-  icons: {
-    icon: [
+    "District Administrative Centre, Gangtok - Government application tracking, management, and citizen services portal.",
+  keywords: [
+    "government",
+    "district",
+    "gangtok",
+    "administrative",
+    "services",
+    "citizen",
+  ],
+  authors: [{ name: "District Administrative Centre" }],
+  creator: "District Administrative Centre, Gangtok",
+  publisher: "District Administrative Centre, Gangtok",
+  metadataBase: new URL("https://your-domain.com"), // Replace with your actual domain
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://your-domain.com", // Replace with your actual domain
+    title: "My Application - District Administrative Centre",
+    description:
+      "District Administrative Centre, Gangtok - Government services portal.",
+    siteName: "My Application",
+    images: [
       {
-        url: "/favicon_io/favicon-16x16.png",
-        sizes: "16x16",
-        type: "image/png",
-      },
-      {
-        url: "/favicon_io/favicon-32x32.png",
-        sizes: "32x32",
-        type: "image/png",
-      },
-    ],
-    shortcut: "/favicon_io/favicon.ico",
-    apple: "/favicon_io/apple-touch-icon.png",
-    other: [
-      {
-        rel: "android-chrome-192x192",
-        url: "/favicon_io/android-chrome-192x192.png",
-      },
-      {
-        rel: "android-chrome-512x512",
-        url: "/favicon_io/android-chrome-512x512.png",
+        url: "/pwa/android/android-launchericon-512-512.png",
+        width: 512,
+        height: 512,
+        alt: "My Application Logo",
       },
     ],
   },
-  manifest: "/favicon_io/site.webmanifest",
+  twitter: {
+    card: "summary_large_image",
+    title: "My Application - District Administrative Centre",
+    description:
+      "District Administrative Centre, Gangtok - Government services portal.",
+    images: ["/pwa/android/android-launchericon-512-512.png"],
+  },
+  icons: {
+    icon: [
+      {
+        url: "/pwa/android/android-launchericon-48-48.png",
+        sizes: "48x48",
+        type: "image/png",
+      },
+      {
+        url: "/pwa/android/android-launchericon-96-96.png",
+        sizes: "96x96",
+        type: "image/png",
+      },
+      {
+        url: "/pwa/android/android-launchericon-192-192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+    ],
+    shortcut: "/pwa/android/android-launchericon-96-96.png",
+    apple: [
+      {
+        url: "/pwa/android/android-launchericon-192-192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+    ],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/pwa/android/android-launchericon-192-192.png",
+      },
+    ],
+  },
+  manifest: "/manifest.json",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
+  themeColor: "#3b82f6",
+  colorScheme: "light",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "My Application",
+  },
 };
 
 export default function RootLayout({
@@ -65,14 +124,56 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#3b82f6" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="My Application" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="application-name" content="My Application" />
+
+        {/* PWA Icons for iOS */}
+        <link
+          rel="apple-touch-icon"
+          href="/pwa/android/android-launchericon-192-192.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="152x152"
+          href="/pwa/android/android-launchericon-192-192.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/pwa/android/android-launchericon-192-192.png"
+        />
+
+        {/* Splash screens for iOS */}
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+      </head>
       <body
         className={`${inter.variable} ${roboto.variable} ${openSans.variable} antialiased`}
       >
-        <AuthProviders>
-          {children}
-          <FloatingSupport />
-          <Toaster position="bottom-center" richColors />
-        </AuthProviders>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProviders>
+            <PWAHandler>
+              {children}
+              <FloatingSupport />
+              <PWAInstallPrompt />
+              <ServiceWorkerRegistration />
+              <Toaster position="bottom-center" richColors />
+            </PWAHandler>
+          </AuthProviders>
+        </ThemeProvider>
       </body>
     </html>
   );

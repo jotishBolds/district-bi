@@ -9,6 +9,7 @@ import {
   User,
 } from "@/app/generated/prisma";
 import { isOfficerRole, isOfficerOrOfficial } from "@/lib/officer-roles";
+import { getCurrentIST } from "@/lib/timezone";
 
 // Define types for our application interfaces
 interface ApplicationWithIncludes extends Application {
@@ -430,15 +431,15 @@ async function handleValidationTransition(
     validationNotes,
   } = additionalData;
 
-  // Generate RR Number using format RR-YYMMDD-HHMM-XX
-  const currentDate = new Date();
+  // Generate RR Number using format RR-YYMMDD-HHMM-XX using Indian Standard Time
+  const currentDate = getCurrentIST();
   const year = currentDate.getFullYear().toString().slice(-2);
   const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
   const day = currentDate.getDate().toString().padStart(2, "0");
   const hour = currentDate.getHours().toString().padStart(2, "0");
   const minute = currentDate.getMinutes().toString().padStart(2, "0");
 
-  // Get count of all applications created today for sequential numbering
+  // Get count of all applications created today for sequential numbering (based on IST day)
   const startOfDay = new Date(currentDate);
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date(currentDate);
@@ -466,9 +467,9 @@ async function handleValidationTransition(
       data: {
         status: ApplicationStatus.VALIDATED,
         rrNumber,
-        validatedAt: new Date(),
+        validatedAt: currentDate,
         currentHolderId: preferredOfficer?.id,
-        updatedAt: new Date(),
+        updatedAt: currentDate,
       },
     });
 
@@ -500,14 +501,15 @@ async function handleValidationTransition(
 
     // Update officer assignment with expected completion date
     if (application.officerAssignments.length > 0) {
+      const expectedCompletionDate = new Date(currentDate);
+      expectedCompletionDate.setDate(expectedCompletionDate.getDate() + 30); // Default 30 days from IST current date
+
       await tx.officerAssignment.updateMany({
         where: {
           applicationId: application.id,
         },
         data: {
-          expectedCompletionDate: new Date(
-            Date.now() + 30 * 24 * 60 * 60 * 1000 // Default 30 days
-          ),
+          expectedCompletionDate,
         },
       });
     }

@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   Home,
   FileText,
@@ -294,10 +295,13 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
         <SheetHeader className="p-4 border-b">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center">
-              <img
+              <Image
                 src="/assets/seal_of_sikkim.png"
                 alt="Government of Sikkim Logo"
+                width={40}
+                height={40}
                 className="h-10 w-10 object-contain"
+                quality={95}
               />
             </div>
             <div className="min-w-0 flex-1">

@@ -117,7 +117,7 @@ const editFrontdeskSchema = z.object({
     .refine((val) => !val || val.length >= 6, {
       message: "Password must be at least 6 characters if provided",
     }),
-  fullName: z.string().min(2, "Full name is required").optional(),
+  fullName: z.string().min(2, "Full name is required"),
   assignedOfficerId: z.string().optional(),
 });
 
@@ -357,15 +357,48 @@ export default function FrontdeskManagementPage() {
     }
   };
 
-  const handleEditUser = (user: FrontdeskUser) => {
+  const handleEditUser = async (user: FrontdeskUser) => {
     setSelectedFrontdeskUser(user);
-    form.reset({
-      email: user.email,
-      phone: user.phone || "",
-      password: "",
-      fullName: "",
-      assignedOfficerId: user.frontdeskAssignments[0]?.officerId || "",
-    });
+
+    // Fetch the user's full details including full name
+    try {
+      const response = await fetch(`/api/admin/users/${user.id}`);
+      if (response.ok) {
+        const userData = await response.json();
+        const fullName =
+          userData.user?.officerProfile?.fullName ||
+          userData.user?.citizenProfile?.fullName ||
+          user.email.split("@")[0]; // fallback to email prefix
+
+        form.reset({
+          email: user.email,
+          phone: user.phone || "",
+          password: "",
+          fullName: fullName,
+          assignedOfficerId: user.frontdeskAssignments[0]?.officerId || "",
+        });
+      } else {
+        // Fallback if API fails
+        form.reset({
+          email: user.email,
+          phone: user.phone || "",
+          password: "",
+          fullName: user.email.split("@")[0], // fallback to email prefix
+          assignedOfficerId: user.frontdeskAssignments[0]?.officerId || "",
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      // Fallback if fetch fails
+      form.reset({
+        email: user.email,
+        phone: user.phone || "",
+        password: "",
+        fullName: user.email.split("@")[0], // fallback to email prefix
+        assignedOfficerId: user.frontdeskAssignments[0]?.officerId || "",
+      });
+    }
+
     setIsEditDialogOpen(true);
   };
 
@@ -376,6 +409,7 @@ export default function FrontdeskManagementPage() {
       const updateData: Record<string, string> = {
         email: data.email,
         phone: data.phone,
+        fullName: data.fullName,
       };
 
       // Only include password if provided
@@ -386,7 +420,7 @@ export default function FrontdeskManagementPage() {
       const response = await fetch(
         `/api/admin/users/${selectedFrontdeskUser.id}`,
         {
-          method: "PUT",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
@@ -923,6 +957,19 @@ export default function FrontdeskManagementPage() {
             >
               <FormField
                 control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter full name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -979,7 +1026,12 @@ export default function FrontdeskManagementPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Update User</Button>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {form.formState.isSubmitting ? "Updating..." : "Update User"}
+                </Button>
               </DialogFooter>
             </form>
           </Form>

@@ -15,6 +15,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -51,6 +59,11 @@ import {
   Loader2,
   Building2,
   Globe,
+  Copy,
+  Clock,
+  Phone,
+  Mail,
+  MapPin,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -215,6 +228,21 @@ export default function CreateApplicationPage() {
     "PUBLIC" | "GOVERNMENT"
   >("PUBLIC");
   const [sameAsPhoneNumber, setSameAsPhoneNumber] = useState(false);
+
+  // Success modal state
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successData, setSuccessData] = useState<{
+    id: string;
+    rrNumber: string;
+    message: string;
+    status: string;
+    citizenName: string;
+    citizenPhone: string;
+    citizenEmail?: string;
+    serviceCategory?: string;
+    subject: string;
+    submittedAt: string;
+  } | null>(null);
 
   // Add refs for each step card
   const stepRefs = [
@@ -742,14 +770,27 @@ export default function CreateApplicationPage() {
         );
       }
 
-      toast.success("Application created successfully!");
+      // Get the service category name for display
+      const selectedServiceCategory = serviceCategories.find(
+        (cat) => cat.id === (data.serviceCategoryId || uncategorisedCategoryId)
+      );
 
-      // Redirect based on frontdesk type
-      if (isGeneralFrontdesk) {
-        router.push(`/dashboard`); // General frontdesk goes to main dashboard
-      } else {
-        router.push(`/dashboard/frontdesk-dashboard`); // Specific frontdesk goes to validate
-      }
+      // Store success data for modal
+      setSuccessData({
+        id: applicationResult.id,
+        rrNumber: applicationResult.rrNumber,
+        message: applicationResult.message,
+        status: applicationResult.status,
+        citizenName: data.citizenName,
+        citizenPhone: data.citizenPhone,
+        citizenEmail: data.citizenEmail || "",
+        serviceCategory: selectedServiceCategory?.name || "Uncategorised",
+        subject: data.subject,
+        submittedAt: new Date().toISOString(),
+      });
+
+      // Show success modal instead of toast
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Error creating application:", error);
       toast.error(
@@ -758,6 +799,48 @@ export default function CreateApplicationPage() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  // Handle success modal close and form reset
+  const handleSuccessModalClose = () => {
+    setShowSuccessModal(false);
+    setSuccessData(null);
+
+    // Reset form to initial state
+    form.reset({
+      serviceCategoryId: "",
+      departmentId: "",
+      subject: "",
+      citizenName: "",
+      citizenPhone: "",
+      citizenEmail: "",
+      citizenAddress: "",
+      citizenGender: "",
+      citizenAlternateNumber: "",
+      assignedOfficerId: "",
+      priority: 1,
+      instructions: "",
+    });
+
+    // Reset other form state
+    setDocuments([]);
+    setCurrentStep(1);
+    setSameAsPhoneNumber(false);
+
+    // Show success toast
+    toast.success("Form reset! Ready for next application.");
+  };
+
+  // Copy RR number to clipboard
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast.success("RR Number copied to clipboard!");
+      })
+      .catch(() => {
+        toast.error("Failed to copy to clipboard");
+      });
   };
 
   if (loading) {
@@ -777,6 +860,25 @@ export default function CreateApplicationPage() {
       </div>
     );
   }
+
+  // Helper function to format date
+  const formatSubmittedDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      const options: Intl.DateTimeFormatOptions = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Asia/Kolkata",
+        hour12: true,
+      };
+      return date.toLocaleString("en-IN", options);
+    } catch (error) {
+      return dateString; // Fallback to original string if formatting fails
+    }
+  };
 
   const progress = calculateProgress();
 
@@ -1190,7 +1292,9 @@ export default function CreateApplicationPage() {
                         size="sm"
                         className="bg-blue-600 hover:bg-blue-700"
                       >
-                        Next: Citizen Info
+                        {applicationType === "GOVERNMENT"
+                          ? "Next: Department Info"
+                          : "Next: Citizen Info"}
                       </Button>
                     )}
                   </div>
@@ -1211,10 +1315,14 @@ export default function CreateApplicationPage() {
                     </div>
                     <div>
                       <CardTitle className="text-lg">
-                        Citizen Information
+                        {applicationType === "GOVERNMENT"
+                          ? "Department Information"
+                          : "Citizen Information"}
                       </CardTitle>
                       <CardDescription className="text-sm">
-                        Enter the citizen&apos;s personal details
+                        {applicationType === "GOVERNMENT"
+                          ? "Enter the department details for this dak"
+                          : "Enter the citizen's personal details"}
                       </CardDescription>
                     </div>
                   </div>
@@ -1227,11 +1335,17 @@ export default function CreateApplicationPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
-                            Full Name *
+                            {applicationType === "GOVERNMENT"
+                              ? "Department Name *"
+                              : "Full Name *"}
                           </FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Enter citizen's full name"
+                              placeholder={
+                                applicationType === "GOVERNMENT"
+                                  ? "Enter department name"
+                                  : "Enter citizen's full name"
+                              }
                               className="h-11"
                               {...field}
                               ref={(e) => {
@@ -1251,11 +1365,17 @@ export default function CreateApplicationPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
-                            Phone Number *
+                            {applicationType === "GOVERNMENT"
+                              ? "Contact Number *"
+                              : "Phone Number *"}
                           </FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="10-digit phone number"
+                              placeholder={
+                                applicationType === "GOVERNMENT"
+                                  ? "Department contact number"
+                                  : "10-digit phone number"
+                              }
                               className="h-11"
                               {...field}
                             />
@@ -1271,14 +1391,20 @@ export default function CreateApplicationPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
-                            Email Address
+                            {applicationType === "GOVERNMENT"
+                              ? "Department Email"
+                              : "Email Address"}
                             <span className="text-gray-400 ml-1">
                               (Optional)
                             </span>
                           </FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="citizen@example.com"
+                              placeholder={
+                                applicationType === "GOVERNMENT"
+                                  ? "department@example.com"
+                                  : "citizen@example.com"
+                              }
                               type="email"
                               className="h-11"
                               {...field}
@@ -1289,36 +1415,38 @@ export default function CreateApplicationPage() {
                       )}
                     />
 
-                    <FormField
-                      control={form.control}
-                      name="citizenGender"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-gray-700">
-                            Gender
-                            <span className="text-gray-400 ml-1">
-                              (Optional)
-                            </span>
-                          </FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger className="h-11">
-                                <SelectValue placeholder="Select gender" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="MALE">Male</SelectItem>
-                              <SelectItem value="FEMALE">Female</SelectItem>
-                              <SelectItem value="OTHER">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {applicationType === "PUBLIC" && (
+                      <FormField
+                        control={form.control}
+                        name="citizenGender"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">
+                              Gender
+                              <span className="text-gray-400 ml-1">
+                                (Optional)
+                              </span>
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="h-11">
+                                  <SelectValue placeholder="Select gender" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="MALE">Male</SelectItem>
+                                <SelectItem value="FEMALE">Female</SelectItem>
+                                <SelectItem value="OTHER">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
                   </div>
 
                   <FormField
@@ -1327,11 +1455,17 @@ export default function CreateApplicationPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-gray-700">
-                          Complete Address *
+                          {applicationType === "GOVERNMENT"
+                            ? "Department Address *"
+                            : "Complete Address *"}
                         </FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Enter complete residential address with pincode"
+                            placeholder={
+                              applicationType === "GOVERNMENT"
+                                ? "Enter department office address with location details"
+                                : "Enter complete residential address with pincode"
+                            }
                             className="min-h-[100px] resize-none"
                             {...field}
                           />
@@ -1347,7 +1481,9 @@ export default function CreateApplicationPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-gray-700">
-                          Alternate Number (WhatsApp)
+                          {applicationType === "GOVERNMENT"
+                            ? "Alternate Contact (WhatsApp)"
+                            : "Alternate Number (WhatsApp)"}
                           <span className="text-gray-400 ml-1">(Optional)</span>
                         </FormLabel>
                         <div className="space-y-3">
@@ -1367,12 +1503,18 @@ export default function CreateApplicationPage() {
                               }}
                             />
                             <Label htmlFor="sameAsPhone" className="text-sm">
-                              Same as phone number
+                              {applicationType === "GOVERNMENT"
+                                ? "Same as contact number"
+                                : "Same as phone number"}
                             </Label>
                           </div>
                           <FormControl>
                             <Input
-                              placeholder="Enter WhatsApp number"
+                              placeholder={
+                                applicationType === "GOVERNMENT"
+                                  ? "Enter alternate contact number"
+                                  : "Enter WhatsApp number"
+                              }
                               className="h-11"
                               disabled={sameAsPhoneNumber}
                               {...field}
@@ -1987,6 +2129,157 @@ export default function CreateApplicationPage() {
           </form>
         </Form>
       </div>
+      {/* Success Modal */}
+      <Dialog
+        open={showSuccessModal}
+        onOpenChange={(open) => {
+          if (!open) {
+            handleSuccessModalClose();
+          }
+        }}
+      >
+        <DialogContent className="max-w-md w-[95vw] mx-auto p-0 overflow-hidden">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Application Created Successfully</DialogTitle>
+            <DialogDescription>
+              {applicationType === "GOVERNMENT"
+                ? "The dak has been received and assigned an RR number."
+                : "Your application has been submitted and assigned an RR number."}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 sm:p-6">
+            <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Application Created Successfully!
+              </h3>
+              <p className="text-sm text-gray-600">
+                {applicationType === "GOVERNMENT"
+                  ? "The dak has been received and assigned an RR number."
+                  : "Your application has been submitted and assigned an RR number."}
+              </p>
+            </div>
+
+            {/* RR Number Display */}
+            <div className="bg-white rounded-lg border border-green-200 p-4 mb-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    Reference Number
+                  </p>
+                  <p className="text-lg font-bold text-gray-900 font-mono">
+                    {successData?.rrNumber}
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard(successData?.rrNumber || "")}
+                  className="h-8 w-8 p-0"
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Application Details */}
+            <div className="space-y-3 mb-6">
+              <div className="flex items-start space-x-3">
+                <Clock className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-gray-500">
+                    Submitted At
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    {successData?.submittedAt
+                      ? formatSubmittedDate(successData.submittedAt)
+                      : "N/A"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <Phone className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-gray-500">
+                    {applicationType === "GOVERNMENT"
+                      ? "Department Contact"
+                      : "Citizen Contact"}
+                  </p>
+                  <p className="text-sm text-gray-900">
+                    {successData?.citizenName} - {successData?.citizenPhone}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <Mail className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-gray-500">Service</p>
+                  <p className="text-sm text-gray-900">
+                    {successData?.serviceCategory || "Not specified"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-gray-500">Subject</p>
+                  <p className="text-sm text-gray-900">
+                    {successData?.subject}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <CheckCircle className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-gray-500">Status</p>
+                  <p className="text-sm text-gray-900 capitalize">
+                    {successData?.status}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              {/* Primary Action */}
+              <Button
+                onClick={handleSuccessModalClose}
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
+              >
+                Create Another Application
+              </Button>
+
+              {/* Secondary Actions */}
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => copyToClipboard(successData?.rrNumber || "")}
+                  className="text-xs sm:text-sm"
+                >
+                  <Copy className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  Copy RR
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleSuccessModalClose}
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 text-xs sm:text-sm"
+                >
+                  <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Animation CSS */}
       <style jsx global>{`
         .animate-step-highlight {

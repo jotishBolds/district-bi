@@ -27,10 +27,12 @@ export default function Navbar() {
               <div className="flex-shrink-0">
                 <Image
                   src="/assets/seal_of_sikkim.png"
-                  width={40}
-                  height={40}
+                  width={48}
+                  height={48}
                   alt="Seal of Sikkim"
-                  className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12"
+                  className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 object-contain"
+                  priority
+                  quality={95}
                 />
               </div>
               <div className="ml-2 sm:ml-3 min-w-0">
@@ -63,24 +65,26 @@ export default function Navbar() {
             <div className="flex items-center space-x-2">
               <Image
                 src="/assets/skm-header.png"
-                width={100}
-                height={100}
-                quality={100}
-                alt="Image 1"
+                width={48}
+                height={48}
+                quality={95}
+                alt="SKM Header"
                 className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
               />
               <Image
                 src="/assets/skm-gov.png"
-                width={100}
-                height={100}
-                alt="Image 2"
+                width={48}
+                height={48}
+                quality={95}
+                alt="SKM Government"
                 className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
               />
               <Image
                 src="/assets/skm-gov-hcm.png"
-                width={100}
-                height={100}
-                alt="Image 3"
+                width={48}
+                height={48}
+                quality={95}
+                alt="SKM Government HCM"
                 className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
               />
             </div>
@@ -155,24 +159,26 @@ export default function Navbar() {
               <div className="flex items-center space-x-3">
                 <Image
                   src="/assets/skm-header.png"
-                  width={100}
-                  height={100}
-                  quality={100}
-                  alt="Image 1"
+                  width={48}
+                  height={48}
+                  quality={95}
+                  alt="SKM Header"
                   className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
                 />
                 <Image
                   src="/assets/skm-gov.png"
-                  width={100}
-                  height={100}
-                  alt="Image 2"
+                  width={48}
+                  height={48}
+                  quality={95}
+                  alt="SKM Government"
                   className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
                 />
                 <Image
                   src="/assets/skm-gov-hcm.png"
-                  width={100}
-                  height={100}
-                  alt="Image 3"
+                  width={48}
+                  height={48}
+                  quality={95}
+                  alt="SKM Government HCM"
                   className="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover"
                 />
               </div>

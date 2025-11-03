@@ -353,6 +353,7 @@ import {
 // import { put } from "@vercel/blob"; // Commented out for development
 import { v4 as uuidv4 } from "uuid";
 import { uploadFileToS3, validateFile } from "@/lib/s3-storage";
+import { getCurrentIST } from "@/lib/timezone";
 
 export async function GET(request: NextRequest) {
   try {
@@ -966,15 +967,15 @@ export async function POST(request: NextRequest) {
 
     // Start database transaction
     const result = await prisma.$transaction(async (tx) => {
-      // Generate RR number in format: RR-YYMMDD-HHMM-XX
-      const currentDate = new Date();
+      // Generate RR number in format: RR-YYMMDD-HHMM-XX using Indian Standard Time
+      const currentDate = getCurrentIST();
       const year = currentDate.getFullYear().toString().slice(-2);
       const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
       const day = currentDate.getDate().toString().padStart(2, "0");
       const hour = currentDate.getHours().toString().padStart(2, "0");
       const minute = currentDate.getMinutes().toString().padStart(2, "0");
 
-      // Get count of all applications created today for sequential numbering
+      // Get count of all applications created today for sequential numbering (based on IST day)
       const startOfDay = new Date(currentDate);
       startOfDay.setHours(0, 0, 0, 0);
       const endOfDay = new Date(currentDate);
@@ -1016,9 +1017,9 @@ export async function POST(request: NextRequest) {
           status: applicationStatus,
           currentHolderId,
           rrNumber,
-          submittedAt: new Date(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          submittedAt: currentDate,
+          createdAt: currentDate,
+          updatedAt: currentDate,
         },
       });
 

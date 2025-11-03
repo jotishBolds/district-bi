@@ -7,6 +7,7 @@ import {
   ApplicationStatus,
   DocumentType,
 } from "@/app/generated/prisma";
+import { getCurrentIST } from "@/lib/timezone";
 
 type AuthenticatedSession = {
   user: {
@@ -503,15 +504,15 @@ async function handleValidateApplication(
     });
   }
 
-  // Generate RR Number using format RR-YYMMDD-HHMM-XX
-  const currentDate = new Date();
+  // Generate RR Number using format RR-YYMMDD-HHMM-XX using Indian Standard Time
+  const currentDate = getCurrentIST();
   const year = currentDate.getFullYear().toString().slice(-2);
   const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
   const day = currentDate.getDate().toString().padStart(2, "0");
   const hour = currentDate.getHours().toString().padStart(2, "0");
   const minute = currentDate.getMinutes().toString().padStart(2, "0");
 
-  // Get count of all applications created today for sequential numbering
+  // Get count of all applications created today for sequential numbering (based on IST day)
   const startOfDay = new Date(currentDate);
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date(currentDate);
@@ -545,8 +546,8 @@ async function handleValidateApplication(
       data: {
         status: ApplicationStatus.VALIDATED,
         rrNumber,
-        validatedAt: new Date(),
-        updatedAt: new Date(),
+        validatedAt: currentDate,
+        updatedAt: currentDate,
       },
     });
 

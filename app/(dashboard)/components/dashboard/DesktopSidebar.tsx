@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   Home,
   FileText,
@@ -291,10 +292,13 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
     <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:block lg:w-72 lg:bg-background lg:border-r lg:border-border">
       <div className="flex h-16 shrink-0 items-center px-4 sm:px-6 border-b border-border">
         <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center">
-          <img
+          <Image
             src="/assets/seal_of_sikkim.png"
             alt="Government of Sikkim Logo"
+            width={40}
+            height={40}
             className="h-10 w-10 object-contain"
+            quality={95}
           />
         </div>
         <div className="ml-3 min-w-0 flex-1">
