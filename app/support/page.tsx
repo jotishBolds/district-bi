@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { FeedbackModal } from "@/components/FeedbackModal";
 
 const SupportPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -134,15 +135,15 @@ const SupportPage = () => {
   const contactInfo = {
     office: {
       name: "District Collectorate",
-      address: "Civil Lines, District Headquarters",
-      phone: "+91-XXXX-XXXXXX",
-      email: "dc.office@district.gov.in",
+      address: "Sichey, Gangtok Sikkim",
+      phone: "03592 284444",
+      email: "dm-gangtok@sikkim.gov.in",
       hours: "Monday to Friday: 10:00 AM - 5:00 PM",
     },
     support: {
-      helpdesk: "+91-XXXX-XXXXXX",
-      email: "support@district.gov.in",
-      hours: "Monday to Saturday: 9:00 AM - 6:00 PM",
+      helpdesk: "+91 8618436026",
+      email: "gangtokdistrict@gmail.com",
+      hours: "Monday to Friday: 10:00 AM - 4:30 PM",
     },
   };
 
@@ -576,7 +577,7 @@ const SupportPage = () => {
                       className="border-red-300 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/30"
                     >
                       <Mail className="h-4 w-4 mr-2" />
-                      emergency@district.gov.in
+                      gangtokdistrict@gmail.com
                     </Button>
                   </div>
                 </CardContent>
@@ -593,10 +594,12 @@ const SupportPage = () => {
                   </p>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg">
-                    <Mail className="h-4 w-4 mr-2" />
-                    Send Feedback
-                  </Button>
+                  <FeedbackModal>
+                    <Button className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg">
+                      <Mail className="h-4 w-4 mr-2" />
+                      Send Feedback
+                    </Button>
+                  </FeedbackModal>
                 </CardContent>
               </Card>
             </TabsContent>

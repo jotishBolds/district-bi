@@ -354,6 +354,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { uploadFileToS3, validateFile } from "@/lib/s3-storage";
 import { getCurrentIST } from "@/lib/timezone";
+import { sendApplicationCreatedEmail } from "@/lib/mail";
 
 export async function GET(request: NextRequest) {
   try {
@@ -1126,6 +1127,71 @@ export async function POST(request: NextRequest) {
 
       return application;
     });
+
+    // Send email notification to citizen if email is provided
+    try {
+      console.log("🔍 Email validation debug:");
+      console.log("  citizenEmail:", citizenEmail);
+      console.log("  citizenEmail exists:", !!citizenEmail);
+      console.log("  citizenEmail after trim:", citizenEmail?.trim());
+      console.log(
+        "  citizenEmail is not empty:",
+        citizenEmail && citizenEmail.trim() !== ""
+      );
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isValidEmail = citizenEmail && emailRegex.test(citizenEmail.trim());
+      console.log("  citizenEmail is valid format:", isValidEmail);
+
+      if (citizenEmail && citizenEmail.trim() !== "" && isValidEmail) {
+        console.log("✅ Proceeding to send email to:", citizenEmail);
+
+        // Get department name for email (only if departmentId exists)
+        let department = null;
+        if (departmentId && departmentId.trim() !== "") {
+          department = await prisma.department.findUnique({
+            where: { id: departmentId },
+            select: { name: true },
+          });
+        }
+
+        const currentDate = new Date().toLocaleDateString("en-IN", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: "Asia/Kolkata",
+        });
+
+        await sendApplicationCreatedEmail({
+          to: citizenEmail.trim(),
+          citizenName,
+          rrNumber: result.rrNumber!,
+          subject,
+          departmentName: undefined, // Don't show department for citizens
+          createdDate: currentDate,
+          trackingUrl: "http://myapplication.dacgangtok.in/",
+        });
+
+        console.log(
+          `✅ Application created email sent to: ${citizenEmail.trim()}`
+        );
+      } else {
+        console.log("❌ Email not sent - reason:");
+        if (!citizenEmail) {
+          console.log("  - citizenEmail is null/undefined");
+        } else if (citizenEmail.trim() === "") {
+          console.log("  - citizenEmail is empty after trim");
+        } else if (!emailRegex.test(citizenEmail.trim())) {
+          console.log("  - citizenEmail has invalid format:", citizenEmail);
+        }
+      }
+    } catch (emailError) {
+      console.error("Failed to send application created email:", emailError);
+      // Don't fail the entire process if email fails
+    }
 
     const statusMessage = isGeneralFrontdesk
       ? "Application created and placed in queue for officer assignment"

@@ -16,33 +16,52 @@ export const authOptions: AuthOptions = {
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
+        identifier: { label: "Email or Phone", type: "text" },
         password: { label: "Password", type: "password" },
+        loginType: { label: "Login Type", type: "text" },
       },
       async authorize(credentials) {
-        if (!credentials?.email) {
+        if (!credentials?.email && !credentials?.identifier) {
           return null;
         }
 
+        const identifier = credentials.email || credentials.identifier;
+
         // Special case for OTP verification
         if (credentials.password === "verified-by-otp") {
-          console.log(
-            "🔐 Processing OTP verification signin for:",
-            credentials.email
-          );
+          console.log("🔐 Processing OTP verification signin for:", identifier);
 
-          const user = await prisma.user.findUnique({
-            where: {
-              email: credentials.email,
-            },
-            include: {
-              officerProfile: {
-                select: { fullName: true, designation: true },
+          // Determine if identifier is email or phone
+          const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
+
+          let user;
+          if (isEmail) {
+            user = await prisma.user.findUnique({
+              where: { email: identifier },
+              include: {
+                officerProfile: {
+                  select: { fullName: true, designation: true },
+                },
+                citizenProfile: {
+                  select: { fullName: true },
+                },
               },
-              citizenProfile: {
-                select: { fullName: true },
+            });
+          } else {
+            // Clean phone number for consistent format
+            const cleanPhone = identifier.replace(/[\s\-\(\)]/g, "");
+            user = await prisma.user.findUnique({
+              where: { phone: cleanPhone },
+              include: {
+                officerProfile: {
+                  select: { fullName: true, designation: true },
+                },
+                citizenProfile: {
+                  select: { fullName: true },
+                },
               },
-            },
-          });
+            });
+          }
 
           if (!user || !user.isActive) {
             console.log("❌ User not found or inactive:", {
@@ -79,19 +98,44 @@ export const authOptions: AuthOptions = {
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
-          include: {
-            officerProfile: {
-              select: { fullName: true, designation: true },
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier);
+        const isPhone = /^[+]?[\d\s\-\(\)]{10,15}$/.test(identifier);
+
+        let user;
+
+        if (isEmail) {
+          user = await prisma.user.findUnique({
+            where: {
+              email: identifier,
             },
-            citizenProfile: {
-              select: { fullName: true },
+            include: {
+              officerProfile: {
+                select: { fullName: true, designation: true },
+              },
+              citizenProfile: {
+                select: { fullName: true },
+              },
             },
-          },
-        });
+          });
+        } else if (isPhone) {
+          // Clean phone number for consistent format
+          const cleanPhone = identifier.replace(/[\s\-\(\)]/g, "");
+          user = await prisma.user.findUnique({
+            where: {
+              phone: cleanPhone,
+            },
+            include: {
+              officerProfile: {
+                select: { fullName: true, designation: true },
+              },
+              citizenProfile: {
+                select: { fullName: true },
+              },
+            },
+          });
+        } else {
+          return null;
+        }
 
         if (!user || !user.passwordHash) {
           return null;
@@ -116,7 +160,7 @@ export const authOptions: AuthOptions = {
         // Store OTP verification token with pre-auth data
         await prisma.verificationToken.create({
           data: {
-            identifier: user.email,
+            identifier: isEmail ? user.email : user.phone || user.email, // Use phone for phone login, email as fallback
             token: otp,
             expires: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
             type: "LOGIN_OTP",
@@ -126,6 +170,8 @@ export const authOptions: AuthOptions = {
               preAuthValidated: true,
               timestamp: Date.now(),
               phone: user.phone, // Include phone for enhanced verification
+              email: user.email, // Include email for enhanced verification
+              loginMethod: isEmail ? "email" : "phone",
             }),
           },
         });
@@ -134,8 +180,9 @@ export const authOptions: AuthOptions = {
         console.log("=".repeat(50));
         console.log("🔐 LOGIN OTP GENERATED");
         console.log("📧 EMAIL:", user.email);
-        console.log("� PHONE:", user.phone || "Not provided");
-        console.log("�🔐 OTP CODE:", otp);
+        console.log("📱 PHONE:", user.phone || "Not provided");
+        console.log("🔐 OTP CODE:", otp);
+        console.log("📞 LOGIN METHOD:", isEmail ? "Email" : "Phone");
         console.log("⏰ EXPIRES IN: 10 minutes");
         console.log("=".repeat(50));
 

@@ -7,21 +7,29 @@ import { signIn } from "next-auth/react";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email, otp, type = "EMAIL_VERIFICATION" } = body;
+    const { email, identifier, otp, type = "EMAIL_VERIFICATION" } = body;
 
-    console.log("🔍 OTP Verification Debug:", { email, otp, type });
+    // Support both legacy email parameter and new identifier parameter
+    const userIdentifier = identifier || email;
 
-    if (!email || !otp) {
+    console.log("🔍 OTP Verification Debug:", {
+      email,
+      identifier: userIdentifier,
+      otp,
+      type,
+    });
+
+    if (!userIdentifier || !otp) {
       return NextResponse.json(
-        { error: "Email and OTP are required" },
+        { error: "Identifier and OTP are required" },
         { status: 400 }
       );
     }
 
-    // Find the verification token - check both email and SMS OTP
+    // Find the verification token - check both email and phone
     const verificationToken = await prisma.verificationToken.findFirst({
       where: {
-        identifier: email,
+        identifier: userIdentifier,
         token: otp,
         expires: {
           gt: new Date(),
@@ -44,11 +52,23 @@ export async function POST(req: NextRequest) {
     // If not found in email verification, check SMS OTP table
     let smsOtpRecord = null;
     if (!verificationToken) {
-      // Get user's phone number
-      const user = await prisma.user.findUnique({
-        where: { email },
-        select: { phone: true },
-      });
+      // Get user by identifier (email or phone)
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userIdentifier);
+      let user;
+
+      if (isEmail) {
+        user = await prisma.user.findUnique({
+          where: { email: userIdentifier },
+          select: { phone: true, email: true },
+        });
+      } else {
+        // Clean phone number for consistent format
+        const cleanPhone = userIdentifier.replace(/[\s\-\(\)]/g, "");
+        user = await prisma.user.findUnique({
+          where: { phone: cleanPhone },
+          select: { phone: true, email: true },
+        });
+      }
 
       if (user?.phone) {
         smsOtpRecord = await prisma.smsOtp.findFirst({
@@ -126,17 +146,37 @@ export async function POST(req: NextRequest) {
       type === "LOGIN_OTP"
     ) {
       // For login OTP verification - verify user exists and is valid
-      const user = await prisma.user.findUnique({
-        where: { email },
-        include: {
-          officerProfile: {
-            select: { fullName: true, designation: true },
+      // Determine if userIdentifier is email or phone
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userIdentifier);
+
+      let user;
+      if (isEmail) {
+        user = await prisma.user.findUnique({
+          where: { email: userIdentifier },
+          include: {
+            officerProfile: {
+              select: { fullName: true, designation: true },
+            },
+            citizenProfile: {
+              select: { fullName: true },
+            },
           },
-          citizenProfile: {
-            select: { fullName: true },
+        });
+      } else {
+        // Clean phone number for consistent format
+        const cleanPhone = userIdentifier.replace(/[\s\-\(\)]/g, "");
+        user = await prisma.user.findUnique({
+          where: { phone: cleanPhone },
+          include: {
+            officerProfile: {
+              select: { fullName: true, designation: true },
+            },
+            citizenProfile: {
+              select: { fullName: true },
+            },
           },
-        },
-      });
+        });
+      }
 
       if (!user) {
         return NextResponse.json({ error: "User not found" }, { status: 400 });
@@ -144,7 +184,7 @@ export async function POST(req: NextRequest) {
 
       // Update user as active and last login time
       await prisma.user.update({
-        where: { email },
+        where: { id: user.id },
         data: {
           isActive: true,
           lastLoginAt: new Date(),

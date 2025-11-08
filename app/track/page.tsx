@@ -35,6 +35,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getRoleMapping } from "@/lib/officer-roles";
 import { UserRole } from "@/app/generated/prisma";
+import { useRouter } from "next/navigation";
 
 interface ApplicationData {
   id: string;
@@ -101,7 +102,7 @@ export default function TrackApplicationPage() {
   const [inputType, setInputType] = useState<
     "RR_NUMBER" | "PHONE_NUMBER" | null
   >(null);
-
+  const router = useRouter();
   // Helper function to get officer display information
   const getOfficerDisplayInfo = (entry: {
     changedBy: string;
@@ -395,6 +396,10 @@ export default function TrackApplicationPage() {
     setStep("applications");
     setApplicationData(null);
     setSelectedApplicationId(null);
+  };
+
+  const handleContactSupport = () => {
+    router.push("/support");
   };
 
   const getStatusBadge = (status: string) => {
@@ -809,7 +814,11 @@ export default function TrackApplicationPage() {
                   Contact our support team for assistance with your
                   applications.
                 </p>
-                <Button variant="secondary" size="sm">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleContactSupport}
+                >
                   Contact Support
                 </Button>
               </CardContent>
@@ -857,8 +866,8 @@ export default function TrackApplicationPage() {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Status Overview Card */}
-              <Card className="border border-slate-200 shadow-lg bg-white rounded-xl overflow-hidden">
-                <CardHeader className="pb-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
+              <Card className="border border-slate-200 shadow-lg bg-white rounded-xl overflow-hidden ">
+                <CardHeader className="pb-4  border-b border-slate-100">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                       <CardTitle className="text-xl text-slate-900">
@@ -1000,12 +1009,12 @@ export default function TrackApplicationPage() {
 
               {/* Timeline Card */}
               <Card className="border border-slate-200 shadow-lg bg-white rounded-xl overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
+                <CardHeader className=" border-b border-slate-100">
                   <CardTitle className="flex items-center gap-2 text-xl text-slate-900">
                     <Clock className="w-5 h-5 text-blue-600" />
                     Application Timeline
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="mb-4">
                     Track the progress of your application
                   </CardDescription>
                 </CardHeader>
@@ -1016,9 +1025,12 @@ export default function TrackApplicationPage() {
                       return (
                         <div key={index} className="relative">
                           {index !== applicationData.workflow.length - 1 && (
-                            <div className="absolute left-4 top-8 w-0.5 h-16 bg-slate-200" />
+                            <div
+                              className="absolute left-4 top-8 w-0.5 bg-slate-200"
+                              style={{ height: "calc(100% + 1rem)" }}
+                            />
                           )}
-                          <div className="flex gap-4">
+                          <div className="flex gap-4 pb-6">
                             <div
                               className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
                               style={{ backgroundColor: "#1170cd" }}
@@ -1114,7 +1126,7 @@ export default function TrackApplicationPage() {
             <div className="space-y-6">
               {/* Quick Actions */}
               <Card className="border border-slate-200 shadow-lg bg-white rounded-xl">
-                <CardHeader className="bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
+                <CardHeader className=" border-b border-slate-100">
                   <CardTitle className="text-lg text-slate-900">
                     Quick Actions
                   </CardTitle>
@@ -1185,7 +1197,12 @@ export default function TrackApplicationPage() {
                     Contact our support team for assistance with your
                     application.
                   </p>
-                  <Button variant="secondary" size="sm" className="w-full">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full"
+                    onClick={handleContactSupport}
+                  >
                     Contact Support
                   </Button>
                 </CardContent>

@@ -24,16 +24,18 @@ function OtpVerificationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
-  const email = searchParams.get("email") || "";
+  const identifier = searchParams.get("identifier");
   const verificationType = searchParams.get("type") || "LOGIN_OTP";
   const [isLoading, setIsLoading] = useState(false);
+  const [userPhone, setUserPhone] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [isEmail, setIsEmail] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [timer, setTimer] = useState(60);
   const [verificationError, setVerificationError] = useState<string | null>(
     null
   );
-  const [userPhone, setUserPhone] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Helper functions to mask sensitive information
@@ -56,27 +58,32 @@ function OtpVerificationContent() {
   };
 
   useEffect(() => {
-    if (!email) {
+    if (!identifier) {
       router.push("/login");
       return;
     }
 
-    // Fetch user phone number
-    const fetchUserPhone = async () => {
+    // Determine if identifier is email or phone
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setIsEmail(emailRegex.test(identifier));
+
+    // Fetch user details (both email and phone)
+    const fetchUserData = async () => {
       try {
         const response = await fetch(
-          `/api/user/phone?email=${encodeURIComponent(email)}`
+          `/api/user/details?identifier=${encodeURIComponent(identifier)}`
         );
         if (response.ok) {
           const data = await response.json();
-          setUserPhone(data.phone);
+          setUserPhone(data.phone || "");
+          setUserEmail(data.email || "");
         }
       } catch (error) {
-        console.error("Failed to fetch user phone:", error);
+        console.error("Failed to fetch user data:", error);
       }
     };
 
-    fetchUserPhone();
+    fetchUserData();
 
     // Focus on first input
     if (inputRefs.current[0]) {
@@ -89,7 +96,7 @@ function OtpVerificationContent() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [email, router]);
+  }, [identifier, router]);
 
   // Removed session watcher to prevent redirect loops
 
@@ -163,7 +170,7 @@ function OtpVerificationContent() {
 
     try {
       console.log("Sending OTP verification request:", {
-        email,
+        identifier,
         otp: otpValue,
         type: verificationType,
       }); // Debug log
@@ -174,7 +181,7 @@ function OtpVerificationContent() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          identifier,
           otp: otpValue,
           type: verificationType,
         }),
@@ -198,7 +205,7 @@ function OtpVerificationContent() {
           console.log("Attempting NextAuth signIn..."); // Debug log
 
           const signInResult = await signIn("credentials", {
-            email,
+            identifier,
             password: "verified-by-otp",
             redirect: false,
             callbackUrl: "/dashboard",
@@ -230,7 +237,7 @@ function OtpVerificationContent() {
         // For password reset, redirect with the resetToken
         router.push(
           `/reset-password?email=${encodeURIComponent(
-            email
+            identifier || ""
           )}&token=${encodeURIComponent(data.resetToken)}`
         );
       }
@@ -260,7 +267,7 @@ function OtpVerificationContent() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          identifier,
           type: verificationType,
         }),
       });
@@ -305,19 +312,40 @@ function OtpVerificationContent() {
             <CardDescription className="text-center">
               We&apos;ve sent a verification code to:
               <div className="mt-2 space-y-1">
-                <div className="font-medium text-blue-600 flex items-center justify-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  {maskEmail(email)}
-                </div>
+                {userEmail && (
+                  <div className="font-medium text-blue-600 flex items-center justify-center gap-2">
+                    <Mail className="w-4 h-4" />
+                    {maskEmail(userEmail)}
+                  </div>
+                )}
                 {userPhone && (
                   <div className="font-medium text-blue-600 flex items-center justify-center gap-2">
                     <Phone className="w-4 h-4" />
-                    +91 {maskPhone(userPhone)}
+                    {maskPhone(userPhone)}
+                  </div>
+                )}
+                {!userEmail && !userPhone && (
+                  <div className="font-medium text-blue-600 flex items-center justify-center gap-2">
+                    {isEmail ? (
+                      <>
+                        <Mail className="w-4 h-4" />
+                        {maskEmail(identifier || "")}
+                      </>
+                    ) : (
+                      <>
+                        <Phone className="w-4 h-4" />
+                        {maskPhone(identifier || "")}
+                      </>
+                    )}
                   </div>
                 )}
               </div>
               <div className="text-xs text-gray-500 mt-2">
-                Enter the same 6-digit code from either email or SMS
+                {userEmail && userPhone
+                  ? "Enter the same 6-digit code from either email or SMS"
+                  : userEmail
+                  ? "Enter the 6-digit code sent to your email"
+                  : "Enter the 6-digit code sent to your phone"}
               </div>
             </CardDescription>
           </CardHeader>

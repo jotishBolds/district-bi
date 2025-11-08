@@ -34,12 +34,19 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 
-// Form schema with validation
+// Form schema with validation for email or phone
 const loginFormSchema = z.object({
-  email: z
+  identifier: z
     .string()
-    .email("Please enter a valid government email address")
-    .min(1, "Email is required"),
+    .min(1, "Email or phone number is required")
+    .refine((value) => {
+      // Check if it's a valid email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // Check if it's a valid phone number (Indian format)
+      const phoneRegex = /^[+]?[\d\s\-\(\)]{10,15}$/;
+
+      return emailRegex.test(value) || phoneRegex.test(value);
+    }, "Please enter a valid email address or phone number"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -143,7 +150,7 @@ function GovernmentLoginForm() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: "",
+      identifier: "",
       password: "",
     },
   });
@@ -175,11 +182,31 @@ function GovernmentLoginForm() {
     }
 
     try {
-      const result = await signIn("credentials", {
-        email: data.email.trim(),
+      // Check if identifier is email or phone
+      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.identifier);
+      const isPhone = /^[+]?[\d\s\-\(\)]{10,15}$/.test(data.identifier);
+
+      const loginData: {
+        password: string;
+        redirect: boolean;
+        email?: string;
+        phone?: string;
+        identifier?: string;
+        loginType?: string;
+      } = {
         password: data.password,
         redirect: false,
-      });
+      };
+
+      if (isEmail) {
+        loginData.email = data.identifier.trim();
+      } else if (isPhone) {
+        // For phone login, we'll use a special identifier that our auth system recognizes
+        loginData.identifier = data.identifier.trim();
+        loginData.loginType = "phone";
+      }
+
+      const result = await signIn("credentials", loginData);
 
       if (result?.error) {
         const friendlyError = getFriendlyErrorMessage(result.error);
@@ -195,9 +222,11 @@ function GovernmentLoginForm() {
       toast.success(
         "Credentials verified. Please verify your identity via OTP."
       );
+
+      // Use identifier for OTP verification regardless of type
       router.push(
-        "/verify-otp?email=" +
-          encodeURIComponent(data.email) +
+        "/verify-otp?identifier=" +
+          encodeURIComponent(data.identifier) +
           "&type=LOGIN_OTP"
       );
     } catch (error) {
@@ -278,17 +307,20 @@ function GovernmentLoginForm() {
               <CardContent className="space-y-4 pt-4">
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="identifier"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Government Email</FormLabel>
+                      <FormLabel>Email or Phone Number</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="name@agency.gov"
+                          placeholder="name@agency.gov or 9XXXX XXXXX"
                           disabled={isLoading || isLocked}
                           {...field}
                         />
                       </FormControl>
+                      <FormDescription>
+                        Enter your registered email address or phone number
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
