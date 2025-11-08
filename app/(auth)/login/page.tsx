@@ -34,18 +34,28 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 
+// Constants for better maintainability
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_DURATION_MINUTES = 1;
+const ATTEMPT_RESET_TIME_MINUTES = 15;
+
+// Validation patterns - centralized for consistency
+const VALIDATION_PATTERNS = {
+  email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+  phone: /^[+]?[1-9][\d\s\-\(\)]{9,14}$/,
+} as const;
+
 // Form schema with validation for email or phone
 const loginFormSchema = z.object({
   identifier: z
     .string()
     .min(1, "Email or phone number is required")
     .refine((value) => {
-      // Check if it's a valid email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      // Check if it's a valid phone number (Indian format)
-      const phoneRegex = /^[+]?[\d\s\-\(\)]{10,15}$/;
-
-      return emailRegex.test(value) || phoneRegex.test(value);
+      const trimmedValue = value.trim();
+      return (
+        VALIDATION_PATTERNS.email.test(trimmedValue) ||
+        VALIDATION_PATTERNS.phone.test(trimmedValue)
+      );
     }, "Please enter a valid email address or phone number"),
   password: z
     .string()
@@ -95,8 +105,11 @@ function GovernmentLoginForm() {
       setIsLocked(true);
       startLockTimer(new Date(lockUntil));
     } else if (attempts && lastAttemptTime) {
-      // Reset attempts if it's been more than 15 minutes
-      if (new Date().getTime() - parseInt(lastAttemptTime) > 15 * 60 * 1000) {
+      // Reset attempts if it's been more than configured time
+      if (
+        new Date().getTime() - parseInt(lastAttemptTime) >
+        ATTEMPT_RESET_TIME_MINUTES * 60 * 1000
+      ) {
         localStorage.setItem("loginAttempts", "0");
         setAttemptCount(0);
       } else {
@@ -167,24 +180,25 @@ function GovernmentLoginForm() {
     localStorage.setItem("loginAttempts", newAttemptCount.toString());
     localStorage.setItem("lastAttemptTime", new Date().getTime().toString());
 
-    // Lock account after 5 attempts for 1 minute
-    if (newAttemptCount >= 5) {
+    // Lock account after maximum attempts for configured duration
+    if (newAttemptCount >= MAX_LOGIN_ATTEMPTS) {
       const lockTime = new Date();
-      lockTime.setMinutes(lockTime.getMinutes() + 1); // 1 minute lock
+      lockTime.setMinutes(lockTime.getMinutes() + LOCKOUT_DURATION_MINUTES);
       localStorage.setItem("lockUntil", lockTime.toISOString());
       setIsLocked(true);
       startLockTimer(lockTime);
       toast.error(
-        "Account temporarily locked due to multiple failed attempts. Please try again in 1 minute."
+        `Account temporarily locked due to multiple failed attempts. Please try again in ${LOCKOUT_DURATION_MINUTES} minute(s).`
       );
       setIsLoading(false);
       return;
     }
 
     try {
-      // Check if identifier is email or phone
-      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.identifier);
-      const isPhone = /^[+]?[\d\s\-\(\)]{10,15}$/.test(data.identifier);
+      // Check if identifier is email or phone using consistent validation
+      const trimmedIdentifier = data.identifier.trim();
+      const isEmail = VALIDATION_PATTERNS.email.test(trimmedIdentifier);
+      const isPhone = VALIDATION_PATTERNS.phone.test(trimmedIdentifier);
 
       const loginData: {
         password: string;
@@ -199,10 +213,10 @@ function GovernmentLoginForm() {
       };
 
       if (isEmail) {
-        loginData.email = data.identifier.trim();
+        loginData.email = trimmedIdentifier;
       } else if (isPhone) {
         // For phone login, we'll use a special identifier that our auth system recognizes
-        loginData.identifier = data.identifier.trim();
+        loginData.identifier = trimmedIdentifier;
         loginData.loginType = "phone";
       }
 
@@ -293,8 +307,9 @@ function GovernmentLoginForm() {
               <ShieldAlert className="h-4 w-4" />
               <AlertTitle>Account Temporarily Locked</AlertTitle>
               <AlertDescription>
-                For security, your account is locked for 1 minute due to
-                multiple failed attempts.
+                For security, your account is locked for{" "}
+                {LOCKOUT_DURATION_MINUTES} minute(s) due to multiple failed
+                attempts.
                 <div className="mt-2 font-medium">
                   Time remaining: {formatTime(lockTimeRemaining)}
                 </div>
