@@ -594,12 +594,12 @@ const SupportPage = () => {
                   </p>
                 </CardHeader>
                 <CardContent>
-                  {/* <FeedbackModal> */}
-                  <Button className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg">
-                    <Mail className="h-4 w-4 mr-2" />
-                    Send Feedback
-                  </Button>
-                  {/* </FeedbackModal> */}
+                  <FeedbackModal>
+                    <Button className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg">
+                      <Mail className="h-4 w-4 mr-2" />
+                      Send Feedback
+                    </Button>
+                  </FeedbackModal>
                 </CardContent>
               </Card>
             </TabsContent>
