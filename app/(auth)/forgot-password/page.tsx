@@ -83,11 +83,21 @@ export default function GovernmentForgotPasswordForm() {
         } at ${new Date().toISOString()}`
       );
 
-      toast.success("Recovery email sent successfully");
+      // Show success message with info about both email and SMS if available
+      const successMessage = responseData.smsSent
+        ? "Recovery codes sent to your email and phone"
+        : "Recovery code sent to your email";
+
+      toast.success(successMessage);
+
       router.push(
-        `/verify-otp?email=${encodeURIComponent(
+        `/verify-otp-enhanced?email=${encodeURIComponent(
           data.email
-        )}&type=PASSWORD_RESET`
+        )}&type=PASSWORD_RESET${
+          responseData.phone
+            ? `&phone=${encodeURIComponent(responseData.phone)}`
+            : ""
+        }`
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -192,7 +202,7 @@ export default function GovernmentForgotPasswordForm() {
 
                 <div className="text-center text-xs text-gray-500 mt-2">
                   For security assistance, contact the IT Help Desk at{" "}
-                  <span className="font-medium">support@agency.gov</span>
+                  <span className="font-medium">gangtokdistrict@gmail.com</span>
                 </div>
               </CardFooter>
             </form>

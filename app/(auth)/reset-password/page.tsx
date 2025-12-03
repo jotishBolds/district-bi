@@ -64,9 +64,19 @@ const ResetPasswordFormContent = () => {
   // Redirect if email or token is missing
   useEffect(() => {
     if (!email || !token) {
-      router.push("/forgot-password");
+      // Check if user came from verified OTP but token is missing
+      const verified = searchParams.get("verified");
+      if (verified === "true" && email) {
+        // If verified but no token, redirect back to forgot password
+        toast.error(
+          "Reset session expired. Please request a new password reset."
+        );
+        router.push("/forgot-password");
+      } else {
+        router.push("/forgot-password");
+      }
     }
-  }, [email, token, router]);
+  }, [email, token, router, searchParams]);
 
   const form = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),

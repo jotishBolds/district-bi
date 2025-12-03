@@ -30,6 +30,7 @@ interface OtpVerificationEnhancedProps {
   onResend: (method: OtpMethod) => void;
   allowedMethods?: OtpMethod[];
   defaultMethod?: OtpMethod;
+  hideHeader?: boolean;
 }
 
 export default function OtpVerificationEnhanced({
@@ -40,6 +41,7 @@ export default function OtpVerificationEnhanced({
   onResend,
   allowedMethods = [OtpMethod.EMAIL, OtpMethod.SMS],
   defaultMethod = OtpMethod.EMAIL,
+  hideHeader = false,
 }: OtpVerificationEnhancedProps) {
   const [activeMethod, setActiveMethod] = useState<OtpMethod>(defaultMethod);
   const [emailOtp, setEmailOtp] = useState<string[]>(Array(6).fill(""));
@@ -193,7 +195,12 @@ export default function OtpVerificationEnhanced({
         body: JSON.stringify({
           email,
           otp: otpString,
-          type: type === "login" ? "EMAIL_VERIFICATION" : type.toUpperCase(),
+          type:
+            type === "login"
+              ? "EMAIL_VERIFICATION"
+              : type === "password_reset"
+              ? "PASSWORD_RESET"
+              : type.toUpperCase(),
         }),
       });
 
@@ -204,7 +211,8 @@ export default function OtpVerificationEnhanced({
       }
 
       toast.success("Email verification successful!");
-      onVerified(OtpMethod.EMAIL, data.user);
+      console.log("OTP Verification Response:", data); // Debug log
+      onVerified(OtpMethod.EMAIL, data);
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "Email verification failed";
@@ -305,6 +313,22 @@ export default function OtpVerificationEnhanced({
           </Alert>
         </CardContent>
       </Card>
+    );
+  }
+
+  if (hideHeader) {
+    // Simple layout without card wrapper for embedded use
+    return (
+      <>
+        <Toaster position="top-center" />
+        <div className="space-y-4">
+          {availableMethods[0] === OtpMethod.EMAIL ? (
+            <EmailOtpForm />
+          ) : (
+            <SmsOtpForm />
+          )}
+        </div>
+      </>
     );
   }
 

@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import OtpVerificationEnhanced from "@/app/components/auth/OtpVerificationEnhanced";
+import OtpVerificationSimple from "@/app/components/auth/OtpVerificationSimple";
 import { OtpMethod } from "@/types/types";
 
 function OtpVerificationContent() {
@@ -60,6 +60,12 @@ function OtpVerificationContent() {
     userData?: Record<string, unknown>
   ) => {
     try {
+      console.log("Verification completed:", {
+        method,
+        verificationType,
+        userData,
+      }); // Debug log
+
       if (verificationType === "login") {
         // For login, we need to complete the authentication flow
         const result = await signIn("credentials", {
@@ -96,10 +102,22 @@ function OtpVerificationContent() {
           } verification successful!`
         );
 
-        if (verificationType === "password_reset") {
-          router.push(
-            `/reset-password?email=${encodeURIComponent(email)}&verified=true`
-          );
+        if (
+          verificationType === "password_reset" ||
+          verificationType === "PASSWORD_RESET"
+        ) {
+          // The userData should contain the resetToken from the API
+          const resetToken = userData?.resetToken as string;
+          if (resetToken) {
+            router.push(
+              `/reset-password?email=${encodeURIComponent(
+                email
+              )}&token=${resetToken}`
+            );
+          } else {
+            toast.error("Reset token not received. Please try again.");
+            router.push("/forgot-password");
+          }
         } else {
           router.push("/login?verified=true");
         }
@@ -119,7 +137,12 @@ function OtpVerificationContent() {
           body: JSON.stringify({
             email,
             type:
-              verificationType === "login" ? "LOGIN_OTP" : "EMAIL_VERIFICATION",
+              verificationType === "login"
+                ? "LOGIN_OTP"
+                : verificationType === "password_reset" ||
+                  verificationType === "PASSWORD_RESET"
+                ? "PASSWORD_RESET"
+                : "EMAIL_VERIFICATION",
           }),
         });
 
@@ -130,15 +153,20 @@ function OtpVerificationContent() {
 
         toast.success("Email OTP sent successfully!");
       } else if (method === OtpMethod.SMS) {
-        const phoneToUse = phone || userPhone;
-        if (!phoneToUse) {
-          throw new Error("Phone number not available");
-        }
-
-        const response = await fetch("/api/sms/send", {
+        // For SMS resend, we use the same send-otp endpoint as email
+        const response = await fetch("/api/auth/send-otp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phone: phoneToUse }),
+          body: JSON.stringify({
+            email,
+            type:
+              verificationType === "login"
+                ? "LOGIN_OTP"
+                : verificationType === "password_reset" ||
+                  verificationType === "PASSWORD_RESET"
+                ? "PASSWORD_RESET"
+                : "EMAIL_VERIFICATION",
+          }),
         });
 
         if (!response.ok) {
@@ -165,8 +193,35 @@ function OtpVerificationContent() {
 
   const defaultMethod = email ? OtpMethod.EMAIL : OtpMethod.SMS;
 
+  // Get the page title based on verification type
+  const getPageTitle = () => {
+    switch (verificationType) {
+      case "password_reset":
+      case "PASSWORD_RESET":
+        return "Reset Password";
+      case "login":
+      case "LOGIN_OTP":
+        return "Login Verification";
+      default:
+        return "Email Verification";
+    }
+  };
+
+  const getPageDescription = () => {
+    switch (verificationType) {
+      case "password_reset":
+      case "PASSWORD_RESET":
+        return "Enter the verification code sent to your email to reset your password";
+      case "login":
+      case "LOGIN_OTP":
+        return "Enter the verification code to complete your login";
+      default:
+        return "Enter the verification code sent to your email";
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen  flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <Card className="shadow-lg border-t-4 border-t-blue-700">
           <CardHeader className="space-y-1 text-center">
@@ -176,13 +231,13 @@ function OtpVerificationContent() {
               </div>
             </div>
             <CardTitle className="text-2xl font-bold">
-              Security Verification
+              {getPageTitle()}
             </CardTitle>
-            <CardDescription>Verify your identity to continue</CardDescription>
+            <CardDescription>{getPageDescription()}</CardDescription>
           </CardHeader>
 
-          <CardContent className="px-0">
-            <OtpVerificationEnhanced
+          <CardContent>
+            <OtpVerificationSimple
               email={email || undefined}
               phone={phone || userPhone || undefined}
               type={
@@ -190,8 +245,6 @@ function OtpVerificationContent() {
               }
               onVerified={handleVerified}
               onResend={handleResend}
-              allowedMethods={availableMethods}
-              defaultMethod={defaultMethod}
             />
           </CardContent>
 
