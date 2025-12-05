@@ -52,15 +52,20 @@ export default function OtpVerificationSimple({
     return phone;
   };
 
+  // Separate effect for initial focus (runs only once)
   useEffect(() => {
     // Focus the first input on mount
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       if (inputRefs.current[0]) {
         inputRefs.current[0].focus();
       }
     }, 100);
 
-    // Set up countdown for resend button
+    return () => clearTimeout(timer);
+  }, []); // Empty dependency array means this runs only once on mount
+
+  // Separate effect for countdown timer
+  useEffect(() => {
     if (resendCountdown > 0) {
       const interval = setInterval(() => {
         setResendCountdown((prev) => {
@@ -74,14 +79,31 @@ export default function OtpVerificationSimple({
 
       return () => clearInterval(interval);
     }
-  }, [resendCountdown]);
+  }, [resendCountdown]); // Only re-run when countdown is reset (e.g., after resend)
 
   const handleInputChange = (index: number, value: string) => {
-    // Take only the last character to handle multiple character input
-    const newValue = value.slice(-1);
+    // Handle empty value (deletion)
+    if (!value) {
+      setError(null);
+      const newOtp = [...otp];
+      newOtp[index] = "";
+      setOtp(newOtp);
+      return;
+    }
 
-    // Only allow numeric input
-    if (newValue && !/^[0-9]$/.test(newValue)) {
+    // Extract only numeric digits
+    const numericValue = value.replace(/\D/g, "");
+
+    // If no numeric value, ignore
+    if (!numericValue) {
+      return;
+    }
+
+    // Take the last digit if multiple characters were entered
+    const newValue = numericValue.slice(-1);
+
+    // Only update if the value actually changed
+    if (newValue === otp[index]) {
       return;
     }
 
@@ -90,14 +112,16 @@ export default function OtpVerificationSimple({
     newOtp[index] = newValue;
     setOtp(newOtp);
 
-    // Auto-focus next input if current input is filled
-    if (newValue && index < 5) {
-      setTimeout(() => {
+    // Auto-focus next input if current input is filled and we're not at the last input
+    if (index < 5) {
+      // Use requestAnimationFrame for smoother focus transition
+      requestAnimationFrame(() => {
         const nextInput = inputRefs.current[index + 1];
         if (nextInput) {
           nextInput.focus();
+          nextInput.select(); // Select the content to prepare for overwriting
         }
-      }, 10);
+      });
     }
   };
 
@@ -107,6 +131,7 @@ export default function OtpVerificationSimple({
   ) => {
     // Handle backspace
     if (e.key === "Backspace") {
+      e.preventDefault();
       if (otp[index]) {
         // Clear current field
         const newOtp = [...otp];
@@ -117,31 +142,41 @@ export default function OtpVerificationSimple({
         const newOtp = [...otp];
         newOtp[index - 1] = "";
         setOtp(newOtp);
-        setTimeout(() => {
+        requestAnimationFrame(() => {
           const prevInput = inputRefs.current[index - 1];
           if (prevInput) {
             prevInput.focus();
+            prevInput.select();
           }
-        }, 10);
+        });
       }
+    }
+    // Handle delete key
+    else if (e.key === "Delete") {
+      e.preventDefault();
+      const newOtp = [...otp];
+      newOtp[index] = "";
+      setOtp(newOtp);
     }
     // Handle arrow keys
     else if (e.key === "ArrowLeft" && index > 0) {
       e.preventDefault();
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         const prevInput = inputRefs.current[index - 1];
         if (prevInput) {
           prevInput.focus();
+          prevInput.select();
         }
-      }, 10);
+      });
     } else if (e.key === "ArrowRight" && index < 5) {
       e.preventDefault();
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         const nextInput = inputRefs.current[index + 1];
         if (nextInput) {
           nextInput.focus();
+          nextInput.select();
         }
-      }, 10);
+      });
     }
   };
 
@@ -157,16 +192,40 @@ export default function OtpVerificationSimple({
       setOtp(newOtp);
 
       // Focus last input after paste
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         const lastInput = inputRefs.current[5];
         if (lastInput) {
           lastInput.focus();
+          lastInput.select();
         }
-      }, 10);
+      });
 
       toast.success("OTP pasted successfully!");
     } else if (pastedData.length > 0) {
-      toast.error("Please paste a valid 6-digit OTP");
+      // If less than 6 digits, fill from current position
+      const currentIndex = inputRefs.current.findIndex(
+        (ref) => ref === document.activeElement
+      );
+      if (currentIndex !== -1) {
+        const newOtp = [...otp];
+        const digits = pastedData.split("");
+        digits.forEach((digit, idx) => {
+          if (currentIndex + idx < 6) {
+            newOtp[currentIndex + idx] = digit;
+          }
+        });
+        setOtp(newOtp);
+
+        // Focus the next empty field or last field
+        const nextIndex = Math.min(currentIndex + digits.length, 5);
+        requestAnimationFrame(() => {
+          const nextInput = inputRefs.current[nextIndex];
+          if (nextInput) {
+            nextInput.focus();
+            nextInput.select();
+          }
+        });
+      }
     }
   };
 
@@ -199,7 +258,18 @@ export default function OtpVerificationSimple({
         }),
       });
 
-      const data = await response.json();
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get("content-type");
+      let data;
+
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        // If not JSON, get text response for error message
+        const text = await response.text();
+        console.error("Non-JSON response:", text);
+        throw new Error("Server error occurred. Please try again.");
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "OTP verification failed");
@@ -295,6 +365,7 @@ export default function OtpVerificationSimple({
                   value={digit}
                   onChange={(e) => handleInputChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
+                  onFocus={(e) => e.target.select()}
                   onPaste={index === 0 ? handlePaste : undefined}
                   disabled={isLoading}
                   aria-label={`digit ${index + 1}`}

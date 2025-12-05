@@ -75,7 +75,7 @@ import {
   sendPasswordResetEmail,
   sendLoginOTPEmail,
 } from "@/lib/mail-new";
-import { sendSms } from "@/lib/thundersms.server";
+import { sendSms, generateOTPMessage } from "@/lib/thundersms.server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -234,9 +234,6 @@ export async function POST(req: NextRequest) {
 
           // Send SMS using the Thunder SMS service with the same OTP
           // Use the exact same SMS configuration as login OTP for better delivery
-          const { sendSms, generateOTPMessage } = await import(
-            "@/lib/thundersms.server"
-          );
           const customMessage = generateOTPMessage(otp, 10);
           console.log("📱 Sending SMS with message:", customMessage);
           console.log("📱 Original message type was:", type);

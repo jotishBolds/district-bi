@@ -84,40 +84,72 @@ function OtpVerificationContent() {
     };
 
     fetchUserData();
+  }, [identifier, router]);
 
-    // Focus on first input
-    if (inputRefs.current[0]) {
-      inputRefs.current[0].focus();
-    }
+  // Separate effect for initial focus (runs only once)
+  useEffect(() => {
+    // Focus on first input after a small delay to ensure render is complete
+    const timer = setTimeout(() => {
+      if (inputRefs.current[0]) {
+        inputRefs.current[0].focus();
+      }
+    }, 100);
 
-    // Start countdown timer
+    return () => clearTimeout(timer);
+  }, []); // Empty dependency array means this runs only once on mount
+
+  // Separate effect for countdown timer
+  useEffect(() => {
     const interval = setInterval(() => {
       setTimer((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [identifier, router]);
+  }, []); // Empty dependency array so timer doesn't reset
 
   // Removed session watcher to prevent redirect loops
 
   const handleInputChange = (index: number, value: string) => {
-    if (value.length > 1) {
-      value = value.charAt(0);
+    // Handle empty value (deletion)
+    if (!value) {
+      setVerificationError(null);
+      const newOtp = [...otp];
+      newOtp[index] = "";
+      setOtp(newOtp);
+      return;
     }
 
-    // Only allow numeric input
-    if (value && !/^[0-9]$/.test(value)) {
+    // Extract only numeric digits
+    const numericValue = value.replace(/\D/g, "");
+
+    // If no numeric value, ignore
+    if (!numericValue) {
+      return;
+    }
+
+    // Take the last digit if multiple characters were entered
+    const newValue = numericValue.slice(-1);
+
+    // Only update if the value actually changed
+    if (newValue === otp[index]) {
       return;
     }
 
     setVerificationError(null);
     const newOtp = [...otp];
-    newOtp[index] = value;
+    newOtp[index] = newValue;
     setOtp(newOtp);
 
-    // Auto-focus next input if current input is filled
-    if (value && index < 5 && inputRefs.current[index + 1]) {
-      inputRefs.current[index + 1]?.focus();
+    // Auto-focus next input if current input is filled and we're not at the last input
+    if (index < 5) {
+      // Use requestAnimationFrame for smoother focus transition
+      requestAnimationFrame(() => {
+        const nextInput = inputRefs.current[index + 1];
+        if (nextInput) {
+          nextInput.focus();
+          nextInput.select(); // Select the content to prepare for overwriting
+        }
+      });
     }
   };
 
@@ -125,14 +157,54 @@ function OtpVerificationContent() {
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    // Handle backspace to clear current field and focus previous
-    if (e.key === "Backspace" && index > 0 && !otp[index]) {
-      const newOtp = [...otp];
-      newOtp[index - 1] = "";
-      setOtp(newOtp);
-      if (inputRefs.current[index - 1]) {
-        inputRefs.current[index - 1]?.focus();
+    // Handle backspace
+    if (e.key === "Backspace") {
+      e.preventDefault();
+      if (otp[index]) {
+        // Clear current field
+        const newOtp = [...otp];
+        newOtp[index] = "";
+        setOtp(newOtp);
+      } else if (index > 0) {
+        // Move to previous field and clear it
+        const newOtp = [...otp];
+        newOtp[index - 1] = "";
+        setOtp(newOtp);
+        requestAnimationFrame(() => {
+          const prevInput = inputRefs.current[index - 1];
+          if (prevInput) {
+            prevInput.focus();
+            prevInput.select();
+          }
+        });
       }
+    }
+    // Handle delete key
+    else if (e.key === "Delete") {
+      e.preventDefault();
+      const newOtp = [...otp];
+      newOtp[index] = "";
+      setOtp(newOtp);
+    }
+    // Handle arrow keys
+    else if (e.key === "ArrowLeft" && index > 0) {
+      e.preventDefault();
+      requestAnimationFrame(() => {
+        const prevInput = inputRefs.current[index - 1];
+        if (prevInput) {
+          prevInput.focus();
+          prevInput.select();
+        }
+      });
+    } else if (e.key === "ArrowRight" && index < 5) {
+      e.preventDefault();
+      requestAnimationFrame(() => {
+        const nextInput = inputRefs.current[index + 1];
+        if (nextInput) {
+          nextInput.focus();
+          nextInput.select();
+        }
+      });
     }
   };
 
@@ -379,6 +451,7 @@ function OtpVerificationContent() {
                       value={digit}
                       onChange={(e) => handleInputChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
+                      onFocus={(e) => e.target.select()}
                       onPaste={index === 0 ? handlePaste : undefined}
                       disabled={isLoading}
                       aria-label={`digit ${index + 1}`}
