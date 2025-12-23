@@ -13,6 +13,10 @@ const s3Client = new S3Client({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
+  requestHandler: {
+    requestTimeout: 30000, // 30 second timeout
+    connectionTimeout: 5000, // 5 second connection timeout
+  },
 });
 
 const BUCKET_NAME = process.env.AWS_BUCKET_NAME!;
@@ -75,12 +79,13 @@ export function validateFile(file: File): FileValidation {
 }
 
 /**
- * Upload file to S3
+ * Upload file to S3 with retry logic
  */
 export async function uploadFileToS3(
   file: File,
   applicationId: string,
-  documentId: string
+  documentId: string,
+  maxRetries = 2
 ): Promise<UploadResult> {
   // Validate file first
   const validation = validateFile(file);
@@ -107,18 +112,53 @@ export async function uploadFileToS3(
     },
   });
 
-  try {
-    await s3Client.send(putCommand);
+  // Retry logic for upload
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(
+        `Uploading file ${file.name}, attempt ${attempt + 1}/${maxRetries + 1}`
+      );
 
-    return {
-      key,
-      url: `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`,
-      size: file.size,
-    };
-  } catch (error) {
-    console.error("Error uploading file to S3:", error);
-    throw new Error(`Failed to upload file: ${file.name}`);
+      // Use Promise.race to implement timeout
+      const uploadPromise = s3Client.send(putCommand);
+      const timeoutPromise = new Promise(
+        (_, reject) =>
+          setTimeout(() => reject(new Error("Upload timeout")), 25000) // 25 second timeout
+      );
+
+      await Promise.race([uploadPromise, timeoutPromise]);
+
+      console.log(`Successfully uploaded file ${file.name}`);
+      return {
+        key,
+        url: `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`,
+        size: file.size,
+      };
+    } catch (error) {
+      console.error(
+        `Upload attempt ${attempt + 1} failed for ${file.name}:`,
+        error
+      );
+
+      if (attempt === maxRetries) {
+        // Final attempt failed
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+        throw new Error(
+          `Failed to upload file after ${maxRetries + 1} attempts: ${
+            file.name
+          } - ${errorMessage}`
+        );
+      }
+
+      // Wait before retry (exponential backoff)
+      await new Promise((resolve) =>
+        setTimeout(resolve, Math.pow(2, attempt) * 1000)
+      );
+    }
   }
+
+  throw new Error(`Failed to upload file: ${file.name}`);
 }
 
 /**

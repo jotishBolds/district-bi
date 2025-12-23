@@ -356,6 +356,18 @@ import { uploadFileToS3, validateFile } from "@/lib/s3-storage";
 import { getCurrentIST } from "@/lib/timezone";
 import { sendApplicationCreatedEmail } from "@/lib/mail";
 
+// Types for document creation
+interface DocumentRecord {
+  id: string;
+  applicationId: string;
+  documentType: DocumentType;
+  fileName: string;
+  filePath: string;
+  fileSize: number;
+  uploadedById: string;
+  isVerified: boolean;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerAuthSession();
@@ -966,65 +978,72 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Start database transaction
-    const result = await prisma.$transaction(async (tx) => {
-      // Generate RR number in format: RR-YYMMDD-HHMM-XX using Indian Standard Time
-      const currentDate = getCurrentIST();
-      const year = currentDate.getFullYear().toString().slice(-2);
-      const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-      const day = currentDate.getDate().toString().padStart(2, "0");
-      const hour = currentDate.getHours().toString().padStart(2, "0");
-      const minute = currentDate.getMinutes().toString().padStart(2, "0");
+    // Generate RR number in format: RR-YYMMDD-HHMM-XX using Indian Standard Time
+    const currentDate = getCurrentIST();
+    const year = currentDate.getFullYear().toString().slice(-2);
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = currentDate.getDate().toString().padStart(2, "0");
+    const hour = currentDate.getHours().toString().padStart(2, "0");
+    const minute = currentDate.getMinutes().toString().padStart(2, "0");
 
-      // Get count of all applications created today for sequential numbering (based on IST day)
-      const startOfDay = new Date(currentDate);
-      startOfDay.setHours(0, 0, 0, 0);
-      const endOfDay = new Date(currentDate);
-      endOfDay.setHours(23, 59, 59, 999);
+    // Get count of all applications created today for sequential numbering (based on IST day)
+    const startOfDay = new Date(currentDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(currentDate);
+    endOfDay.setHours(23, 59, 59, 999);
 
-      const applicationsToday = await tx.application.count({
-        where: {
-          createdAt: {
-            gte: startOfDay,
-            lte: endOfDay,
+    const applicationsToday = await prisma.application.count({
+      where: {
+        createdAt: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+      },
+    });
+
+    const sequentialNumber = (applicationsToday + 1)
+      .toString()
+      .padStart(2, "0");
+    const rrNumber = `RR-${year}${month}${day}-${hour}${minute}-${sequentialNumber}`;
+
+    // Determine application status and assignment based on frontdesk type
+    const applicationStatus = isGeneralFrontdesk
+      ? ApplicationStatus.OPEN
+      : ApplicationStatus.IN_PROGRESS;
+    const currentHolderId = isGeneralFrontdesk ? null : preferredOfficerId;
+
+    // Step 1: Create the application first (smaller transaction)
+    const application = await prisma.$transaction(
+      async (tx) => {
+        return await tx.application.create({
+          data: {
+            serviceCategoryId,
+            departmentId: departmentId || null,
+            subject,
+            citizenName,
+            citizenPhone,
+            citizenEmail,
+            citizenAddress,
+            citizenGender,
+            citizenAlternateNumber,
+            applicationSource: applicationSource as ApplicationSource,
+            status: applicationStatus,
+            currentHolderId,
+            rrNumber,
+            submittedAt: currentDate,
+            createdAt: currentDate,
+            updatedAt: currentDate,
           },
-        },
-      });
+        });
+      },
+      {
+        timeout: 10000, // 10 second timeout for this transaction
+      }
+    );
 
-      const sequentialNumber = (applicationsToday + 1)
-        .toString()
-        .padStart(2, "0");
-      const rrNumber = `RR-${year}${month}${day}-${hour}${minute}-${sequentialNumber}`;
-
-      // Determine application status and assignment based on frontdesk type
-      const applicationStatus = isGeneralFrontdesk
-        ? ApplicationStatus.OPEN
-        : ApplicationStatus.IN_PROGRESS;
-      const currentHolderId = isGeneralFrontdesk ? null : preferredOfficerId;
-
-      // Create the application
-      const application = await tx.application.create({
-        data: {
-          serviceCategoryId,
-          departmentId: departmentId || null,
-          subject,
-          citizenName,
-          citizenPhone,
-          citizenEmail,
-          citizenAddress,
-          citizenGender,
-          citizenAlternateNumber,
-          applicationSource: applicationSource as ApplicationSource, // Cast to enum value
-          status: applicationStatus,
-          currentHolderId,
-          rrNumber,
-          submittedAt: currentDate,
-          createdAt: currentDate,
-          updatedAt: currentDate,
-        },
-      });
-
-      // Upload documents and save records
+    // Step 2: Upload documents in parallel (outside transaction to prevent timeout)
+    let uploadedDocumentRecords: DocumentRecord[] = [];
+    try {
       const documentPromises = uploadedDocuments.map(
         async ({ file, documentType }) => {
           try {
@@ -1038,19 +1057,17 @@ export async function POST(request: NextRequest) {
               documentId
             );
 
-            // Save document record to database
-            return tx.document.create({
-              data: {
-                id: documentId,
-                applicationId: application.id,
-                documentType,
-                fileName: file.name,
-                filePath: uploadResult.key, // Store S3 key
-                fileSize: file.size,
-                uploadedById: session.user.id,
-                isVerified: false,
-              },
-            });
+            // Return document data to be saved later
+            return {
+              id: documentId,
+              applicationId: application.id,
+              documentType,
+              fileName: file.name,
+              filePath: uploadResult.key,
+              fileSize: file.size,
+              uploadedById: session.user.id,
+              isVerified: false,
+            };
           } catch (uploadError) {
             console.error(`Error uploading file ${file.name}:`, uploadError);
             throw new Error(`Failed to upload file: ${file.name}`);
@@ -1058,75 +1075,123 @@ export async function POST(request: NextRequest) {
         }
       );
 
-      await Promise.all(documentPromises);
+      uploadedDocumentRecords = await Promise.all(documentPromises);
 
-      // Create initial workflow entry
-      await tx.applicationWorkflow.create({
-        data: {
-          applicationId: application.id,
-          fromStatus: null,
-          toStatus: applicationStatus,
-          changedById: session.user.id,
-          comments: isGeneralFrontdesk
-            ? `Application created by general frontdesk and placed in queue for officer assignment${
-                applicationDetails ? `: ${applicationDetails}` : ""
-              }`
-            : applicationDetails ||
-              "Application created with officer assignment",
+      // Step 3: Save document records to database
+      await prisma.$transaction(
+        async (tx) => {
+          const documentCreatePromises = uploadedDocumentRecords.map(
+            (docData) => tx.document.create({ data: docData })
+          );
+          await Promise.all(documentCreatePromises);
         },
-      });
+        {
+          timeout: 5000, // 5 second timeout for this transaction
+        }
+      );
+    } catch (documentError) {
+      // If document upload fails, we need to clean up the application
+      console.error(
+        "Document upload failed, cleaning up application:",
+        documentError
+      );
+      await prisma.application
+        .delete({
+          where: { id: application.id },
+        })
+        .catch(() => {}); // Ignore cleanup errors
 
-      // Create officer assignment only for specific frontdesk
-      if (!isGeneralFrontdesk) {
-        await tx.officerAssignment.create({
-          data: {
-            applicationId: application.id,
-            assignedById: session.user.id,
-            assignedToId: preferredOfficerId,
-            priority: 1, // High priority (default for frontdesk applications)
-            instructions:
-              applicationDetails || "No specific instructions provided",
-          },
-        });
-
-        // Create notification for assigned officer
-        await tx.notification.create({
-          data: {
-            userId: preferredOfficerId,
-            notificationType: "APPLICATION_SUBMITTED",
-            applicationId: application.id,
-            title: "New Application Assigned",
-            message: `A new application for ${serviceCategory.name} (RR: ${rrNumber}) has been assigned to you and is now in progress.`,
-            isRead: false,
-          },
-        });
-      }
-
-      // Create audit log
-      await tx.applicationAuditLog.create({
-        data: {
-          applicationId: application.id,
-          action: isGeneralFrontdesk
-            ? "APPLICATION_OPENED"
-            : "APPLICATION_CREATED",
-          performedById: session.user.id,
-          newValues: {
-            serviceCategoryId,
-            preferredOfficerId: isGeneralFrontdesk ? null : preferredOfficerId,
-            citizenName,
-            citizenPhone,
-            status: applicationStatus,
-            rrNumber,
-          },
-          ipAddress:
-            request.headers.get("x-forwarded-for") ||
-            request.headers.get("x-real-ip") ||
-            "unknown",
+      return NextResponse.json(
+        {
+          error:
+            documentError instanceof Error
+              ? documentError.message
+              : "Failed to upload documents",
         },
-      });
+        { status: 500 }
+      );
+    }
 
-      return application;
-    });
+    // Step 4: Create workflow, assignment, audit log, and notifications (separate transaction)
+    try {
+      await prisma.$transaction(
+        async (tx) => {
+          // Create initial workflow entry
+          await tx.applicationWorkflow.create({
+            data: {
+              applicationId: application.id,
+              fromStatus: null,
+              toStatus: applicationStatus,
+              changedById: session.user.id,
+              comments: isGeneralFrontdesk
+                ? `Application created by general frontdesk and placed in queue for officer assignment${
+                    applicationDetails ? `: ${applicationDetails}` : ""
+                  }`
+                : applicationDetails ||
+                  "Application created with officer assignment",
+            },
+          });
+
+          // Create officer assignment only for specific frontdesk
+          if (!isGeneralFrontdesk) {
+            await tx.officerAssignment.create({
+              data: {
+                applicationId: application.id,
+                assignedById: session.user.id,
+                assignedToId: preferredOfficerId,
+                priority: 1,
+                instructions:
+                  applicationDetails || "No specific instructions provided",
+              },
+            });
+
+            // Create notification for assigned officer
+            await tx.notification.create({
+              data: {
+                userId: preferredOfficerId,
+                notificationType: "APPLICATION_SUBMITTED",
+                applicationId: application.id,
+                title: "New Application Assigned",
+                message: `A new application for ${serviceCategory.name} (RR: ${rrNumber}) has been assigned to you and is now in progress.`,
+                isRead: false,
+              },
+            });
+          }
+
+          // Create audit log
+          await tx.applicationAuditLog.create({
+            data: {
+              applicationId: application.id,
+              action: isGeneralFrontdesk
+                ? "APPLICATION_OPENED"
+                : "APPLICATION_CREATED",
+              performedById: session.user.id,
+              newValues: {
+                serviceCategoryId,
+                preferredOfficerId: isGeneralFrontdesk
+                  ? null
+                  : preferredOfficerId,
+                citizenName,
+                citizenPhone,
+                status: applicationStatus,
+                rrNumber,
+              },
+              ipAddress:
+                request.headers.get("x-forwarded-for") ||
+                request.headers.get("x-real-ip") ||
+                "unknown",
+            },
+          });
+        },
+        {
+          timeout: 8000, // 8 second timeout for this transaction
+        }
+      );
+    } catch (workflowError) {
+      console.error("Failed to create workflow/notifications:", workflowError);
+      // Application is created but workflow failed - log the error but don't fail the request
+      // as the core application is already created successfully
+    }
 
     // Send email notification to citizen if email is provided
     try {
@@ -1168,7 +1233,7 @@ export async function POST(request: NextRequest) {
         await sendApplicationCreatedEmail({
           to: citizenEmail.trim(),
           citizenName,
-          rrNumber: result.rrNumber!,
+          rrNumber: application.rrNumber!,
           subject,
           departmentName: undefined, // Don't show department for citizens
           createdDate: currentDate,
@@ -1198,8 +1263,8 @@ export async function POST(request: NextRequest) {
       : "Application created and assigned to officer in IN_PROGRESS status";
 
     return NextResponse.json({
-      id: result.id,
-      rrNumber: result.rrNumber,
+      id: application.id,
+      rrNumber: application.rrNumber,
       message: statusMessage,
       status: isGeneralFrontdesk
         ? ApplicationStatus.OPEN
@@ -1208,15 +1273,84 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error creating application:", error);
 
-    // Provide more specific error messages
+    // Provide more specific error messages based on error type
     if (error instanceof Error) {
+      // Database connection errors
+      if (
+        error.message.includes("connection") ||
+        error.message.includes("timeout")
+      ) {
+        return NextResponse.json(
+          { error: "Database connection timeout. Please try again." },
+          { status: 503 }
+        );
+      }
+
+      // File upload errors
       if (error.message.includes("Failed to upload file")) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json(
+          {
+            error:
+              "File upload failed. Please check your internet connection and try again.",
+          },
+          { status: 500 }
+        );
+      }
+
+      // S3 specific errors
+      if (error.message.includes("S3") || error.message.includes("AWS")) {
+        return NextResponse.json(
+          {
+            error:
+              "Document storage service is temporarily unavailable. Please try again.",
+          },
+          { status: 503 }
+        );
+      }
+
+      // Prisma specific errors
+      if (error.message.includes("Prisma") || error.message.includes("query")) {
+        return NextResponse.json(
+          {
+            error:
+              "Database service is temporarily unavailable. Please try again.",
+          },
+          { status: 503 }
+        );
+      }
+
+      // Transaction timeout errors
+      if (
+        error.message.includes("Transaction") ||
+        error.message.includes("timed out")
+      ) {
+        return NextResponse.json(
+          {
+            error:
+              "Request processing timeout. Please try again with fewer documents or smaller file sizes.",
+          },
+          { status: 408 }
+        );
+      }
+
+      // Network or external service errors
+      if (
+        error.message.includes("network") ||
+        error.message.includes("ENOTFOUND")
+      ) {
+        return NextResponse.json(
+          {
+            error:
+              "Network connectivity issue. Please check your connection and try again.",
+          },
+          { status: 503 }
+        );
       }
     }
 
+    // Default error response
     return NextResponse.json(
-      { error: "Failed to create application" },
+      { error: "Failed to create application. Please try again." },
       { status: 500 }
     );
   }

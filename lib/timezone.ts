@@ -219,7 +219,7 @@ export function isBusinessHoursIST(): boolean {
   return hour >= 9 && hour < 18; // 9 AM to 6 PM
 }
 
-export default {
+const timezoneUtils = {
   getCurrentIST,
   toIST,
   formatIST,
@@ -236,3 +236,5 @@ export default {
   isBusinessHoursIST,
   IST_TIMEZONE,
 };
+
+export default timezoneUtils;
