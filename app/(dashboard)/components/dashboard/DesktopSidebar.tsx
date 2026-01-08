@@ -21,6 +21,7 @@ import {
   ArrowDownToLine,
   Layers,
   Search,
+  MessageSquareDot,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -85,6 +86,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       name: "Pull Applications",
       href: "/dashboard/pull-requests",
       icon: ArrowDownToLine,
+    },
+    {
+      name: "SAMADHAN Tickets",
+      href: "/dashboard/samadhan",
+      icon: MessageSquareDot,
     },
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
@@ -158,6 +164,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       href: "/admin/frontdesk-management",
       icon: Shield,
     },
+    {
+      name: "SAMADHAN Tickets",
+      href: "/dashboard/samadhan",
+      icon: MessageSquareDot,
+    },
     // { name: "System Settings", href: "/admin/settings", icon: Settings },
     // { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
@@ -179,6 +190,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       name: "Pull Applications",
       href: "/dashboard/pull-requests",
       icon: ArrowDownToLine,
+    },
+    {
+      name: "SAMADHAN Tickets",
+      href: "/dashboard/samadhan",
+      icon: MessageSquareDot,
     },
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];

@@ -233,6 +233,16 @@ export const OFFICER_ROLE_MAPPINGS: Record<UserRole, OfficerRoleMapping> = {
     defaultSection: "System Administration",
     userType: "Admin",
   },
+
+  // SAMADHAN Portal Users
+  [UserRole.CITIZEN]: {
+    role: UserRole.CITIZEN,
+    level: 10, // Public user level (lowest priority in hierarchy)
+    fullName: "Citizen",
+    shortDesignation: "CITIZEN",
+    defaultSection: "SAMADHAN Portal",
+    userType: "Official", // Using Official as they are not Officers
+  },
 };
 
 export const DEFAULT_SECTIONS = [

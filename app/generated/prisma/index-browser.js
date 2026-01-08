@@ -161,6 +161,7 @@ exports.Prisma.CitizenProfileScalarFieldEnum = {
   phone: 'phone',
   address: 'address',
   aadhaarNumber: 'aadhaarNumber',
+  samadhanPseudonym: 'samadhanPseudonym',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -411,6 +412,104 @@ exports.Prisma.OfficerForwardingHistoryScalarFieldEnum = {
   forwardedAt: 'forwardedAt'
 };
 
+exports.Prisma.SamadhanTicketScalarFieldEnum = {
+  id: 'id',
+  referenceId: 'referenceId',
+  queryType: 'queryType',
+  priority: 'priority',
+  status: 'status',
+  citizenId: 'citizenId',
+  citizenName: 'citizenName',
+  citizenEmail: 'citizenEmail',
+  citizenPhone: 'citizenPhone',
+  citizenPseudonym: 'citizenPseudonym',
+  isAnonymous: 'isAnonymous',
+  isAnonymousToOfficer: 'isAnonymousToOfficer',
+  sectionId: 'sectionId',
+  serviceAvailed: 'serviceAvailed',
+  description: 'description',
+  assignedOfficerId: 'assignedOfficerId',
+  escalatedToId: 'escalatedToId',
+  submissionChannel: 'submissionChannel',
+  whatsappNumber: 'whatsappNumber',
+  slaDeadline: 'slaDeadline',
+  seenAt: 'seenAt',
+  acknowledgedAt: 'acknowledgedAt',
+  resolvedAt: 'resolvedAt',
+  closedAt: 'closedAt',
+  slaBreachedAt: 'slaBreachedAt',
+  resolutionMessage: 'resolutionMessage',
+  isAppeal: 'isAppeal',
+  originalTicketId: 'originalTicketId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SamadhanAttachmentScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  infoRequestId: 'infoRequestId',
+  fileName: 'fileName',
+  originalName: 'originalName',
+  filePath: 'filePath',
+  fileType: 'fileType',
+  fileSize: 'fileSize',
+  uploadedById: 'uploadedById',
+  uploadedByType: 'uploadedByType',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SamadhanInfoRequestScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  requestedById: 'requestedById',
+  description: 'description',
+  documentTypes: 'documentTypes',
+  deadline: 'deadline',
+  status: 'status',
+  citizenResponse: 'citizenResponse',
+  respondedAt: 'respondedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SamadhanStatusHistoryScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  fromStatus: 'fromStatus',
+  toStatus: 'toStatus',
+  changedById: 'changedById',
+  changeReason: 'changeReason',
+  isSystemGenerated: 'isSystemGenerated',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SamadhanInternalNoteScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  createdById: 'createdById',
+  content: 'content',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SamadhanSLAConfigScalarFieldEnum = {
+  id: 'id',
+  queryType: 'queryType',
+  priority: 'priority',
+  slaHours: 'slaHours',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SamadhanDailySequenceScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  lastSequence: 'lastSequence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -437,6 +536,7 @@ exports.Prisma.JsonNullValueFilter = {
   AnyNull: Prisma.AnyNull
 };
 exports.UserRole = exports.$Enums.UserRole = {
+  CITIZEN: 'CITIZEN',
   FRONT_DESK: 'FRONT_DESK',
   DC: 'DC',
   ADC: 'ADC',
@@ -495,6 +595,46 @@ exports.NotificationType = exports.$Enums.NotificationType = {
   PAYMENT_REQUIRED: 'PAYMENT_REQUIRED'
 };
 
+exports.SamadhanQueryType = exports.$Enums.SamadhanQueryType = {
+  FEEDBACK: 'FEEDBACK',
+  GRIEVANCE: 'GRIEVANCE',
+  SUGGESTION: 'SUGGESTION'
+};
+
+exports.SamadhanPriority = exports.$Enums.SamadhanPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+};
+
+exports.SamadhanTicketStatus = exports.$Enums.SamadhanTicketStatus = {
+  UNSEEN: 'UNSEEN',
+  SEEN: 'SEEN',
+  ACKNOWLEDGED: 'ACKNOWLEDGED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  PENDING_INFORMATION: 'PENDING_INFORMATION',
+  AWAITING_ESCALATION: 'AWAITING_ESCALATION',
+  ESCALATED: 'ESCALATED',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+  CLOSED_NO_RESPONSE: 'CLOSED_NO_RESPONSE',
+  APPEALED: 'APPEALED',
+  APPEAL_FILED: 'APPEAL_FILED',
+  OVERDUE: 'OVERDUE'
+};
+
+exports.SamadhanSubmissionChannel = exports.$Enums.SamadhanSubmissionChannel = {
+  WEB_PORTAL: 'WEB_PORTAL',
+  WHATSAPP: 'WHATSAPP',
+  MOBILE_APP: 'MOBILE_APP'
+};
+
+exports.SamadhanInfoRequestStatus = exports.$Enums.SamadhanInfoRequestStatus = {
+  PENDING: 'PENDING',
+  RESPONDED: 'RESPONDED',
+  EXPIRED: 'EXPIRED'
+};
+
 exports.Prisma.ModelName = {
   UserSettings: 'UserSettings',
   User: 'User',
@@ -519,7 +659,14 @@ exports.Prisma.ModelName = {
   SmsOtp: 'SmsOtp',
   ApplicationTrackingOTP: 'ApplicationTrackingOTP',
   FrontdeskForwarding: 'FrontdeskForwarding',
-  OfficerForwardingHistory: 'OfficerForwardingHistory'
+  OfficerForwardingHistory: 'OfficerForwardingHistory',
+  SamadhanTicket: 'SamadhanTicket',
+  SamadhanAttachment: 'SamadhanAttachment',
+  SamadhanInfoRequest: 'SamadhanInfoRequest',
+  SamadhanStatusHistory: 'SamadhanStatusHistory',
+  SamadhanInternalNote: 'SamadhanInternalNote',
+  SamadhanSLAConfig: 'SamadhanSLAConfig',
+  SamadhanDailySequence: 'SamadhanDailySequence'
 };
 
 /**

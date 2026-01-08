@@ -133,12 +133,48 @@ export type FrontdeskForwarding = $Result.DefaultSelection<Prisma.$FrontdeskForw
  * 
  */
 export type OfficerForwardingHistory = $Result.DefaultSelection<Prisma.$OfficerForwardingHistoryPayload>
+/**
+ * Model SamadhanTicket
+ * 
+ */
+export type SamadhanTicket = $Result.DefaultSelection<Prisma.$SamadhanTicketPayload>
+/**
+ * Model SamadhanAttachment
+ * 
+ */
+export type SamadhanAttachment = $Result.DefaultSelection<Prisma.$SamadhanAttachmentPayload>
+/**
+ * Model SamadhanInfoRequest
+ * 
+ */
+export type SamadhanInfoRequest = $Result.DefaultSelection<Prisma.$SamadhanInfoRequestPayload>
+/**
+ * Model SamadhanStatusHistory
+ * 
+ */
+export type SamadhanStatusHistory = $Result.DefaultSelection<Prisma.$SamadhanStatusHistoryPayload>
+/**
+ * Model SamadhanInternalNote
+ * 
+ */
+export type SamadhanInternalNote = $Result.DefaultSelection<Prisma.$SamadhanInternalNotePayload>
+/**
+ * Model SamadhanSLAConfig
+ * 
+ */
+export type SamadhanSLAConfig = $Result.DefaultSelection<Prisma.$SamadhanSLAConfigPayload>
+/**
+ * Model SamadhanDailySequence
+ * 
+ */
+export type SamadhanDailySequence = $Result.DefaultSelection<Prisma.$SamadhanDailySequencePayload>
 
 /**
  * Enums
  */
 export namespace $Enums {
   export const UserRole: {
+  CITIZEN: 'CITIZEN',
   FRONT_DESK: 'FRONT_DESK',
   DC: 'DC',
   ADC: 'ADC',
@@ -211,6 +247,61 @@ export const ApplicationSource: {
 
 export type ApplicationSource = (typeof ApplicationSource)[keyof typeof ApplicationSource]
 
+
+export const SamadhanQueryType: {
+  FEEDBACK: 'FEEDBACK',
+  GRIEVANCE: 'GRIEVANCE',
+  SUGGESTION: 'SUGGESTION'
+};
+
+export type SamadhanQueryType = (typeof SamadhanQueryType)[keyof typeof SamadhanQueryType]
+
+
+export const SamadhanPriority: {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+};
+
+export type SamadhanPriority = (typeof SamadhanPriority)[keyof typeof SamadhanPriority]
+
+
+export const SamadhanTicketStatus: {
+  UNSEEN: 'UNSEEN',
+  SEEN: 'SEEN',
+  ACKNOWLEDGED: 'ACKNOWLEDGED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  PENDING_INFORMATION: 'PENDING_INFORMATION',
+  AWAITING_ESCALATION: 'AWAITING_ESCALATION',
+  ESCALATED: 'ESCALATED',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+  CLOSED_NO_RESPONSE: 'CLOSED_NO_RESPONSE',
+  APPEALED: 'APPEALED',
+  APPEAL_FILED: 'APPEAL_FILED',
+  OVERDUE: 'OVERDUE'
+};
+
+export type SamadhanTicketStatus = (typeof SamadhanTicketStatus)[keyof typeof SamadhanTicketStatus]
+
+
+export const SamadhanSubmissionChannel: {
+  WEB_PORTAL: 'WEB_PORTAL',
+  WHATSAPP: 'WHATSAPP',
+  MOBILE_APP: 'MOBILE_APP'
+};
+
+export type SamadhanSubmissionChannel = (typeof SamadhanSubmissionChannel)[keyof typeof SamadhanSubmissionChannel]
+
+
+export const SamadhanInfoRequestStatus: {
+  PENDING: 'PENDING',
+  RESPONDED: 'RESPONDED',
+  EXPIRED: 'EXPIRED'
+};
+
+export type SamadhanInfoRequestStatus = (typeof SamadhanInfoRequestStatus)[keyof typeof SamadhanInfoRequestStatus]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -232,6 +323,26 @@ export const NotificationType: typeof $Enums.NotificationType
 export type ApplicationSource = $Enums.ApplicationSource
 
 export const ApplicationSource: typeof $Enums.ApplicationSource
+
+export type SamadhanQueryType = $Enums.SamadhanQueryType
+
+export const SamadhanQueryType: typeof $Enums.SamadhanQueryType
+
+export type SamadhanPriority = $Enums.SamadhanPriority
+
+export const SamadhanPriority: typeof $Enums.SamadhanPriority
+
+export type SamadhanTicketStatus = $Enums.SamadhanTicketStatus
+
+export const SamadhanTicketStatus: typeof $Enums.SamadhanTicketStatus
+
+export type SamadhanSubmissionChannel = $Enums.SamadhanSubmissionChannel
+
+export const SamadhanSubmissionChannel: typeof $Enums.SamadhanSubmissionChannel
+
+export type SamadhanInfoRequestStatus = $Enums.SamadhanInfoRequestStatus
+
+export const SamadhanInfoRequestStatus: typeof $Enums.SamadhanInfoRequestStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -590,6 +701,76 @@ export class PrismaClient<
     * ```
     */
   get officerForwardingHistory(): Prisma.OfficerForwardingHistoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.samadhanTicket`: Exposes CRUD operations for the **SamadhanTicket** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SamadhanTickets
+    * const samadhanTickets = await prisma.samadhanTicket.findMany()
+    * ```
+    */
+  get samadhanTicket(): Prisma.SamadhanTicketDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.samadhanAttachment`: Exposes CRUD operations for the **SamadhanAttachment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SamadhanAttachments
+    * const samadhanAttachments = await prisma.samadhanAttachment.findMany()
+    * ```
+    */
+  get samadhanAttachment(): Prisma.SamadhanAttachmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.samadhanInfoRequest`: Exposes CRUD operations for the **SamadhanInfoRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SamadhanInfoRequests
+    * const samadhanInfoRequests = await prisma.samadhanInfoRequest.findMany()
+    * ```
+    */
+  get samadhanInfoRequest(): Prisma.SamadhanInfoRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.samadhanStatusHistory`: Exposes CRUD operations for the **SamadhanStatusHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SamadhanStatusHistories
+    * const samadhanStatusHistories = await prisma.samadhanStatusHistory.findMany()
+    * ```
+    */
+  get samadhanStatusHistory(): Prisma.SamadhanStatusHistoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.samadhanInternalNote`: Exposes CRUD operations for the **SamadhanInternalNote** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SamadhanInternalNotes
+    * const samadhanInternalNotes = await prisma.samadhanInternalNote.findMany()
+    * ```
+    */
+  get samadhanInternalNote(): Prisma.SamadhanInternalNoteDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.samadhanSLAConfig`: Exposes CRUD operations for the **SamadhanSLAConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SamadhanSLAConfigs
+    * const samadhanSLAConfigs = await prisma.samadhanSLAConfig.findMany()
+    * ```
+    */
+  get samadhanSLAConfig(): Prisma.SamadhanSLAConfigDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.samadhanDailySequence`: Exposes CRUD operations for the **SamadhanDailySequence** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SamadhanDailySequences
+    * const samadhanDailySequences = await prisma.samadhanDailySequence.findMany()
+    * ```
+    */
+  get samadhanDailySequence(): Prisma.SamadhanDailySequenceDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1053,7 +1234,14 @@ export namespace Prisma {
     SmsOtp: 'SmsOtp',
     ApplicationTrackingOTP: 'ApplicationTrackingOTP',
     FrontdeskForwarding: 'FrontdeskForwarding',
-    OfficerForwardingHistory: 'OfficerForwardingHistory'
+    OfficerForwardingHistory: 'OfficerForwardingHistory',
+    SamadhanTicket: 'SamadhanTicket',
+    SamadhanAttachment: 'SamadhanAttachment',
+    SamadhanInfoRequest: 'SamadhanInfoRequest',
+    SamadhanStatusHistory: 'SamadhanStatusHistory',
+    SamadhanInternalNote: 'SamadhanInternalNote',
+    SamadhanSLAConfig: 'SamadhanSLAConfig',
+    SamadhanDailySequence: 'SamadhanDailySequence'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1072,7 +1260,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "userSettings" | "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "serviceCategoryChange" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "smsOtp" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory"
+      modelProps: "userSettings" | "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "serviceCategoryChange" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "smsOtp" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory" | "samadhanTicket" | "samadhanAttachment" | "samadhanInfoRequest" | "samadhanStatusHistory" | "samadhanInternalNote" | "samadhanSLAConfig" | "samadhanDailySequence"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2852,6 +3040,524 @@ export namespace Prisma {
           }
         }
       }
+      SamadhanTicket: {
+        payload: Prisma.$SamadhanTicketPayload<ExtArgs>
+        fields: Prisma.SamadhanTicketFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SamadhanTicketFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SamadhanTicketFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload>
+          }
+          findFirst: {
+            args: Prisma.SamadhanTicketFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SamadhanTicketFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload>
+          }
+          findMany: {
+            args: Prisma.SamadhanTicketFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload>[]
+          }
+          create: {
+            args: Prisma.SamadhanTicketCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload>
+          }
+          createMany: {
+            args: Prisma.SamadhanTicketCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SamadhanTicketCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload>[]
+          }
+          delete: {
+            args: Prisma.SamadhanTicketDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload>
+          }
+          update: {
+            args: Prisma.SamadhanTicketUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload>
+          }
+          deleteMany: {
+            args: Prisma.SamadhanTicketDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SamadhanTicketUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SamadhanTicketUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload>[]
+          }
+          upsert: {
+            args: Prisma.SamadhanTicketUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanTicketPayload>
+          }
+          aggregate: {
+            args: Prisma.SamadhanTicketAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSamadhanTicket>
+          }
+          groupBy: {
+            args: Prisma.SamadhanTicketGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanTicketGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SamadhanTicketCountArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanTicketCountAggregateOutputType> | number
+          }
+        }
+      }
+      SamadhanAttachment: {
+        payload: Prisma.$SamadhanAttachmentPayload<ExtArgs>
+        fields: Prisma.SamadhanAttachmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SamadhanAttachmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SamadhanAttachmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload>
+          }
+          findFirst: {
+            args: Prisma.SamadhanAttachmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SamadhanAttachmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload>
+          }
+          findMany: {
+            args: Prisma.SamadhanAttachmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload>[]
+          }
+          create: {
+            args: Prisma.SamadhanAttachmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload>
+          }
+          createMany: {
+            args: Prisma.SamadhanAttachmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SamadhanAttachmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload>[]
+          }
+          delete: {
+            args: Prisma.SamadhanAttachmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload>
+          }
+          update: {
+            args: Prisma.SamadhanAttachmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.SamadhanAttachmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SamadhanAttachmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SamadhanAttachmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.SamadhanAttachmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanAttachmentPayload>
+          }
+          aggregate: {
+            args: Prisma.SamadhanAttachmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSamadhanAttachment>
+          }
+          groupBy: {
+            args: Prisma.SamadhanAttachmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanAttachmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SamadhanAttachmentCountArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanAttachmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      SamadhanInfoRequest: {
+        payload: Prisma.$SamadhanInfoRequestPayload<ExtArgs>
+        fields: Prisma.SamadhanInfoRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SamadhanInfoRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SamadhanInfoRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.SamadhanInfoRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SamadhanInfoRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload>
+          }
+          findMany: {
+            args: Prisma.SamadhanInfoRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload>[]
+          }
+          create: {
+            args: Prisma.SamadhanInfoRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload>
+          }
+          createMany: {
+            args: Prisma.SamadhanInfoRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SamadhanInfoRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.SamadhanInfoRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload>
+          }
+          update: {
+            args: Prisma.SamadhanInfoRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.SamadhanInfoRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SamadhanInfoRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SamadhanInfoRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.SamadhanInfoRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInfoRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.SamadhanInfoRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSamadhanInfoRequest>
+          }
+          groupBy: {
+            args: Prisma.SamadhanInfoRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanInfoRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SamadhanInfoRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanInfoRequestCountAggregateOutputType> | number
+          }
+        }
+      }
+      SamadhanStatusHistory: {
+        payload: Prisma.$SamadhanStatusHistoryPayload<ExtArgs>
+        fields: Prisma.SamadhanStatusHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SamadhanStatusHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SamadhanStatusHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.SamadhanStatusHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SamadhanStatusHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.SamadhanStatusHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.SamadhanStatusHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.SamadhanStatusHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SamadhanStatusHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.SamadhanStatusHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload>
+          }
+          update: {
+            args: Prisma.SamadhanStatusHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.SamadhanStatusHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SamadhanStatusHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SamadhanStatusHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.SamadhanStatusHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanStatusHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.SamadhanStatusHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSamadhanStatusHistory>
+          }
+          groupBy: {
+            args: Prisma.SamadhanStatusHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanStatusHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SamadhanStatusHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanStatusHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
+      SamadhanInternalNote: {
+        payload: Prisma.$SamadhanInternalNotePayload<ExtArgs>
+        fields: Prisma.SamadhanInternalNoteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SamadhanInternalNoteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SamadhanInternalNoteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload>
+          }
+          findFirst: {
+            args: Prisma.SamadhanInternalNoteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SamadhanInternalNoteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload>
+          }
+          findMany: {
+            args: Prisma.SamadhanInternalNoteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload>[]
+          }
+          create: {
+            args: Prisma.SamadhanInternalNoteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload>
+          }
+          createMany: {
+            args: Prisma.SamadhanInternalNoteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SamadhanInternalNoteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload>[]
+          }
+          delete: {
+            args: Prisma.SamadhanInternalNoteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload>
+          }
+          update: {
+            args: Prisma.SamadhanInternalNoteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload>
+          }
+          deleteMany: {
+            args: Prisma.SamadhanInternalNoteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SamadhanInternalNoteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SamadhanInternalNoteUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload>[]
+          }
+          upsert: {
+            args: Prisma.SamadhanInternalNoteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanInternalNotePayload>
+          }
+          aggregate: {
+            args: Prisma.SamadhanInternalNoteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSamadhanInternalNote>
+          }
+          groupBy: {
+            args: Prisma.SamadhanInternalNoteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanInternalNoteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SamadhanInternalNoteCountArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanInternalNoteCountAggregateOutputType> | number
+          }
+        }
+      }
+      SamadhanSLAConfig: {
+        payload: Prisma.$SamadhanSLAConfigPayload<ExtArgs>
+        fields: Prisma.SamadhanSLAConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SamadhanSLAConfigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SamadhanSLAConfigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.SamadhanSLAConfigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SamadhanSLAConfigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload>
+          }
+          findMany: {
+            args: Prisma.SamadhanSLAConfigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload>[]
+          }
+          create: {
+            args: Prisma.SamadhanSLAConfigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload>
+          }
+          createMany: {
+            args: Prisma.SamadhanSLAConfigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SamadhanSLAConfigCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.SamadhanSLAConfigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload>
+          }
+          update: {
+            args: Prisma.SamadhanSLAConfigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.SamadhanSLAConfigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SamadhanSLAConfigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SamadhanSLAConfigUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload>[]
+          }
+          upsert: {
+            args: Prisma.SamadhanSLAConfigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanSLAConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.SamadhanSLAConfigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSamadhanSLAConfig>
+          }
+          groupBy: {
+            args: Prisma.SamadhanSLAConfigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanSLAConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SamadhanSLAConfigCountArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanSLAConfigCountAggregateOutputType> | number
+          }
+        }
+      }
+      SamadhanDailySequence: {
+        payload: Prisma.$SamadhanDailySequencePayload<ExtArgs>
+        fields: Prisma.SamadhanDailySequenceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SamadhanDailySequenceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SamadhanDailySequenceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload>
+          }
+          findFirst: {
+            args: Prisma.SamadhanDailySequenceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SamadhanDailySequenceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload>
+          }
+          findMany: {
+            args: Prisma.SamadhanDailySequenceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload>[]
+          }
+          create: {
+            args: Prisma.SamadhanDailySequenceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload>
+          }
+          createMany: {
+            args: Prisma.SamadhanDailySequenceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SamadhanDailySequenceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload>[]
+          }
+          delete: {
+            args: Prisma.SamadhanDailySequenceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload>
+          }
+          update: {
+            args: Prisma.SamadhanDailySequenceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload>
+          }
+          deleteMany: {
+            args: Prisma.SamadhanDailySequenceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SamadhanDailySequenceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SamadhanDailySequenceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload>[]
+          }
+          upsert: {
+            args: Prisma.SamadhanDailySequenceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanDailySequencePayload>
+          }
+          aggregate: {
+            args: Prisma.SamadhanDailySequenceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSamadhanDailySequence>
+          }
+          groupBy: {
+            args: Prisma.SamadhanDailySequenceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanDailySequenceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SamadhanDailySequenceCountArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanDailySequenceCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2968,6 +3674,13 @@ export namespace Prisma {
     applicationTrackingOTP?: ApplicationTrackingOTPOmit
     frontdeskForwarding?: FrontdeskForwardingOmit
     officerForwardingHistory?: OfficerForwardingHistoryOmit
+    samadhanTicket?: SamadhanTicketOmit
+    samadhanAttachment?: SamadhanAttachmentOmit
+    samadhanInfoRequest?: SamadhanInfoRequestOmit
+    samadhanStatusHistory?: SamadhanStatusHistoryOmit
+    samadhanInternalNote?: SamadhanInternalNoteOmit
+    samadhanSLAConfig?: SamadhanSLAConfigOmit
+    samadhanDailySequence?: SamadhanDailySequenceOmit
   }
 
   /* Types for Logging */
@@ -3065,6 +3778,13 @@ export namespace Prisma {
     officerForwardedFrom: number
     officerForwardedTo: number
     serviceCategoryChanges: number
+    samadhanTicketsAsCitizen: number
+    samadhanTicketsAsOfficer: number
+    samadhanTicketsEscalated: number
+    samadhanAttachmentsUploaded: number
+    samadhanInfoRequests: number
+    samadhanStatusChanges: number
+    samadhanInternalNotes: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3085,6 +3805,13 @@ export namespace Prisma {
     officerForwardedFrom?: boolean | UserCountOutputTypeCountOfficerForwardedFromArgs
     officerForwardedTo?: boolean | UserCountOutputTypeCountOfficerForwardedToArgs
     serviceCategoryChanges?: boolean | UserCountOutputTypeCountServiceCategoryChangesArgs
+    samadhanTicketsAsCitizen?: boolean | UserCountOutputTypeCountSamadhanTicketsAsCitizenArgs
+    samadhanTicketsAsOfficer?: boolean | UserCountOutputTypeCountSamadhanTicketsAsOfficerArgs
+    samadhanTicketsEscalated?: boolean | UserCountOutputTypeCountSamadhanTicketsEscalatedArgs
+    samadhanAttachmentsUploaded?: boolean | UserCountOutputTypeCountSamadhanAttachmentsUploadedArgs
+    samadhanInfoRequests?: boolean | UserCountOutputTypeCountSamadhanInfoRequestsArgs
+    samadhanStatusChanges?: boolean | UserCountOutputTypeCountSamadhanStatusChangesArgs
+    samadhanInternalNotes?: boolean | UserCountOutputTypeCountSamadhanInternalNotesArgs
   }
 
   // Custom InputTypes
@@ -3217,6 +3944,55 @@ export namespace Prisma {
     where?: ServiceCategoryChangeWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSamadhanTicketsAsCitizenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanTicketWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSamadhanTicketsAsOfficerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanTicketWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSamadhanTicketsEscalatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanTicketWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSamadhanAttachmentsUploadedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanAttachmentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSamadhanInfoRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanInfoRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSamadhanStatusChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanStatusHistoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSamadhanInternalNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanInternalNoteWhereInput
+  }
+
 
   /**
    * Count Type OfficerProfileCountOutputType
@@ -3304,10 +4080,12 @@ export namespace Prisma {
 
   export type SectionCountOutputType = {
     officers: number
+    samadhanTickets: number
   }
 
   export type SectionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     officers?: boolean | SectionCountOutputTypeCountOfficersArgs
+    samadhanTickets?: boolean | SectionCountOutputTypeCountSamadhanTicketsArgs
   }
 
   // Custom InputTypes
@@ -3326,6 +4104,13 @@ export namespace Prisma {
    */
   export type SectionCountOutputTypeCountOfficersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OfficerProfileWhereInput
+  }
+
+  /**
+   * SectionCountOutputType without action
+   */
+  export type SectionCountOutputTypeCountSamadhanTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanTicketWhereInput
   }
 
 
@@ -3460,6 +4245,104 @@ export namespace Prisma {
    */
   export type ApplicationCountOutputTypeCountServiceCategoryChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ServiceCategoryChangeWhereInput
+  }
+
+
+  /**
+   * Count Type SamadhanTicketCountOutputType
+   */
+
+  export type SamadhanTicketCountOutputType = {
+    appeals: number
+    attachments: number
+    infoRequests: number
+    statusHistory: number
+    internalNotes: number
+  }
+
+  export type SamadhanTicketCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    appeals?: boolean | SamadhanTicketCountOutputTypeCountAppealsArgs
+    attachments?: boolean | SamadhanTicketCountOutputTypeCountAttachmentsArgs
+    infoRequests?: boolean | SamadhanTicketCountOutputTypeCountInfoRequestsArgs
+    statusHistory?: boolean | SamadhanTicketCountOutputTypeCountStatusHistoryArgs
+    internalNotes?: boolean | SamadhanTicketCountOutputTypeCountInternalNotesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SamadhanTicketCountOutputType without action
+   */
+  export type SamadhanTicketCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicketCountOutputType
+     */
+    select?: SamadhanTicketCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanTicketCountOutputType without action
+   */
+  export type SamadhanTicketCountOutputTypeCountAppealsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanTicketWhereInput
+  }
+
+  /**
+   * SamadhanTicketCountOutputType without action
+   */
+  export type SamadhanTicketCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanAttachmentWhereInput
+  }
+
+  /**
+   * SamadhanTicketCountOutputType without action
+   */
+  export type SamadhanTicketCountOutputTypeCountInfoRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanInfoRequestWhereInput
+  }
+
+  /**
+   * SamadhanTicketCountOutputType without action
+   */
+  export type SamadhanTicketCountOutputTypeCountStatusHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanStatusHistoryWhereInput
+  }
+
+  /**
+   * SamadhanTicketCountOutputType without action
+   */
+  export type SamadhanTicketCountOutputTypeCountInternalNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanInternalNoteWhereInput
+  }
+
+
+  /**
+   * Count Type SamadhanInfoRequestCountOutputType
+   */
+
+  export type SamadhanInfoRequestCountOutputType = {
+    attachments: number
+  }
+
+  export type SamadhanInfoRequestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attachments?: boolean | SamadhanInfoRequestCountOutputTypeCountAttachmentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SamadhanInfoRequestCountOutputType without action
+   */
+  export type SamadhanInfoRequestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequestCountOutputType
+     */
+    select?: SamadhanInfoRequestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanInfoRequestCountOutputType without action
+   */
+  export type SamadhanInfoRequestCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanAttachmentWhereInput
   }
 
 
@@ -4986,6 +5869,13 @@ export namespace Prisma {
     officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
     serviceCategoryChanges?: boolean | User$serviceCategoryChangesArgs<ExtArgs>
     userSettings?: boolean | User$userSettingsArgs<ExtArgs>
+    samadhanTicketsAsCitizen?: boolean | User$samadhanTicketsAsCitizenArgs<ExtArgs>
+    samadhanTicketsAsOfficer?: boolean | User$samadhanTicketsAsOfficerArgs<ExtArgs>
+    samadhanTicketsEscalated?: boolean | User$samadhanTicketsEscalatedArgs<ExtArgs>
+    samadhanAttachmentsUploaded?: boolean | User$samadhanAttachmentsUploadedArgs<ExtArgs>
+    samadhanInfoRequests?: boolean | User$samadhanInfoRequestsArgs<ExtArgs>
+    samadhanStatusChanges?: boolean | User$samadhanStatusChangesArgs<ExtArgs>
+    samadhanInternalNotes?: boolean | User$samadhanInternalNotesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -5050,6 +5940,13 @@ export namespace Prisma {
     officerProfile?: boolean | User$officerProfileArgs<ExtArgs>
     serviceCategoryChanges?: boolean | User$serviceCategoryChangesArgs<ExtArgs>
     userSettings?: boolean | User$userSettingsArgs<ExtArgs>
+    samadhanTicketsAsCitizen?: boolean | User$samadhanTicketsAsCitizenArgs<ExtArgs>
+    samadhanTicketsAsOfficer?: boolean | User$samadhanTicketsAsOfficerArgs<ExtArgs>
+    samadhanTicketsEscalated?: boolean | User$samadhanTicketsEscalatedArgs<ExtArgs>
+    samadhanAttachmentsUploaded?: boolean | User$samadhanAttachmentsUploadedArgs<ExtArgs>
+    samadhanInfoRequests?: boolean | User$samadhanInfoRequestsArgs<ExtArgs>
+    samadhanStatusChanges?: boolean | User$samadhanStatusChangesArgs<ExtArgs>
+    samadhanInternalNotes?: boolean | User$samadhanInternalNotesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5078,6 +5975,13 @@ export namespace Prisma {
       officerProfile: Prisma.$OfficerProfilePayload<ExtArgs> | null
       serviceCategoryChanges: Prisma.$ServiceCategoryChangePayload<ExtArgs>[]
       userSettings: Prisma.$UserSettingsPayload<ExtArgs> | null
+      samadhanTicketsAsCitizen: Prisma.$SamadhanTicketPayload<ExtArgs>[]
+      samadhanTicketsAsOfficer: Prisma.$SamadhanTicketPayload<ExtArgs>[]
+      samadhanTicketsEscalated: Prisma.$SamadhanTicketPayload<ExtArgs>[]
+      samadhanAttachmentsUploaded: Prisma.$SamadhanAttachmentPayload<ExtArgs>[]
+      samadhanInfoRequests: Prisma.$SamadhanInfoRequestPayload<ExtArgs>[]
+      samadhanStatusChanges: Prisma.$SamadhanStatusHistoryPayload<ExtArgs>[]
+      samadhanInternalNotes: Prisma.$SamadhanInternalNotePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5504,6 +6408,13 @@ export namespace Prisma {
     officerProfile<T extends User$officerProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$officerProfileArgs<ExtArgs>>): Prisma__OfficerProfileClient<$Result.GetResult<Prisma.$OfficerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     serviceCategoryChanges<T extends User$serviceCategoryChangesArgs<ExtArgs> = {}>(args?: Subset<T, User$serviceCategoryChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceCategoryChangePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     userSettings<T extends User$userSettingsArgs<ExtArgs> = {}>(args?: Subset<T, User$userSettingsArgs<ExtArgs>>): Prisma__UserSettingsClient<$Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    samadhanTicketsAsCitizen<T extends User$samadhanTicketsAsCitizenArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanTicketsAsCitizenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    samadhanTicketsAsOfficer<T extends User$samadhanTicketsAsOfficerArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanTicketsAsOfficerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    samadhanTicketsEscalated<T extends User$samadhanTicketsEscalatedArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanTicketsEscalatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    samadhanAttachmentsUploaded<T extends User$samadhanAttachmentsUploadedArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanAttachmentsUploadedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    samadhanInfoRequests<T extends User$samadhanInfoRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanInfoRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    samadhanStatusChanges<T extends User$samadhanStatusChangesArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanStatusChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    samadhanInternalNotes<T extends User$samadhanInternalNotesArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanInternalNotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6396,6 +7307,174 @@ export namespace Prisma {
   }
 
   /**
+   * User.samadhanTicketsAsCitizen
+   */
+  export type User$samadhanTicketsAsCitizenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    where?: SamadhanTicketWhereInput
+    orderBy?: SamadhanTicketOrderByWithRelationInput | SamadhanTicketOrderByWithRelationInput[]
+    cursor?: SamadhanTicketWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanTicketScalarFieldEnum | SamadhanTicketScalarFieldEnum[]
+  }
+
+  /**
+   * User.samadhanTicketsAsOfficer
+   */
+  export type User$samadhanTicketsAsOfficerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    where?: SamadhanTicketWhereInput
+    orderBy?: SamadhanTicketOrderByWithRelationInput | SamadhanTicketOrderByWithRelationInput[]
+    cursor?: SamadhanTicketWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanTicketScalarFieldEnum | SamadhanTicketScalarFieldEnum[]
+  }
+
+  /**
+   * User.samadhanTicketsEscalated
+   */
+  export type User$samadhanTicketsEscalatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    where?: SamadhanTicketWhereInput
+    orderBy?: SamadhanTicketOrderByWithRelationInput | SamadhanTicketOrderByWithRelationInput[]
+    cursor?: SamadhanTicketWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanTicketScalarFieldEnum | SamadhanTicketScalarFieldEnum[]
+  }
+
+  /**
+   * User.samadhanAttachmentsUploaded
+   */
+  export type User$samadhanAttachmentsUploadedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    where?: SamadhanAttachmentWhereInput
+    orderBy?: SamadhanAttachmentOrderByWithRelationInput | SamadhanAttachmentOrderByWithRelationInput[]
+    cursor?: SamadhanAttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanAttachmentScalarFieldEnum | SamadhanAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * User.samadhanInfoRequests
+   */
+  export type User$samadhanInfoRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    where?: SamadhanInfoRequestWhereInput
+    orderBy?: SamadhanInfoRequestOrderByWithRelationInput | SamadhanInfoRequestOrderByWithRelationInput[]
+    cursor?: SamadhanInfoRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanInfoRequestScalarFieldEnum | SamadhanInfoRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.samadhanStatusChanges
+   */
+  export type User$samadhanStatusChangesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    where?: SamadhanStatusHistoryWhereInput
+    orderBy?: SamadhanStatusHistoryOrderByWithRelationInput | SamadhanStatusHistoryOrderByWithRelationInput[]
+    cursor?: SamadhanStatusHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanStatusHistoryScalarFieldEnum | SamadhanStatusHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * User.samadhanInternalNotes
+   */
+  export type User$samadhanInternalNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    where?: SamadhanInternalNoteWhereInput
+    orderBy?: SamadhanInternalNoteOrderByWithRelationInput | SamadhanInternalNoteOrderByWithRelationInput[]
+    cursor?: SamadhanInternalNoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanInternalNoteScalarFieldEnum | SamadhanInternalNoteScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6431,6 +7510,7 @@ export namespace Prisma {
     phone: string | null
     address: string | null
     aadhaarNumber: string | null
+    samadhanPseudonym: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6442,6 +7522,7 @@ export namespace Prisma {
     phone: string | null
     address: string | null
     aadhaarNumber: string | null
+    samadhanPseudonym: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6453,6 +7534,7 @@ export namespace Prisma {
     phone: number
     address: number
     aadhaarNumber: number
+    samadhanPseudonym: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -6466,6 +7548,7 @@ export namespace Prisma {
     phone?: true
     address?: true
     aadhaarNumber?: true
+    samadhanPseudonym?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6477,6 +7560,7 @@ export namespace Prisma {
     phone?: true
     address?: true
     aadhaarNumber?: true
+    samadhanPseudonym?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6488,6 +7572,7 @@ export namespace Prisma {
     phone?: true
     address?: true
     aadhaarNumber?: true
+    samadhanPseudonym?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -6572,6 +7657,7 @@ export namespace Prisma {
     phone: string
     address: string
     aadhaarNumber: string | null
+    samadhanPseudonym: string | null
     createdAt: Date
     updatedAt: Date
     _count: CitizenProfileCountAggregateOutputType | null
@@ -6600,6 +7686,7 @@ export namespace Prisma {
     phone?: boolean
     address?: boolean
     aadhaarNumber?: boolean
+    samadhanPseudonym?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -6612,6 +7699,7 @@ export namespace Prisma {
     phone?: boolean
     address?: boolean
     aadhaarNumber?: boolean
+    samadhanPseudonym?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -6624,6 +7712,7 @@ export namespace Prisma {
     phone?: boolean
     address?: boolean
     aadhaarNumber?: boolean
+    samadhanPseudonym?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -6636,11 +7725,12 @@ export namespace Prisma {
     phone?: boolean
     address?: boolean
     aadhaarNumber?: boolean
+    samadhanPseudonym?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CitizenProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "phone" | "address" | "aadhaarNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["citizenProfile"]>
+  export type CitizenProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "fullName" | "phone" | "address" | "aadhaarNumber" | "samadhanPseudonym" | "createdAt" | "updatedAt", ExtArgs["result"]["citizenProfile"]>
   export type CitizenProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -6663,6 +7753,7 @@ export namespace Prisma {
       phone: string
       address: string
       aadhaarNumber: string | null
+      samadhanPseudonym: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["citizenProfile"]>
@@ -7095,6 +8186,7 @@ export namespace Prisma {
     readonly phone: FieldRef<"CitizenProfile", 'String'>
     readonly address: FieldRef<"CitizenProfile", 'String'>
     readonly aadhaarNumber: FieldRef<"CitizenProfile", 'String'>
+    readonly samadhanPseudonym: FieldRef<"CitizenProfile", 'String'>
     readonly createdAt: FieldRef<"CitizenProfile", 'DateTime'>
     readonly updatedAt: FieldRef<"CitizenProfile", 'DateTime'>
   }
@@ -11088,6 +12180,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     officers?: boolean | Section$officersArgs<ExtArgs>
+    samadhanTickets?: boolean | Section$samadhanTicketsArgs<ExtArgs>
     _count?: boolean | SectionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["section"]>
 
@@ -11121,6 +12214,7 @@ export namespace Prisma {
   export type SectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["section"]>
   export type SectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     officers?: boolean | Section$officersArgs<ExtArgs>
+    samadhanTickets?: boolean | Section$samadhanTicketsArgs<ExtArgs>
     _count?: boolean | SectionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -11130,6 +12224,7 @@ export namespace Prisma {
     name: "Section"
     objects: {
       officers: Prisma.$OfficerProfilePayload<ExtArgs>[]
+      samadhanTickets: Prisma.$SamadhanTicketPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11533,6 +12628,7 @@ export namespace Prisma {
   export interface Prisma__SectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     officers<T extends Section$officersArgs<ExtArgs> = {}>(args?: Subset<T, Section$officersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    samadhanTickets<T extends Section$samadhanTicketsArgs<ExtArgs> = {}>(args?: Subset<T, Section$samadhanTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11977,6 +13073,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OfficerProfileScalarFieldEnum | OfficerProfileScalarFieldEnum[]
+  }
+
+  /**
+   * Section.samadhanTickets
+   */
+  export type Section$samadhanTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    where?: SamadhanTicketWhereInput
+    orderBy?: SamadhanTicketOrderByWithRelationInput | SamadhanTicketOrderByWithRelationInput[]
+    cursor?: SamadhanTicketWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanTicketScalarFieldEnum | SamadhanTicketScalarFieldEnum[]
   }
 
   /**
@@ -31360,6 +32480,8311 @@ export namespace Prisma {
 
 
   /**
+   * Model SamadhanTicket
+   */
+
+  export type AggregateSamadhanTicket = {
+    _count: SamadhanTicketCountAggregateOutputType | null
+    _min: SamadhanTicketMinAggregateOutputType | null
+    _max: SamadhanTicketMaxAggregateOutputType | null
+  }
+
+  export type SamadhanTicketMinAggregateOutputType = {
+    id: string | null
+    referenceId: string | null
+    queryType: $Enums.SamadhanQueryType | null
+    priority: $Enums.SamadhanPriority | null
+    status: $Enums.SamadhanTicketStatus | null
+    citizenId: string | null
+    citizenName: string | null
+    citizenEmail: string | null
+    citizenPhone: string | null
+    citizenPseudonym: string | null
+    isAnonymous: boolean | null
+    isAnonymousToOfficer: boolean | null
+    sectionId: string | null
+    serviceAvailed: string | null
+    description: string | null
+    assignedOfficerId: string | null
+    escalatedToId: string | null
+    submissionChannel: $Enums.SamadhanSubmissionChannel | null
+    whatsappNumber: string | null
+    slaDeadline: Date | null
+    seenAt: Date | null
+    acknowledgedAt: Date | null
+    resolvedAt: Date | null
+    closedAt: Date | null
+    slaBreachedAt: Date | null
+    resolutionMessage: string | null
+    isAppeal: boolean | null
+    originalTicketId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanTicketMaxAggregateOutputType = {
+    id: string | null
+    referenceId: string | null
+    queryType: $Enums.SamadhanQueryType | null
+    priority: $Enums.SamadhanPriority | null
+    status: $Enums.SamadhanTicketStatus | null
+    citizenId: string | null
+    citizenName: string | null
+    citizenEmail: string | null
+    citizenPhone: string | null
+    citizenPseudonym: string | null
+    isAnonymous: boolean | null
+    isAnonymousToOfficer: boolean | null
+    sectionId: string | null
+    serviceAvailed: string | null
+    description: string | null
+    assignedOfficerId: string | null
+    escalatedToId: string | null
+    submissionChannel: $Enums.SamadhanSubmissionChannel | null
+    whatsappNumber: string | null
+    slaDeadline: Date | null
+    seenAt: Date | null
+    acknowledgedAt: Date | null
+    resolvedAt: Date | null
+    closedAt: Date | null
+    slaBreachedAt: Date | null
+    resolutionMessage: string | null
+    isAppeal: boolean | null
+    originalTicketId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanTicketCountAggregateOutputType = {
+    id: number
+    referenceId: number
+    queryType: number
+    priority: number
+    status: number
+    citizenId: number
+    citizenName: number
+    citizenEmail: number
+    citizenPhone: number
+    citizenPseudonym: number
+    isAnonymous: number
+    isAnonymousToOfficer: number
+    sectionId: number
+    serviceAvailed: number
+    description: number
+    assignedOfficerId: number
+    escalatedToId: number
+    submissionChannel: number
+    whatsappNumber: number
+    slaDeadline: number
+    seenAt: number
+    acknowledgedAt: number
+    resolvedAt: number
+    closedAt: number
+    slaBreachedAt: number
+    resolutionMessage: number
+    isAppeal: number
+    originalTicketId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SamadhanTicketMinAggregateInputType = {
+    id?: true
+    referenceId?: true
+    queryType?: true
+    priority?: true
+    status?: true
+    citizenId?: true
+    citizenName?: true
+    citizenEmail?: true
+    citizenPhone?: true
+    citizenPseudonym?: true
+    isAnonymous?: true
+    isAnonymousToOfficer?: true
+    sectionId?: true
+    serviceAvailed?: true
+    description?: true
+    assignedOfficerId?: true
+    escalatedToId?: true
+    submissionChannel?: true
+    whatsappNumber?: true
+    slaDeadline?: true
+    seenAt?: true
+    acknowledgedAt?: true
+    resolvedAt?: true
+    closedAt?: true
+    slaBreachedAt?: true
+    resolutionMessage?: true
+    isAppeal?: true
+    originalTicketId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanTicketMaxAggregateInputType = {
+    id?: true
+    referenceId?: true
+    queryType?: true
+    priority?: true
+    status?: true
+    citizenId?: true
+    citizenName?: true
+    citizenEmail?: true
+    citizenPhone?: true
+    citizenPseudonym?: true
+    isAnonymous?: true
+    isAnonymousToOfficer?: true
+    sectionId?: true
+    serviceAvailed?: true
+    description?: true
+    assignedOfficerId?: true
+    escalatedToId?: true
+    submissionChannel?: true
+    whatsappNumber?: true
+    slaDeadline?: true
+    seenAt?: true
+    acknowledgedAt?: true
+    resolvedAt?: true
+    closedAt?: true
+    slaBreachedAt?: true
+    resolutionMessage?: true
+    isAppeal?: true
+    originalTicketId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanTicketCountAggregateInputType = {
+    id?: true
+    referenceId?: true
+    queryType?: true
+    priority?: true
+    status?: true
+    citizenId?: true
+    citizenName?: true
+    citizenEmail?: true
+    citizenPhone?: true
+    citizenPseudonym?: true
+    isAnonymous?: true
+    isAnonymousToOfficer?: true
+    sectionId?: true
+    serviceAvailed?: true
+    description?: true
+    assignedOfficerId?: true
+    escalatedToId?: true
+    submissionChannel?: true
+    whatsappNumber?: true
+    slaDeadline?: true
+    seenAt?: true
+    acknowledgedAt?: true
+    resolvedAt?: true
+    closedAt?: true
+    slaBreachedAt?: true
+    resolutionMessage?: true
+    isAppeal?: true
+    originalTicketId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SamadhanTicketAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanTicket to aggregate.
+     */
+    where?: SamadhanTicketWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanTickets to fetch.
+     */
+    orderBy?: SamadhanTicketOrderByWithRelationInput | SamadhanTicketOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SamadhanTicketWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanTickets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanTickets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SamadhanTickets
+    **/
+    _count?: true | SamadhanTicketCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SamadhanTicketMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SamadhanTicketMaxAggregateInputType
+  }
+
+  export type GetSamadhanTicketAggregateType<T extends SamadhanTicketAggregateArgs> = {
+        [P in keyof T & keyof AggregateSamadhanTicket]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSamadhanTicket[P]>
+      : GetScalarType<T[P], AggregateSamadhanTicket[P]>
+  }
+
+
+
+
+  export type SamadhanTicketGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanTicketWhereInput
+    orderBy?: SamadhanTicketOrderByWithAggregationInput | SamadhanTicketOrderByWithAggregationInput[]
+    by: SamadhanTicketScalarFieldEnum[] | SamadhanTicketScalarFieldEnum
+    having?: SamadhanTicketScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SamadhanTicketCountAggregateInputType | true
+    _min?: SamadhanTicketMinAggregateInputType
+    _max?: SamadhanTicketMaxAggregateInputType
+  }
+
+  export type SamadhanTicketGroupByOutputType = {
+    id: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority: $Enums.SamadhanPriority
+    status: $Enums.SamadhanTicketStatus
+    citizenId: string | null
+    citizenName: string | null
+    citizenEmail: string | null
+    citizenPhone: string | null
+    citizenPseudonym: string | null
+    isAnonymous: boolean
+    isAnonymousToOfficer: boolean
+    sectionId: string
+    serviceAvailed: string | null
+    description: string
+    assignedOfficerId: string | null
+    escalatedToId: string | null
+    submissionChannel: $Enums.SamadhanSubmissionChannel
+    whatsappNumber: string | null
+    slaDeadline: Date | null
+    seenAt: Date | null
+    acknowledgedAt: Date | null
+    resolvedAt: Date | null
+    closedAt: Date | null
+    slaBreachedAt: Date | null
+    resolutionMessage: string | null
+    isAppeal: boolean
+    originalTicketId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: SamadhanTicketCountAggregateOutputType | null
+    _min: SamadhanTicketMinAggregateOutputType | null
+    _max: SamadhanTicketMaxAggregateOutputType | null
+  }
+
+  type GetSamadhanTicketGroupByPayload<T extends SamadhanTicketGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SamadhanTicketGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SamadhanTicketGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SamadhanTicketGroupByOutputType[P]>
+            : GetScalarType<T[P], SamadhanTicketGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SamadhanTicketSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    referenceId?: boolean
+    queryType?: boolean
+    priority?: boolean
+    status?: boolean
+    citizenId?: boolean
+    citizenName?: boolean
+    citizenEmail?: boolean
+    citizenPhone?: boolean
+    citizenPseudonym?: boolean
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId?: boolean
+    serviceAvailed?: boolean
+    description?: boolean
+    assignedOfficerId?: boolean
+    escalatedToId?: boolean
+    submissionChannel?: boolean
+    whatsappNumber?: boolean
+    slaDeadline?: boolean
+    seenAt?: boolean
+    acknowledgedAt?: boolean
+    resolvedAt?: boolean
+    closedAt?: boolean
+    slaBreachedAt?: boolean
+    resolutionMessage?: boolean
+    isAppeal?: boolean
+    originalTicketId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    citizen?: boolean | SamadhanTicket$citizenArgs<ExtArgs>
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+    assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
+    escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
+    appeals?: boolean | SamadhanTicket$appealsArgs<ExtArgs>
+    attachments?: boolean | SamadhanTicket$attachmentsArgs<ExtArgs>
+    infoRequests?: boolean | SamadhanTicket$infoRequestsArgs<ExtArgs>
+    statusHistory?: boolean | SamadhanTicket$statusHistoryArgs<ExtArgs>
+    internalNotes?: boolean | SamadhanTicket$internalNotesArgs<ExtArgs>
+    _count?: boolean | SamadhanTicketCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanTicket"]>
+
+  export type SamadhanTicketSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    referenceId?: boolean
+    queryType?: boolean
+    priority?: boolean
+    status?: boolean
+    citizenId?: boolean
+    citizenName?: boolean
+    citizenEmail?: boolean
+    citizenPhone?: boolean
+    citizenPseudonym?: boolean
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId?: boolean
+    serviceAvailed?: boolean
+    description?: boolean
+    assignedOfficerId?: boolean
+    escalatedToId?: boolean
+    submissionChannel?: boolean
+    whatsappNumber?: boolean
+    slaDeadline?: boolean
+    seenAt?: boolean
+    acknowledgedAt?: boolean
+    resolvedAt?: boolean
+    closedAt?: boolean
+    slaBreachedAt?: boolean
+    resolutionMessage?: boolean
+    isAppeal?: boolean
+    originalTicketId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    citizen?: boolean | SamadhanTicket$citizenArgs<ExtArgs>
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+    assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
+    escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanTicket"]>
+
+  export type SamadhanTicketSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    referenceId?: boolean
+    queryType?: boolean
+    priority?: boolean
+    status?: boolean
+    citizenId?: boolean
+    citizenName?: boolean
+    citizenEmail?: boolean
+    citizenPhone?: boolean
+    citizenPseudonym?: boolean
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId?: boolean
+    serviceAvailed?: boolean
+    description?: boolean
+    assignedOfficerId?: boolean
+    escalatedToId?: boolean
+    submissionChannel?: boolean
+    whatsappNumber?: boolean
+    slaDeadline?: boolean
+    seenAt?: boolean
+    acknowledgedAt?: boolean
+    resolvedAt?: boolean
+    closedAt?: boolean
+    slaBreachedAt?: boolean
+    resolutionMessage?: boolean
+    isAppeal?: boolean
+    originalTicketId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    citizen?: boolean | SamadhanTicket$citizenArgs<ExtArgs>
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+    assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
+    escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanTicket"]>
+
+  export type SamadhanTicketSelectScalar = {
+    id?: boolean
+    referenceId?: boolean
+    queryType?: boolean
+    priority?: boolean
+    status?: boolean
+    citizenId?: boolean
+    citizenName?: boolean
+    citizenEmail?: boolean
+    citizenPhone?: boolean
+    citizenPseudonym?: boolean
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId?: boolean
+    serviceAvailed?: boolean
+    description?: boolean
+    assignedOfficerId?: boolean
+    escalatedToId?: boolean
+    submissionChannel?: boolean
+    whatsappNumber?: boolean
+    slaDeadline?: boolean
+    seenAt?: boolean
+    acknowledgedAt?: boolean
+    resolvedAt?: boolean
+    closedAt?: boolean
+    slaBreachedAt?: boolean
+    resolutionMessage?: boolean
+    isAppeal?: boolean
+    originalTicketId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SamadhanTicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "referenceId" | "queryType" | "priority" | "status" | "citizenId" | "citizenName" | "citizenEmail" | "citizenPhone" | "citizenPseudonym" | "isAnonymous" | "isAnonymousToOfficer" | "sectionId" | "serviceAvailed" | "description" | "assignedOfficerId" | "escalatedToId" | "submissionChannel" | "whatsappNumber" | "slaDeadline" | "seenAt" | "acknowledgedAt" | "resolvedAt" | "closedAt" | "slaBreachedAt" | "resolutionMessage" | "isAppeal" | "originalTicketId" | "createdAt" | "updatedAt", ExtArgs["result"]["samadhanTicket"]>
+  export type SamadhanTicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    citizen?: boolean | SamadhanTicket$citizenArgs<ExtArgs>
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+    assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
+    escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
+    appeals?: boolean | SamadhanTicket$appealsArgs<ExtArgs>
+    attachments?: boolean | SamadhanTicket$attachmentsArgs<ExtArgs>
+    infoRequests?: boolean | SamadhanTicket$infoRequestsArgs<ExtArgs>
+    statusHistory?: boolean | SamadhanTicket$statusHistoryArgs<ExtArgs>
+    internalNotes?: boolean | SamadhanTicket$internalNotesArgs<ExtArgs>
+    _count?: boolean | SamadhanTicketCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type SamadhanTicketIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    citizen?: boolean | SamadhanTicket$citizenArgs<ExtArgs>
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+    assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
+    escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
+  }
+  export type SamadhanTicketIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    citizen?: boolean | SamadhanTicket$citizenArgs<ExtArgs>
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+    assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
+    escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
+  }
+
+  export type $SamadhanTicketPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SamadhanTicket"
+    objects: {
+      citizen: Prisma.$UserPayload<ExtArgs> | null
+      section: Prisma.$SectionPayload<ExtArgs>
+      assignedOfficer: Prisma.$UserPayload<ExtArgs> | null
+      escalatedTo: Prisma.$UserPayload<ExtArgs> | null
+      originalTicket: Prisma.$SamadhanTicketPayload<ExtArgs> | null
+      appeals: Prisma.$SamadhanTicketPayload<ExtArgs>[]
+      attachments: Prisma.$SamadhanAttachmentPayload<ExtArgs>[]
+      infoRequests: Prisma.$SamadhanInfoRequestPayload<ExtArgs>[]
+      statusHistory: Prisma.$SamadhanStatusHistoryPayload<ExtArgs>[]
+      internalNotes: Prisma.$SamadhanInternalNotePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      referenceId: string
+      queryType: $Enums.SamadhanQueryType
+      priority: $Enums.SamadhanPriority
+      status: $Enums.SamadhanTicketStatus
+      citizenId: string | null
+      citizenName: string | null
+      citizenEmail: string | null
+      citizenPhone: string | null
+      citizenPseudonym: string | null
+      isAnonymous: boolean
+      isAnonymousToOfficer: boolean
+      sectionId: string
+      serviceAvailed: string | null
+      description: string
+      assignedOfficerId: string | null
+      escalatedToId: string | null
+      submissionChannel: $Enums.SamadhanSubmissionChannel
+      whatsappNumber: string | null
+      slaDeadline: Date | null
+      seenAt: Date | null
+      acknowledgedAt: Date | null
+      resolvedAt: Date | null
+      closedAt: Date | null
+      slaBreachedAt: Date | null
+      resolutionMessage: string | null
+      isAppeal: boolean
+      originalTicketId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["samadhanTicket"]>
+    composites: {}
+  }
+
+  type SamadhanTicketGetPayload<S extends boolean | null | undefined | SamadhanTicketDefaultArgs> = $Result.GetResult<Prisma.$SamadhanTicketPayload, S>
+
+  type SamadhanTicketCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SamadhanTicketFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SamadhanTicketCountAggregateInputType | true
+    }
+
+  export interface SamadhanTicketDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SamadhanTicket'], meta: { name: 'SamadhanTicket' } }
+    /**
+     * Find zero or one SamadhanTicket that matches the filter.
+     * @param {SamadhanTicketFindUniqueArgs} args - Arguments to find a SamadhanTicket
+     * @example
+     * // Get one SamadhanTicket
+     * const samadhanTicket = await prisma.samadhanTicket.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SamadhanTicketFindUniqueArgs>(args: SelectSubset<T, SamadhanTicketFindUniqueArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SamadhanTicket that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SamadhanTicketFindUniqueOrThrowArgs} args - Arguments to find a SamadhanTicket
+     * @example
+     * // Get one SamadhanTicket
+     * const samadhanTicket = await prisma.samadhanTicket.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SamadhanTicketFindUniqueOrThrowArgs>(args: SelectSubset<T, SamadhanTicketFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanTicket that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanTicketFindFirstArgs} args - Arguments to find a SamadhanTicket
+     * @example
+     * // Get one SamadhanTicket
+     * const samadhanTicket = await prisma.samadhanTicket.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SamadhanTicketFindFirstArgs>(args?: SelectSubset<T, SamadhanTicketFindFirstArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanTicket that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanTicketFindFirstOrThrowArgs} args - Arguments to find a SamadhanTicket
+     * @example
+     * // Get one SamadhanTicket
+     * const samadhanTicket = await prisma.samadhanTicket.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SamadhanTicketFindFirstOrThrowArgs>(args?: SelectSubset<T, SamadhanTicketFindFirstOrThrowArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SamadhanTickets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanTicketFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SamadhanTickets
+     * const samadhanTickets = await prisma.samadhanTicket.findMany()
+     * 
+     * // Get first 10 SamadhanTickets
+     * const samadhanTickets = await prisma.samadhanTicket.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const samadhanTicketWithIdOnly = await prisma.samadhanTicket.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SamadhanTicketFindManyArgs>(args?: SelectSubset<T, SamadhanTicketFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SamadhanTicket.
+     * @param {SamadhanTicketCreateArgs} args - Arguments to create a SamadhanTicket.
+     * @example
+     * // Create one SamadhanTicket
+     * const SamadhanTicket = await prisma.samadhanTicket.create({
+     *   data: {
+     *     // ... data to create a SamadhanTicket
+     *   }
+     * })
+     * 
+     */
+    create<T extends SamadhanTicketCreateArgs>(args: SelectSubset<T, SamadhanTicketCreateArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SamadhanTickets.
+     * @param {SamadhanTicketCreateManyArgs} args - Arguments to create many SamadhanTickets.
+     * @example
+     * // Create many SamadhanTickets
+     * const samadhanTicket = await prisma.samadhanTicket.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SamadhanTicketCreateManyArgs>(args?: SelectSubset<T, SamadhanTicketCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SamadhanTickets and returns the data saved in the database.
+     * @param {SamadhanTicketCreateManyAndReturnArgs} args - Arguments to create many SamadhanTickets.
+     * @example
+     * // Create many SamadhanTickets
+     * const samadhanTicket = await prisma.samadhanTicket.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SamadhanTickets and only return the `id`
+     * const samadhanTicketWithIdOnly = await prisma.samadhanTicket.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SamadhanTicketCreateManyAndReturnArgs>(args?: SelectSubset<T, SamadhanTicketCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SamadhanTicket.
+     * @param {SamadhanTicketDeleteArgs} args - Arguments to delete one SamadhanTicket.
+     * @example
+     * // Delete one SamadhanTicket
+     * const SamadhanTicket = await prisma.samadhanTicket.delete({
+     *   where: {
+     *     // ... filter to delete one SamadhanTicket
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SamadhanTicketDeleteArgs>(args: SelectSubset<T, SamadhanTicketDeleteArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SamadhanTicket.
+     * @param {SamadhanTicketUpdateArgs} args - Arguments to update one SamadhanTicket.
+     * @example
+     * // Update one SamadhanTicket
+     * const samadhanTicket = await prisma.samadhanTicket.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SamadhanTicketUpdateArgs>(args: SelectSubset<T, SamadhanTicketUpdateArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SamadhanTickets.
+     * @param {SamadhanTicketDeleteManyArgs} args - Arguments to filter SamadhanTickets to delete.
+     * @example
+     * // Delete a few SamadhanTickets
+     * const { count } = await prisma.samadhanTicket.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SamadhanTicketDeleteManyArgs>(args?: SelectSubset<T, SamadhanTicketDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanTickets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanTicketUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SamadhanTickets
+     * const samadhanTicket = await prisma.samadhanTicket.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SamadhanTicketUpdateManyArgs>(args: SelectSubset<T, SamadhanTicketUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanTickets and returns the data updated in the database.
+     * @param {SamadhanTicketUpdateManyAndReturnArgs} args - Arguments to update many SamadhanTickets.
+     * @example
+     * // Update many SamadhanTickets
+     * const samadhanTicket = await prisma.samadhanTicket.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SamadhanTickets and only return the `id`
+     * const samadhanTicketWithIdOnly = await prisma.samadhanTicket.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SamadhanTicketUpdateManyAndReturnArgs>(args: SelectSubset<T, SamadhanTicketUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SamadhanTicket.
+     * @param {SamadhanTicketUpsertArgs} args - Arguments to update or create a SamadhanTicket.
+     * @example
+     * // Update or create a SamadhanTicket
+     * const samadhanTicket = await prisma.samadhanTicket.upsert({
+     *   create: {
+     *     // ... data to create a SamadhanTicket
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SamadhanTicket we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SamadhanTicketUpsertArgs>(args: SelectSubset<T, SamadhanTicketUpsertArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SamadhanTickets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanTicketCountArgs} args - Arguments to filter SamadhanTickets to count.
+     * @example
+     * // Count the number of SamadhanTickets
+     * const count = await prisma.samadhanTicket.count({
+     *   where: {
+     *     // ... the filter for the SamadhanTickets we want to count
+     *   }
+     * })
+    **/
+    count<T extends SamadhanTicketCountArgs>(
+      args?: Subset<T, SamadhanTicketCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SamadhanTicketCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SamadhanTicket.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanTicketAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SamadhanTicketAggregateArgs>(args: Subset<T, SamadhanTicketAggregateArgs>): Prisma.PrismaPromise<GetSamadhanTicketAggregateType<T>>
+
+    /**
+     * Group by SamadhanTicket.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanTicketGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SamadhanTicketGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SamadhanTicketGroupByArgs['orderBy'] }
+        : { orderBy?: SamadhanTicketGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SamadhanTicketGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSamadhanTicketGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SamadhanTicket model
+   */
+  readonly fields: SamadhanTicketFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SamadhanTicket.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SamadhanTicketClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    citizen<T extends SamadhanTicket$citizenArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$citizenArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    section<T extends SectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SectionDefaultArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assignedOfficer<T extends SamadhanTicket$assignedOfficerArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$assignedOfficerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    escalatedTo<T extends SamadhanTicket$escalatedToArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$escalatedToArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    originalTicket<T extends SamadhanTicket$originalTicketArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$originalTicketArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    appeals<T extends SamadhanTicket$appealsArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$appealsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attachments<T extends SamadhanTicket$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    infoRequests<T extends SamadhanTicket$infoRequestsArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$infoRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    statusHistory<T extends SamadhanTicket$statusHistoryArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$statusHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    internalNotes<T extends SamadhanTicket$internalNotesArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$internalNotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SamadhanTicket model
+   */
+  interface SamadhanTicketFieldRefs {
+    readonly id: FieldRef<"SamadhanTicket", 'String'>
+    readonly referenceId: FieldRef<"SamadhanTicket", 'String'>
+    readonly queryType: FieldRef<"SamadhanTicket", 'SamadhanQueryType'>
+    readonly priority: FieldRef<"SamadhanTicket", 'SamadhanPriority'>
+    readonly status: FieldRef<"SamadhanTicket", 'SamadhanTicketStatus'>
+    readonly citizenId: FieldRef<"SamadhanTicket", 'String'>
+    readonly citizenName: FieldRef<"SamadhanTicket", 'String'>
+    readonly citizenEmail: FieldRef<"SamadhanTicket", 'String'>
+    readonly citizenPhone: FieldRef<"SamadhanTicket", 'String'>
+    readonly citizenPseudonym: FieldRef<"SamadhanTicket", 'String'>
+    readonly isAnonymous: FieldRef<"SamadhanTicket", 'Boolean'>
+    readonly isAnonymousToOfficer: FieldRef<"SamadhanTicket", 'Boolean'>
+    readonly sectionId: FieldRef<"SamadhanTicket", 'String'>
+    readonly serviceAvailed: FieldRef<"SamadhanTicket", 'String'>
+    readonly description: FieldRef<"SamadhanTicket", 'String'>
+    readonly assignedOfficerId: FieldRef<"SamadhanTicket", 'String'>
+    readonly escalatedToId: FieldRef<"SamadhanTicket", 'String'>
+    readonly submissionChannel: FieldRef<"SamadhanTicket", 'SamadhanSubmissionChannel'>
+    readonly whatsappNumber: FieldRef<"SamadhanTicket", 'String'>
+    readonly slaDeadline: FieldRef<"SamadhanTicket", 'DateTime'>
+    readonly seenAt: FieldRef<"SamadhanTicket", 'DateTime'>
+    readonly acknowledgedAt: FieldRef<"SamadhanTicket", 'DateTime'>
+    readonly resolvedAt: FieldRef<"SamadhanTicket", 'DateTime'>
+    readonly closedAt: FieldRef<"SamadhanTicket", 'DateTime'>
+    readonly slaBreachedAt: FieldRef<"SamadhanTicket", 'DateTime'>
+    readonly resolutionMessage: FieldRef<"SamadhanTicket", 'String'>
+    readonly isAppeal: FieldRef<"SamadhanTicket", 'Boolean'>
+    readonly originalTicketId: FieldRef<"SamadhanTicket", 'String'>
+    readonly createdAt: FieldRef<"SamadhanTicket", 'DateTime'>
+    readonly updatedAt: FieldRef<"SamadhanTicket", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SamadhanTicket findUnique
+   */
+  export type SamadhanTicketFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanTicket to fetch.
+     */
+    where: SamadhanTicketWhereUniqueInput
+  }
+
+  /**
+   * SamadhanTicket findUniqueOrThrow
+   */
+  export type SamadhanTicketFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanTicket to fetch.
+     */
+    where: SamadhanTicketWhereUniqueInput
+  }
+
+  /**
+   * SamadhanTicket findFirst
+   */
+  export type SamadhanTicketFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanTicket to fetch.
+     */
+    where?: SamadhanTicketWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanTickets to fetch.
+     */
+    orderBy?: SamadhanTicketOrderByWithRelationInput | SamadhanTicketOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanTickets.
+     */
+    cursor?: SamadhanTicketWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanTickets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanTickets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanTickets.
+     */
+    distinct?: SamadhanTicketScalarFieldEnum | SamadhanTicketScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanTicket findFirstOrThrow
+   */
+  export type SamadhanTicketFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanTicket to fetch.
+     */
+    where?: SamadhanTicketWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanTickets to fetch.
+     */
+    orderBy?: SamadhanTicketOrderByWithRelationInput | SamadhanTicketOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanTickets.
+     */
+    cursor?: SamadhanTicketWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanTickets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanTickets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanTickets.
+     */
+    distinct?: SamadhanTicketScalarFieldEnum | SamadhanTicketScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanTicket findMany
+   */
+  export type SamadhanTicketFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanTickets to fetch.
+     */
+    where?: SamadhanTicketWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanTickets to fetch.
+     */
+    orderBy?: SamadhanTicketOrderByWithRelationInput | SamadhanTicketOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SamadhanTickets.
+     */
+    cursor?: SamadhanTicketWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanTickets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanTickets.
+     */
+    skip?: number
+    distinct?: SamadhanTicketScalarFieldEnum | SamadhanTicketScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanTicket create
+   */
+  export type SamadhanTicketCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SamadhanTicket.
+     */
+    data: XOR<SamadhanTicketCreateInput, SamadhanTicketUncheckedCreateInput>
+  }
+
+  /**
+   * SamadhanTicket createMany
+   */
+  export type SamadhanTicketCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SamadhanTickets.
+     */
+    data: SamadhanTicketCreateManyInput | SamadhanTicketCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanTicket createManyAndReturn
+   */
+  export type SamadhanTicketCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * The data used to create many SamadhanTickets.
+     */
+    data: SamadhanTicketCreateManyInput | SamadhanTicketCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanTicket update
+   */
+  export type SamadhanTicketUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SamadhanTicket.
+     */
+    data: XOR<SamadhanTicketUpdateInput, SamadhanTicketUncheckedUpdateInput>
+    /**
+     * Choose, which SamadhanTicket to update.
+     */
+    where: SamadhanTicketWhereUniqueInput
+  }
+
+  /**
+   * SamadhanTicket updateMany
+   */
+  export type SamadhanTicketUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SamadhanTickets.
+     */
+    data: XOR<SamadhanTicketUpdateManyMutationInput, SamadhanTicketUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanTickets to update
+     */
+    where?: SamadhanTicketWhereInput
+    /**
+     * Limit how many SamadhanTickets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanTicket updateManyAndReturn
+   */
+  export type SamadhanTicketUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * The data used to update SamadhanTickets.
+     */
+    data: XOR<SamadhanTicketUpdateManyMutationInput, SamadhanTicketUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanTickets to update
+     */
+    where?: SamadhanTicketWhereInput
+    /**
+     * Limit how many SamadhanTickets to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanTicket upsert
+   */
+  export type SamadhanTicketUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SamadhanTicket to update in case it exists.
+     */
+    where: SamadhanTicketWhereUniqueInput
+    /**
+     * In case the SamadhanTicket found by the `where` argument doesn't exist, create a new SamadhanTicket with this data.
+     */
+    create: XOR<SamadhanTicketCreateInput, SamadhanTicketUncheckedCreateInput>
+    /**
+     * In case the SamadhanTicket was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SamadhanTicketUpdateInput, SamadhanTicketUncheckedUpdateInput>
+  }
+
+  /**
+   * SamadhanTicket delete
+   */
+  export type SamadhanTicketDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    /**
+     * Filter which SamadhanTicket to delete.
+     */
+    where: SamadhanTicketWhereUniqueInput
+  }
+
+  /**
+   * SamadhanTicket deleteMany
+   */
+  export type SamadhanTicketDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanTickets to delete
+     */
+    where?: SamadhanTicketWhereInput
+    /**
+     * Limit how many SamadhanTickets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanTicket.citizen
+   */
+  export type SamadhanTicket$citizenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * SamadhanTicket.assignedOfficer
+   */
+  export type SamadhanTicket$assignedOfficerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * SamadhanTicket.escalatedTo
+   */
+  export type SamadhanTicket$escalatedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * SamadhanTicket.originalTicket
+   */
+  export type SamadhanTicket$originalTicketArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    where?: SamadhanTicketWhereInput
+  }
+
+  /**
+   * SamadhanTicket.appeals
+   */
+  export type SamadhanTicket$appealsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    where?: SamadhanTicketWhereInput
+    orderBy?: SamadhanTicketOrderByWithRelationInput | SamadhanTicketOrderByWithRelationInput[]
+    cursor?: SamadhanTicketWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanTicketScalarFieldEnum | SamadhanTicketScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanTicket.attachments
+   */
+  export type SamadhanTicket$attachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    where?: SamadhanAttachmentWhereInput
+    orderBy?: SamadhanAttachmentOrderByWithRelationInput | SamadhanAttachmentOrderByWithRelationInput[]
+    cursor?: SamadhanAttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanAttachmentScalarFieldEnum | SamadhanAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanTicket.infoRequests
+   */
+  export type SamadhanTicket$infoRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    where?: SamadhanInfoRequestWhereInput
+    orderBy?: SamadhanInfoRequestOrderByWithRelationInput | SamadhanInfoRequestOrderByWithRelationInput[]
+    cursor?: SamadhanInfoRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanInfoRequestScalarFieldEnum | SamadhanInfoRequestScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanTicket.statusHistory
+   */
+  export type SamadhanTicket$statusHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    where?: SamadhanStatusHistoryWhereInput
+    orderBy?: SamadhanStatusHistoryOrderByWithRelationInput | SamadhanStatusHistoryOrderByWithRelationInput[]
+    cursor?: SamadhanStatusHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanStatusHistoryScalarFieldEnum | SamadhanStatusHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanTicket.internalNotes
+   */
+  export type SamadhanTicket$internalNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    where?: SamadhanInternalNoteWhereInput
+    orderBy?: SamadhanInternalNoteOrderByWithRelationInput | SamadhanInternalNoteOrderByWithRelationInput[]
+    cursor?: SamadhanInternalNoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanInternalNoteScalarFieldEnum | SamadhanInternalNoteScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanTicket without action
+   */
+  export type SamadhanTicketDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SamadhanAttachment
+   */
+
+  export type AggregateSamadhanAttachment = {
+    _count: SamadhanAttachmentCountAggregateOutputType | null
+    _avg: SamadhanAttachmentAvgAggregateOutputType | null
+    _sum: SamadhanAttachmentSumAggregateOutputType | null
+    _min: SamadhanAttachmentMinAggregateOutputType | null
+    _max: SamadhanAttachmentMaxAggregateOutputType | null
+  }
+
+  export type SamadhanAttachmentAvgAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type SamadhanAttachmentSumAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type SamadhanAttachmentMinAggregateOutputType = {
+    id: string | null
+    ticketId: string | null
+    infoRequestId: string | null
+    fileName: string | null
+    originalName: string | null
+    filePath: string | null
+    fileType: string | null
+    fileSize: number | null
+    uploadedById: string | null
+    uploadedByType: string | null
+    createdAt: Date | null
+  }
+
+  export type SamadhanAttachmentMaxAggregateOutputType = {
+    id: string | null
+    ticketId: string | null
+    infoRequestId: string | null
+    fileName: string | null
+    originalName: string | null
+    filePath: string | null
+    fileType: string | null
+    fileSize: number | null
+    uploadedById: string | null
+    uploadedByType: string | null
+    createdAt: Date | null
+  }
+
+  export type SamadhanAttachmentCountAggregateOutputType = {
+    id: number
+    ticketId: number
+    infoRequestId: number
+    fileName: number
+    originalName: number
+    filePath: number
+    fileType: number
+    fileSize: number
+    uploadedById: number
+    uploadedByType: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type SamadhanAttachmentAvgAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type SamadhanAttachmentSumAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type SamadhanAttachmentMinAggregateInputType = {
+    id?: true
+    ticketId?: true
+    infoRequestId?: true
+    fileName?: true
+    originalName?: true
+    filePath?: true
+    fileType?: true
+    fileSize?: true
+    uploadedById?: true
+    uploadedByType?: true
+    createdAt?: true
+  }
+
+  export type SamadhanAttachmentMaxAggregateInputType = {
+    id?: true
+    ticketId?: true
+    infoRequestId?: true
+    fileName?: true
+    originalName?: true
+    filePath?: true
+    fileType?: true
+    fileSize?: true
+    uploadedById?: true
+    uploadedByType?: true
+    createdAt?: true
+  }
+
+  export type SamadhanAttachmentCountAggregateInputType = {
+    id?: true
+    ticketId?: true
+    infoRequestId?: true
+    fileName?: true
+    originalName?: true
+    filePath?: true
+    fileType?: true
+    fileSize?: true
+    uploadedById?: true
+    uploadedByType?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type SamadhanAttachmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanAttachment to aggregate.
+     */
+    where?: SamadhanAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanAttachments to fetch.
+     */
+    orderBy?: SamadhanAttachmentOrderByWithRelationInput | SamadhanAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SamadhanAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SamadhanAttachments
+    **/
+    _count?: true | SamadhanAttachmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SamadhanAttachmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SamadhanAttachmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SamadhanAttachmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SamadhanAttachmentMaxAggregateInputType
+  }
+
+  export type GetSamadhanAttachmentAggregateType<T extends SamadhanAttachmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateSamadhanAttachment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSamadhanAttachment[P]>
+      : GetScalarType<T[P], AggregateSamadhanAttachment[P]>
+  }
+
+
+
+
+  export type SamadhanAttachmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanAttachmentWhereInput
+    orderBy?: SamadhanAttachmentOrderByWithAggregationInput | SamadhanAttachmentOrderByWithAggregationInput[]
+    by: SamadhanAttachmentScalarFieldEnum[] | SamadhanAttachmentScalarFieldEnum
+    having?: SamadhanAttachmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SamadhanAttachmentCountAggregateInputType | true
+    _avg?: SamadhanAttachmentAvgAggregateInputType
+    _sum?: SamadhanAttachmentSumAggregateInputType
+    _min?: SamadhanAttachmentMinAggregateInputType
+    _max?: SamadhanAttachmentMaxAggregateInputType
+  }
+
+  export type SamadhanAttachmentGroupByOutputType = {
+    id: string
+    ticketId: string
+    infoRequestId: string | null
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedById: string | null
+    uploadedByType: string
+    createdAt: Date
+    _count: SamadhanAttachmentCountAggregateOutputType | null
+    _avg: SamadhanAttachmentAvgAggregateOutputType | null
+    _sum: SamadhanAttachmentSumAggregateOutputType | null
+    _min: SamadhanAttachmentMinAggregateOutputType | null
+    _max: SamadhanAttachmentMaxAggregateOutputType | null
+  }
+
+  type GetSamadhanAttachmentGroupByPayload<T extends SamadhanAttachmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SamadhanAttachmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SamadhanAttachmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SamadhanAttachmentGroupByOutputType[P]>
+            : GetScalarType<T[P], SamadhanAttachmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SamadhanAttachmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    infoRequestId?: boolean
+    fileName?: boolean
+    originalName?: boolean
+    filePath?: boolean
+    fileType?: boolean
+    fileSize?: boolean
+    uploadedById?: boolean
+    uploadedByType?: boolean
+    createdAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    infoRequest?: boolean | SamadhanAttachment$infoRequestArgs<ExtArgs>
+    uploadedBy?: boolean | SamadhanAttachment$uploadedByArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanAttachment"]>
+
+  export type SamadhanAttachmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    infoRequestId?: boolean
+    fileName?: boolean
+    originalName?: boolean
+    filePath?: boolean
+    fileType?: boolean
+    fileSize?: boolean
+    uploadedById?: boolean
+    uploadedByType?: boolean
+    createdAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    infoRequest?: boolean | SamadhanAttachment$infoRequestArgs<ExtArgs>
+    uploadedBy?: boolean | SamadhanAttachment$uploadedByArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanAttachment"]>
+
+  export type SamadhanAttachmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    infoRequestId?: boolean
+    fileName?: boolean
+    originalName?: boolean
+    filePath?: boolean
+    fileType?: boolean
+    fileSize?: boolean
+    uploadedById?: boolean
+    uploadedByType?: boolean
+    createdAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    infoRequest?: boolean | SamadhanAttachment$infoRequestArgs<ExtArgs>
+    uploadedBy?: boolean | SamadhanAttachment$uploadedByArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanAttachment"]>
+
+  export type SamadhanAttachmentSelectScalar = {
+    id?: boolean
+    ticketId?: boolean
+    infoRequestId?: boolean
+    fileName?: boolean
+    originalName?: boolean
+    filePath?: boolean
+    fileType?: boolean
+    fileSize?: boolean
+    uploadedById?: boolean
+    uploadedByType?: boolean
+    createdAt?: boolean
+  }
+
+  export type SamadhanAttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ticketId" | "infoRequestId" | "fileName" | "originalName" | "filePath" | "fileType" | "fileSize" | "uploadedById" | "uploadedByType" | "createdAt", ExtArgs["result"]["samadhanAttachment"]>
+  export type SamadhanAttachmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    infoRequest?: boolean | SamadhanAttachment$infoRequestArgs<ExtArgs>
+    uploadedBy?: boolean | SamadhanAttachment$uploadedByArgs<ExtArgs>
+  }
+  export type SamadhanAttachmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    infoRequest?: boolean | SamadhanAttachment$infoRequestArgs<ExtArgs>
+    uploadedBy?: boolean | SamadhanAttachment$uploadedByArgs<ExtArgs>
+  }
+  export type SamadhanAttachmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    infoRequest?: boolean | SamadhanAttachment$infoRequestArgs<ExtArgs>
+    uploadedBy?: boolean | SamadhanAttachment$uploadedByArgs<ExtArgs>
+  }
+
+  export type $SamadhanAttachmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SamadhanAttachment"
+    objects: {
+      ticket: Prisma.$SamadhanTicketPayload<ExtArgs>
+      infoRequest: Prisma.$SamadhanInfoRequestPayload<ExtArgs> | null
+      uploadedBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ticketId: string
+      infoRequestId: string | null
+      fileName: string
+      originalName: string
+      filePath: string
+      fileType: string
+      fileSize: number
+      uploadedById: string | null
+      uploadedByType: string
+      createdAt: Date
+    }, ExtArgs["result"]["samadhanAttachment"]>
+    composites: {}
+  }
+
+  type SamadhanAttachmentGetPayload<S extends boolean | null | undefined | SamadhanAttachmentDefaultArgs> = $Result.GetResult<Prisma.$SamadhanAttachmentPayload, S>
+
+  type SamadhanAttachmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SamadhanAttachmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SamadhanAttachmentCountAggregateInputType | true
+    }
+
+  export interface SamadhanAttachmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SamadhanAttachment'], meta: { name: 'SamadhanAttachment' } }
+    /**
+     * Find zero or one SamadhanAttachment that matches the filter.
+     * @param {SamadhanAttachmentFindUniqueArgs} args - Arguments to find a SamadhanAttachment
+     * @example
+     * // Get one SamadhanAttachment
+     * const samadhanAttachment = await prisma.samadhanAttachment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SamadhanAttachmentFindUniqueArgs>(args: SelectSubset<T, SamadhanAttachmentFindUniqueArgs<ExtArgs>>): Prisma__SamadhanAttachmentClient<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SamadhanAttachment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SamadhanAttachmentFindUniqueOrThrowArgs} args - Arguments to find a SamadhanAttachment
+     * @example
+     * // Get one SamadhanAttachment
+     * const samadhanAttachment = await prisma.samadhanAttachment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SamadhanAttachmentFindUniqueOrThrowArgs>(args: SelectSubset<T, SamadhanAttachmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SamadhanAttachmentClient<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanAttachment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanAttachmentFindFirstArgs} args - Arguments to find a SamadhanAttachment
+     * @example
+     * // Get one SamadhanAttachment
+     * const samadhanAttachment = await prisma.samadhanAttachment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SamadhanAttachmentFindFirstArgs>(args?: SelectSubset<T, SamadhanAttachmentFindFirstArgs<ExtArgs>>): Prisma__SamadhanAttachmentClient<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanAttachment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanAttachmentFindFirstOrThrowArgs} args - Arguments to find a SamadhanAttachment
+     * @example
+     * // Get one SamadhanAttachment
+     * const samadhanAttachment = await prisma.samadhanAttachment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SamadhanAttachmentFindFirstOrThrowArgs>(args?: SelectSubset<T, SamadhanAttachmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__SamadhanAttachmentClient<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SamadhanAttachments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanAttachmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SamadhanAttachments
+     * const samadhanAttachments = await prisma.samadhanAttachment.findMany()
+     * 
+     * // Get first 10 SamadhanAttachments
+     * const samadhanAttachments = await prisma.samadhanAttachment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const samadhanAttachmentWithIdOnly = await prisma.samadhanAttachment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SamadhanAttachmentFindManyArgs>(args?: SelectSubset<T, SamadhanAttachmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SamadhanAttachment.
+     * @param {SamadhanAttachmentCreateArgs} args - Arguments to create a SamadhanAttachment.
+     * @example
+     * // Create one SamadhanAttachment
+     * const SamadhanAttachment = await prisma.samadhanAttachment.create({
+     *   data: {
+     *     // ... data to create a SamadhanAttachment
+     *   }
+     * })
+     * 
+     */
+    create<T extends SamadhanAttachmentCreateArgs>(args: SelectSubset<T, SamadhanAttachmentCreateArgs<ExtArgs>>): Prisma__SamadhanAttachmentClient<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SamadhanAttachments.
+     * @param {SamadhanAttachmentCreateManyArgs} args - Arguments to create many SamadhanAttachments.
+     * @example
+     * // Create many SamadhanAttachments
+     * const samadhanAttachment = await prisma.samadhanAttachment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SamadhanAttachmentCreateManyArgs>(args?: SelectSubset<T, SamadhanAttachmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SamadhanAttachments and returns the data saved in the database.
+     * @param {SamadhanAttachmentCreateManyAndReturnArgs} args - Arguments to create many SamadhanAttachments.
+     * @example
+     * // Create many SamadhanAttachments
+     * const samadhanAttachment = await prisma.samadhanAttachment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SamadhanAttachments and only return the `id`
+     * const samadhanAttachmentWithIdOnly = await prisma.samadhanAttachment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SamadhanAttachmentCreateManyAndReturnArgs>(args?: SelectSubset<T, SamadhanAttachmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SamadhanAttachment.
+     * @param {SamadhanAttachmentDeleteArgs} args - Arguments to delete one SamadhanAttachment.
+     * @example
+     * // Delete one SamadhanAttachment
+     * const SamadhanAttachment = await prisma.samadhanAttachment.delete({
+     *   where: {
+     *     // ... filter to delete one SamadhanAttachment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SamadhanAttachmentDeleteArgs>(args: SelectSubset<T, SamadhanAttachmentDeleteArgs<ExtArgs>>): Prisma__SamadhanAttachmentClient<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SamadhanAttachment.
+     * @param {SamadhanAttachmentUpdateArgs} args - Arguments to update one SamadhanAttachment.
+     * @example
+     * // Update one SamadhanAttachment
+     * const samadhanAttachment = await prisma.samadhanAttachment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SamadhanAttachmentUpdateArgs>(args: SelectSubset<T, SamadhanAttachmentUpdateArgs<ExtArgs>>): Prisma__SamadhanAttachmentClient<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SamadhanAttachments.
+     * @param {SamadhanAttachmentDeleteManyArgs} args - Arguments to filter SamadhanAttachments to delete.
+     * @example
+     * // Delete a few SamadhanAttachments
+     * const { count } = await prisma.samadhanAttachment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SamadhanAttachmentDeleteManyArgs>(args?: SelectSubset<T, SamadhanAttachmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanAttachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanAttachmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SamadhanAttachments
+     * const samadhanAttachment = await prisma.samadhanAttachment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SamadhanAttachmentUpdateManyArgs>(args: SelectSubset<T, SamadhanAttachmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanAttachments and returns the data updated in the database.
+     * @param {SamadhanAttachmentUpdateManyAndReturnArgs} args - Arguments to update many SamadhanAttachments.
+     * @example
+     * // Update many SamadhanAttachments
+     * const samadhanAttachment = await prisma.samadhanAttachment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SamadhanAttachments and only return the `id`
+     * const samadhanAttachmentWithIdOnly = await prisma.samadhanAttachment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SamadhanAttachmentUpdateManyAndReturnArgs>(args: SelectSubset<T, SamadhanAttachmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SamadhanAttachment.
+     * @param {SamadhanAttachmentUpsertArgs} args - Arguments to update or create a SamadhanAttachment.
+     * @example
+     * // Update or create a SamadhanAttachment
+     * const samadhanAttachment = await prisma.samadhanAttachment.upsert({
+     *   create: {
+     *     // ... data to create a SamadhanAttachment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SamadhanAttachment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SamadhanAttachmentUpsertArgs>(args: SelectSubset<T, SamadhanAttachmentUpsertArgs<ExtArgs>>): Prisma__SamadhanAttachmentClient<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SamadhanAttachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanAttachmentCountArgs} args - Arguments to filter SamadhanAttachments to count.
+     * @example
+     * // Count the number of SamadhanAttachments
+     * const count = await prisma.samadhanAttachment.count({
+     *   where: {
+     *     // ... the filter for the SamadhanAttachments we want to count
+     *   }
+     * })
+    **/
+    count<T extends SamadhanAttachmentCountArgs>(
+      args?: Subset<T, SamadhanAttachmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SamadhanAttachmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SamadhanAttachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanAttachmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SamadhanAttachmentAggregateArgs>(args: Subset<T, SamadhanAttachmentAggregateArgs>): Prisma.PrismaPromise<GetSamadhanAttachmentAggregateType<T>>
+
+    /**
+     * Group by SamadhanAttachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanAttachmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SamadhanAttachmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SamadhanAttachmentGroupByArgs['orderBy'] }
+        : { orderBy?: SamadhanAttachmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SamadhanAttachmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSamadhanAttachmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SamadhanAttachment model
+   */
+  readonly fields: SamadhanAttachmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SamadhanAttachment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SamadhanAttachmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    ticket<T extends SamadhanTicketDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicketDefaultArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    infoRequest<T extends SamadhanAttachment$infoRequestArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanAttachment$infoRequestArgs<ExtArgs>>): Prisma__SamadhanInfoRequestClient<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    uploadedBy<T extends SamadhanAttachment$uploadedByArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanAttachment$uploadedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SamadhanAttachment model
+   */
+  interface SamadhanAttachmentFieldRefs {
+    readonly id: FieldRef<"SamadhanAttachment", 'String'>
+    readonly ticketId: FieldRef<"SamadhanAttachment", 'String'>
+    readonly infoRequestId: FieldRef<"SamadhanAttachment", 'String'>
+    readonly fileName: FieldRef<"SamadhanAttachment", 'String'>
+    readonly originalName: FieldRef<"SamadhanAttachment", 'String'>
+    readonly filePath: FieldRef<"SamadhanAttachment", 'String'>
+    readonly fileType: FieldRef<"SamadhanAttachment", 'String'>
+    readonly fileSize: FieldRef<"SamadhanAttachment", 'Int'>
+    readonly uploadedById: FieldRef<"SamadhanAttachment", 'String'>
+    readonly uploadedByType: FieldRef<"SamadhanAttachment", 'String'>
+    readonly createdAt: FieldRef<"SamadhanAttachment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SamadhanAttachment findUnique
+   */
+  export type SamadhanAttachmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanAttachment to fetch.
+     */
+    where: SamadhanAttachmentWhereUniqueInput
+  }
+
+  /**
+   * SamadhanAttachment findUniqueOrThrow
+   */
+  export type SamadhanAttachmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanAttachment to fetch.
+     */
+    where: SamadhanAttachmentWhereUniqueInput
+  }
+
+  /**
+   * SamadhanAttachment findFirst
+   */
+  export type SamadhanAttachmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanAttachment to fetch.
+     */
+    where?: SamadhanAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanAttachments to fetch.
+     */
+    orderBy?: SamadhanAttachmentOrderByWithRelationInput | SamadhanAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanAttachments.
+     */
+    cursor?: SamadhanAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanAttachments.
+     */
+    distinct?: SamadhanAttachmentScalarFieldEnum | SamadhanAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanAttachment findFirstOrThrow
+   */
+  export type SamadhanAttachmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanAttachment to fetch.
+     */
+    where?: SamadhanAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanAttachments to fetch.
+     */
+    orderBy?: SamadhanAttachmentOrderByWithRelationInput | SamadhanAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanAttachments.
+     */
+    cursor?: SamadhanAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanAttachments.
+     */
+    distinct?: SamadhanAttachmentScalarFieldEnum | SamadhanAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanAttachment findMany
+   */
+  export type SamadhanAttachmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanAttachments to fetch.
+     */
+    where?: SamadhanAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanAttachments to fetch.
+     */
+    orderBy?: SamadhanAttachmentOrderByWithRelationInput | SamadhanAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SamadhanAttachments.
+     */
+    cursor?: SamadhanAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanAttachments.
+     */
+    skip?: number
+    distinct?: SamadhanAttachmentScalarFieldEnum | SamadhanAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanAttachment create
+   */
+  export type SamadhanAttachmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SamadhanAttachment.
+     */
+    data: XOR<SamadhanAttachmentCreateInput, SamadhanAttachmentUncheckedCreateInput>
+  }
+
+  /**
+   * SamadhanAttachment createMany
+   */
+  export type SamadhanAttachmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SamadhanAttachments.
+     */
+    data: SamadhanAttachmentCreateManyInput | SamadhanAttachmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanAttachment createManyAndReturn
+   */
+  export type SamadhanAttachmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many SamadhanAttachments.
+     */
+    data: SamadhanAttachmentCreateManyInput | SamadhanAttachmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanAttachment update
+   */
+  export type SamadhanAttachmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SamadhanAttachment.
+     */
+    data: XOR<SamadhanAttachmentUpdateInput, SamadhanAttachmentUncheckedUpdateInput>
+    /**
+     * Choose, which SamadhanAttachment to update.
+     */
+    where: SamadhanAttachmentWhereUniqueInput
+  }
+
+  /**
+   * SamadhanAttachment updateMany
+   */
+  export type SamadhanAttachmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SamadhanAttachments.
+     */
+    data: XOR<SamadhanAttachmentUpdateManyMutationInput, SamadhanAttachmentUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanAttachments to update
+     */
+    where?: SamadhanAttachmentWhereInput
+    /**
+     * Limit how many SamadhanAttachments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanAttachment updateManyAndReturn
+   */
+  export type SamadhanAttachmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * The data used to update SamadhanAttachments.
+     */
+    data: XOR<SamadhanAttachmentUpdateManyMutationInput, SamadhanAttachmentUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanAttachments to update
+     */
+    where?: SamadhanAttachmentWhereInput
+    /**
+     * Limit how many SamadhanAttachments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanAttachment upsert
+   */
+  export type SamadhanAttachmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SamadhanAttachment to update in case it exists.
+     */
+    where: SamadhanAttachmentWhereUniqueInput
+    /**
+     * In case the SamadhanAttachment found by the `where` argument doesn't exist, create a new SamadhanAttachment with this data.
+     */
+    create: XOR<SamadhanAttachmentCreateInput, SamadhanAttachmentUncheckedCreateInput>
+    /**
+     * In case the SamadhanAttachment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SamadhanAttachmentUpdateInput, SamadhanAttachmentUncheckedUpdateInput>
+  }
+
+  /**
+   * SamadhanAttachment delete
+   */
+  export type SamadhanAttachmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter which SamadhanAttachment to delete.
+     */
+    where: SamadhanAttachmentWhereUniqueInput
+  }
+
+  /**
+   * SamadhanAttachment deleteMany
+   */
+  export type SamadhanAttachmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanAttachments to delete
+     */
+    where?: SamadhanAttachmentWhereInput
+    /**
+     * Limit how many SamadhanAttachments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanAttachment.infoRequest
+   */
+  export type SamadhanAttachment$infoRequestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    where?: SamadhanInfoRequestWhereInput
+  }
+
+  /**
+   * SamadhanAttachment.uploadedBy
+   */
+  export type SamadhanAttachment$uploadedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * SamadhanAttachment without action
+   */
+  export type SamadhanAttachmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SamadhanInfoRequest
+   */
+
+  export type AggregateSamadhanInfoRequest = {
+    _count: SamadhanInfoRequestCountAggregateOutputType | null
+    _min: SamadhanInfoRequestMinAggregateOutputType | null
+    _max: SamadhanInfoRequestMaxAggregateOutputType | null
+  }
+
+  export type SamadhanInfoRequestMinAggregateOutputType = {
+    id: string | null
+    ticketId: string | null
+    requestedById: string | null
+    description: string | null
+    documentTypes: string | null
+    deadline: Date | null
+    status: $Enums.SamadhanInfoRequestStatus | null
+    citizenResponse: string | null
+    respondedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanInfoRequestMaxAggregateOutputType = {
+    id: string | null
+    ticketId: string | null
+    requestedById: string | null
+    description: string | null
+    documentTypes: string | null
+    deadline: Date | null
+    status: $Enums.SamadhanInfoRequestStatus | null
+    citizenResponse: string | null
+    respondedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanInfoRequestCountAggregateOutputType = {
+    id: number
+    ticketId: number
+    requestedById: number
+    description: number
+    documentTypes: number
+    deadline: number
+    status: number
+    citizenResponse: number
+    respondedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SamadhanInfoRequestMinAggregateInputType = {
+    id?: true
+    ticketId?: true
+    requestedById?: true
+    description?: true
+    documentTypes?: true
+    deadline?: true
+    status?: true
+    citizenResponse?: true
+    respondedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanInfoRequestMaxAggregateInputType = {
+    id?: true
+    ticketId?: true
+    requestedById?: true
+    description?: true
+    documentTypes?: true
+    deadline?: true
+    status?: true
+    citizenResponse?: true
+    respondedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanInfoRequestCountAggregateInputType = {
+    id?: true
+    ticketId?: true
+    requestedById?: true
+    description?: true
+    documentTypes?: true
+    deadline?: true
+    status?: true
+    citizenResponse?: true
+    respondedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SamadhanInfoRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanInfoRequest to aggregate.
+     */
+    where?: SamadhanInfoRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanInfoRequests to fetch.
+     */
+    orderBy?: SamadhanInfoRequestOrderByWithRelationInput | SamadhanInfoRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SamadhanInfoRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanInfoRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanInfoRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SamadhanInfoRequests
+    **/
+    _count?: true | SamadhanInfoRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SamadhanInfoRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SamadhanInfoRequestMaxAggregateInputType
+  }
+
+  export type GetSamadhanInfoRequestAggregateType<T extends SamadhanInfoRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateSamadhanInfoRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSamadhanInfoRequest[P]>
+      : GetScalarType<T[P], AggregateSamadhanInfoRequest[P]>
+  }
+
+
+
+
+  export type SamadhanInfoRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanInfoRequestWhereInput
+    orderBy?: SamadhanInfoRequestOrderByWithAggregationInput | SamadhanInfoRequestOrderByWithAggregationInput[]
+    by: SamadhanInfoRequestScalarFieldEnum[] | SamadhanInfoRequestScalarFieldEnum
+    having?: SamadhanInfoRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SamadhanInfoRequestCountAggregateInputType | true
+    _min?: SamadhanInfoRequestMinAggregateInputType
+    _max?: SamadhanInfoRequestMaxAggregateInputType
+  }
+
+  export type SamadhanInfoRequestGroupByOutputType = {
+    id: string
+    ticketId: string
+    requestedById: string
+    description: string
+    documentTypes: string | null
+    deadline: Date
+    status: $Enums.SamadhanInfoRequestStatus
+    citizenResponse: string | null
+    respondedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: SamadhanInfoRequestCountAggregateOutputType | null
+    _min: SamadhanInfoRequestMinAggregateOutputType | null
+    _max: SamadhanInfoRequestMaxAggregateOutputType | null
+  }
+
+  type GetSamadhanInfoRequestGroupByPayload<T extends SamadhanInfoRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SamadhanInfoRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SamadhanInfoRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SamadhanInfoRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], SamadhanInfoRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SamadhanInfoRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    requestedById?: boolean
+    description?: boolean
+    documentTypes?: boolean
+    deadline?: boolean
+    status?: boolean
+    citizenResponse?: boolean
+    respondedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    requestedBy?: boolean | UserDefaultArgs<ExtArgs>
+    attachments?: boolean | SamadhanInfoRequest$attachmentsArgs<ExtArgs>
+    _count?: boolean | SamadhanInfoRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanInfoRequest"]>
+
+  export type SamadhanInfoRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    requestedById?: boolean
+    description?: boolean
+    documentTypes?: boolean
+    deadline?: boolean
+    status?: boolean
+    citizenResponse?: boolean
+    respondedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    requestedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanInfoRequest"]>
+
+  export type SamadhanInfoRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    requestedById?: boolean
+    description?: boolean
+    documentTypes?: boolean
+    deadline?: boolean
+    status?: boolean
+    citizenResponse?: boolean
+    respondedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    requestedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanInfoRequest"]>
+
+  export type SamadhanInfoRequestSelectScalar = {
+    id?: boolean
+    ticketId?: boolean
+    requestedById?: boolean
+    description?: boolean
+    documentTypes?: boolean
+    deadline?: boolean
+    status?: boolean
+    citizenResponse?: boolean
+    respondedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SamadhanInfoRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ticketId" | "requestedById" | "description" | "documentTypes" | "deadline" | "status" | "citizenResponse" | "respondedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["samadhanInfoRequest"]>
+  export type SamadhanInfoRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    requestedBy?: boolean | UserDefaultArgs<ExtArgs>
+    attachments?: boolean | SamadhanInfoRequest$attachmentsArgs<ExtArgs>
+    _count?: boolean | SamadhanInfoRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type SamadhanInfoRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    requestedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SamadhanInfoRequestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    requestedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SamadhanInfoRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SamadhanInfoRequest"
+    objects: {
+      ticket: Prisma.$SamadhanTicketPayload<ExtArgs>
+      requestedBy: Prisma.$UserPayload<ExtArgs>
+      attachments: Prisma.$SamadhanAttachmentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ticketId: string
+      requestedById: string
+      description: string
+      documentTypes: string | null
+      deadline: Date
+      status: $Enums.SamadhanInfoRequestStatus
+      citizenResponse: string | null
+      respondedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["samadhanInfoRequest"]>
+    composites: {}
+  }
+
+  type SamadhanInfoRequestGetPayload<S extends boolean | null | undefined | SamadhanInfoRequestDefaultArgs> = $Result.GetResult<Prisma.$SamadhanInfoRequestPayload, S>
+
+  type SamadhanInfoRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SamadhanInfoRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SamadhanInfoRequestCountAggregateInputType | true
+    }
+
+  export interface SamadhanInfoRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SamadhanInfoRequest'], meta: { name: 'SamadhanInfoRequest' } }
+    /**
+     * Find zero or one SamadhanInfoRequest that matches the filter.
+     * @param {SamadhanInfoRequestFindUniqueArgs} args - Arguments to find a SamadhanInfoRequest
+     * @example
+     * // Get one SamadhanInfoRequest
+     * const samadhanInfoRequest = await prisma.samadhanInfoRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SamadhanInfoRequestFindUniqueArgs>(args: SelectSubset<T, SamadhanInfoRequestFindUniqueArgs<ExtArgs>>): Prisma__SamadhanInfoRequestClient<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SamadhanInfoRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SamadhanInfoRequestFindUniqueOrThrowArgs} args - Arguments to find a SamadhanInfoRequest
+     * @example
+     * // Get one SamadhanInfoRequest
+     * const samadhanInfoRequest = await prisma.samadhanInfoRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SamadhanInfoRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, SamadhanInfoRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SamadhanInfoRequestClient<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanInfoRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInfoRequestFindFirstArgs} args - Arguments to find a SamadhanInfoRequest
+     * @example
+     * // Get one SamadhanInfoRequest
+     * const samadhanInfoRequest = await prisma.samadhanInfoRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SamadhanInfoRequestFindFirstArgs>(args?: SelectSubset<T, SamadhanInfoRequestFindFirstArgs<ExtArgs>>): Prisma__SamadhanInfoRequestClient<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanInfoRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInfoRequestFindFirstOrThrowArgs} args - Arguments to find a SamadhanInfoRequest
+     * @example
+     * // Get one SamadhanInfoRequest
+     * const samadhanInfoRequest = await prisma.samadhanInfoRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SamadhanInfoRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, SamadhanInfoRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__SamadhanInfoRequestClient<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SamadhanInfoRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInfoRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SamadhanInfoRequests
+     * const samadhanInfoRequests = await prisma.samadhanInfoRequest.findMany()
+     * 
+     * // Get first 10 SamadhanInfoRequests
+     * const samadhanInfoRequests = await prisma.samadhanInfoRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const samadhanInfoRequestWithIdOnly = await prisma.samadhanInfoRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SamadhanInfoRequestFindManyArgs>(args?: SelectSubset<T, SamadhanInfoRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SamadhanInfoRequest.
+     * @param {SamadhanInfoRequestCreateArgs} args - Arguments to create a SamadhanInfoRequest.
+     * @example
+     * // Create one SamadhanInfoRequest
+     * const SamadhanInfoRequest = await prisma.samadhanInfoRequest.create({
+     *   data: {
+     *     // ... data to create a SamadhanInfoRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends SamadhanInfoRequestCreateArgs>(args: SelectSubset<T, SamadhanInfoRequestCreateArgs<ExtArgs>>): Prisma__SamadhanInfoRequestClient<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SamadhanInfoRequests.
+     * @param {SamadhanInfoRequestCreateManyArgs} args - Arguments to create many SamadhanInfoRequests.
+     * @example
+     * // Create many SamadhanInfoRequests
+     * const samadhanInfoRequest = await prisma.samadhanInfoRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SamadhanInfoRequestCreateManyArgs>(args?: SelectSubset<T, SamadhanInfoRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SamadhanInfoRequests and returns the data saved in the database.
+     * @param {SamadhanInfoRequestCreateManyAndReturnArgs} args - Arguments to create many SamadhanInfoRequests.
+     * @example
+     * // Create many SamadhanInfoRequests
+     * const samadhanInfoRequest = await prisma.samadhanInfoRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SamadhanInfoRequests and only return the `id`
+     * const samadhanInfoRequestWithIdOnly = await prisma.samadhanInfoRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SamadhanInfoRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, SamadhanInfoRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SamadhanInfoRequest.
+     * @param {SamadhanInfoRequestDeleteArgs} args - Arguments to delete one SamadhanInfoRequest.
+     * @example
+     * // Delete one SamadhanInfoRequest
+     * const SamadhanInfoRequest = await prisma.samadhanInfoRequest.delete({
+     *   where: {
+     *     // ... filter to delete one SamadhanInfoRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SamadhanInfoRequestDeleteArgs>(args: SelectSubset<T, SamadhanInfoRequestDeleteArgs<ExtArgs>>): Prisma__SamadhanInfoRequestClient<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SamadhanInfoRequest.
+     * @param {SamadhanInfoRequestUpdateArgs} args - Arguments to update one SamadhanInfoRequest.
+     * @example
+     * // Update one SamadhanInfoRequest
+     * const samadhanInfoRequest = await prisma.samadhanInfoRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SamadhanInfoRequestUpdateArgs>(args: SelectSubset<T, SamadhanInfoRequestUpdateArgs<ExtArgs>>): Prisma__SamadhanInfoRequestClient<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SamadhanInfoRequests.
+     * @param {SamadhanInfoRequestDeleteManyArgs} args - Arguments to filter SamadhanInfoRequests to delete.
+     * @example
+     * // Delete a few SamadhanInfoRequests
+     * const { count } = await prisma.samadhanInfoRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SamadhanInfoRequestDeleteManyArgs>(args?: SelectSubset<T, SamadhanInfoRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanInfoRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInfoRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SamadhanInfoRequests
+     * const samadhanInfoRequest = await prisma.samadhanInfoRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SamadhanInfoRequestUpdateManyArgs>(args: SelectSubset<T, SamadhanInfoRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanInfoRequests and returns the data updated in the database.
+     * @param {SamadhanInfoRequestUpdateManyAndReturnArgs} args - Arguments to update many SamadhanInfoRequests.
+     * @example
+     * // Update many SamadhanInfoRequests
+     * const samadhanInfoRequest = await prisma.samadhanInfoRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SamadhanInfoRequests and only return the `id`
+     * const samadhanInfoRequestWithIdOnly = await prisma.samadhanInfoRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SamadhanInfoRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, SamadhanInfoRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SamadhanInfoRequest.
+     * @param {SamadhanInfoRequestUpsertArgs} args - Arguments to update or create a SamadhanInfoRequest.
+     * @example
+     * // Update or create a SamadhanInfoRequest
+     * const samadhanInfoRequest = await prisma.samadhanInfoRequest.upsert({
+     *   create: {
+     *     // ... data to create a SamadhanInfoRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SamadhanInfoRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SamadhanInfoRequestUpsertArgs>(args: SelectSubset<T, SamadhanInfoRequestUpsertArgs<ExtArgs>>): Prisma__SamadhanInfoRequestClient<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SamadhanInfoRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInfoRequestCountArgs} args - Arguments to filter SamadhanInfoRequests to count.
+     * @example
+     * // Count the number of SamadhanInfoRequests
+     * const count = await prisma.samadhanInfoRequest.count({
+     *   where: {
+     *     // ... the filter for the SamadhanInfoRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends SamadhanInfoRequestCountArgs>(
+      args?: Subset<T, SamadhanInfoRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SamadhanInfoRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SamadhanInfoRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInfoRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SamadhanInfoRequestAggregateArgs>(args: Subset<T, SamadhanInfoRequestAggregateArgs>): Prisma.PrismaPromise<GetSamadhanInfoRequestAggregateType<T>>
+
+    /**
+     * Group by SamadhanInfoRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInfoRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SamadhanInfoRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SamadhanInfoRequestGroupByArgs['orderBy'] }
+        : { orderBy?: SamadhanInfoRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SamadhanInfoRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSamadhanInfoRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SamadhanInfoRequest model
+   */
+  readonly fields: SamadhanInfoRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SamadhanInfoRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SamadhanInfoRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    ticket<T extends SamadhanTicketDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicketDefaultArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    requestedBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    attachments<T extends SamadhanInfoRequest$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanInfoRequest$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SamadhanInfoRequest model
+   */
+  interface SamadhanInfoRequestFieldRefs {
+    readonly id: FieldRef<"SamadhanInfoRequest", 'String'>
+    readonly ticketId: FieldRef<"SamadhanInfoRequest", 'String'>
+    readonly requestedById: FieldRef<"SamadhanInfoRequest", 'String'>
+    readonly description: FieldRef<"SamadhanInfoRequest", 'String'>
+    readonly documentTypes: FieldRef<"SamadhanInfoRequest", 'String'>
+    readonly deadline: FieldRef<"SamadhanInfoRequest", 'DateTime'>
+    readonly status: FieldRef<"SamadhanInfoRequest", 'SamadhanInfoRequestStatus'>
+    readonly citizenResponse: FieldRef<"SamadhanInfoRequest", 'String'>
+    readonly respondedAt: FieldRef<"SamadhanInfoRequest", 'DateTime'>
+    readonly createdAt: FieldRef<"SamadhanInfoRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"SamadhanInfoRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SamadhanInfoRequest findUnique
+   */
+  export type SamadhanInfoRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanInfoRequest to fetch.
+     */
+    where: SamadhanInfoRequestWhereUniqueInput
+  }
+
+  /**
+   * SamadhanInfoRequest findUniqueOrThrow
+   */
+  export type SamadhanInfoRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanInfoRequest to fetch.
+     */
+    where: SamadhanInfoRequestWhereUniqueInput
+  }
+
+  /**
+   * SamadhanInfoRequest findFirst
+   */
+  export type SamadhanInfoRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanInfoRequest to fetch.
+     */
+    where?: SamadhanInfoRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanInfoRequests to fetch.
+     */
+    orderBy?: SamadhanInfoRequestOrderByWithRelationInput | SamadhanInfoRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanInfoRequests.
+     */
+    cursor?: SamadhanInfoRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanInfoRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanInfoRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanInfoRequests.
+     */
+    distinct?: SamadhanInfoRequestScalarFieldEnum | SamadhanInfoRequestScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanInfoRequest findFirstOrThrow
+   */
+  export type SamadhanInfoRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanInfoRequest to fetch.
+     */
+    where?: SamadhanInfoRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanInfoRequests to fetch.
+     */
+    orderBy?: SamadhanInfoRequestOrderByWithRelationInput | SamadhanInfoRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanInfoRequests.
+     */
+    cursor?: SamadhanInfoRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanInfoRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanInfoRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanInfoRequests.
+     */
+    distinct?: SamadhanInfoRequestScalarFieldEnum | SamadhanInfoRequestScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanInfoRequest findMany
+   */
+  export type SamadhanInfoRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanInfoRequests to fetch.
+     */
+    where?: SamadhanInfoRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanInfoRequests to fetch.
+     */
+    orderBy?: SamadhanInfoRequestOrderByWithRelationInput | SamadhanInfoRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SamadhanInfoRequests.
+     */
+    cursor?: SamadhanInfoRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanInfoRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanInfoRequests.
+     */
+    skip?: number
+    distinct?: SamadhanInfoRequestScalarFieldEnum | SamadhanInfoRequestScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanInfoRequest create
+   */
+  export type SamadhanInfoRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SamadhanInfoRequest.
+     */
+    data: XOR<SamadhanInfoRequestCreateInput, SamadhanInfoRequestUncheckedCreateInput>
+  }
+
+  /**
+   * SamadhanInfoRequest createMany
+   */
+  export type SamadhanInfoRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SamadhanInfoRequests.
+     */
+    data: SamadhanInfoRequestCreateManyInput | SamadhanInfoRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanInfoRequest createManyAndReturn
+   */
+  export type SamadhanInfoRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many SamadhanInfoRequests.
+     */
+    data: SamadhanInfoRequestCreateManyInput | SamadhanInfoRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanInfoRequest update
+   */
+  export type SamadhanInfoRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SamadhanInfoRequest.
+     */
+    data: XOR<SamadhanInfoRequestUpdateInput, SamadhanInfoRequestUncheckedUpdateInput>
+    /**
+     * Choose, which SamadhanInfoRequest to update.
+     */
+    where: SamadhanInfoRequestWhereUniqueInput
+  }
+
+  /**
+   * SamadhanInfoRequest updateMany
+   */
+  export type SamadhanInfoRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SamadhanInfoRequests.
+     */
+    data: XOR<SamadhanInfoRequestUpdateManyMutationInput, SamadhanInfoRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanInfoRequests to update
+     */
+    where?: SamadhanInfoRequestWhereInput
+    /**
+     * Limit how many SamadhanInfoRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanInfoRequest updateManyAndReturn
+   */
+  export type SamadhanInfoRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update SamadhanInfoRequests.
+     */
+    data: XOR<SamadhanInfoRequestUpdateManyMutationInput, SamadhanInfoRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanInfoRequests to update
+     */
+    where?: SamadhanInfoRequestWhereInput
+    /**
+     * Limit how many SamadhanInfoRequests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanInfoRequest upsert
+   */
+  export type SamadhanInfoRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SamadhanInfoRequest to update in case it exists.
+     */
+    where: SamadhanInfoRequestWhereUniqueInput
+    /**
+     * In case the SamadhanInfoRequest found by the `where` argument doesn't exist, create a new SamadhanInfoRequest with this data.
+     */
+    create: XOR<SamadhanInfoRequestCreateInput, SamadhanInfoRequestUncheckedCreateInput>
+    /**
+     * In case the SamadhanInfoRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SamadhanInfoRequestUpdateInput, SamadhanInfoRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * SamadhanInfoRequest delete
+   */
+  export type SamadhanInfoRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+    /**
+     * Filter which SamadhanInfoRequest to delete.
+     */
+    where: SamadhanInfoRequestWhereUniqueInput
+  }
+
+  /**
+   * SamadhanInfoRequest deleteMany
+   */
+  export type SamadhanInfoRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanInfoRequests to delete
+     */
+    where?: SamadhanInfoRequestWhereInput
+    /**
+     * Limit how many SamadhanInfoRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanInfoRequest.attachments
+   */
+  export type SamadhanInfoRequest$attachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanAttachment
+     */
+    select?: SamadhanAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanAttachment
+     */
+    omit?: SamadhanAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanAttachmentInclude<ExtArgs> | null
+    where?: SamadhanAttachmentWhereInput
+    orderBy?: SamadhanAttachmentOrderByWithRelationInput | SamadhanAttachmentOrderByWithRelationInput[]
+    cursor?: SamadhanAttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanAttachmentScalarFieldEnum | SamadhanAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanInfoRequest without action
+   */
+  export type SamadhanInfoRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInfoRequest
+     */
+    select?: SamadhanInfoRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInfoRequest
+     */
+    omit?: SamadhanInfoRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInfoRequestInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SamadhanStatusHistory
+   */
+
+  export type AggregateSamadhanStatusHistory = {
+    _count: SamadhanStatusHistoryCountAggregateOutputType | null
+    _min: SamadhanStatusHistoryMinAggregateOutputType | null
+    _max: SamadhanStatusHistoryMaxAggregateOutputType | null
+  }
+
+  export type SamadhanStatusHistoryMinAggregateOutputType = {
+    id: string | null
+    ticketId: string | null
+    fromStatus: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus | null
+    changedById: string | null
+    changeReason: string | null
+    isSystemGenerated: boolean | null
+    createdAt: Date | null
+  }
+
+  export type SamadhanStatusHistoryMaxAggregateOutputType = {
+    id: string | null
+    ticketId: string | null
+    fromStatus: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus | null
+    changedById: string | null
+    changeReason: string | null
+    isSystemGenerated: boolean | null
+    createdAt: Date | null
+  }
+
+  export type SamadhanStatusHistoryCountAggregateOutputType = {
+    id: number
+    ticketId: number
+    fromStatus: number
+    toStatus: number
+    changedById: number
+    changeReason: number
+    isSystemGenerated: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type SamadhanStatusHistoryMinAggregateInputType = {
+    id?: true
+    ticketId?: true
+    fromStatus?: true
+    toStatus?: true
+    changedById?: true
+    changeReason?: true
+    isSystemGenerated?: true
+    createdAt?: true
+  }
+
+  export type SamadhanStatusHistoryMaxAggregateInputType = {
+    id?: true
+    ticketId?: true
+    fromStatus?: true
+    toStatus?: true
+    changedById?: true
+    changeReason?: true
+    isSystemGenerated?: true
+    createdAt?: true
+  }
+
+  export type SamadhanStatusHistoryCountAggregateInputType = {
+    id?: true
+    ticketId?: true
+    fromStatus?: true
+    toStatus?: true
+    changedById?: true
+    changeReason?: true
+    isSystemGenerated?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type SamadhanStatusHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanStatusHistory to aggregate.
+     */
+    where?: SamadhanStatusHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanStatusHistories to fetch.
+     */
+    orderBy?: SamadhanStatusHistoryOrderByWithRelationInput | SamadhanStatusHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SamadhanStatusHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanStatusHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanStatusHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SamadhanStatusHistories
+    **/
+    _count?: true | SamadhanStatusHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SamadhanStatusHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SamadhanStatusHistoryMaxAggregateInputType
+  }
+
+  export type GetSamadhanStatusHistoryAggregateType<T extends SamadhanStatusHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateSamadhanStatusHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSamadhanStatusHistory[P]>
+      : GetScalarType<T[P], AggregateSamadhanStatusHistory[P]>
+  }
+
+
+
+
+  export type SamadhanStatusHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanStatusHistoryWhereInput
+    orderBy?: SamadhanStatusHistoryOrderByWithAggregationInput | SamadhanStatusHistoryOrderByWithAggregationInput[]
+    by: SamadhanStatusHistoryScalarFieldEnum[] | SamadhanStatusHistoryScalarFieldEnum
+    having?: SamadhanStatusHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SamadhanStatusHistoryCountAggregateInputType | true
+    _min?: SamadhanStatusHistoryMinAggregateInputType
+    _max?: SamadhanStatusHistoryMaxAggregateInputType
+  }
+
+  export type SamadhanStatusHistoryGroupByOutputType = {
+    id: string
+    ticketId: string
+    fromStatus: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus
+    changedById: string | null
+    changeReason: string | null
+    isSystemGenerated: boolean
+    createdAt: Date
+    _count: SamadhanStatusHistoryCountAggregateOutputType | null
+    _min: SamadhanStatusHistoryMinAggregateOutputType | null
+    _max: SamadhanStatusHistoryMaxAggregateOutputType | null
+  }
+
+  type GetSamadhanStatusHistoryGroupByPayload<T extends SamadhanStatusHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SamadhanStatusHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SamadhanStatusHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SamadhanStatusHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], SamadhanStatusHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SamadhanStatusHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    fromStatus?: boolean
+    toStatus?: boolean
+    changedById?: boolean
+    changeReason?: boolean
+    isSystemGenerated?: boolean
+    createdAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    changedBy?: boolean | SamadhanStatusHistory$changedByArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanStatusHistory"]>
+
+  export type SamadhanStatusHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    fromStatus?: boolean
+    toStatus?: boolean
+    changedById?: boolean
+    changeReason?: boolean
+    isSystemGenerated?: boolean
+    createdAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    changedBy?: boolean | SamadhanStatusHistory$changedByArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanStatusHistory"]>
+
+  export type SamadhanStatusHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    fromStatus?: boolean
+    toStatus?: boolean
+    changedById?: boolean
+    changeReason?: boolean
+    isSystemGenerated?: boolean
+    createdAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    changedBy?: boolean | SamadhanStatusHistory$changedByArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanStatusHistory"]>
+
+  export type SamadhanStatusHistorySelectScalar = {
+    id?: boolean
+    ticketId?: boolean
+    fromStatus?: boolean
+    toStatus?: boolean
+    changedById?: boolean
+    changeReason?: boolean
+    isSystemGenerated?: boolean
+    createdAt?: boolean
+  }
+
+  export type SamadhanStatusHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ticketId" | "fromStatus" | "toStatus" | "changedById" | "changeReason" | "isSystemGenerated" | "createdAt", ExtArgs["result"]["samadhanStatusHistory"]>
+  export type SamadhanStatusHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    changedBy?: boolean | SamadhanStatusHistory$changedByArgs<ExtArgs>
+  }
+  export type SamadhanStatusHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    changedBy?: boolean | SamadhanStatusHistory$changedByArgs<ExtArgs>
+  }
+  export type SamadhanStatusHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    changedBy?: boolean | SamadhanStatusHistory$changedByArgs<ExtArgs>
+  }
+
+  export type $SamadhanStatusHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SamadhanStatusHistory"
+    objects: {
+      ticket: Prisma.$SamadhanTicketPayload<ExtArgs>
+      changedBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ticketId: string
+      fromStatus: $Enums.SamadhanTicketStatus | null
+      toStatus: $Enums.SamadhanTicketStatus
+      changedById: string | null
+      changeReason: string | null
+      isSystemGenerated: boolean
+      createdAt: Date
+    }, ExtArgs["result"]["samadhanStatusHistory"]>
+    composites: {}
+  }
+
+  type SamadhanStatusHistoryGetPayload<S extends boolean | null | undefined | SamadhanStatusHistoryDefaultArgs> = $Result.GetResult<Prisma.$SamadhanStatusHistoryPayload, S>
+
+  type SamadhanStatusHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SamadhanStatusHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SamadhanStatusHistoryCountAggregateInputType | true
+    }
+
+  export interface SamadhanStatusHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SamadhanStatusHistory'], meta: { name: 'SamadhanStatusHistory' } }
+    /**
+     * Find zero or one SamadhanStatusHistory that matches the filter.
+     * @param {SamadhanStatusHistoryFindUniqueArgs} args - Arguments to find a SamadhanStatusHistory
+     * @example
+     * // Get one SamadhanStatusHistory
+     * const samadhanStatusHistory = await prisma.samadhanStatusHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SamadhanStatusHistoryFindUniqueArgs>(args: SelectSubset<T, SamadhanStatusHistoryFindUniqueArgs<ExtArgs>>): Prisma__SamadhanStatusHistoryClient<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SamadhanStatusHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SamadhanStatusHistoryFindUniqueOrThrowArgs} args - Arguments to find a SamadhanStatusHistory
+     * @example
+     * // Get one SamadhanStatusHistory
+     * const samadhanStatusHistory = await prisma.samadhanStatusHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SamadhanStatusHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, SamadhanStatusHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SamadhanStatusHistoryClient<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanStatusHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanStatusHistoryFindFirstArgs} args - Arguments to find a SamadhanStatusHistory
+     * @example
+     * // Get one SamadhanStatusHistory
+     * const samadhanStatusHistory = await prisma.samadhanStatusHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SamadhanStatusHistoryFindFirstArgs>(args?: SelectSubset<T, SamadhanStatusHistoryFindFirstArgs<ExtArgs>>): Prisma__SamadhanStatusHistoryClient<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanStatusHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanStatusHistoryFindFirstOrThrowArgs} args - Arguments to find a SamadhanStatusHistory
+     * @example
+     * // Get one SamadhanStatusHistory
+     * const samadhanStatusHistory = await prisma.samadhanStatusHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SamadhanStatusHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, SamadhanStatusHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__SamadhanStatusHistoryClient<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SamadhanStatusHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanStatusHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SamadhanStatusHistories
+     * const samadhanStatusHistories = await prisma.samadhanStatusHistory.findMany()
+     * 
+     * // Get first 10 SamadhanStatusHistories
+     * const samadhanStatusHistories = await prisma.samadhanStatusHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const samadhanStatusHistoryWithIdOnly = await prisma.samadhanStatusHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SamadhanStatusHistoryFindManyArgs>(args?: SelectSubset<T, SamadhanStatusHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SamadhanStatusHistory.
+     * @param {SamadhanStatusHistoryCreateArgs} args - Arguments to create a SamadhanStatusHistory.
+     * @example
+     * // Create one SamadhanStatusHistory
+     * const SamadhanStatusHistory = await prisma.samadhanStatusHistory.create({
+     *   data: {
+     *     // ... data to create a SamadhanStatusHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends SamadhanStatusHistoryCreateArgs>(args: SelectSubset<T, SamadhanStatusHistoryCreateArgs<ExtArgs>>): Prisma__SamadhanStatusHistoryClient<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SamadhanStatusHistories.
+     * @param {SamadhanStatusHistoryCreateManyArgs} args - Arguments to create many SamadhanStatusHistories.
+     * @example
+     * // Create many SamadhanStatusHistories
+     * const samadhanStatusHistory = await prisma.samadhanStatusHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SamadhanStatusHistoryCreateManyArgs>(args?: SelectSubset<T, SamadhanStatusHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SamadhanStatusHistories and returns the data saved in the database.
+     * @param {SamadhanStatusHistoryCreateManyAndReturnArgs} args - Arguments to create many SamadhanStatusHistories.
+     * @example
+     * // Create many SamadhanStatusHistories
+     * const samadhanStatusHistory = await prisma.samadhanStatusHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SamadhanStatusHistories and only return the `id`
+     * const samadhanStatusHistoryWithIdOnly = await prisma.samadhanStatusHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SamadhanStatusHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, SamadhanStatusHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SamadhanStatusHistory.
+     * @param {SamadhanStatusHistoryDeleteArgs} args - Arguments to delete one SamadhanStatusHistory.
+     * @example
+     * // Delete one SamadhanStatusHistory
+     * const SamadhanStatusHistory = await prisma.samadhanStatusHistory.delete({
+     *   where: {
+     *     // ... filter to delete one SamadhanStatusHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SamadhanStatusHistoryDeleteArgs>(args: SelectSubset<T, SamadhanStatusHistoryDeleteArgs<ExtArgs>>): Prisma__SamadhanStatusHistoryClient<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SamadhanStatusHistory.
+     * @param {SamadhanStatusHistoryUpdateArgs} args - Arguments to update one SamadhanStatusHistory.
+     * @example
+     * // Update one SamadhanStatusHistory
+     * const samadhanStatusHistory = await prisma.samadhanStatusHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SamadhanStatusHistoryUpdateArgs>(args: SelectSubset<T, SamadhanStatusHistoryUpdateArgs<ExtArgs>>): Prisma__SamadhanStatusHistoryClient<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SamadhanStatusHistories.
+     * @param {SamadhanStatusHistoryDeleteManyArgs} args - Arguments to filter SamadhanStatusHistories to delete.
+     * @example
+     * // Delete a few SamadhanStatusHistories
+     * const { count } = await prisma.samadhanStatusHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SamadhanStatusHistoryDeleteManyArgs>(args?: SelectSubset<T, SamadhanStatusHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanStatusHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanStatusHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SamadhanStatusHistories
+     * const samadhanStatusHistory = await prisma.samadhanStatusHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SamadhanStatusHistoryUpdateManyArgs>(args: SelectSubset<T, SamadhanStatusHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanStatusHistories and returns the data updated in the database.
+     * @param {SamadhanStatusHistoryUpdateManyAndReturnArgs} args - Arguments to update many SamadhanStatusHistories.
+     * @example
+     * // Update many SamadhanStatusHistories
+     * const samadhanStatusHistory = await prisma.samadhanStatusHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SamadhanStatusHistories and only return the `id`
+     * const samadhanStatusHistoryWithIdOnly = await prisma.samadhanStatusHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SamadhanStatusHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, SamadhanStatusHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SamadhanStatusHistory.
+     * @param {SamadhanStatusHistoryUpsertArgs} args - Arguments to update or create a SamadhanStatusHistory.
+     * @example
+     * // Update or create a SamadhanStatusHistory
+     * const samadhanStatusHistory = await prisma.samadhanStatusHistory.upsert({
+     *   create: {
+     *     // ... data to create a SamadhanStatusHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SamadhanStatusHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SamadhanStatusHistoryUpsertArgs>(args: SelectSubset<T, SamadhanStatusHistoryUpsertArgs<ExtArgs>>): Prisma__SamadhanStatusHistoryClient<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SamadhanStatusHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanStatusHistoryCountArgs} args - Arguments to filter SamadhanStatusHistories to count.
+     * @example
+     * // Count the number of SamadhanStatusHistories
+     * const count = await prisma.samadhanStatusHistory.count({
+     *   where: {
+     *     // ... the filter for the SamadhanStatusHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends SamadhanStatusHistoryCountArgs>(
+      args?: Subset<T, SamadhanStatusHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SamadhanStatusHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SamadhanStatusHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanStatusHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SamadhanStatusHistoryAggregateArgs>(args: Subset<T, SamadhanStatusHistoryAggregateArgs>): Prisma.PrismaPromise<GetSamadhanStatusHistoryAggregateType<T>>
+
+    /**
+     * Group by SamadhanStatusHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanStatusHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SamadhanStatusHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SamadhanStatusHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: SamadhanStatusHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SamadhanStatusHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSamadhanStatusHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SamadhanStatusHistory model
+   */
+  readonly fields: SamadhanStatusHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SamadhanStatusHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SamadhanStatusHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    ticket<T extends SamadhanTicketDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicketDefaultArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    changedBy<T extends SamadhanStatusHistory$changedByArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanStatusHistory$changedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SamadhanStatusHistory model
+   */
+  interface SamadhanStatusHistoryFieldRefs {
+    readonly id: FieldRef<"SamadhanStatusHistory", 'String'>
+    readonly ticketId: FieldRef<"SamadhanStatusHistory", 'String'>
+    readonly fromStatus: FieldRef<"SamadhanStatusHistory", 'SamadhanTicketStatus'>
+    readonly toStatus: FieldRef<"SamadhanStatusHistory", 'SamadhanTicketStatus'>
+    readonly changedById: FieldRef<"SamadhanStatusHistory", 'String'>
+    readonly changeReason: FieldRef<"SamadhanStatusHistory", 'String'>
+    readonly isSystemGenerated: FieldRef<"SamadhanStatusHistory", 'Boolean'>
+    readonly createdAt: FieldRef<"SamadhanStatusHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SamadhanStatusHistory findUnique
+   */
+  export type SamadhanStatusHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanStatusHistory to fetch.
+     */
+    where: SamadhanStatusHistoryWhereUniqueInput
+  }
+
+  /**
+   * SamadhanStatusHistory findUniqueOrThrow
+   */
+  export type SamadhanStatusHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanStatusHistory to fetch.
+     */
+    where: SamadhanStatusHistoryWhereUniqueInput
+  }
+
+  /**
+   * SamadhanStatusHistory findFirst
+   */
+  export type SamadhanStatusHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanStatusHistory to fetch.
+     */
+    where?: SamadhanStatusHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanStatusHistories to fetch.
+     */
+    orderBy?: SamadhanStatusHistoryOrderByWithRelationInput | SamadhanStatusHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanStatusHistories.
+     */
+    cursor?: SamadhanStatusHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanStatusHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanStatusHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanStatusHistories.
+     */
+    distinct?: SamadhanStatusHistoryScalarFieldEnum | SamadhanStatusHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanStatusHistory findFirstOrThrow
+   */
+  export type SamadhanStatusHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanStatusHistory to fetch.
+     */
+    where?: SamadhanStatusHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanStatusHistories to fetch.
+     */
+    orderBy?: SamadhanStatusHistoryOrderByWithRelationInput | SamadhanStatusHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanStatusHistories.
+     */
+    cursor?: SamadhanStatusHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanStatusHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanStatusHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanStatusHistories.
+     */
+    distinct?: SamadhanStatusHistoryScalarFieldEnum | SamadhanStatusHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanStatusHistory findMany
+   */
+  export type SamadhanStatusHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanStatusHistories to fetch.
+     */
+    where?: SamadhanStatusHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanStatusHistories to fetch.
+     */
+    orderBy?: SamadhanStatusHistoryOrderByWithRelationInput | SamadhanStatusHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SamadhanStatusHistories.
+     */
+    cursor?: SamadhanStatusHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanStatusHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanStatusHistories.
+     */
+    skip?: number
+    distinct?: SamadhanStatusHistoryScalarFieldEnum | SamadhanStatusHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanStatusHistory create
+   */
+  export type SamadhanStatusHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SamadhanStatusHistory.
+     */
+    data: XOR<SamadhanStatusHistoryCreateInput, SamadhanStatusHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * SamadhanStatusHistory createMany
+   */
+  export type SamadhanStatusHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SamadhanStatusHistories.
+     */
+    data: SamadhanStatusHistoryCreateManyInput | SamadhanStatusHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanStatusHistory createManyAndReturn
+   */
+  export type SamadhanStatusHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many SamadhanStatusHistories.
+     */
+    data: SamadhanStatusHistoryCreateManyInput | SamadhanStatusHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanStatusHistory update
+   */
+  export type SamadhanStatusHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SamadhanStatusHistory.
+     */
+    data: XOR<SamadhanStatusHistoryUpdateInput, SamadhanStatusHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which SamadhanStatusHistory to update.
+     */
+    where: SamadhanStatusHistoryWhereUniqueInput
+  }
+
+  /**
+   * SamadhanStatusHistory updateMany
+   */
+  export type SamadhanStatusHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SamadhanStatusHistories.
+     */
+    data: XOR<SamadhanStatusHistoryUpdateManyMutationInput, SamadhanStatusHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanStatusHistories to update
+     */
+    where?: SamadhanStatusHistoryWhereInput
+    /**
+     * Limit how many SamadhanStatusHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanStatusHistory updateManyAndReturn
+   */
+  export type SamadhanStatusHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update SamadhanStatusHistories.
+     */
+    data: XOR<SamadhanStatusHistoryUpdateManyMutationInput, SamadhanStatusHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanStatusHistories to update
+     */
+    where?: SamadhanStatusHistoryWhereInput
+    /**
+     * Limit how many SamadhanStatusHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanStatusHistory upsert
+   */
+  export type SamadhanStatusHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SamadhanStatusHistory to update in case it exists.
+     */
+    where: SamadhanStatusHistoryWhereUniqueInput
+    /**
+     * In case the SamadhanStatusHistory found by the `where` argument doesn't exist, create a new SamadhanStatusHistory with this data.
+     */
+    create: XOR<SamadhanStatusHistoryCreateInput, SamadhanStatusHistoryUncheckedCreateInput>
+    /**
+     * In case the SamadhanStatusHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SamadhanStatusHistoryUpdateInput, SamadhanStatusHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * SamadhanStatusHistory delete
+   */
+  export type SamadhanStatusHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which SamadhanStatusHistory to delete.
+     */
+    where: SamadhanStatusHistoryWhereUniqueInput
+  }
+
+  /**
+   * SamadhanStatusHistory deleteMany
+   */
+  export type SamadhanStatusHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanStatusHistories to delete
+     */
+    where?: SamadhanStatusHistoryWhereInput
+    /**
+     * Limit how many SamadhanStatusHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanStatusHistory.changedBy
+   */
+  export type SamadhanStatusHistory$changedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * SamadhanStatusHistory without action
+   */
+  export type SamadhanStatusHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanStatusHistory
+     */
+    select?: SamadhanStatusHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanStatusHistory
+     */
+    omit?: SamadhanStatusHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanStatusHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SamadhanInternalNote
+   */
+
+  export type AggregateSamadhanInternalNote = {
+    _count: SamadhanInternalNoteCountAggregateOutputType | null
+    _min: SamadhanInternalNoteMinAggregateOutputType | null
+    _max: SamadhanInternalNoteMaxAggregateOutputType | null
+  }
+
+  export type SamadhanInternalNoteMinAggregateOutputType = {
+    id: string | null
+    ticketId: string | null
+    createdById: string | null
+    content: string | null
+    createdAt: Date | null
+  }
+
+  export type SamadhanInternalNoteMaxAggregateOutputType = {
+    id: string | null
+    ticketId: string | null
+    createdById: string | null
+    content: string | null
+    createdAt: Date | null
+  }
+
+  export type SamadhanInternalNoteCountAggregateOutputType = {
+    id: number
+    ticketId: number
+    createdById: number
+    content: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type SamadhanInternalNoteMinAggregateInputType = {
+    id?: true
+    ticketId?: true
+    createdById?: true
+    content?: true
+    createdAt?: true
+  }
+
+  export type SamadhanInternalNoteMaxAggregateInputType = {
+    id?: true
+    ticketId?: true
+    createdById?: true
+    content?: true
+    createdAt?: true
+  }
+
+  export type SamadhanInternalNoteCountAggregateInputType = {
+    id?: true
+    ticketId?: true
+    createdById?: true
+    content?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type SamadhanInternalNoteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanInternalNote to aggregate.
+     */
+    where?: SamadhanInternalNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanInternalNotes to fetch.
+     */
+    orderBy?: SamadhanInternalNoteOrderByWithRelationInput | SamadhanInternalNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SamadhanInternalNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanInternalNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanInternalNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SamadhanInternalNotes
+    **/
+    _count?: true | SamadhanInternalNoteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SamadhanInternalNoteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SamadhanInternalNoteMaxAggregateInputType
+  }
+
+  export type GetSamadhanInternalNoteAggregateType<T extends SamadhanInternalNoteAggregateArgs> = {
+        [P in keyof T & keyof AggregateSamadhanInternalNote]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSamadhanInternalNote[P]>
+      : GetScalarType<T[P], AggregateSamadhanInternalNote[P]>
+  }
+
+
+
+
+  export type SamadhanInternalNoteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanInternalNoteWhereInput
+    orderBy?: SamadhanInternalNoteOrderByWithAggregationInput | SamadhanInternalNoteOrderByWithAggregationInput[]
+    by: SamadhanInternalNoteScalarFieldEnum[] | SamadhanInternalNoteScalarFieldEnum
+    having?: SamadhanInternalNoteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SamadhanInternalNoteCountAggregateInputType | true
+    _min?: SamadhanInternalNoteMinAggregateInputType
+    _max?: SamadhanInternalNoteMaxAggregateInputType
+  }
+
+  export type SamadhanInternalNoteGroupByOutputType = {
+    id: string
+    ticketId: string
+    createdById: string
+    content: string
+    createdAt: Date
+    _count: SamadhanInternalNoteCountAggregateOutputType | null
+    _min: SamadhanInternalNoteMinAggregateOutputType | null
+    _max: SamadhanInternalNoteMaxAggregateOutputType | null
+  }
+
+  type GetSamadhanInternalNoteGroupByPayload<T extends SamadhanInternalNoteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SamadhanInternalNoteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SamadhanInternalNoteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SamadhanInternalNoteGroupByOutputType[P]>
+            : GetScalarType<T[P], SamadhanInternalNoteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SamadhanInternalNoteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    createdById?: boolean
+    content?: boolean
+    createdAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanInternalNote"]>
+
+  export type SamadhanInternalNoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    createdById?: boolean
+    content?: boolean
+    createdAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanInternalNote"]>
+
+  export type SamadhanInternalNoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ticketId?: boolean
+    createdById?: boolean
+    content?: boolean
+    createdAt?: boolean
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanInternalNote"]>
+
+  export type SamadhanInternalNoteSelectScalar = {
+    id?: boolean
+    ticketId?: boolean
+    createdById?: boolean
+    content?: boolean
+    createdAt?: boolean
+  }
+
+  export type SamadhanInternalNoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ticketId" | "createdById" | "content" | "createdAt", ExtArgs["result"]["samadhanInternalNote"]>
+  export type SamadhanInternalNoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SamadhanInternalNoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SamadhanInternalNoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ticket?: boolean | SamadhanTicketDefaultArgs<ExtArgs>
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SamadhanInternalNotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SamadhanInternalNote"
+    objects: {
+      ticket: Prisma.$SamadhanTicketPayload<ExtArgs>
+      createdBy: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ticketId: string
+      createdById: string
+      content: string
+      createdAt: Date
+    }, ExtArgs["result"]["samadhanInternalNote"]>
+    composites: {}
+  }
+
+  type SamadhanInternalNoteGetPayload<S extends boolean | null | undefined | SamadhanInternalNoteDefaultArgs> = $Result.GetResult<Prisma.$SamadhanInternalNotePayload, S>
+
+  type SamadhanInternalNoteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SamadhanInternalNoteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SamadhanInternalNoteCountAggregateInputType | true
+    }
+
+  export interface SamadhanInternalNoteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SamadhanInternalNote'], meta: { name: 'SamadhanInternalNote' } }
+    /**
+     * Find zero or one SamadhanInternalNote that matches the filter.
+     * @param {SamadhanInternalNoteFindUniqueArgs} args - Arguments to find a SamadhanInternalNote
+     * @example
+     * // Get one SamadhanInternalNote
+     * const samadhanInternalNote = await prisma.samadhanInternalNote.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SamadhanInternalNoteFindUniqueArgs>(args: SelectSubset<T, SamadhanInternalNoteFindUniqueArgs<ExtArgs>>): Prisma__SamadhanInternalNoteClient<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SamadhanInternalNote that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SamadhanInternalNoteFindUniqueOrThrowArgs} args - Arguments to find a SamadhanInternalNote
+     * @example
+     * // Get one SamadhanInternalNote
+     * const samadhanInternalNote = await prisma.samadhanInternalNote.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SamadhanInternalNoteFindUniqueOrThrowArgs>(args: SelectSubset<T, SamadhanInternalNoteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SamadhanInternalNoteClient<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanInternalNote that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInternalNoteFindFirstArgs} args - Arguments to find a SamadhanInternalNote
+     * @example
+     * // Get one SamadhanInternalNote
+     * const samadhanInternalNote = await prisma.samadhanInternalNote.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SamadhanInternalNoteFindFirstArgs>(args?: SelectSubset<T, SamadhanInternalNoteFindFirstArgs<ExtArgs>>): Prisma__SamadhanInternalNoteClient<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanInternalNote that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInternalNoteFindFirstOrThrowArgs} args - Arguments to find a SamadhanInternalNote
+     * @example
+     * // Get one SamadhanInternalNote
+     * const samadhanInternalNote = await prisma.samadhanInternalNote.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SamadhanInternalNoteFindFirstOrThrowArgs>(args?: SelectSubset<T, SamadhanInternalNoteFindFirstOrThrowArgs<ExtArgs>>): Prisma__SamadhanInternalNoteClient<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SamadhanInternalNotes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInternalNoteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SamadhanInternalNotes
+     * const samadhanInternalNotes = await prisma.samadhanInternalNote.findMany()
+     * 
+     * // Get first 10 SamadhanInternalNotes
+     * const samadhanInternalNotes = await prisma.samadhanInternalNote.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const samadhanInternalNoteWithIdOnly = await prisma.samadhanInternalNote.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SamadhanInternalNoteFindManyArgs>(args?: SelectSubset<T, SamadhanInternalNoteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SamadhanInternalNote.
+     * @param {SamadhanInternalNoteCreateArgs} args - Arguments to create a SamadhanInternalNote.
+     * @example
+     * // Create one SamadhanInternalNote
+     * const SamadhanInternalNote = await prisma.samadhanInternalNote.create({
+     *   data: {
+     *     // ... data to create a SamadhanInternalNote
+     *   }
+     * })
+     * 
+     */
+    create<T extends SamadhanInternalNoteCreateArgs>(args: SelectSubset<T, SamadhanInternalNoteCreateArgs<ExtArgs>>): Prisma__SamadhanInternalNoteClient<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SamadhanInternalNotes.
+     * @param {SamadhanInternalNoteCreateManyArgs} args - Arguments to create many SamadhanInternalNotes.
+     * @example
+     * // Create many SamadhanInternalNotes
+     * const samadhanInternalNote = await prisma.samadhanInternalNote.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SamadhanInternalNoteCreateManyArgs>(args?: SelectSubset<T, SamadhanInternalNoteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SamadhanInternalNotes and returns the data saved in the database.
+     * @param {SamadhanInternalNoteCreateManyAndReturnArgs} args - Arguments to create many SamadhanInternalNotes.
+     * @example
+     * // Create many SamadhanInternalNotes
+     * const samadhanInternalNote = await prisma.samadhanInternalNote.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SamadhanInternalNotes and only return the `id`
+     * const samadhanInternalNoteWithIdOnly = await prisma.samadhanInternalNote.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SamadhanInternalNoteCreateManyAndReturnArgs>(args?: SelectSubset<T, SamadhanInternalNoteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SamadhanInternalNote.
+     * @param {SamadhanInternalNoteDeleteArgs} args - Arguments to delete one SamadhanInternalNote.
+     * @example
+     * // Delete one SamadhanInternalNote
+     * const SamadhanInternalNote = await prisma.samadhanInternalNote.delete({
+     *   where: {
+     *     // ... filter to delete one SamadhanInternalNote
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SamadhanInternalNoteDeleteArgs>(args: SelectSubset<T, SamadhanInternalNoteDeleteArgs<ExtArgs>>): Prisma__SamadhanInternalNoteClient<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SamadhanInternalNote.
+     * @param {SamadhanInternalNoteUpdateArgs} args - Arguments to update one SamadhanInternalNote.
+     * @example
+     * // Update one SamadhanInternalNote
+     * const samadhanInternalNote = await prisma.samadhanInternalNote.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SamadhanInternalNoteUpdateArgs>(args: SelectSubset<T, SamadhanInternalNoteUpdateArgs<ExtArgs>>): Prisma__SamadhanInternalNoteClient<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SamadhanInternalNotes.
+     * @param {SamadhanInternalNoteDeleteManyArgs} args - Arguments to filter SamadhanInternalNotes to delete.
+     * @example
+     * // Delete a few SamadhanInternalNotes
+     * const { count } = await prisma.samadhanInternalNote.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SamadhanInternalNoteDeleteManyArgs>(args?: SelectSubset<T, SamadhanInternalNoteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanInternalNotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInternalNoteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SamadhanInternalNotes
+     * const samadhanInternalNote = await prisma.samadhanInternalNote.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SamadhanInternalNoteUpdateManyArgs>(args: SelectSubset<T, SamadhanInternalNoteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanInternalNotes and returns the data updated in the database.
+     * @param {SamadhanInternalNoteUpdateManyAndReturnArgs} args - Arguments to update many SamadhanInternalNotes.
+     * @example
+     * // Update many SamadhanInternalNotes
+     * const samadhanInternalNote = await prisma.samadhanInternalNote.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SamadhanInternalNotes and only return the `id`
+     * const samadhanInternalNoteWithIdOnly = await prisma.samadhanInternalNote.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SamadhanInternalNoteUpdateManyAndReturnArgs>(args: SelectSubset<T, SamadhanInternalNoteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SamadhanInternalNote.
+     * @param {SamadhanInternalNoteUpsertArgs} args - Arguments to update or create a SamadhanInternalNote.
+     * @example
+     * // Update or create a SamadhanInternalNote
+     * const samadhanInternalNote = await prisma.samadhanInternalNote.upsert({
+     *   create: {
+     *     // ... data to create a SamadhanInternalNote
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SamadhanInternalNote we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SamadhanInternalNoteUpsertArgs>(args: SelectSubset<T, SamadhanInternalNoteUpsertArgs<ExtArgs>>): Prisma__SamadhanInternalNoteClient<$Result.GetResult<Prisma.$SamadhanInternalNotePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SamadhanInternalNotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInternalNoteCountArgs} args - Arguments to filter SamadhanInternalNotes to count.
+     * @example
+     * // Count the number of SamadhanInternalNotes
+     * const count = await prisma.samadhanInternalNote.count({
+     *   where: {
+     *     // ... the filter for the SamadhanInternalNotes we want to count
+     *   }
+     * })
+    **/
+    count<T extends SamadhanInternalNoteCountArgs>(
+      args?: Subset<T, SamadhanInternalNoteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SamadhanInternalNoteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SamadhanInternalNote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInternalNoteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SamadhanInternalNoteAggregateArgs>(args: Subset<T, SamadhanInternalNoteAggregateArgs>): Prisma.PrismaPromise<GetSamadhanInternalNoteAggregateType<T>>
+
+    /**
+     * Group by SamadhanInternalNote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanInternalNoteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SamadhanInternalNoteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SamadhanInternalNoteGroupByArgs['orderBy'] }
+        : { orderBy?: SamadhanInternalNoteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SamadhanInternalNoteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSamadhanInternalNoteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SamadhanInternalNote model
+   */
+  readonly fields: SamadhanInternalNoteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SamadhanInternalNote.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SamadhanInternalNoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    ticket<T extends SamadhanTicketDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicketDefaultArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SamadhanInternalNote model
+   */
+  interface SamadhanInternalNoteFieldRefs {
+    readonly id: FieldRef<"SamadhanInternalNote", 'String'>
+    readonly ticketId: FieldRef<"SamadhanInternalNote", 'String'>
+    readonly createdById: FieldRef<"SamadhanInternalNote", 'String'>
+    readonly content: FieldRef<"SamadhanInternalNote", 'String'>
+    readonly createdAt: FieldRef<"SamadhanInternalNote", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SamadhanInternalNote findUnique
+   */
+  export type SamadhanInternalNoteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanInternalNote to fetch.
+     */
+    where: SamadhanInternalNoteWhereUniqueInput
+  }
+
+  /**
+   * SamadhanInternalNote findUniqueOrThrow
+   */
+  export type SamadhanInternalNoteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanInternalNote to fetch.
+     */
+    where: SamadhanInternalNoteWhereUniqueInput
+  }
+
+  /**
+   * SamadhanInternalNote findFirst
+   */
+  export type SamadhanInternalNoteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanInternalNote to fetch.
+     */
+    where?: SamadhanInternalNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanInternalNotes to fetch.
+     */
+    orderBy?: SamadhanInternalNoteOrderByWithRelationInput | SamadhanInternalNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanInternalNotes.
+     */
+    cursor?: SamadhanInternalNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanInternalNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanInternalNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanInternalNotes.
+     */
+    distinct?: SamadhanInternalNoteScalarFieldEnum | SamadhanInternalNoteScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanInternalNote findFirstOrThrow
+   */
+  export type SamadhanInternalNoteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanInternalNote to fetch.
+     */
+    where?: SamadhanInternalNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanInternalNotes to fetch.
+     */
+    orderBy?: SamadhanInternalNoteOrderByWithRelationInput | SamadhanInternalNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanInternalNotes.
+     */
+    cursor?: SamadhanInternalNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanInternalNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanInternalNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanInternalNotes.
+     */
+    distinct?: SamadhanInternalNoteScalarFieldEnum | SamadhanInternalNoteScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanInternalNote findMany
+   */
+  export type SamadhanInternalNoteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanInternalNotes to fetch.
+     */
+    where?: SamadhanInternalNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanInternalNotes to fetch.
+     */
+    orderBy?: SamadhanInternalNoteOrderByWithRelationInput | SamadhanInternalNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SamadhanInternalNotes.
+     */
+    cursor?: SamadhanInternalNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanInternalNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanInternalNotes.
+     */
+    skip?: number
+    distinct?: SamadhanInternalNoteScalarFieldEnum | SamadhanInternalNoteScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanInternalNote create
+   */
+  export type SamadhanInternalNoteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SamadhanInternalNote.
+     */
+    data: XOR<SamadhanInternalNoteCreateInput, SamadhanInternalNoteUncheckedCreateInput>
+  }
+
+  /**
+   * SamadhanInternalNote createMany
+   */
+  export type SamadhanInternalNoteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SamadhanInternalNotes.
+     */
+    data: SamadhanInternalNoteCreateManyInput | SamadhanInternalNoteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanInternalNote createManyAndReturn
+   */
+  export type SamadhanInternalNoteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * The data used to create many SamadhanInternalNotes.
+     */
+    data: SamadhanInternalNoteCreateManyInput | SamadhanInternalNoteCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanInternalNote update
+   */
+  export type SamadhanInternalNoteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SamadhanInternalNote.
+     */
+    data: XOR<SamadhanInternalNoteUpdateInput, SamadhanInternalNoteUncheckedUpdateInput>
+    /**
+     * Choose, which SamadhanInternalNote to update.
+     */
+    where: SamadhanInternalNoteWhereUniqueInput
+  }
+
+  /**
+   * SamadhanInternalNote updateMany
+   */
+  export type SamadhanInternalNoteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SamadhanInternalNotes.
+     */
+    data: XOR<SamadhanInternalNoteUpdateManyMutationInput, SamadhanInternalNoteUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanInternalNotes to update
+     */
+    where?: SamadhanInternalNoteWhereInput
+    /**
+     * Limit how many SamadhanInternalNotes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanInternalNote updateManyAndReturn
+   */
+  export type SamadhanInternalNoteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * The data used to update SamadhanInternalNotes.
+     */
+    data: XOR<SamadhanInternalNoteUpdateManyMutationInput, SamadhanInternalNoteUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanInternalNotes to update
+     */
+    where?: SamadhanInternalNoteWhereInput
+    /**
+     * Limit how many SamadhanInternalNotes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanInternalNote upsert
+   */
+  export type SamadhanInternalNoteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SamadhanInternalNote to update in case it exists.
+     */
+    where: SamadhanInternalNoteWhereUniqueInput
+    /**
+     * In case the SamadhanInternalNote found by the `where` argument doesn't exist, create a new SamadhanInternalNote with this data.
+     */
+    create: XOR<SamadhanInternalNoteCreateInput, SamadhanInternalNoteUncheckedCreateInput>
+    /**
+     * In case the SamadhanInternalNote was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SamadhanInternalNoteUpdateInput, SamadhanInternalNoteUncheckedUpdateInput>
+  }
+
+  /**
+   * SamadhanInternalNote delete
+   */
+  export type SamadhanInternalNoteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+    /**
+     * Filter which SamadhanInternalNote to delete.
+     */
+    where: SamadhanInternalNoteWhereUniqueInput
+  }
+
+  /**
+   * SamadhanInternalNote deleteMany
+   */
+  export type SamadhanInternalNoteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanInternalNotes to delete
+     */
+    where?: SamadhanInternalNoteWhereInput
+    /**
+     * Limit how many SamadhanInternalNotes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanInternalNote without action
+   */
+  export type SamadhanInternalNoteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanInternalNote
+     */
+    select?: SamadhanInternalNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanInternalNote
+     */
+    omit?: SamadhanInternalNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanInternalNoteInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SamadhanSLAConfig
+   */
+
+  export type AggregateSamadhanSLAConfig = {
+    _count: SamadhanSLAConfigCountAggregateOutputType | null
+    _avg: SamadhanSLAConfigAvgAggregateOutputType | null
+    _sum: SamadhanSLAConfigSumAggregateOutputType | null
+    _min: SamadhanSLAConfigMinAggregateOutputType | null
+    _max: SamadhanSLAConfigMaxAggregateOutputType | null
+  }
+
+  export type SamadhanSLAConfigAvgAggregateOutputType = {
+    slaHours: number | null
+  }
+
+  export type SamadhanSLAConfigSumAggregateOutputType = {
+    slaHours: number | null
+  }
+
+  export type SamadhanSLAConfigMinAggregateOutputType = {
+    id: string | null
+    queryType: $Enums.SamadhanQueryType | null
+    priority: $Enums.SamadhanPriority | null
+    slaHours: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanSLAConfigMaxAggregateOutputType = {
+    id: string | null
+    queryType: $Enums.SamadhanQueryType | null
+    priority: $Enums.SamadhanPriority | null
+    slaHours: number | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanSLAConfigCountAggregateOutputType = {
+    id: number
+    queryType: number
+    priority: number
+    slaHours: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SamadhanSLAConfigAvgAggregateInputType = {
+    slaHours?: true
+  }
+
+  export type SamadhanSLAConfigSumAggregateInputType = {
+    slaHours?: true
+  }
+
+  export type SamadhanSLAConfigMinAggregateInputType = {
+    id?: true
+    queryType?: true
+    priority?: true
+    slaHours?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanSLAConfigMaxAggregateInputType = {
+    id?: true
+    queryType?: true
+    priority?: true
+    slaHours?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanSLAConfigCountAggregateInputType = {
+    id?: true
+    queryType?: true
+    priority?: true
+    slaHours?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SamadhanSLAConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanSLAConfig to aggregate.
+     */
+    where?: SamadhanSLAConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanSLAConfigs to fetch.
+     */
+    orderBy?: SamadhanSLAConfigOrderByWithRelationInput | SamadhanSLAConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SamadhanSLAConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanSLAConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanSLAConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SamadhanSLAConfigs
+    **/
+    _count?: true | SamadhanSLAConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SamadhanSLAConfigAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SamadhanSLAConfigSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SamadhanSLAConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SamadhanSLAConfigMaxAggregateInputType
+  }
+
+  export type GetSamadhanSLAConfigAggregateType<T extends SamadhanSLAConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateSamadhanSLAConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSamadhanSLAConfig[P]>
+      : GetScalarType<T[P], AggregateSamadhanSLAConfig[P]>
+  }
+
+
+
+
+  export type SamadhanSLAConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanSLAConfigWhereInput
+    orderBy?: SamadhanSLAConfigOrderByWithAggregationInput | SamadhanSLAConfigOrderByWithAggregationInput[]
+    by: SamadhanSLAConfigScalarFieldEnum[] | SamadhanSLAConfigScalarFieldEnum
+    having?: SamadhanSLAConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SamadhanSLAConfigCountAggregateInputType | true
+    _avg?: SamadhanSLAConfigAvgAggregateInputType
+    _sum?: SamadhanSLAConfigSumAggregateInputType
+    _min?: SamadhanSLAConfigMinAggregateInputType
+    _max?: SamadhanSLAConfigMaxAggregateInputType
+  }
+
+  export type SamadhanSLAConfigGroupByOutputType = {
+    id: string
+    queryType: $Enums.SamadhanQueryType
+    priority: $Enums.SamadhanPriority
+    slaHours: number
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: SamadhanSLAConfigCountAggregateOutputType | null
+    _avg: SamadhanSLAConfigAvgAggregateOutputType | null
+    _sum: SamadhanSLAConfigSumAggregateOutputType | null
+    _min: SamadhanSLAConfigMinAggregateOutputType | null
+    _max: SamadhanSLAConfigMaxAggregateOutputType | null
+  }
+
+  type GetSamadhanSLAConfigGroupByPayload<T extends SamadhanSLAConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SamadhanSLAConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SamadhanSLAConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SamadhanSLAConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], SamadhanSLAConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SamadhanSLAConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    queryType?: boolean
+    priority?: boolean
+    slaHours?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["samadhanSLAConfig"]>
+
+  export type SamadhanSLAConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    queryType?: boolean
+    priority?: boolean
+    slaHours?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["samadhanSLAConfig"]>
+
+  export type SamadhanSLAConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    queryType?: boolean
+    priority?: boolean
+    slaHours?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["samadhanSLAConfig"]>
+
+  export type SamadhanSLAConfigSelectScalar = {
+    id?: boolean
+    queryType?: boolean
+    priority?: boolean
+    slaHours?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SamadhanSLAConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "queryType" | "priority" | "slaHours" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["samadhanSLAConfig"]>
+
+  export type $SamadhanSLAConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SamadhanSLAConfig"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      queryType: $Enums.SamadhanQueryType
+      priority: $Enums.SamadhanPriority
+      slaHours: number
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["samadhanSLAConfig"]>
+    composites: {}
+  }
+
+  type SamadhanSLAConfigGetPayload<S extends boolean | null | undefined | SamadhanSLAConfigDefaultArgs> = $Result.GetResult<Prisma.$SamadhanSLAConfigPayload, S>
+
+  type SamadhanSLAConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SamadhanSLAConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SamadhanSLAConfigCountAggregateInputType | true
+    }
+
+  export interface SamadhanSLAConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SamadhanSLAConfig'], meta: { name: 'SamadhanSLAConfig' } }
+    /**
+     * Find zero or one SamadhanSLAConfig that matches the filter.
+     * @param {SamadhanSLAConfigFindUniqueArgs} args - Arguments to find a SamadhanSLAConfig
+     * @example
+     * // Get one SamadhanSLAConfig
+     * const samadhanSLAConfig = await prisma.samadhanSLAConfig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SamadhanSLAConfigFindUniqueArgs>(args: SelectSubset<T, SamadhanSLAConfigFindUniqueArgs<ExtArgs>>): Prisma__SamadhanSLAConfigClient<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SamadhanSLAConfig that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SamadhanSLAConfigFindUniqueOrThrowArgs} args - Arguments to find a SamadhanSLAConfig
+     * @example
+     * // Get one SamadhanSLAConfig
+     * const samadhanSLAConfig = await prisma.samadhanSLAConfig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SamadhanSLAConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, SamadhanSLAConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SamadhanSLAConfigClient<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanSLAConfig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanSLAConfigFindFirstArgs} args - Arguments to find a SamadhanSLAConfig
+     * @example
+     * // Get one SamadhanSLAConfig
+     * const samadhanSLAConfig = await prisma.samadhanSLAConfig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SamadhanSLAConfigFindFirstArgs>(args?: SelectSubset<T, SamadhanSLAConfigFindFirstArgs<ExtArgs>>): Prisma__SamadhanSLAConfigClient<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanSLAConfig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanSLAConfigFindFirstOrThrowArgs} args - Arguments to find a SamadhanSLAConfig
+     * @example
+     * // Get one SamadhanSLAConfig
+     * const samadhanSLAConfig = await prisma.samadhanSLAConfig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SamadhanSLAConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, SamadhanSLAConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__SamadhanSLAConfigClient<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SamadhanSLAConfigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanSLAConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SamadhanSLAConfigs
+     * const samadhanSLAConfigs = await prisma.samadhanSLAConfig.findMany()
+     * 
+     * // Get first 10 SamadhanSLAConfigs
+     * const samadhanSLAConfigs = await prisma.samadhanSLAConfig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const samadhanSLAConfigWithIdOnly = await prisma.samadhanSLAConfig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SamadhanSLAConfigFindManyArgs>(args?: SelectSubset<T, SamadhanSLAConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SamadhanSLAConfig.
+     * @param {SamadhanSLAConfigCreateArgs} args - Arguments to create a SamadhanSLAConfig.
+     * @example
+     * // Create one SamadhanSLAConfig
+     * const SamadhanSLAConfig = await prisma.samadhanSLAConfig.create({
+     *   data: {
+     *     // ... data to create a SamadhanSLAConfig
+     *   }
+     * })
+     * 
+     */
+    create<T extends SamadhanSLAConfigCreateArgs>(args: SelectSubset<T, SamadhanSLAConfigCreateArgs<ExtArgs>>): Prisma__SamadhanSLAConfigClient<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SamadhanSLAConfigs.
+     * @param {SamadhanSLAConfigCreateManyArgs} args - Arguments to create many SamadhanSLAConfigs.
+     * @example
+     * // Create many SamadhanSLAConfigs
+     * const samadhanSLAConfig = await prisma.samadhanSLAConfig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SamadhanSLAConfigCreateManyArgs>(args?: SelectSubset<T, SamadhanSLAConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SamadhanSLAConfigs and returns the data saved in the database.
+     * @param {SamadhanSLAConfigCreateManyAndReturnArgs} args - Arguments to create many SamadhanSLAConfigs.
+     * @example
+     * // Create many SamadhanSLAConfigs
+     * const samadhanSLAConfig = await prisma.samadhanSLAConfig.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SamadhanSLAConfigs and only return the `id`
+     * const samadhanSLAConfigWithIdOnly = await prisma.samadhanSLAConfig.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SamadhanSLAConfigCreateManyAndReturnArgs>(args?: SelectSubset<T, SamadhanSLAConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SamadhanSLAConfig.
+     * @param {SamadhanSLAConfigDeleteArgs} args - Arguments to delete one SamadhanSLAConfig.
+     * @example
+     * // Delete one SamadhanSLAConfig
+     * const SamadhanSLAConfig = await prisma.samadhanSLAConfig.delete({
+     *   where: {
+     *     // ... filter to delete one SamadhanSLAConfig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SamadhanSLAConfigDeleteArgs>(args: SelectSubset<T, SamadhanSLAConfigDeleteArgs<ExtArgs>>): Prisma__SamadhanSLAConfigClient<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SamadhanSLAConfig.
+     * @param {SamadhanSLAConfigUpdateArgs} args - Arguments to update one SamadhanSLAConfig.
+     * @example
+     * // Update one SamadhanSLAConfig
+     * const samadhanSLAConfig = await prisma.samadhanSLAConfig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SamadhanSLAConfigUpdateArgs>(args: SelectSubset<T, SamadhanSLAConfigUpdateArgs<ExtArgs>>): Prisma__SamadhanSLAConfigClient<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SamadhanSLAConfigs.
+     * @param {SamadhanSLAConfigDeleteManyArgs} args - Arguments to filter SamadhanSLAConfigs to delete.
+     * @example
+     * // Delete a few SamadhanSLAConfigs
+     * const { count } = await prisma.samadhanSLAConfig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SamadhanSLAConfigDeleteManyArgs>(args?: SelectSubset<T, SamadhanSLAConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanSLAConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanSLAConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SamadhanSLAConfigs
+     * const samadhanSLAConfig = await prisma.samadhanSLAConfig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SamadhanSLAConfigUpdateManyArgs>(args: SelectSubset<T, SamadhanSLAConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanSLAConfigs and returns the data updated in the database.
+     * @param {SamadhanSLAConfigUpdateManyAndReturnArgs} args - Arguments to update many SamadhanSLAConfigs.
+     * @example
+     * // Update many SamadhanSLAConfigs
+     * const samadhanSLAConfig = await prisma.samadhanSLAConfig.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SamadhanSLAConfigs and only return the `id`
+     * const samadhanSLAConfigWithIdOnly = await prisma.samadhanSLAConfig.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SamadhanSLAConfigUpdateManyAndReturnArgs>(args: SelectSubset<T, SamadhanSLAConfigUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SamadhanSLAConfig.
+     * @param {SamadhanSLAConfigUpsertArgs} args - Arguments to update or create a SamadhanSLAConfig.
+     * @example
+     * // Update or create a SamadhanSLAConfig
+     * const samadhanSLAConfig = await prisma.samadhanSLAConfig.upsert({
+     *   create: {
+     *     // ... data to create a SamadhanSLAConfig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SamadhanSLAConfig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SamadhanSLAConfigUpsertArgs>(args: SelectSubset<T, SamadhanSLAConfigUpsertArgs<ExtArgs>>): Prisma__SamadhanSLAConfigClient<$Result.GetResult<Prisma.$SamadhanSLAConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SamadhanSLAConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanSLAConfigCountArgs} args - Arguments to filter SamadhanSLAConfigs to count.
+     * @example
+     * // Count the number of SamadhanSLAConfigs
+     * const count = await prisma.samadhanSLAConfig.count({
+     *   where: {
+     *     // ... the filter for the SamadhanSLAConfigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends SamadhanSLAConfigCountArgs>(
+      args?: Subset<T, SamadhanSLAConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SamadhanSLAConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SamadhanSLAConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanSLAConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SamadhanSLAConfigAggregateArgs>(args: Subset<T, SamadhanSLAConfigAggregateArgs>): Prisma.PrismaPromise<GetSamadhanSLAConfigAggregateType<T>>
+
+    /**
+     * Group by SamadhanSLAConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanSLAConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SamadhanSLAConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SamadhanSLAConfigGroupByArgs['orderBy'] }
+        : { orderBy?: SamadhanSLAConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SamadhanSLAConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSamadhanSLAConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SamadhanSLAConfig model
+   */
+  readonly fields: SamadhanSLAConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SamadhanSLAConfig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SamadhanSLAConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SamadhanSLAConfig model
+   */
+  interface SamadhanSLAConfigFieldRefs {
+    readonly id: FieldRef<"SamadhanSLAConfig", 'String'>
+    readonly queryType: FieldRef<"SamadhanSLAConfig", 'SamadhanQueryType'>
+    readonly priority: FieldRef<"SamadhanSLAConfig", 'SamadhanPriority'>
+    readonly slaHours: FieldRef<"SamadhanSLAConfig", 'Int'>
+    readonly isActive: FieldRef<"SamadhanSLAConfig", 'Boolean'>
+    readonly createdAt: FieldRef<"SamadhanSLAConfig", 'DateTime'>
+    readonly updatedAt: FieldRef<"SamadhanSLAConfig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SamadhanSLAConfig findUnique
+   */
+  export type SamadhanSLAConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanSLAConfig to fetch.
+     */
+    where: SamadhanSLAConfigWhereUniqueInput
+  }
+
+  /**
+   * SamadhanSLAConfig findUniqueOrThrow
+   */
+  export type SamadhanSLAConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanSLAConfig to fetch.
+     */
+    where: SamadhanSLAConfigWhereUniqueInput
+  }
+
+  /**
+   * SamadhanSLAConfig findFirst
+   */
+  export type SamadhanSLAConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanSLAConfig to fetch.
+     */
+    where?: SamadhanSLAConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanSLAConfigs to fetch.
+     */
+    orderBy?: SamadhanSLAConfigOrderByWithRelationInput | SamadhanSLAConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanSLAConfigs.
+     */
+    cursor?: SamadhanSLAConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanSLAConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanSLAConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanSLAConfigs.
+     */
+    distinct?: SamadhanSLAConfigScalarFieldEnum | SamadhanSLAConfigScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanSLAConfig findFirstOrThrow
+   */
+  export type SamadhanSLAConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanSLAConfig to fetch.
+     */
+    where?: SamadhanSLAConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanSLAConfigs to fetch.
+     */
+    orderBy?: SamadhanSLAConfigOrderByWithRelationInput | SamadhanSLAConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanSLAConfigs.
+     */
+    cursor?: SamadhanSLAConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanSLAConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanSLAConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanSLAConfigs.
+     */
+    distinct?: SamadhanSLAConfigScalarFieldEnum | SamadhanSLAConfigScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanSLAConfig findMany
+   */
+  export type SamadhanSLAConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanSLAConfigs to fetch.
+     */
+    where?: SamadhanSLAConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanSLAConfigs to fetch.
+     */
+    orderBy?: SamadhanSLAConfigOrderByWithRelationInput | SamadhanSLAConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SamadhanSLAConfigs.
+     */
+    cursor?: SamadhanSLAConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanSLAConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanSLAConfigs.
+     */
+    skip?: number
+    distinct?: SamadhanSLAConfigScalarFieldEnum | SamadhanSLAConfigScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanSLAConfig create
+   */
+  export type SamadhanSLAConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SamadhanSLAConfig.
+     */
+    data: XOR<SamadhanSLAConfigCreateInput, SamadhanSLAConfigUncheckedCreateInput>
+  }
+
+  /**
+   * SamadhanSLAConfig createMany
+   */
+  export type SamadhanSLAConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SamadhanSLAConfigs.
+     */
+    data: SamadhanSLAConfigCreateManyInput | SamadhanSLAConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanSLAConfig createManyAndReturn
+   */
+  export type SamadhanSLAConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * The data used to create many SamadhanSLAConfigs.
+     */
+    data: SamadhanSLAConfigCreateManyInput | SamadhanSLAConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanSLAConfig update
+   */
+  export type SamadhanSLAConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SamadhanSLAConfig.
+     */
+    data: XOR<SamadhanSLAConfigUpdateInput, SamadhanSLAConfigUncheckedUpdateInput>
+    /**
+     * Choose, which SamadhanSLAConfig to update.
+     */
+    where: SamadhanSLAConfigWhereUniqueInput
+  }
+
+  /**
+   * SamadhanSLAConfig updateMany
+   */
+  export type SamadhanSLAConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SamadhanSLAConfigs.
+     */
+    data: XOR<SamadhanSLAConfigUpdateManyMutationInput, SamadhanSLAConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanSLAConfigs to update
+     */
+    where?: SamadhanSLAConfigWhereInput
+    /**
+     * Limit how many SamadhanSLAConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanSLAConfig updateManyAndReturn
+   */
+  export type SamadhanSLAConfigUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * The data used to update SamadhanSLAConfigs.
+     */
+    data: XOR<SamadhanSLAConfigUpdateManyMutationInput, SamadhanSLAConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanSLAConfigs to update
+     */
+    where?: SamadhanSLAConfigWhereInput
+    /**
+     * Limit how many SamadhanSLAConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanSLAConfig upsert
+   */
+  export type SamadhanSLAConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SamadhanSLAConfig to update in case it exists.
+     */
+    where: SamadhanSLAConfigWhereUniqueInput
+    /**
+     * In case the SamadhanSLAConfig found by the `where` argument doesn't exist, create a new SamadhanSLAConfig with this data.
+     */
+    create: XOR<SamadhanSLAConfigCreateInput, SamadhanSLAConfigUncheckedCreateInput>
+    /**
+     * In case the SamadhanSLAConfig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SamadhanSLAConfigUpdateInput, SamadhanSLAConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * SamadhanSLAConfig delete
+   */
+  export type SamadhanSLAConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+    /**
+     * Filter which SamadhanSLAConfig to delete.
+     */
+    where: SamadhanSLAConfigWhereUniqueInput
+  }
+
+  /**
+   * SamadhanSLAConfig deleteMany
+   */
+  export type SamadhanSLAConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanSLAConfigs to delete
+     */
+    where?: SamadhanSLAConfigWhereInput
+    /**
+     * Limit how many SamadhanSLAConfigs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanSLAConfig without action
+   */
+  export type SamadhanSLAConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanSLAConfig
+     */
+    select?: SamadhanSLAConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanSLAConfig
+     */
+    omit?: SamadhanSLAConfigOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SamadhanDailySequence
+   */
+
+  export type AggregateSamadhanDailySequence = {
+    _count: SamadhanDailySequenceCountAggregateOutputType | null
+    _avg: SamadhanDailySequenceAvgAggregateOutputType | null
+    _sum: SamadhanDailySequenceSumAggregateOutputType | null
+    _min: SamadhanDailySequenceMinAggregateOutputType | null
+    _max: SamadhanDailySequenceMaxAggregateOutputType | null
+  }
+
+  export type SamadhanDailySequenceAvgAggregateOutputType = {
+    lastSequence: number | null
+  }
+
+  export type SamadhanDailySequenceSumAggregateOutputType = {
+    lastSequence: number | null
+  }
+
+  export type SamadhanDailySequenceMinAggregateOutputType = {
+    id: string | null
+    date: Date | null
+    lastSequence: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanDailySequenceMaxAggregateOutputType = {
+    id: string | null
+    date: Date | null
+    lastSequence: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanDailySequenceCountAggregateOutputType = {
+    id: number
+    date: number
+    lastSequence: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SamadhanDailySequenceAvgAggregateInputType = {
+    lastSequence?: true
+  }
+
+  export type SamadhanDailySequenceSumAggregateInputType = {
+    lastSequence?: true
+  }
+
+  export type SamadhanDailySequenceMinAggregateInputType = {
+    id?: true
+    date?: true
+    lastSequence?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanDailySequenceMaxAggregateInputType = {
+    id?: true
+    date?: true
+    lastSequence?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanDailySequenceCountAggregateInputType = {
+    id?: true
+    date?: true
+    lastSequence?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SamadhanDailySequenceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanDailySequence to aggregate.
+     */
+    where?: SamadhanDailySequenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanDailySequences to fetch.
+     */
+    orderBy?: SamadhanDailySequenceOrderByWithRelationInput | SamadhanDailySequenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SamadhanDailySequenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanDailySequences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanDailySequences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SamadhanDailySequences
+    **/
+    _count?: true | SamadhanDailySequenceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SamadhanDailySequenceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SamadhanDailySequenceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SamadhanDailySequenceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SamadhanDailySequenceMaxAggregateInputType
+  }
+
+  export type GetSamadhanDailySequenceAggregateType<T extends SamadhanDailySequenceAggregateArgs> = {
+        [P in keyof T & keyof AggregateSamadhanDailySequence]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSamadhanDailySequence[P]>
+      : GetScalarType<T[P], AggregateSamadhanDailySequence[P]>
+  }
+
+
+
+
+  export type SamadhanDailySequenceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanDailySequenceWhereInput
+    orderBy?: SamadhanDailySequenceOrderByWithAggregationInput | SamadhanDailySequenceOrderByWithAggregationInput[]
+    by: SamadhanDailySequenceScalarFieldEnum[] | SamadhanDailySequenceScalarFieldEnum
+    having?: SamadhanDailySequenceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SamadhanDailySequenceCountAggregateInputType | true
+    _avg?: SamadhanDailySequenceAvgAggregateInputType
+    _sum?: SamadhanDailySequenceSumAggregateInputType
+    _min?: SamadhanDailySequenceMinAggregateInputType
+    _max?: SamadhanDailySequenceMaxAggregateInputType
+  }
+
+  export type SamadhanDailySequenceGroupByOutputType = {
+    id: string
+    date: Date
+    lastSequence: number
+    createdAt: Date
+    updatedAt: Date
+    _count: SamadhanDailySequenceCountAggregateOutputType | null
+    _avg: SamadhanDailySequenceAvgAggregateOutputType | null
+    _sum: SamadhanDailySequenceSumAggregateOutputType | null
+    _min: SamadhanDailySequenceMinAggregateOutputType | null
+    _max: SamadhanDailySequenceMaxAggregateOutputType | null
+  }
+
+  type GetSamadhanDailySequenceGroupByPayload<T extends SamadhanDailySequenceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SamadhanDailySequenceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SamadhanDailySequenceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SamadhanDailySequenceGroupByOutputType[P]>
+            : GetScalarType<T[P], SamadhanDailySequenceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SamadhanDailySequenceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    lastSequence?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["samadhanDailySequence"]>
+
+  export type SamadhanDailySequenceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    lastSequence?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["samadhanDailySequence"]>
+
+  export type SamadhanDailySequenceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    lastSequence?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["samadhanDailySequence"]>
+
+  export type SamadhanDailySequenceSelectScalar = {
+    id?: boolean
+    date?: boolean
+    lastSequence?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SamadhanDailySequenceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "lastSequence" | "createdAt" | "updatedAt", ExtArgs["result"]["samadhanDailySequence"]>
+
+  export type $SamadhanDailySequencePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SamadhanDailySequence"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      date: Date
+      lastSequence: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["samadhanDailySequence"]>
+    composites: {}
+  }
+
+  type SamadhanDailySequenceGetPayload<S extends boolean | null | undefined | SamadhanDailySequenceDefaultArgs> = $Result.GetResult<Prisma.$SamadhanDailySequencePayload, S>
+
+  type SamadhanDailySequenceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SamadhanDailySequenceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SamadhanDailySequenceCountAggregateInputType | true
+    }
+
+  export interface SamadhanDailySequenceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SamadhanDailySequence'], meta: { name: 'SamadhanDailySequence' } }
+    /**
+     * Find zero or one SamadhanDailySequence that matches the filter.
+     * @param {SamadhanDailySequenceFindUniqueArgs} args - Arguments to find a SamadhanDailySequence
+     * @example
+     * // Get one SamadhanDailySequence
+     * const samadhanDailySequence = await prisma.samadhanDailySequence.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SamadhanDailySequenceFindUniqueArgs>(args: SelectSubset<T, SamadhanDailySequenceFindUniqueArgs<ExtArgs>>): Prisma__SamadhanDailySequenceClient<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SamadhanDailySequence that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SamadhanDailySequenceFindUniqueOrThrowArgs} args - Arguments to find a SamadhanDailySequence
+     * @example
+     * // Get one SamadhanDailySequence
+     * const samadhanDailySequence = await prisma.samadhanDailySequence.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SamadhanDailySequenceFindUniqueOrThrowArgs>(args: SelectSubset<T, SamadhanDailySequenceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SamadhanDailySequenceClient<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanDailySequence that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanDailySequenceFindFirstArgs} args - Arguments to find a SamadhanDailySequence
+     * @example
+     * // Get one SamadhanDailySequence
+     * const samadhanDailySequence = await prisma.samadhanDailySequence.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SamadhanDailySequenceFindFirstArgs>(args?: SelectSubset<T, SamadhanDailySequenceFindFirstArgs<ExtArgs>>): Prisma__SamadhanDailySequenceClient<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanDailySequence that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanDailySequenceFindFirstOrThrowArgs} args - Arguments to find a SamadhanDailySequence
+     * @example
+     * // Get one SamadhanDailySequence
+     * const samadhanDailySequence = await prisma.samadhanDailySequence.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SamadhanDailySequenceFindFirstOrThrowArgs>(args?: SelectSubset<T, SamadhanDailySequenceFindFirstOrThrowArgs<ExtArgs>>): Prisma__SamadhanDailySequenceClient<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SamadhanDailySequences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanDailySequenceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SamadhanDailySequences
+     * const samadhanDailySequences = await prisma.samadhanDailySequence.findMany()
+     * 
+     * // Get first 10 SamadhanDailySequences
+     * const samadhanDailySequences = await prisma.samadhanDailySequence.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const samadhanDailySequenceWithIdOnly = await prisma.samadhanDailySequence.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SamadhanDailySequenceFindManyArgs>(args?: SelectSubset<T, SamadhanDailySequenceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SamadhanDailySequence.
+     * @param {SamadhanDailySequenceCreateArgs} args - Arguments to create a SamadhanDailySequence.
+     * @example
+     * // Create one SamadhanDailySequence
+     * const SamadhanDailySequence = await prisma.samadhanDailySequence.create({
+     *   data: {
+     *     // ... data to create a SamadhanDailySequence
+     *   }
+     * })
+     * 
+     */
+    create<T extends SamadhanDailySequenceCreateArgs>(args: SelectSubset<T, SamadhanDailySequenceCreateArgs<ExtArgs>>): Prisma__SamadhanDailySequenceClient<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SamadhanDailySequences.
+     * @param {SamadhanDailySequenceCreateManyArgs} args - Arguments to create many SamadhanDailySequences.
+     * @example
+     * // Create many SamadhanDailySequences
+     * const samadhanDailySequence = await prisma.samadhanDailySequence.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SamadhanDailySequenceCreateManyArgs>(args?: SelectSubset<T, SamadhanDailySequenceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SamadhanDailySequences and returns the data saved in the database.
+     * @param {SamadhanDailySequenceCreateManyAndReturnArgs} args - Arguments to create many SamadhanDailySequences.
+     * @example
+     * // Create many SamadhanDailySequences
+     * const samadhanDailySequence = await prisma.samadhanDailySequence.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SamadhanDailySequences and only return the `id`
+     * const samadhanDailySequenceWithIdOnly = await prisma.samadhanDailySequence.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SamadhanDailySequenceCreateManyAndReturnArgs>(args?: SelectSubset<T, SamadhanDailySequenceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SamadhanDailySequence.
+     * @param {SamadhanDailySequenceDeleteArgs} args - Arguments to delete one SamadhanDailySequence.
+     * @example
+     * // Delete one SamadhanDailySequence
+     * const SamadhanDailySequence = await prisma.samadhanDailySequence.delete({
+     *   where: {
+     *     // ... filter to delete one SamadhanDailySequence
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SamadhanDailySequenceDeleteArgs>(args: SelectSubset<T, SamadhanDailySequenceDeleteArgs<ExtArgs>>): Prisma__SamadhanDailySequenceClient<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SamadhanDailySequence.
+     * @param {SamadhanDailySequenceUpdateArgs} args - Arguments to update one SamadhanDailySequence.
+     * @example
+     * // Update one SamadhanDailySequence
+     * const samadhanDailySequence = await prisma.samadhanDailySequence.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SamadhanDailySequenceUpdateArgs>(args: SelectSubset<T, SamadhanDailySequenceUpdateArgs<ExtArgs>>): Prisma__SamadhanDailySequenceClient<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SamadhanDailySequences.
+     * @param {SamadhanDailySequenceDeleteManyArgs} args - Arguments to filter SamadhanDailySequences to delete.
+     * @example
+     * // Delete a few SamadhanDailySequences
+     * const { count } = await prisma.samadhanDailySequence.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SamadhanDailySequenceDeleteManyArgs>(args?: SelectSubset<T, SamadhanDailySequenceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanDailySequences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanDailySequenceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SamadhanDailySequences
+     * const samadhanDailySequence = await prisma.samadhanDailySequence.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SamadhanDailySequenceUpdateManyArgs>(args: SelectSubset<T, SamadhanDailySequenceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanDailySequences and returns the data updated in the database.
+     * @param {SamadhanDailySequenceUpdateManyAndReturnArgs} args - Arguments to update many SamadhanDailySequences.
+     * @example
+     * // Update many SamadhanDailySequences
+     * const samadhanDailySequence = await prisma.samadhanDailySequence.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SamadhanDailySequences and only return the `id`
+     * const samadhanDailySequenceWithIdOnly = await prisma.samadhanDailySequence.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SamadhanDailySequenceUpdateManyAndReturnArgs>(args: SelectSubset<T, SamadhanDailySequenceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SamadhanDailySequence.
+     * @param {SamadhanDailySequenceUpsertArgs} args - Arguments to update or create a SamadhanDailySequence.
+     * @example
+     * // Update or create a SamadhanDailySequence
+     * const samadhanDailySequence = await prisma.samadhanDailySequence.upsert({
+     *   create: {
+     *     // ... data to create a SamadhanDailySequence
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SamadhanDailySequence we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SamadhanDailySequenceUpsertArgs>(args: SelectSubset<T, SamadhanDailySequenceUpsertArgs<ExtArgs>>): Prisma__SamadhanDailySequenceClient<$Result.GetResult<Prisma.$SamadhanDailySequencePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SamadhanDailySequences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanDailySequenceCountArgs} args - Arguments to filter SamadhanDailySequences to count.
+     * @example
+     * // Count the number of SamadhanDailySequences
+     * const count = await prisma.samadhanDailySequence.count({
+     *   where: {
+     *     // ... the filter for the SamadhanDailySequences we want to count
+     *   }
+     * })
+    **/
+    count<T extends SamadhanDailySequenceCountArgs>(
+      args?: Subset<T, SamadhanDailySequenceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SamadhanDailySequenceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SamadhanDailySequence.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanDailySequenceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SamadhanDailySequenceAggregateArgs>(args: Subset<T, SamadhanDailySequenceAggregateArgs>): Prisma.PrismaPromise<GetSamadhanDailySequenceAggregateType<T>>
+
+    /**
+     * Group by SamadhanDailySequence.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanDailySequenceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SamadhanDailySequenceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SamadhanDailySequenceGroupByArgs['orderBy'] }
+        : { orderBy?: SamadhanDailySequenceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SamadhanDailySequenceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSamadhanDailySequenceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SamadhanDailySequence model
+   */
+  readonly fields: SamadhanDailySequenceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SamadhanDailySequence.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SamadhanDailySequenceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SamadhanDailySequence model
+   */
+  interface SamadhanDailySequenceFieldRefs {
+    readonly id: FieldRef<"SamadhanDailySequence", 'String'>
+    readonly date: FieldRef<"SamadhanDailySequence", 'DateTime'>
+    readonly lastSequence: FieldRef<"SamadhanDailySequence", 'Int'>
+    readonly createdAt: FieldRef<"SamadhanDailySequence", 'DateTime'>
+    readonly updatedAt: FieldRef<"SamadhanDailySequence", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SamadhanDailySequence findUnique
+   */
+  export type SamadhanDailySequenceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanDailySequence to fetch.
+     */
+    where: SamadhanDailySequenceWhereUniqueInput
+  }
+
+  /**
+   * SamadhanDailySequence findUniqueOrThrow
+   */
+  export type SamadhanDailySequenceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanDailySequence to fetch.
+     */
+    where: SamadhanDailySequenceWhereUniqueInput
+  }
+
+  /**
+   * SamadhanDailySequence findFirst
+   */
+  export type SamadhanDailySequenceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanDailySequence to fetch.
+     */
+    where?: SamadhanDailySequenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanDailySequences to fetch.
+     */
+    orderBy?: SamadhanDailySequenceOrderByWithRelationInput | SamadhanDailySequenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanDailySequences.
+     */
+    cursor?: SamadhanDailySequenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanDailySequences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanDailySequences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanDailySequences.
+     */
+    distinct?: SamadhanDailySequenceScalarFieldEnum | SamadhanDailySequenceScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanDailySequence findFirstOrThrow
+   */
+  export type SamadhanDailySequenceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanDailySequence to fetch.
+     */
+    where?: SamadhanDailySequenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanDailySequences to fetch.
+     */
+    orderBy?: SamadhanDailySequenceOrderByWithRelationInput | SamadhanDailySequenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanDailySequences.
+     */
+    cursor?: SamadhanDailySequenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanDailySequences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanDailySequences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanDailySequences.
+     */
+    distinct?: SamadhanDailySequenceScalarFieldEnum | SamadhanDailySequenceScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanDailySequence findMany
+   */
+  export type SamadhanDailySequenceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanDailySequences to fetch.
+     */
+    where?: SamadhanDailySequenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanDailySequences to fetch.
+     */
+    orderBy?: SamadhanDailySequenceOrderByWithRelationInput | SamadhanDailySequenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SamadhanDailySequences.
+     */
+    cursor?: SamadhanDailySequenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanDailySequences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanDailySequences.
+     */
+    skip?: number
+    distinct?: SamadhanDailySequenceScalarFieldEnum | SamadhanDailySequenceScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanDailySequence create
+   */
+  export type SamadhanDailySequenceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SamadhanDailySequence.
+     */
+    data: XOR<SamadhanDailySequenceCreateInput, SamadhanDailySequenceUncheckedCreateInput>
+  }
+
+  /**
+   * SamadhanDailySequence createMany
+   */
+  export type SamadhanDailySequenceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SamadhanDailySequences.
+     */
+    data: SamadhanDailySequenceCreateManyInput | SamadhanDailySequenceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanDailySequence createManyAndReturn
+   */
+  export type SamadhanDailySequenceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * The data used to create many SamadhanDailySequences.
+     */
+    data: SamadhanDailySequenceCreateManyInput | SamadhanDailySequenceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanDailySequence update
+   */
+  export type SamadhanDailySequenceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SamadhanDailySequence.
+     */
+    data: XOR<SamadhanDailySequenceUpdateInput, SamadhanDailySequenceUncheckedUpdateInput>
+    /**
+     * Choose, which SamadhanDailySequence to update.
+     */
+    where: SamadhanDailySequenceWhereUniqueInput
+  }
+
+  /**
+   * SamadhanDailySequence updateMany
+   */
+  export type SamadhanDailySequenceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SamadhanDailySequences.
+     */
+    data: XOR<SamadhanDailySequenceUpdateManyMutationInput, SamadhanDailySequenceUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanDailySequences to update
+     */
+    where?: SamadhanDailySequenceWhereInput
+    /**
+     * Limit how many SamadhanDailySequences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanDailySequence updateManyAndReturn
+   */
+  export type SamadhanDailySequenceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * The data used to update SamadhanDailySequences.
+     */
+    data: XOR<SamadhanDailySequenceUpdateManyMutationInput, SamadhanDailySequenceUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanDailySequences to update
+     */
+    where?: SamadhanDailySequenceWhereInput
+    /**
+     * Limit how many SamadhanDailySequences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanDailySequence upsert
+   */
+  export type SamadhanDailySequenceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SamadhanDailySequence to update in case it exists.
+     */
+    where: SamadhanDailySequenceWhereUniqueInput
+    /**
+     * In case the SamadhanDailySequence found by the `where` argument doesn't exist, create a new SamadhanDailySequence with this data.
+     */
+    create: XOR<SamadhanDailySequenceCreateInput, SamadhanDailySequenceUncheckedCreateInput>
+    /**
+     * In case the SamadhanDailySequence was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SamadhanDailySequenceUpdateInput, SamadhanDailySequenceUncheckedUpdateInput>
+  }
+
+  /**
+   * SamadhanDailySequence delete
+   */
+  export type SamadhanDailySequenceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+    /**
+     * Filter which SamadhanDailySequence to delete.
+     */
+    where: SamadhanDailySequenceWhereUniqueInput
+  }
+
+  /**
+   * SamadhanDailySequence deleteMany
+   */
+  export type SamadhanDailySequenceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanDailySequences to delete
+     */
+    where?: SamadhanDailySequenceWhereInput
+    /**
+     * Limit how many SamadhanDailySequences to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanDailySequence without action
+   */
+  export type SamadhanDailySequenceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanDailySequence
+     */
+    select?: SamadhanDailySequenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanDailySequence
+     */
+    omit?: SamadhanDailySequenceOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -31420,6 +40845,7 @@ export namespace Prisma {
     phone: 'phone',
     address: 'address',
     aadhaarNumber: 'aadhaarNumber',
+    samadhanPseudonym: 'samadhanPseudonym',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -31736,6 +41162,125 @@ export namespace Prisma {
   export type OfficerForwardingHistoryScalarFieldEnum = (typeof OfficerForwardingHistoryScalarFieldEnum)[keyof typeof OfficerForwardingHistoryScalarFieldEnum]
 
 
+  export const SamadhanTicketScalarFieldEnum: {
+    id: 'id',
+    referenceId: 'referenceId',
+    queryType: 'queryType',
+    priority: 'priority',
+    status: 'status',
+    citizenId: 'citizenId',
+    citizenName: 'citizenName',
+    citizenEmail: 'citizenEmail',
+    citizenPhone: 'citizenPhone',
+    citizenPseudonym: 'citizenPseudonym',
+    isAnonymous: 'isAnonymous',
+    isAnonymousToOfficer: 'isAnonymousToOfficer',
+    sectionId: 'sectionId',
+    serviceAvailed: 'serviceAvailed',
+    description: 'description',
+    assignedOfficerId: 'assignedOfficerId',
+    escalatedToId: 'escalatedToId',
+    submissionChannel: 'submissionChannel',
+    whatsappNumber: 'whatsappNumber',
+    slaDeadline: 'slaDeadline',
+    seenAt: 'seenAt',
+    acknowledgedAt: 'acknowledgedAt',
+    resolvedAt: 'resolvedAt',
+    closedAt: 'closedAt',
+    slaBreachedAt: 'slaBreachedAt',
+    resolutionMessage: 'resolutionMessage',
+    isAppeal: 'isAppeal',
+    originalTicketId: 'originalTicketId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SamadhanTicketScalarFieldEnum = (typeof SamadhanTicketScalarFieldEnum)[keyof typeof SamadhanTicketScalarFieldEnum]
+
+
+  export const SamadhanAttachmentScalarFieldEnum: {
+    id: 'id',
+    ticketId: 'ticketId',
+    infoRequestId: 'infoRequestId',
+    fileName: 'fileName',
+    originalName: 'originalName',
+    filePath: 'filePath',
+    fileType: 'fileType',
+    fileSize: 'fileSize',
+    uploadedById: 'uploadedById',
+    uploadedByType: 'uploadedByType',
+    createdAt: 'createdAt'
+  };
+
+  export type SamadhanAttachmentScalarFieldEnum = (typeof SamadhanAttachmentScalarFieldEnum)[keyof typeof SamadhanAttachmentScalarFieldEnum]
+
+
+  export const SamadhanInfoRequestScalarFieldEnum: {
+    id: 'id',
+    ticketId: 'ticketId',
+    requestedById: 'requestedById',
+    description: 'description',
+    documentTypes: 'documentTypes',
+    deadline: 'deadline',
+    status: 'status',
+    citizenResponse: 'citizenResponse',
+    respondedAt: 'respondedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SamadhanInfoRequestScalarFieldEnum = (typeof SamadhanInfoRequestScalarFieldEnum)[keyof typeof SamadhanInfoRequestScalarFieldEnum]
+
+
+  export const SamadhanStatusHistoryScalarFieldEnum: {
+    id: 'id',
+    ticketId: 'ticketId',
+    fromStatus: 'fromStatus',
+    toStatus: 'toStatus',
+    changedById: 'changedById',
+    changeReason: 'changeReason',
+    isSystemGenerated: 'isSystemGenerated',
+    createdAt: 'createdAt'
+  };
+
+  export type SamadhanStatusHistoryScalarFieldEnum = (typeof SamadhanStatusHistoryScalarFieldEnum)[keyof typeof SamadhanStatusHistoryScalarFieldEnum]
+
+
+  export const SamadhanInternalNoteScalarFieldEnum: {
+    id: 'id',
+    ticketId: 'ticketId',
+    createdById: 'createdById',
+    content: 'content',
+    createdAt: 'createdAt'
+  };
+
+  export type SamadhanInternalNoteScalarFieldEnum = (typeof SamadhanInternalNoteScalarFieldEnum)[keyof typeof SamadhanInternalNoteScalarFieldEnum]
+
+
+  export const SamadhanSLAConfigScalarFieldEnum: {
+    id: 'id',
+    queryType: 'queryType',
+    priority: 'priority',
+    slaHours: 'slaHours',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SamadhanSLAConfigScalarFieldEnum = (typeof SamadhanSLAConfigScalarFieldEnum)[keyof typeof SamadhanSLAConfigScalarFieldEnum]
+
+
+  export const SamadhanDailySequenceScalarFieldEnum: {
+    id: 'id',
+    date: 'date',
+    lastSequence: 'lastSequence',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SamadhanDailySequenceScalarFieldEnum = (typeof SamadhanDailySequenceScalarFieldEnum)[keyof typeof SamadhanDailySequenceScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -31916,6 +41461,76 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'SamadhanQueryType'
+   */
+  export type EnumSamadhanQueryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SamadhanQueryType'>
+    
+
+
+  /**
+   * Reference to a field of type 'SamadhanQueryType[]'
+   */
+  export type ListEnumSamadhanQueryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SamadhanQueryType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SamadhanPriority'
+   */
+  export type EnumSamadhanPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SamadhanPriority'>
+    
+
+
+  /**
+   * Reference to a field of type 'SamadhanPriority[]'
+   */
+  export type ListEnumSamadhanPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SamadhanPriority[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SamadhanTicketStatus'
+   */
+  export type EnumSamadhanTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SamadhanTicketStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SamadhanTicketStatus[]'
+   */
+  export type ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SamadhanTicketStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SamadhanSubmissionChannel'
+   */
+  export type EnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SamadhanSubmissionChannel'>
+    
+
+
+  /**
+   * Reference to a field of type 'SamadhanSubmissionChannel[]'
+   */
+  export type ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SamadhanSubmissionChannel[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SamadhanInfoRequestStatus'
+   */
+  export type EnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SamadhanInfoRequestStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SamadhanInfoRequestStatus[]'
+   */
+  export type ListEnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SamadhanInfoRequestStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -32088,6 +41703,13 @@ export namespace Prisma {
     officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
     serviceCategoryChanges?: ServiceCategoryChangeListRelationFilter
     userSettings?: XOR<UserSettingsNullableScalarRelationFilter, UserSettingsWhereInput> | null
+    samadhanTicketsAsCitizen?: SamadhanTicketListRelationFilter
+    samadhanTicketsAsOfficer?: SamadhanTicketListRelationFilter
+    samadhanTicketsEscalated?: SamadhanTicketListRelationFilter
+    samadhanAttachmentsUploaded?: SamadhanAttachmentListRelationFilter
+    samadhanInfoRequests?: SamadhanInfoRequestListRelationFilter
+    samadhanStatusChanges?: SamadhanStatusHistoryListRelationFilter
+    samadhanInternalNotes?: SamadhanInternalNoteListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -32121,6 +41743,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileOrderByWithRelationInput
     serviceCategoryChanges?: ServiceCategoryChangeOrderByRelationAggregateInput
     userSettings?: UserSettingsOrderByWithRelationInput
+    samadhanTicketsAsCitizen?: SamadhanTicketOrderByRelationAggregateInput
+    samadhanTicketsAsOfficer?: SamadhanTicketOrderByRelationAggregateInput
+    samadhanTicketsEscalated?: SamadhanTicketOrderByRelationAggregateInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentOrderByRelationAggregateInput
+    samadhanInfoRequests?: SamadhanInfoRequestOrderByRelationAggregateInput
+    samadhanStatusChanges?: SamadhanStatusHistoryOrderByRelationAggregateInput
+    samadhanInternalNotes?: SamadhanInternalNoteOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -32157,6 +41786,13 @@ export namespace Prisma {
     officerProfile?: XOR<OfficerProfileNullableScalarRelationFilter, OfficerProfileWhereInput> | null
     serviceCategoryChanges?: ServiceCategoryChangeListRelationFilter
     userSettings?: XOR<UserSettingsNullableScalarRelationFilter, UserSettingsWhereInput> | null
+    samadhanTicketsAsCitizen?: SamadhanTicketListRelationFilter
+    samadhanTicketsAsOfficer?: SamadhanTicketListRelationFilter
+    samadhanTicketsEscalated?: SamadhanTicketListRelationFilter
+    samadhanAttachmentsUploaded?: SamadhanAttachmentListRelationFilter
+    samadhanInfoRequests?: SamadhanInfoRequestListRelationFilter
+    samadhanStatusChanges?: SamadhanStatusHistoryListRelationFilter
+    samadhanInternalNotes?: SamadhanInternalNoteListRelationFilter
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -32203,6 +41839,7 @@ export namespace Prisma {
     phone?: StringFilter<"CitizenProfile"> | string
     address?: StringFilter<"CitizenProfile"> | string
     aadhaarNumber?: StringNullableFilter<"CitizenProfile"> | string | null
+    samadhanPseudonym?: StringNullableFilter<"CitizenProfile"> | string | null
     createdAt?: DateTimeFilter<"CitizenProfile"> | Date | string
     updatedAt?: DateTimeFilter<"CitizenProfile"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -32215,6 +41852,7 @@ export namespace Prisma {
     phone?: SortOrder
     address?: SortOrder
     aadhaarNumber?: SortOrderInput | SortOrder
+    samadhanPseudonym?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -32230,6 +41868,7 @@ export namespace Prisma {
     phone?: StringFilter<"CitizenProfile"> | string
     address?: StringFilter<"CitizenProfile"> | string
     aadhaarNumber?: StringNullableFilter<"CitizenProfile"> | string | null
+    samadhanPseudonym?: StringNullableFilter<"CitizenProfile"> | string | null
     createdAt?: DateTimeFilter<"CitizenProfile"> | Date | string
     updatedAt?: DateTimeFilter<"CitizenProfile"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -32242,6 +41881,7 @@ export namespace Prisma {
     phone?: SortOrder
     address?: SortOrder
     aadhaarNumber?: SortOrderInput | SortOrder
+    samadhanPseudonym?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CitizenProfileCountOrderByAggregateInput
@@ -32259,6 +41899,7 @@ export namespace Prisma {
     phone?: StringWithAggregatesFilter<"CitizenProfile"> | string
     address?: StringWithAggregatesFilter<"CitizenProfile"> | string
     aadhaarNumber?: StringNullableWithAggregatesFilter<"CitizenProfile"> | string | null
+    samadhanPseudonym?: StringNullableWithAggregatesFilter<"CitizenProfile"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CitizenProfile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CitizenProfile"> | Date | string
   }
@@ -32485,6 +42126,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Section"> | Date | string
     updatedAt?: DateTimeFilter<"Section"> | Date | string
     officers?: OfficerProfileListRelationFilter
+    samadhanTickets?: SamadhanTicketListRelationFilter
   }
 
   export type SectionOrderByWithRelationInput = {
@@ -32495,6 +42137,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     officers?: OfficerProfileOrderByRelationAggregateInput
+    samadhanTickets?: SamadhanTicketOrderByRelationAggregateInput
   }
 
   export type SectionWhereUniqueInput = Prisma.AtLeast<{
@@ -32508,6 +42151,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Section"> | Date | string
     updatedAt?: DateTimeFilter<"Section"> | Date | string
     officers?: OfficerProfileListRelationFilter
+    samadhanTickets?: SamadhanTicketListRelationFilter
   }, "id" | "name">
 
   export type SectionOrderByWithAggregationInput = {
@@ -33909,6 +43553,647 @@ export namespace Prisma {
     forwardedAt?: DateTimeWithAggregatesFilter<"OfficerForwardingHistory"> | Date | string
   }
 
+  export type SamadhanTicketWhereInput = {
+    AND?: SamadhanTicketWhereInput | SamadhanTicketWhereInput[]
+    OR?: SamadhanTicketWhereInput[]
+    NOT?: SamadhanTicketWhereInput | SamadhanTicketWhereInput[]
+    id?: StringFilter<"SamadhanTicket"> | string
+    referenceId?: StringFilter<"SamadhanTicket"> | string
+    queryType?: EnumSamadhanQueryTypeFilter<"SamadhanTicket"> | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFilter<"SamadhanTicket"> | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFilter<"SamadhanTicket"> | $Enums.SamadhanTicketStatus
+    citizenId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenName?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenEmail?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenPhone?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenPseudonym?: StringNullableFilter<"SamadhanTicket"> | string | null
+    isAnonymous?: BoolFilter<"SamadhanTicket"> | boolean
+    isAnonymousToOfficer?: BoolFilter<"SamadhanTicket"> | boolean
+    sectionId?: StringFilter<"SamadhanTicket"> | string
+    serviceAvailed?: StringNullableFilter<"SamadhanTicket"> | string | null
+    description?: StringFilter<"SamadhanTicket"> | string
+    assignedOfficerId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    escalatedToId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFilter<"SamadhanTicket"> | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: StringNullableFilter<"SamadhanTicket"> | string | null
+    slaDeadline?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    seenAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    resolvedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    slaBreachedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    resolutionMessage?: StringNullableFilter<"SamadhanTicket"> | string | null
+    isAppeal?: BoolFilter<"SamadhanTicket"> | boolean
+    originalTicketId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    createdAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
+    citizen?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
+    assignedOfficer?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    escalatedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    originalTicket?: XOR<SamadhanTicketNullableScalarRelationFilter, SamadhanTicketWhereInput> | null
+    appeals?: SamadhanTicketListRelationFilter
+    attachments?: SamadhanAttachmentListRelationFilter
+    infoRequests?: SamadhanInfoRequestListRelationFilter
+    statusHistory?: SamadhanStatusHistoryListRelationFilter
+    internalNotes?: SamadhanInternalNoteListRelationFilter
+  }
+
+  export type SamadhanTicketOrderByWithRelationInput = {
+    id?: SortOrder
+    referenceId?: SortOrder
+    queryType?: SortOrder
+    priority?: SortOrder
+    status?: SortOrder
+    citizenId?: SortOrderInput | SortOrder
+    citizenName?: SortOrderInput | SortOrder
+    citizenEmail?: SortOrderInput | SortOrder
+    citizenPhone?: SortOrderInput | SortOrder
+    citizenPseudonym?: SortOrderInput | SortOrder
+    isAnonymous?: SortOrder
+    isAnonymousToOfficer?: SortOrder
+    sectionId?: SortOrder
+    serviceAvailed?: SortOrderInput | SortOrder
+    description?: SortOrder
+    assignedOfficerId?: SortOrderInput | SortOrder
+    escalatedToId?: SortOrderInput | SortOrder
+    submissionChannel?: SortOrder
+    whatsappNumber?: SortOrderInput | SortOrder
+    slaDeadline?: SortOrderInput | SortOrder
+    seenAt?: SortOrderInput | SortOrder
+    acknowledgedAt?: SortOrderInput | SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    slaBreachedAt?: SortOrderInput | SortOrder
+    resolutionMessage?: SortOrderInput | SortOrder
+    isAppeal?: SortOrder
+    originalTicketId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    citizen?: UserOrderByWithRelationInput
+    section?: SectionOrderByWithRelationInput
+    assignedOfficer?: UserOrderByWithRelationInput
+    escalatedTo?: UserOrderByWithRelationInput
+    originalTicket?: SamadhanTicketOrderByWithRelationInput
+    appeals?: SamadhanTicketOrderByRelationAggregateInput
+    attachments?: SamadhanAttachmentOrderByRelationAggregateInput
+    infoRequests?: SamadhanInfoRequestOrderByRelationAggregateInput
+    statusHistory?: SamadhanStatusHistoryOrderByRelationAggregateInput
+    internalNotes?: SamadhanInternalNoteOrderByRelationAggregateInput
+  }
+
+  export type SamadhanTicketWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    referenceId?: string
+    AND?: SamadhanTicketWhereInput | SamadhanTicketWhereInput[]
+    OR?: SamadhanTicketWhereInput[]
+    NOT?: SamadhanTicketWhereInput | SamadhanTicketWhereInput[]
+    queryType?: EnumSamadhanQueryTypeFilter<"SamadhanTicket"> | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFilter<"SamadhanTicket"> | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFilter<"SamadhanTicket"> | $Enums.SamadhanTicketStatus
+    citizenId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenName?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenEmail?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenPhone?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenPseudonym?: StringNullableFilter<"SamadhanTicket"> | string | null
+    isAnonymous?: BoolFilter<"SamadhanTicket"> | boolean
+    isAnonymousToOfficer?: BoolFilter<"SamadhanTicket"> | boolean
+    sectionId?: StringFilter<"SamadhanTicket"> | string
+    serviceAvailed?: StringNullableFilter<"SamadhanTicket"> | string | null
+    description?: StringFilter<"SamadhanTicket"> | string
+    assignedOfficerId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    escalatedToId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFilter<"SamadhanTicket"> | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: StringNullableFilter<"SamadhanTicket"> | string | null
+    slaDeadline?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    seenAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    resolvedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    slaBreachedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    resolutionMessage?: StringNullableFilter<"SamadhanTicket"> | string | null
+    isAppeal?: BoolFilter<"SamadhanTicket"> | boolean
+    originalTicketId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    createdAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
+    citizen?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
+    assignedOfficer?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    escalatedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    originalTicket?: XOR<SamadhanTicketNullableScalarRelationFilter, SamadhanTicketWhereInput> | null
+    appeals?: SamadhanTicketListRelationFilter
+    attachments?: SamadhanAttachmentListRelationFilter
+    infoRequests?: SamadhanInfoRequestListRelationFilter
+    statusHistory?: SamadhanStatusHistoryListRelationFilter
+    internalNotes?: SamadhanInternalNoteListRelationFilter
+  }, "id" | "referenceId">
+
+  export type SamadhanTicketOrderByWithAggregationInput = {
+    id?: SortOrder
+    referenceId?: SortOrder
+    queryType?: SortOrder
+    priority?: SortOrder
+    status?: SortOrder
+    citizenId?: SortOrderInput | SortOrder
+    citizenName?: SortOrderInput | SortOrder
+    citizenEmail?: SortOrderInput | SortOrder
+    citizenPhone?: SortOrderInput | SortOrder
+    citizenPseudonym?: SortOrderInput | SortOrder
+    isAnonymous?: SortOrder
+    isAnonymousToOfficer?: SortOrder
+    sectionId?: SortOrder
+    serviceAvailed?: SortOrderInput | SortOrder
+    description?: SortOrder
+    assignedOfficerId?: SortOrderInput | SortOrder
+    escalatedToId?: SortOrderInput | SortOrder
+    submissionChannel?: SortOrder
+    whatsappNumber?: SortOrderInput | SortOrder
+    slaDeadline?: SortOrderInput | SortOrder
+    seenAt?: SortOrderInput | SortOrder
+    acknowledgedAt?: SortOrderInput | SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    slaBreachedAt?: SortOrderInput | SortOrder
+    resolutionMessage?: SortOrderInput | SortOrder
+    isAppeal?: SortOrder
+    originalTicketId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SamadhanTicketCountOrderByAggregateInput
+    _max?: SamadhanTicketMaxOrderByAggregateInput
+    _min?: SamadhanTicketMinOrderByAggregateInput
+  }
+
+  export type SamadhanTicketScalarWhereWithAggregatesInput = {
+    AND?: SamadhanTicketScalarWhereWithAggregatesInput | SamadhanTicketScalarWhereWithAggregatesInput[]
+    OR?: SamadhanTicketScalarWhereWithAggregatesInput[]
+    NOT?: SamadhanTicketScalarWhereWithAggregatesInput | SamadhanTicketScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SamadhanTicket"> | string
+    referenceId?: StringWithAggregatesFilter<"SamadhanTicket"> | string
+    queryType?: EnumSamadhanQueryTypeWithAggregatesFilter<"SamadhanTicket"> | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityWithAggregatesFilter<"SamadhanTicket"> | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusWithAggregatesFilter<"SamadhanTicket"> | $Enums.SamadhanTicketStatus
+    citizenId?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    citizenName?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    citizenEmail?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    citizenPhone?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    citizenPseudonym?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    isAnonymous?: BoolWithAggregatesFilter<"SamadhanTicket"> | boolean
+    isAnonymousToOfficer?: BoolWithAggregatesFilter<"SamadhanTicket"> | boolean
+    sectionId?: StringWithAggregatesFilter<"SamadhanTicket"> | string
+    serviceAvailed?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    description?: StringWithAggregatesFilter<"SamadhanTicket"> | string
+    assignedOfficerId?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    escalatedToId?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelWithAggregatesFilter<"SamadhanTicket"> | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    slaDeadline?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
+    seenAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
+    acknowledgedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
+    resolvedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
+    closedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
+    slaBreachedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
+    resolutionMessage?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    isAppeal?: BoolWithAggregatesFilter<"SamadhanTicket"> | boolean
+    originalTicketId?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SamadhanTicket"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SamadhanTicket"> | Date | string
+  }
+
+  export type SamadhanAttachmentWhereInput = {
+    AND?: SamadhanAttachmentWhereInput | SamadhanAttachmentWhereInput[]
+    OR?: SamadhanAttachmentWhereInput[]
+    NOT?: SamadhanAttachmentWhereInput | SamadhanAttachmentWhereInput[]
+    id?: StringFilter<"SamadhanAttachment"> | string
+    ticketId?: StringFilter<"SamadhanAttachment"> | string
+    infoRequestId?: StringNullableFilter<"SamadhanAttachment"> | string | null
+    fileName?: StringFilter<"SamadhanAttachment"> | string
+    originalName?: StringFilter<"SamadhanAttachment"> | string
+    filePath?: StringFilter<"SamadhanAttachment"> | string
+    fileType?: StringFilter<"SamadhanAttachment"> | string
+    fileSize?: IntFilter<"SamadhanAttachment"> | number
+    uploadedById?: StringNullableFilter<"SamadhanAttachment"> | string | null
+    uploadedByType?: StringFilter<"SamadhanAttachment"> | string
+    createdAt?: DateTimeFilter<"SamadhanAttachment"> | Date | string
+    ticket?: XOR<SamadhanTicketScalarRelationFilter, SamadhanTicketWhereInput>
+    infoRequest?: XOR<SamadhanInfoRequestNullableScalarRelationFilter, SamadhanInfoRequestWhereInput> | null
+    uploadedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type SamadhanAttachmentOrderByWithRelationInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    infoRequestId?: SortOrderInput | SortOrder
+    fileName?: SortOrder
+    originalName?: SortOrder
+    filePath?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    uploadedById?: SortOrderInput | SortOrder
+    uploadedByType?: SortOrder
+    createdAt?: SortOrder
+    ticket?: SamadhanTicketOrderByWithRelationInput
+    infoRequest?: SamadhanInfoRequestOrderByWithRelationInput
+    uploadedBy?: UserOrderByWithRelationInput
+  }
+
+  export type SamadhanAttachmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SamadhanAttachmentWhereInput | SamadhanAttachmentWhereInput[]
+    OR?: SamadhanAttachmentWhereInput[]
+    NOT?: SamadhanAttachmentWhereInput | SamadhanAttachmentWhereInput[]
+    ticketId?: StringFilter<"SamadhanAttachment"> | string
+    infoRequestId?: StringNullableFilter<"SamadhanAttachment"> | string | null
+    fileName?: StringFilter<"SamadhanAttachment"> | string
+    originalName?: StringFilter<"SamadhanAttachment"> | string
+    filePath?: StringFilter<"SamadhanAttachment"> | string
+    fileType?: StringFilter<"SamadhanAttachment"> | string
+    fileSize?: IntFilter<"SamadhanAttachment"> | number
+    uploadedById?: StringNullableFilter<"SamadhanAttachment"> | string | null
+    uploadedByType?: StringFilter<"SamadhanAttachment"> | string
+    createdAt?: DateTimeFilter<"SamadhanAttachment"> | Date | string
+    ticket?: XOR<SamadhanTicketScalarRelationFilter, SamadhanTicketWhereInput>
+    infoRequest?: XOR<SamadhanInfoRequestNullableScalarRelationFilter, SamadhanInfoRequestWhereInput> | null
+    uploadedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type SamadhanAttachmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    infoRequestId?: SortOrderInput | SortOrder
+    fileName?: SortOrder
+    originalName?: SortOrder
+    filePath?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    uploadedById?: SortOrderInput | SortOrder
+    uploadedByType?: SortOrder
+    createdAt?: SortOrder
+    _count?: SamadhanAttachmentCountOrderByAggregateInput
+    _avg?: SamadhanAttachmentAvgOrderByAggregateInput
+    _max?: SamadhanAttachmentMaxOrderByAggregateInput
+    _min?: SamadhanAttachmentMinOrderByAggregateInput
+    _sum?: SamadhanAttachmentSumOrderByAggregateInput
+  }
+
+  export type SamadhanAttachmentScalarWhereWithAggregatesInput = {
+    AND?: SamadhanAttachmentScalarWhereWithAggregatesInput | SamadhanAttachmentScalarWhereWithAggregatesInput[]
+    OR?: SamadhanAttachmentScalarWhereWithAggregatesInput[]
+    NOT?: SamadhanAttachmentScalarWhereWithAggregatesInput | SamadhanAttachmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SamadhanAttachment"> | string
+    ticketId?: StringWithAggregatesFilter<"SamadhanAttachment"> | string
+    infoRequestId?: StringNullableWithAggregatesFilter<"SamadhanAttachment"> | string | null
+    fileName?: StringWithAggregatesFilter<"SamadhanAttachment"> | string
+    originalName?: StringWithAggregatesFilter<"SamadhanAttachment"> | string
+    filePath?: StringWithAggregatesFilter<"SamadhanAttachment"> | string
+    fileType?: StringWithAggregatesFilter<"SamadhanAttachment"> | string
+    fileSize?: IntWithAggregatesFilter<"SamadhanAttachment"> | number
+    uploadedById?: StringNullableWithAggregatesFilter<"SamadhanAttachment"> | string | null
+    uploadedByType?: StringWithAggregatesFilter<"SamadhanAttachment"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SamadhanAttachment"> | Date | string
+  }
+
+  export type SamadhanInfoRequestWhereInput = {
+    AND?: SamadhanInfoRequestWhereInput | SamadhanInfoRequestWhereInput[]
+    OR?: SamadhanInfoRequestWhereInput[]
+    NOT?: SamadhanInfoRequestWhereInput | SamadhanInfoRequestWhereInput[]
+    id?: StringFilter<"SamadhanInfoRequest"> | string
+    ticketId?: StringFilter<"SamadhanInfoRequest"> | string
+    requestedById?: StringFilter<"SamadhanInfoRequest"> | string
+    description?: StringFilter<"SamadhanInfoRequest"> | string
+    documentTypes?: StringNullableFilter<"SamadhanInfoRequest"> | string | null
+    deadline?: DateTimeFilter<"SamadhanInfoRequest"> | Date | string
+    status?: EnumSamadhanInfoRequestStatusFilter<"SamadhanInfoRequest"> | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: StringNullableFilter<"SamadhanInfoRequest"> | string | null
+    respondedAt?: DateTimeNullableFilter<"SamadhanInfoRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"SamadhanInfoRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanInfoRequest"> | Date | string
+    ticket?: XOR<SamadhanTicketScalarRelationFilter, SamadhanTicketWhereInput>
+    requestedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    attachments?: SamadhanAttachmentListRelationFilter
+  }
+
+  export type SamadhanInfoRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    requestedById?: SortOrder
+    description?: SortOrder
+    documentTypes?: SortOrderInput | SortOrder
+    deadline?: SortOrder
+    status?: SortOrder
+    citizenResponse?: SortOrderInput | SortOrder
+    respondedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    ticket?: SamadhanTicketOrderByWithRelationInput
+    requestedBy?: UserOrderByWithRelationInput
+    attachments?: SamadhanAttachmentOrderByRelationAggregateInput
+  }
+
+  export type SamadhanInfoRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SamadhanInfoRequestWhereInput | SamadhanInfoRequestWhereInput[]
+    OR?: SamadhanInfoRequestWhereInput[]
+    NOT?: SamadhanInfoRequestWhereInput | SamadhanInfoRequestWhereInput[]
+    ticketId?: StringFilter<"SamadhanInfoRequest"> | string
+    requestedById?: StringFilter<"SamadhanInfoRequest"> | string
+    description?: StringFilter<"SamadhanInfoRequest"> | string
+    documentTypes?: StringNullableFilter<"SamadhanInfoRequest"> | string | null
+    deadline?: DateTimeFilter<"SamadhanInfoRequest"> | Date | string
+    status?: EnumSamadhanInfoRequestStatusFilter<"SamadhanInfoRequest"> | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: StringNullableFilter<"SamadhanInfoRequest"> | string | null
+    respondedAt?: DateTimeNullableFilter<"SamadhanInfoRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"SamadhanInfoRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanInfoRequest"> | Date | string
+    ticket?: XOR<SamadhanTicketScalarRelationFilter, SamadhanTicketWhereInput>
+    requestedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    attachments?: SamadhanAttachmentListRelationFilter
+  }, "id">
+
+  export type SamadhanInfoRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    requestedById?: SortOrder
+    description?: SortOrder
+    documentTypes?: SortOrderInput | SortOrder
+    deadline?: SortOrder
+    status?: SortOrder
+    citizenResponse?: SortOrderInput | SortOrder
+    respondedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SamadhanInfoRequestCountOrderByAggregateInput
+    _max?: SamadhanInfoRequestMaxOrderByAggregateInput
+    _min?: SamadhanInfoRequestMinOrderByAggregateInput
+  }
+
+  export type SamadhanInfoRequestScalarWhereWithAggregatesInput = {
+    AND?: SamadhanInfoRequestScalarWhereWithAggregatesInput | SamadhanInfoRequestScalarWhereWithAggregatesInput[]
+    OR?: SamadhanInfoRequestScalarWhereWithAggregatesInput[]
+    NOT?: SamadhanInfoRequestScalarWhereWithAggregatesInput | SamadhanInfoRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SamadhanInfoRequest"> | string
+    ticketId?: StringWithAggregatesFilter<"SamadhanInfoRequest"> | string
+    requestedById?: StringWithAggregatesFilter<"SamadhanInfoRequest"> | string
+    description?: StringWithAggregatesFilter<"SamadhanInfoRequest"> | string
+    documentTypes?: StringNullableWithAggregatesFilter<"SamadhanInfoRequest"> | string | null
+    deadline?: DateTimeWithAggregatesFilter<"SamadhanInfoRequest"> | Date | string
+    status?: EnumSamadhanInfoRequestStatusWithAggregatesFilter<"SamadhanInfoRequest"> | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: StringNullableWithAggregatesFilter<"SamadhanInfoRequest"> | string | null
+    respondedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanInfoRequest"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SamadhanInfoRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SamadhanInfoRequest"> | Date | string
+  }
+
+  export type SamadhanStatusHistoryWhereInput = {
+    AND?: SamadhanStatusHistoryWhereInput | SamadhanStatusHistoryWhereInput[]
+    OR?: SamadhanStatusHistoryWhereInput[]
+    NOT?: SamadhanStatusHistoryWhereInput | SamadhanStatusHistoryWhereInput[]
+    id?: StringFilter<"SamadhanStatusHistory"> | string
+    ticketId?: StringFilter<"SamadhanStatusHistory"> | string
+    fromStatus?: EnumSamadhanTicketStatusNullableFilter<"SamadhanStatusHistory"> | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFilter<"SamadhanStatusHistory"> | $Enums.SamadhanTicketStatus
+    changedById?: StringNullableFilter<"SamadhanStatusHistory"> | string | null
+    changeReason?: StringNullableFilter<"SamadhanStatusHistory"> | string | null
+    isSystemGenerated?: BoolFilter<"SamadhanStatusHistory"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanStatusHistory"> | Date | string
+    ticket?: XOR<SamadhanTicketScalarRelationFilter, SamadhanTicketWhereInput>
+    changedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type SamadhanStatusHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    fromStatus?: SortOrderInput | SortOrder
+    toStatus?: SortOrder
+    changedById?: SortOrderInput | SortOrder
+    changeReason?: SortOrderInput | SortOrder
+    isSystemGenerated?: SortOrder
+    createdAt?: SortOrder
+    ticket?: SamadhanTicketOrderByWithRelationInput
+    changedBy?: UserOrderByWithRelationInput
+  }
+
+  export type SamadhanStatusHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SamadhanStatusHistoryWhereInput | SamadhanStatusHistoryWhereInput[]
+    OR?: SamadhanStatusHistoryWhereInput[]
+    NOT?: SamadhanStatusHistoryWhereInput | SamadhanStatusHistoryWhereInput[]
+    ticketId?: StringFilter<"SamadhanStatusHistory"> | string
+    fromStatus?: EnumSamadhanTicketStatusNullableFilter<"SamadhanStatusHistory"> | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFilter<"SamadhanStatusHistory"> | $Enums.SamadhanTicketStatus
+    changedById?: StringNullableFilter<"SamadhanStatusHistory"> | string | null
+    changeReason?: StringNullableFilter<"SamadhanStatusHistory"> | string | null
+    isSystemGenerated?: BoolFilter<"SamadhanStatusHistory"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanStatusHistory"> | Date | string
+    ticket?: XOR<SamadhanTicketScalarRelationFilter, SamadhanTicketWhereInput>
+    changedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type SamadhanStatusHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    fromStatus?: SortOrderInput | SortOrder
+    toStatus?: SortOrder
+    changedById?: SortOrderInput | SortOrder
+    changeReason?: SortOrderInput | SortOrder
+    isSystemGenerated?: SortOrder
+    createdAt?: SortOrder
+    _count?: SamadhanStatusHistoryCountOrderByAggregateInput
+    _max?: SamadhanStatusHistoryMaxOrderByAggregateInput
+    _min?: SamadhanStatusHistoryMinOrderByAggregateInput
+  }
+
+  export type SamadhanStatusHistoryScalarWhereWithAggregatesInput = {
+    AND?: SamadhanStatusHistoryScalarWhereWithAggregatesInput | SamadhanStatusHistoryScalarWhereWithAggregatesInput[]
+    OR?: SamadhanStatusHistoryScalarWhereWithAggregatesInput[]
+    NOT?: SamadhanStatusHistoryScalarWhereWithAggregatesInput | SamadhanStatusHistoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SamadhanStatusHistory"> | string
+    ticketId?: StringWithAggregatesFilter<"SamadhanStatusHistory"> | string
+    fromStatus?: EnumSamadhanTicketStatusNullableWithAggregatesFilter<"SamadhanStatusHistory"> | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusWithAggregatesFilter<"SamadhanStatusHistory"> | $Enums.SamadhanTicketStatus
+    changedById?: StringNullableWithAggregatesFilter<"SamadhanStatusHistory"> | string | null
+    changeReason?: StringNullableWithAggregatesFilter<"SamadhanStatusHistory"> | string | null
+    isSystemGenerated?: BoolWithAggregatesFilter<"SamadhanStatusHistory"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"SamadhanStatusHistory"> | Date | string
+  }
+
+  export type SamadhanInternalNoteWhereInput = {
+    AND?: SamadhanInternalNoteWhereInput | SamadhanInternalNoteWhereInput[]
+    OR?: SamadhanInternalNoteWhereInput[]
+    NOT?: SamadhanInternalNoteWhereInput | SamadhanInternalNoteWhereInput[]
+    id?: StringFilter<"SamadhanInternalNote"> | string
+    ticketId?: StringFilter<"SamadhanInternalNote"> | string
+    createdById?: StringFilter<"SamadhanInternalNote"> | string
+    content?: StringFilter<"SamadhanInternalNote"> | string
+    createdAt?: DateTimeFilter<"SamadhanInternalNote"> | Date | string
+    ticket?: XOR<SamadhanTicketScalarRelationFilter, SamadhanTicketWhereInput>
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type SamadhanInternalNoteOrderByWithRelationInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    createdById?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    ticket?: SamadhanTicketOrderByWithRelationInput
+    createdBy?: UserOrderByWithRelationInput
+  }
+
+  export type SamadhanInternalNoteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SamadhanInternalNoteWhereInput | SamadhanInternalNoteWhereInput[]
+    OR?: SamadhanInternalNoteWhereInput[]
+    NOT?: SamadhanInternalNoteWhereInput | SamadhanInternalNoteWhereInput[]
+    ticketId?: StringFilter<"SamadhanInternalNote"> | string
+    createdById?: StringFilter<"SamadhanInternalNote"> | string
+    content?: StringFilter<"SamadhanInternalNote"> | string
+    createdAt?: DateTimeFilter<"SamadhanInternalNote"> | Date | string
+    ticket?: XOR<SamadhanTicketScalarRelationFilter, SamadhanTicketWhereInput>
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type SamadhanInternalNoteOrderByWithAggregationInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    createdById?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    _count?: SamadhanInternalNoteCountOrderByAggregateInput
+    _max?: SamadhanInternalNoteMaxOrderByAggregateInput
+    _min?: SamadhanInternalNoteMinOrderByAggregateInput
+  }
+
+  export type SamadhanInternalNoteScalarWhereWithAggregatesInput = {
+    AND?: SamadhanInternalNoteScalarWhereWithAggregatesInput | SamadhanInternalNoteScalarWhereWithAggregatesInput[]
+    OR?: SamadhanInternalNoteScalarWhereWithAggregatesInput[]
+    NOT?: SamadhanInternalNoteScalarWhereWithAggregatesInput | SamadhanInternalNoteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SamadhanInternalNote"> | string
+    ticketId?: StringWithAggregatesFilter<"SamadhanInternalNote"> | string
+    createdById?: StringWithAggregatesFilter<"SamadhanInternalNote"> | string
+    content?: StringWithAggregatesFilter<"SamadhanInternalNote"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"SamadhanInternalNote"> | Date | string
+  }
+
+  export type SamadhanSLAConfigWhereInput = {
+    AND?: SamadhanSLAConfigWhereInput | SamadhanSLAConfigWhereInput[]
+    OR?: SamadhanSLAConfigWhereInput[]
+    NOT?: SamadhanSLAConfigWhereInput | SamadhanSLAConfigWhereInput[]
+    id?: StringFilter<"SamadhanSLAConfig"> | string
+    queryType?: EnumSamadhanQueryTypeFilter<"SamadhanSLAConfig"> | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFilter<"SamadhanSLAConfig"> | $Enums.SamadhanPriority
+    slaHours?: IntFilter<"SamadhanSLAConfig"> | number
+    isActive?: BoolFilter<"SamadhanSLAConfig"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanSLAConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanSLAConfig"> | Date | string
+  }
+
+  export type SamadhanSLAConfigOrderByWithRelationInput = {
+    id?: SortOrder
+    queryType?: SortOrder
+    priority?: SortOrder
+    slaHours?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanSLAConfigWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    queryType_priority?: SamadhanSLAConfigQueryTypePriorityCompoundUniqueInput
+    AND?: SamadhanSLAConfigWhereInput | SamadhanSLAConfigWhereInput[]
+    OR?: SamadhanSLAConfigWhereInput[]
+    NOT?: SamadhanSLAConfigWhereInput | SamadhanSLAConfigWhereInput[]
+    queryType?: EnumSamadhanQueryTypeFilter<"SamadhanSLAConfig"> | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFilter<"SamadhanSLAConfig"> | $Enums.SamadhanPriority
+    slaHours?: IntFilter<"SamadhanSLAConfig"> | number
+    isActive?: BoolFilter<"SamadhanSLAConfig"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanSLAConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanSLAConfig"> | Date | string
+  }, "id" | "queryType_priority">
+
+  export type SamadhanSLAConfigOrderByWithAggregationInput = {
+    id?: SortOrder
+    queryType?: SortOrder
+    priority?: SortOrder
+    slaHours?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SamadhanSLAConfigCountOrderByAggregateInput
+    _avg?: SamadhanSLAConfigAvgOrderByAggregateInput
+    _max?: SamadhanSLAConfigMaxOrderByAggregateInput
+    _min?: SamadhanSLAConfigMinOrderByAggregateInput
+    _sum?: SamadhanSLAConfigSumOrderByAggregateInput
+  }
+
+  export type SamadhanSLAConfigScalarWhereWithAggregatesInput = {
+    AND?: SamadhanSLAConfigScalarWhereWithAggregatesInput | SamadhanSLAConfigScalarWhereWithAggregatesInput[]
+    OR?: SamadhanSLAConfigScalarWhereWithAggregatesInput[]
+    NOT?: SamadhanSLAConfigScalarWhereWithAggregatesInput | SamadhanSLAConfigScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SamadhanSLAConfig"> | string
+    queryType?: EnumSamadhanQueryTypeWithAggregatesFilter<"SamadhanSLAConfig"> | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityWithAggregatesFilter<"SamadhanSLAConfig"> | $Enums.SamadhanPriority
+    slaHours?: IntWithAggregatesFilter<"SamadhanSLAConfig"> | number
+    isActive?: BoolWithAggregatesFilter<"SamadhanSLAConfig"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"SamadhanSLAConfig"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SamadhanSLAConfig"> | Date | string
+  }
+
+  export type SamadhanDailySequenceWhereInput = {
+    AND?: SamadhanDailySequenceWhereInput | SamadhanDailySequenceWhereInput[]
+    OR?: SamadhanDailySequenceWhereInput[]
+    NOT?: SamadhanDailySequenceWhereInput | SamadhanDailySequenceWhereInput[]
+    id?: StringFilter<"SamadhanDailySequence"> | string
+    date?: DateTimeFilter<"SamadhanDailySequence"> | Date | string
+    lastSequence?: IntFilter<"SamadhanDailySequence"> | number
+    createdAt?: DateTimeFilter<"SamadhanDailySequence"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanDailySequence"> | Date | string
+  }
+
+  export type SamadhanDailySequenceOrderByWithRelationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    lastSequence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanDailySequenceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    date?: Date | string
+    AND?: SamadhanDailySequenceWhereInput | SamadhanDailySequenceWhereInput[]
+    OR?: SamadhanDailySequenceWhereInput[]
+    NOT?: SamadhanDailySequenceWhereInput | SamadhanDailySequenceWhereInput[]
+    lastSequence?: IntFilter<"SamadhanDailySequence"> | number
+    createdAt?: DateTimeFilter<"SamadhanDailySequence"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanDailySequence"> | Date | string
+  }, "id" | "date">
+
+  export type SamadhanDailySequenceOrderByWithAggregationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    lastSequence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SamadhanDailySequenceCountOrderByAggregateInput
+    _avg?: SamadhanDailySequenceAvgOrderByAggregateInput
+    _max?: SamadhanDailySequenceMaxOrderByAggregateInput
+    _min?: SamadhanDailySequenceMinOrderByAggregateInput
+    _sum?: SamadhanDailySequenceSumOrderByAggregateInput
+  }
+
+  export type SamadhanDailySequenceScalarWhereWithAggregatesInput = {
+    AND?: SamadhanDailySequenceScalarWhereWithAggregatesInput | SamadhanDailySequenceScalarWhereWithAggregatesInput[]
+    OR?: SamadhanDailySequenceScalarWhereWithAggregatesInput[]
+    NOT?: SamadhanDailySequenceScalarWhereWithAggregatesInput | SamadhanDailySequenceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SamadhanDailySequence"> | string
+    date?: DateTimeWithAggregatesFilter<"SamadhanDailySequence"> | Date | string
+    lastSequence?: IntWithAggregatesFilter<"SamadhanDailySequence"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"SamadhanDailySequence"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SamadhanDailySequence"> | Date | string
+  }
+
   export type UserSettingsCreateInput = {
     id?: string
     emailNotifications?: boolean
@@ -34086,6 +44371,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -34119,6 +44411,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUpdateInput = {
@@ -34152,6 +44451,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -34185,6 +44491,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -34232,6 +44545,7 @@ export namespace Prisma {
     phone: string
     address: string
     aadhaarNumber?: string | null
+    samadhanPseudonym?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutCitizenProfileInput
@@ -34244,6 +44558,7 @@ export namespace Prisma {
     phone: string
     address: string
     aadhaarNumber?: string | null
+    samadhanPseudonym?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34254,6 +44569,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     aadhaarNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    samadhanPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutCitizenProfileNestedInput
@@ -34266,6 +44582,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     aadhaarNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    samadhanPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34277,6 +44594,7 @@ export namespace Prisma {
     phone: string
     address: string
     aadhaarNumber?: string | null
+    samadhanPseudonym?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34287,6 +44605,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     aadhaarNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    samadhanPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34298,6 +44617,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     aadhaarNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    samadhanPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34532,6 +44852,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     officers?: OfficerProfileCreateNestedManyWithoutSectionInput
+    samadhanTickets?: SamadhanTicketCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUncheckedCreateInput = {
@@ -34542,6 +44863,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     officers?: OfficerProfileUncheckedCreateNestedManyWithoutSectionInput
+    samadhanTickets?: SamadhanTicketUncheckedCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUpdateInput = {
@@ -34552,6 +44874,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officers?: OfficerProfileUpdateManyWithoutSectionNestedInput
+    samadhanTickets?: SamadhanTicketUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionUncheckedUpdateInput = {
@@ -34562,6 +44885,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officers?: OfficerProfileUncheckedUpdateManyWithoutSectionNestedInput
+    samadhanTickets?: SamadhanTicketUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionCreateManyInput = {
@@ -36054,6 +46378,702 @@ export namespace Prisma {
     forwardedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SamadhanTicketCreateInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketCreateManyInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanTicketUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanAttachmentCreateInput = {
+    id?: string
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedByType?: string
+    createdAt?: Date | string
+    ticket: SamadhanTicketCreateNestedOneWithoutAttachmentsInput
+    infoRequest?: SamadhanInfoRequestCreateNestedOneWithoutAttachmentsInput
+    uploadedBy?: UserCreateNestedOneWithoutSamadhanAttachmentsUploadedInput
+  }
+
+  export type SamadhanAttachmentUncheckedCreateInput = {
+    id?: string
+    ticketId: string
+    infoRequestId?: string | null
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedById?: string | null
+    uploadedByType?: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanAttachmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: SamadhanTicketUpdateOneRequiredWithoutAttachmentsNestedInput
+    infoRequest?: SamadhanInfoRequestUpdateOneWithoutAttachmentsNestedInput
+    uploadedBy?: UserUpdateOneWithoutSamadhanAttachmentsUploadedNestedInput
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    infoRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanAttachmentCreateManyInput = {
+    id?: string
+    ticketId: string
+    infoRequestId?: string | null
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedById?: string | null
+    uploadedByType?: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanAttachmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    infoRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInfoRequestCreateInput = {
+    id?: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ticket: SamadhanTicketCreateNestedOneWithoutInfoRequestsInput
+    requestedBy: UserCreateNestedOneWithoutSamadhanInfoRequestsInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutInfoRequestInput
+  }
+
+  export type SamadhanInfoRequestUncheckedCreateInput = {
+    id?: string
+    ticketId: string
+    requestedById: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutInfoRequestInput
+  }
+
+  export type SamadhanInfoRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: SamadhanTicketUpdateOneRequiredWithoutInfoRequestsNestedInput
+    requestedBy?: UserUpdateOneRequiredWithoutSamadhanInfoRequestsNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutInfoRequestNestedInput
+  }
+
+  export type SamadhanInfoRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    requestedById?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutInfoRequestNestedInput
+  }
+
+  export type SamadhanInfoRequestCreateManyInput = {
+    id?: string
+    ticketId: string
+    requestedById: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanInfoRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInfoRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    requestedById?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanStatusHistoryCreateInput = {
+    id?: string
+    fromStatus?: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus
+    changeReason?: string | null
+    isSystemGenerated?: boolean
+    createdAt?: Date | string
+    ticket: SamadhanTicketCreateNestedOneWithoutStatusHistoryInput
+    changedBy?: UserCreateNestedOneWithoutSamadhanStatusChangesInput
+  }
+
+  export type SamadhanStatusHistoryUncheckedCreateInput = {
+    id?: string
+    ticketId: string
+    fromStatus?: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus
+    changedById?: string | null
+    changeReason?: string | null
+    isSystemGenerated?: boolean
+    createdAt?: Date | string
+  }
+
+  export type SamadhanStatusHistoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    changeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystemGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: SamadhanTicketUpdateOneRequiredWithoutStatusHistoryNestedInput
+    changedBy?: UserUpdateOneWithoutSamadhanStatusChangesNestedInput
+  }
+
+  export type SamadhanStatusHistoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    changedById?: NullableStringFieldUpdateOperationsInput | string | null
+    changeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystemGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanStatusHistoryCreateManyInput = {
+    id?: string
+    ticketId: string
+    fromStatus?: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus
+    changedById?: string | null
+    changeReason?: string | null
+    isSystemGenerated?: boolean
+    createdAt?: Date | string
+  }
+
+  export type SamadhanStatusHistoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    changeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystemGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanStatusHistoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    changedById?: NullableStringFieldUpdateOperationsInput | string | null
+    changeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystemGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInternalNoteCreateInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    ticket: SamadhanTicketCreateNestedOneWithoutInternalNotesInput
+    createdBy: UserCreateNestedOneWithoutSamadhanInternalNotesInput
+  }
+
+  export type SamadhanInternalNoteUncheckedCreateInput = {
+    id?: string
+    ticketId: string
+    createdById: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanInternalNoteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: SamadhanTicketUpdateOneRequiredWithoutInternalNotesNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutSamadhanInternalNotesNestedInput
+  }
+
+  export type SamadhanInternalNoteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInternalNoteCreateManyInput = {
+    id?: string
+    ticketId: string
+    createdById: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanInternalNoteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInternalNoteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanSLAConfigCreateInput = {
+    id?: string
+    queryType: $Enums.SamadhanQueryType
+    priority: $Enums.SamadhanPriority
+    slaHours: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanSLAConfigUncheckedCreateInput = {
+    id?: string
+    queryType: $Enums.SamadhanQueryType
+    priority: $Enums.SamadhanPriority
+    slaHours: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanSLAConfigUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    slaHours?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanSLAConfigUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    slaHours?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanSLAConfigCreateManyInput = {
+    id?: string
+    queryType: $Enums.SamadhanQueryType
+    priority: $Enums.SamadhanPriority
+    slaHours: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanSLAConfigUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    slaHours?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanSLAConfigUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    slaHours?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanDailySequenceCreateInput = {
+    id?: string
+    date: Date | string
+    lastSequence?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanDailySequenceUncheckedCreateInput = {
+    id?: string
+    date: Date | string
+    lastSequence?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanDailySequenceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanDailySequenceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanDailySequenceCreateManyInput = {
+    id?: string
+    date: Date | string
+    lastSequence?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanDailySequenceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanDailySequenceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSequence?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -36359,6 +47379,36 @@ export namespace Prisma {
     isNot?: UserSettingsWhereInput | null
   }
 
+  export type SamadhanTicketListRelationFilter = {
+    every?: SamadhanTicketWhereInput
+    some?: SamadhanTicketWhereInput
+    none?: SamadhanTicketWhereInput
+  }
+
+  export type SamadhanAttachmentListRelationFilter = {
+    every?: SamadhanAttachmentWhereInput
+    some?: SamadhanAttachmentWhereInput
+    none?: SamadhanAttachmentWhereInput
+  }
+
+  export type SamadhanInfoRequestListRelationFilter = {
+    every?: SamadhanInfoRequestWhereInput
+    some?: SamadhanInfoRequestWhereInput
+    none?: SamadhanInfoRequestWhereInput
+  }
+
+  export type SamadhanStatusHistoryListRelationFilter = {
+    every?: SamadhanStatusHistoryWhereInput
+    some?: SamadhanStatusHistoryWhereInput
+    none?: SamadhanStatusHistoryWhereInput
+  }
+
+  export type SamadhanInternalNoteListRelationFilter = {
+    every?: SamadhanInternalNoteWhereInput
+    some?: SamadhanInternalNoteWhereInput
+    none?: SamadhanInternalNoteWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -36409,6 +47459,26 @@ export namespace Prisma {
   }
 
   export type ServiceCategoryChangeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SamadhanTicketOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SamadhanAttachmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SamadhanInfoRequestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SamadhanStatusHistoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SamadhanInternalNoteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -36524,6 +47594,7 @@ export namespace Prisma {
     phone?: SortOrder
     address?: SortOrder
     aadhaarNumber?: SortOrder
+    samadhanPseudonym?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36535,6 +47606,7 @@ export namespace Prisma {
     phone?: SortOrder
     address?: SortOrder
     aadhaarNumber?: SortOrder
+    samadhanPseudonym?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36546,6 +47618,7 @@ export namespace Prisma {
     phone?: SortOrder
     address?: SortOrder
     aadhaarNumber?: SortOrder
+    samadhanPseudonym?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37534,6 +48607,451 @@ export namespace Prisma {
     priority?: SortOrder
   }
 
+  export type EnumSamadhanQueryTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanQueryType | EnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanQueryType[] | ListEnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanQueryType[] | ListEnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanQueryTypeFilter<$PrismaModel> | $Enums.SamadhanQueryType
+  }
+
+  export type EnumSamadhanPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanPriority | EnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanPriority[] | ListEnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanPriority[] | ListEnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanPriorityFilter<$PrismaModel> | $Enums.SamadhanPriority
+  }
+
+  export type EnumSamadhanTicketStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanTicketStatus | EnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel> | $Enums.SamadhanTicketStatus
+  }
+
+  export type EnumSamadhanSubmissionChannelFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanSubmissionChannel | EnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanSubmissionChannelFilter<$PrismaModel> | $Enums.SamadhanSubmissionChannel
+  }
+
+  export type SectionScalarRelationFilter = {
+    is?: SectionWhereInput
+    isNot?: SectionWhereInput
+  }
+
+  export type SamadhanTicketNullableScalarRelationFilter = {
+    is?: SamadhanTicketWhereInput | null
+    isNot?: SamadhanTicketWhereInput | null
+  }
+
+  export type SamadhanTicketCountOrderByAggregateInput = {
+    id?: SortOrder
+    referenceId?: SortOrder
+    queryType?: SortOrder
+    priority?: SortOrder
+    status?: SortOrder
+    citizenId?: SortOrder
+    citizenName?: SortOrder
+    citizenEmail?: SortOrder
+    citizenPhone?: SortOrder
+    citizenPseudonym?: SortOrder
+    isAnonymous?: SortOrder
+    isAnonymousToOfficer?: SortOrder
+    sectionId?: SortOrder
+    serviceAvailed?: SortOrder
+    description?: SortOrder
+    assignedOfficerId?: SortOrder
+    escalatedToId?: SortOrder
+    submissionChannel?: SortOrder
+    whatsappNumber?: SortOrder
+    slaDeadline?: SortOrder
+    seenAt?: SortOrder
+    acknowledgedAt?: SortOrder
+    resolvedAt?: SortOrder
+    closedAt?: SortOrder
+    slaBreachedAt?: SortOrder
+    resolutionMessage?: SortOrder
+    isAppeal?: SortOrder
+    originalTicketId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanTicketMaxOrderByAggregateInput = {
+    id?: SortOrder
+    referenceId?: SortOrder
+    queryType?: SortOrder
+    priority?: SortOrder
+    status?: SortOrder
+    citizenId?: SortOrder
+    citizenName?: SortOrder
+    citizenEmail?: SortOrder
+    citizenPhone?: SortOrder
+    citizenPseudonym?: SortOrder
+    isAnonymous?: SortOrder
+    isAnonymousToOfficer?: SortOrder
+    sectionId?: SortOrder
+    serviceAvailed?: SortOrder
+    description?: SortOrder
+    assignedOfficerId?: SortOrder
+    escalatedToId?: SortOrder
+    submissionChannel?: SortOrder
+    whatsappNumber?: SortOrder
+    slaDeadline?: SortOrder
+    seenAt?: SortOrder
+    acknowledgedAt?: SortOrder
+    resolvedAt?: SortOrder
+    closedAt?: SortOrder
+    slaBreachedAt?: SortOrder
+    resolutionMessage?: SortOrder
+    isAppeal?: SortOrder
+    originalTicketId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanTicketMinOrderByAggregateInput = {
+    id?: SortOrder
+    referenceId?: SortOrder
+    queryType?: SortOrder
+    priority?: SortOrder
+    status?: SortOrder
+    citizenId?: SortOrder
+    citizenName?: SortOrder
+    citizenEmail?: SortOrder
+    citizenPhone?: SortOrder
+    citizenPseudonym?: SortOrder
+    isAnonymous?: SortOrder
+    isAnonymousToOfficer?: SortOrder
+    sectionId?: SortOrder
+    serviceAvailed?: SortOrder
+    description?: SortOrder
+    assignedOfficerId?: SortOrder
+    escalatedToId?: SortOrder
+    submissionChannel?: SortOrder
+    whatsappNumber?: SortOrder
+    slaDeadline?: SortOrder
+    seenAt?: SortOrder
+    acknowledgedAt?: SortOrder
+    resolvedAt?: SortOrder
+    closedAt?: SortOrder
+    slaBreachedAt?: SortOrder
+    resolutionMessage?: SortOrder
+    isAppeal?: SortOrder
+    originalTicketId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumSamadhanQueryTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanQueryType | EnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanQueryType[] | ListEnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanQueryType[] | ListEnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanQueryTypeWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanQueryType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanQueryTypeFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanQueryTypeFilter<$PrismaModel>
+  }
+
+  export type EnumSamadhanPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanPriority | EnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanPriority[] | ListEnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanPriority[] | ListEnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanPriorityWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanPriorityFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanPriorityFilter<$PrismaModel>
+  }
+
+  export type EnumSamadhanTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanTicketStatus | EnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanTicketStatusWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanTicketStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel>
+  }
+
+  export type EnumSamadhanSubmissionChannelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanSubmissionChannel | EnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanSubmissionChannelWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanSubmissionChannel
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanSubmissionChannelFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanSubmissionChannelFilter<$PrismaModel>
+  }
+
+  export type SamadhanTicketScalarRelationFilter = {
+    is?: SamadhanTicketWhereInput
+    isNot?: SamadhanTicketWhereInput
+  }
+
+  export type SamadhanInfoRequestNullableScalarRelationFilter = {
+    is?: SamadhanInfoRequestWhereInput | null
+    isNot?: SamadhanInfoRequestWhereInput | null
+  }
+
+  export type SamadhanAttachmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    infoRequestId?: SortOrder
+    fileName?: SortOrder
+    originalName?: SortOrder
+    filePath?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    uploadedById?: SortOrder
+    uploadedByType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SamadhanAttachmentAvgOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type SamadhanAttachmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    infoRequestId?: SortOrder
+    fileName?: SortOrder
+    originalName?: SortOrder
+    filePath?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    uploadedById?: SortOrder
+    uploadedByType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SamadhanAttachmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    infoRequestId?: SortOrder
+    fileName?: SortOrder
+    originalName?: SortOrder
+    filePath?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    uploadedById?: SortOrder
+    uploadedByType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SamadhanAttachmentSumOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type EnumSamadhanInfoRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanInfoRequestStatus | EnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanInfoRequestStatus[] | ListEnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanInfoRequestStatus[] | ListEnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanInfoRequestStatusFilter<$PrismaModel> | $Enums.SamadhanInfoRequestStatus
+  }
+
+  export type SamadhanInfoRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    requestedById?: SortOrder
+    description?: SortOrder
+    documentTypes?: SortOrder
+    deadline?: SortOrder
+    status?: SortOrder
+    citizenResponse?: SortOrder
+    respondedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanInfoRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    requestedById?: SortOrder
+    description?: SortOrder
+    documentTypes?: SortOrder
+    deadline?: SortOrder
+    status?: SortOrder
+    citizenResponse?: SortOrder
+    respondedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanInfoRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    requestedById?: SortOrder
+    description?: SortOrder
+    documentTypes?: SortOrder
+    deadline?: SortOrder
+    status?: SortOrder
+    citizenResponse?: SortOrder
+    respondedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumSamadhanInfoRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanInfoRequestStatus | EnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanInfoRequestStatus[] | ListEnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanInfoRequestStatus[] | ListEnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanInfoRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanInfoRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanInfoRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanInfoRequestStatusFilter<$PrismaModel>
+  }
+
+  export type EnumSamadhanTicketStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanTicketStatus | EnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSamadhanTicketStatusNullableFilter<$PrismaModel> | $Enums.SamadhanTicketStatus | null
+  }
+
+  export type SamadhanStatusHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    fromStatus?: SortOrder
+    toStatus?: SortOrder
+    changedById?: SortOrder
+    changeReason?: SortOrder
+    isSystemGenerated?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SamadhanStatusHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    fromStatus?: SortOrder
+    toStatus?: SortOrder
+    changedById?: SortOrder
+    changeReason?: SortOrder
+    isSystemGenerated?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SamadhanStatusHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    fromStatus?: SortOrder
+    toStatus?: SortOrder
+    changedById?: SortOrder
+    changeReason?: SortOrder
+    isSystemGenerated?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumSamadhanTicketStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanTicketStatus | EnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSamadhanTicketStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanTicketStatus | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanTicketStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanTicketStatusNullableFilter<$PrismaModel>
+  }
+
+  export type SamadhanInternalNoteCountOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    createdById?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SamadhanInternalNoteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    createdById?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SamadhanInternalNoteMinOrderByAggregateInput = {
+    id?: SortOrder
+    ticketId?: SortOrder
+    createdById?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SamadhanSLAConfigQueryTypePriorityCompoundUniqueInput = {
+    queryType: $Enums.SamadhanQueryType
+    priority: $Enums.SamadhanPriority
+  }
+
+  export type SamadhanSLAConfigCountOrderByAggregateInput = {
+    id?: SortOrder
+    queryType?: SortOrder
+    priority?: SortOrder
+    slaHours?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanSLAConfigAvgOrderByAggregateInput = {
+    slaHours?: SortOrder
+  }
+
+  export type SamadhanSLAConfigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    queryType?: SortOrder
+    priority?: SortOrder
+    slaHours?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanSLAConfigMinOrderByAggregateInput = {
+    id?: SortOrder
+    queryType?: SortOrder
+    priority?: SortOrder
+    slaHours?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanSLAConfigSumOrderByAggregateInput = {
+    slaHours?: SortOrder
+  }
+
+  export type SamadhanDailySequenceCountOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    lastSequence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanDailySequenceAvgOrderByAggregateInput = {
+    lastSequence?: SortOrder
+  }
+
+  export type SamadhanDailySequenceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    lastSequence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanDailySequenceMinOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    lastSequence?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanDailySequenceSumOrderByAggregateInput = {
+    lastSequence?: SortOrder
+  }
+
   export type UserCreateNestedOneWithoutUserSettingsInput = {
     create?: XOR<UserCreateWithoutUserSettingsInput, UserUncheckedCreateWithoutUserSettingsInput>
     connectOrCreate?: UserCreateOrConnectWithoutUserSettingsInput
@@ -37705,6 +49223,55 @@ export namespace Prisma {
     connect?: UserSettingsWhereUniqueInput
   }
 
+  export type SamadhanTicketCreateNestedManyWithoutCitizenInput = {
+    create?: XOR<SamadhanTicketCreateWithoutCitizenInput, SamadhanTicketUncheckedCreateWithoutCitizenInput> | SamadhanTicketCreateWithoutCitizenInput[] | SamadhanTicketUncheckedCreateWithoutCitizenInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutCitizenInput | SamadhanTicketCreateOrConnectWithoutCitizenInput[]
+    createMany?: SamadhanTicketCreateManyCitizenInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
+  export type SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAssignedOfficerInput, SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput> | SamadhanTicketCreateWithoutAssignedOfficerInput[] | SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAssignedOfficerInput | SamadhanTicketCreateOrConnectWithoutAssignedOfficerInput[]
+    createMany?: SamadhanTicketCreateManyAssignedOfficerInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
+  export type SamadhanTicketCreateNestedManyWithoutEscalatedToInput = {
+    create?: XOR<SamadhanTicketCreateWithoutEscalatedToInput, SamadhanTicketUncheckedCreateWithoutEscalatedToInput> | SamadhanTicketCreateWithoutEscalatedToInput[] | SamadhanTicketUncheckedCreateWithoutEscalatedToInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutEscalatedToInput | SamadhanTicketCreateOrConnectWithoutEscalatedToInput[]
+    createMany?: SamadhanTicketCreateManyEscalatedToInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
+  export type SamadhanAttachmentCreateNestedManyWithoutUploadedByInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutUploadedByInput, SamadhanAttachmentUncheckedCreateWithoutUploadedByInput> | SamadhanAttachmentCreateWithoutUploadedByInput[] | SamadhanAttachmentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutUploadedByInput | SamadhanAttachmentCreateOrConnectWithoutUploadedByInput[]
+    createMany?: SamadhanAttachmentCreateManyUploadedByInputEnvelope
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+  }
+
+  export type SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput = {
+    create?: XOR<SamadhanInfoRequestCreateWithoutRequestedByInput, SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput> | SamadhanInfoRequestCreateWithoutRequestedByInput[] | SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput[]
+    connectOrCreate?: SamadhanInfoRequestCreateOrConnectWithoutRequestedByInput | SamadhanInfoRequestCreateOrConnectWithoutRequestedByInput[]
+    createMany?: SamadhanInfoRequestCreateManyRequestedByInputEnvelope
+    connect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+  }
+
+  export type SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput = {
+    create?: XOR<SamadhanStatusHistoryCreateWithoutChangedByInput, SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput> | SamadhanStatusHistoryCreateWithoutChangedByInput[] | SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: SamadhanStatusHistoryCreateOrConnectWithoutChangedByInput | SamadhanStatusHistoryCreateOrConnectWithoutChangedByInput[]
+    createMany?: SamadhanStatusHistoryCreateManyChangedByInputEnvelope
+    connect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+  }
+
+  export type SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<SamadhanInternalNoteCreateWithoutCreatedByInput, SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput> | SamadhanInternalNoteCreateWithoutCreatedByInput[] | SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: SamadhanInternalNoteCreateOrConnectWithoutCreatedByInput | SamadhanInternalNoteCreateOrConnectWithoutCreatedByInput[]
+    createMany?: SamadhanInternalNoteCreateManyCreatedByInputEnvelope
+    connect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+  }
+
   export type ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput = {
     create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
     connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
@@ -37840,6 +49407,55 @@ export namespace Prisma {
     create?: XOR<UserSettingsCreateWithoutUserInput, UserSettingsUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserSettingsCreateOrConnectWithoutUserInput
     connect?: UserSettingsWhereUniqueInput
+  }
+
+  export type SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput = {
+    create?: XOR<SamadhanTicketCreateWithoutCitizenInput, SamadhanTicketUncheckedCreateWithoutCitizenInput> | SamadhanTicketCreateWithoutCitizenInput[] | SamadhanTicketUncheckedCreateWithoutCitizenInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutCitizenInput | SamadhanTicketCreateOrConnectWithoutCitizenInput[]
+    createMany?: SamadhanTicketCreateManyCitizenInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
+  export type SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAssignedOfficerInput, SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput> | SamadhanTicketCreateWithoutAssignedOfficerInput[] | SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAssignedOfficerInput | SamadhanTicketCreateOrConnectWithoutAssignedOfficerInput[]
+    createMany?: SamadhanTicketCreateManyAssignedOfficerInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
+  export type SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput = {
+    create?: XOR<SamadhanTicketCreateWithoutEscalatedToInput, SamadhanTicketUncheckedCreateWithoutEscalatedToInput> | SamadhanTicketCreateWithoutEscalatedToInput[] | SamadhanTicketUncheckedCreateWithoutEscalatedToInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutEscalatedToInput | SamadhanTicketCreateOrConnectWithoutEscalatedToInput[]
+    createMany?: SamadhanTicketCreateManyEscalatedToInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
+  export type SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutUploadedByInput, SamadhanAttachmentUncheckedCreateWithoutUploadedByInput> | SamadhanAttachmentCreateWithoutUploadedByInput[] | SamadhanAttachmentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutUploadedByInput | SamadhanAttachmentCreateOrConnectWithoutUploadedByInput[]
+    createMany?: SamadhanAttachmentCreateManyUploadedByInputEnvelope
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+  }
+
+  export type SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput = {
+    create?: XOR<SamadhanInfoRequestCreateWithoutRequestedByInput, SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput> | SamadhanInfoRequestCreateWithoutRequestedByInput[] | SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput[]
+    connectOrCreate?: SamadhanInfoRequestCreateOrConnectWithoutRequestedByInput | SamadhanInfoRequestCreateOrConnectWithoutRequestedByInput[]
+    createMany?: SamadhanInfoRequestCreateManyRequestedByInputEnvelope
+    connect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+  }
+
+  export type SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput = {
+    create?: XOR<SamadhanStatusHistoryCreateWithoutChangedByInput, SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput> | SamadhanStatusHistoryCreateWithoutChangedByInput[] | SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: SamadhanStatusHistoryCreateOrConnectWithoutChangedByInput | SamadhanStatusHistoryCreateOrConnectWithoutChangedByInput[]
+    createMany?: SamadhanStatusHistoryCreateManyChangedByInputEnvelope
+    connect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+  }
+
+  export type SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<SamadhanInternalNoteCreateWithoutCreatedByInput, SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput> | SamadhanInternalNoteCreateWithoutCreatedByInput[] | SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: SamadhanInternalNoteCreateOrConnectWithoutCreatedByInput | SamadhanInternalNoteCreateOrConnectWithoutCreatedByInput[]
+    createMany?: SamadhanInternalNoteCreateManyCreatedByInputEnvelope
+    connect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -38130,6 +49746,104 @@ export namespace Prisma {
     update?: XOR<XOR<UserSettingsUpdateToOneWithWhereWithoutUserInput, UserSettingsUpdateWithoutUserInput>, UserSettingsUncheckedUpdateWithoutUserInput>
   }
 
+  export type SamadhanTicketUpdateManyWithoutCitizenNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutCitizenInput, SamadhanTicketUncheckedCreateWithoutCitizenInput> | SamadhanTicketCreateWithoutCitizenInput[] | SamadhanTicketUncheckedCreateWithoutCitizenInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutCitizenInput | SamadhanTicketCreateOrConnectWithoutCitizenInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutCitizenInput | SamadhanTicketUpsertWithWhereUniqueWithoutCitizenInput[]
+    createMany?: SamadhanTicketCreateManyCitizenInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutCitizenInput | SamadhanTicketUpdateWithWhereUniqueWithoutCitizenInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutCitizenInput | SamadhanTicketUpdateManyWithWhereWithoutCitizenInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
+  export type SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAssignedOfficerInput, SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput> | SamadhanTicketCreateWithoutAssignedOfficerInput[] | SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAssignedOfficerInput | SamadhanTicketCreateOrConnectWithoutAssignedOfficerInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutAssignedOfficerInput | SamadhanTicketUpsertWithWhereUniqueWithoutAssignedOfficerInput[]
+    createMany?: SamadhanTicketCreateManyAssignedOfficerInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutAssignedOfficerInput | SamadhanTicketUpdateWithWhereUniqueWithoutAssignedOfficerInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutAssignedOfficerInput | SamadhanTicketUpdateManyWithWhereWithoutAssignedOfficerInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
+  export type SamadhanTicketUpdateManyWithoutEscalatedToNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutEscalatedToInput, SamadhanTicketUncheckedCreateWithoutEscalatedToInput> | SamadhanTicketCreateWithoutEscalatedToInput[] | SamadhanTicketUncheckedCreateWithoutEscalatedToInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutEscalatedToInput | SamadhanTicketCreateOrConnectWithoutEscalatedToInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutEscalatedToInput | SamadhanTicketUpsertWithWhereUniqueWithoutEscalatedToInput[]
+    createMany?: SamadhanTicketCreateManyEscalatedToInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutEscalatedToInput | SamadhanTicketUpdateWithWhereUniqueWithoutEscalatedToInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutEscalatedToInput | SamadhanTicketUpdateManyWithWhereWithoutEscalatedToInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
+  export type SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutUploadedByInput, SamadhanAttachmentUncheckedCreateWithoutUploadedByInput> | SamadhanAttachmentCreateWithoutUploadedByInput[] | SamadhanAttachmentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutUploadedByInput | SamadhanAttachmentCreateOrConnectWithoutUploadedByInput[]
+    upsert?: SamadhanAttachmentUpsertWithWhereUniqueWithoutUploadedByInput | SamadhanAttachmentUpsertWithWhereUniqueWithoutUploadedByInput[]
+    createMany?: SamadhanAttachmentCreateManyUploadedByInputEnvelope
+    set?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    disconnect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    delete?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    update?: SamadhanAttachmentUpdateWithWhereUniqueWithoutUploadedByInput | SamadhanAttachmentUpdateWithWhereUniqueWithoutUploadedByInput[]
+    updateMany?: SamadhanAttachmentUpdateManyWithWhereWithoutUploadedByInput | SamadhanAttachmentUpdateManyWithWhereWithoutUploadedByInput[]
+    deleteMany?: SamadhanAttachmentScalarWhereInput | SamadhanAttachmentScalarWhereInput[]
+  }
+
+  export type SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput = {
+    create?: XOR<SamadhanInfoRequestCreateWithoutRequestedByInput, SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput> | SamadhanInfoRequestCreateWithoutRequestedByInput[] | SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput[]
+    connectOrCreate?: SamadhanInfoRequestCreateOrConnectWithoutRequestedByInput | SamadhanInfoRequestCreateOrConnectWithoutRequestedByInput[]
+    upsert?: SamadhanInfoRequestUpsertWithWhereUniqueWithoutRequestedByInput | SamadhanInfoRequestUpsertWithWhereUniqueWithoutRequestedByInput[]
+    createMany?: SamadhanInfoRequestCreateManyRequestedByInputEnvelope
+    set?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    disconnect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    delete?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    connect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    update?: SamadhanInfoRequestUpdateWithWhereUniqueWithoutRequestedByInput | SamadhanInfoRequestUpdateWithWhereUniqueWithoutRequestedByInput[]
+    updateMany?: SamadhanInfoRequestUpdateManyWithWhereWithoutRequestedByInput | SamadhanInfoRequestUpdateManyWithWhereWithoutRequestedByInput[]
+    deleteMany?: SamadhanInfoRequestScalarWhereInput | SamadhanInfoRequestScalarWhereInput[]
+  }
+
+  export type SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput = {
+    create?: XOR<SamadhanStatusHistoryCreateWithoutChangedByInput, SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput> | SamadhanStatusHistoryCreateWithoutChangedByInput[] | SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: SamadhanStatusHistoryCreateOrConnectWithoutChangedByInput | SamadhanStatusHistoryCreateOrConnectWithoutChangedByInput[]
+    upsert?: SamadhanStatusHistoryUpsertWithWhereUniqueWithoutChangedByInput | SamadhanStatusHistoryUpsertWithWhereUniqueWithoutChangedByInput[]
+    createMany?: SamadhanStatusHistoryCreateManyChangedByInputEnvelope
+    set?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    disconnect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    delete?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    connect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    update?: SamadhanStatusHistoryUpdateWithWhereUniqueWithoutChangedByInput | SamadhanStatusHistoryUpdateWithWhereUniqueWithoutChangedByInput[]
+    updateMany?: SamadhanStatusHistoryUpdateManyWithWhereWithoutChangedByInput | SamadhanStatusHistoryUpdateManyWithWhereWithoutChangedByInput[]
+    deleteMany?: SamadhanStatusHistoryScalarWhereInput | SamadhanStatusHistoryScalarWhereInput[]
+  }
+
+  export type SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<SamadhanInternalNoteCreateWithoutCreatedByInput, SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput> | SamadhanInternalNoteCreateWithoutCreatedByInput[] | SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: SamadhanInternalNoteCreateOrConnectWithoutCreatedByInput | SamadhanInternalNoteCreateOrConnectWithoutCreatedByInput[]
+    upsert?: SamadhanInternalNoteUpsertWithWhereUniqueWithoutCreatedByInput | SamadhanInternalNoteUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: SamadhanInternalNoteCreateManyCreatedByInputEnvelope
+    set?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    disconnect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    delete?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    connect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    update?: SamadhanInternalNoteUpdateWithWhereUniqueWithoutCreatedByInput | SamadhanInternalNoteUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: SamadhanInternalNoteUpdateManyWithWhereWithoutCreatedByInput | SamadhanInternalNoteUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: SamadhanInternalNoteScalarWhereInput | SamadhanInternalNoteScalarWhereInput[]
+  }
+
   export type ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput = {
     create?: XOR<ApplicationAuditLogCreateWithoutPerformedByInput, ApplicationAuditLogUncheckedCreateWithoutPerformedByInput> | ApplicationAuditLogCreateWithoutPerformedByInput[] | ApplicationAuditLogUncheckedCreateWithoutPerformedByInput[]
     connectOrCreate?: ApplicationAuditLogCreateOrConnectWithoutPerformedByInput | ApplicationAuditLogCreateOrConnectWithoutPerformedByInput[]
@@ -38398,6 +50112,104 @@ export namespace Prisma {
     update?: XOR<XOR<UserSettingsUpdateToOneWithWhereWithoutUserInput, UserSettingsUpdateWithoutUserInput>, UserSettingsUncheckedUpdateWithoutUserInput>
   }
 
+  export type SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutCitizenInput, SamadhanTicketUncheckedCreateWithoutCitizenInput> | SamadhanTicketCreateWithoutCitizenInput[] | SamadhanTicketUncheckedCreateWithoutCitizenInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutCitizenInput | SamadhanTicketCreateOrConnectWithoutCitizenInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutCitizenInput | SamadhanTicketUpsertWithWhereUniqueWithoutCitizenInput[]
+    createMany?: SamadhanTicketCreateManyCitizenInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutCitizenInput | SamadhanTicketUpdateWithWhereUniqueWithoutCitizenInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutCitizenInput | SamadhanTicketUpdateManyWithWhereWithoutCitizenInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAssignedOfficerInput, SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput> | SamadhanTicketCreateWithoutAssignedOfficerInput[] | SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAssignedOfficerInput | SamadhanTicketCreateOrConnectWithoutAssignedOfficerInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutAssignedOfficerInput | SamadhanTicketUpsertWithWhereUniqueWithoutAssignedOfficerInput[]
+    createMany?: SamadhanTicketCreateManyAssignedOfficerInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutAssignedOfficerInput | SamadhanTicketUpdateWithWhereUniqueWithoutAssignedOfficerInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutAssignedOfficerInput | SamadhanTicketUpdateManyWithWhereWithoutAssignedOfficerInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutEscalatedToInput, SamadhanTicketUncheckedCreateWithoutEscalatedToInput> | SamadhanTicketCreateWithoutEscalatedToInput[] | SamadhanTicketUncheckedCreateWithoutEscalatedToInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutEscalatedToInput | SamadhanTicketCreateOrConnectWithoutEscalatedToInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutEscalatedToInput | SamadhanTicketUpsertWithWhereUniqueWithoutEscalatedToInput[]
+    createMany?: SamadhanTicketCreateManyEscalatedToInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutEscalatedToInput | SamadhanTicketUpdateWithWhereUniqueWithoutEscalatedToInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutEscalatedToInput | SamadhanTicketUpdateManyWithWhereWithoutEscalatedToInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutUploadedByInput, SamadhanAttachmentUncheckedCreateWithoutUploadedByInput> | SamadhanAttachmentCreateWithoutUploadedByInput[] | SamadhanAttachmentUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutUploadedByInput | SamadhanAttachmentCreateOrConnectWithoutUploadedByInput[]
+    upsert?: SamadhanAttachmentUpsertWithWhereUniqueWithoutUploadedByInput | SamadhanAttachmentUpsertWithWhereUniqueWithoutUploadedByInput[]
+    createMany?: SamadhanAttachmentCreateManyUploadedByInputEnvelope
+    set?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    disconnect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    delete?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    update?: SamadhanAttachmentUpdateWithWhereUniqueWithoutUploadedByInput | SamadhanAttachmentUpdateWithWhereUniqueWithoutUploadedByInput[]
+    updateMany?: SamadhanAttachmentUpdateManyWithWhereWithoutUploadedByInput | SamadhanAttachmentUpdateManyWithWhereWithoutUploadedByInput[]
+    deleteMany?: SamadhanAttachmentScalarWhereInput | SamadhanAttachmentScalarWhereInput[]
+  }
+
+  export type SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput = {
+    create?: XOR<SamadhanInfoRequestCreateWithoutRequestedByInput, SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput> | SamadhanInfoRequestCreateWithoutRequestedByInput[] | SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput[]
+    connectOrCreate?: SamadhanInfoRequestCreateOrConnectWithoutRequestedByInput | SamadhanInfoRequestCreateOrConnectWithoutRequestedByInput[]
+    upsert?: SamadhanInfoRequestUpsertWithWhereUniqueWithoutRequestedByInput | SamadhanInfoRequestUpsertWithWhereUniqueWithoutRequestedByInput[]
+    createMany?: SamadhanInfoRequestCreateManyRequestedByInputEnvelope
+    set?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    disconnect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    delete?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    connect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    update?: SamadhanInfoRequestUpdateWithWhereUniqueWithoutRequestedByInput | SamadhanInfoRequestUpdateWithWhereUniqueWithoutRequestedByInput[]
+    updateMany?: SamadhanInfoRequestUpdateManyWithWhereWithoutRequestedByInput | SamadhanInfoRequestUpdateManyWithWhereWithoutRequestedByInput[]
+    deleteMany?: SamadhanInfoRequestScalarWhereInput | SamadhanInfoRequestScalarWhereInput[]
+  }
+
+  export type SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput = {
+    create?: XOR<SamadhanStatusHistoryCreateWithoutChangedByInput, SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput> | SamadhanStatusHistoryCreateWithoutChangedByInput[] | SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput[]
+    connectOrCreate?: SamadhanStatusHistoryCreateOrConnectWithoutChangedByInput | SamadhanStatusHistoryCreateOrConnectWithoutChangedByInput[]
+    upsert?: SamadhanStatusHistoryUpsertWithWhereUniqueWithoutChangedByInput | SamadhanStatusHistoryUpsertWithWhereUniqueWithoutChangedByInput[]
+    createMany?: SamadhanStatusHistoryCreateManyChangedByInputEnvelope
+    set?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    disconnect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    delete?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    connect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    update?: SamadhanStatusHistoryUpdateWithWhereUniqueWithoutChangedByInput | SamadhanStatusHistoryUpdateWithWhereUniqueWithoutChangedByInput[]
+    updateMany?: SamadhanStatusHistoryUpdateManyWithWhereWithoutChangedByInput | SamadhanStatusHistoryUpdateManyWithWhereWithoutChangedByInput[]
+    deleteMany?: SamadhanStatusHistoryScalarWhereInput | SamadhanStatusHistoryScalarWhereInput[]
+  }
+
+  export type SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<SamadhanInternalNoteCreateWithoutCreatedByInput, SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput> | SamadhanInternalNoteCreateWithoutCreatedByInput[] | SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: SamadhanInternalNoteCreateOrConnectWithoutCreatedByInput | SamadhanInternalNoteCreateOrConnectWithoutCreatedByInput[]
+    upsert?: SamadhanInternalNoteUpsertWithWhereUniqueWithoutCreatedByInput | SamadhanInternalNoteUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: SamadhanInternalNoteCreateManyCreatedByInputEnvelope
+    set?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    disconnect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    delete?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    connect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    update?: SamadhanInternalNoteUpdateWithWhereUniqueWithoutCreatedByInput | SamadhanInternalNoteUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: SamadhanInternalNoteUpdateManyWithWhereWithoutCreatedByInput | SamadhanInternalNoteUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: SamadhanInternalNoteScalarWhereInput | SamadhanInternalNoteScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutCitizenProfileInput = {
     create?: XOR<UserCreateWithoutCitizenProfileInput, UserUncheckedCreateWithoutCitizenProfileInput>
     connectOrCreate?: UserCreateOrConnectWithoutCitizenProfileInput
@@ -38647,11 +50459,25 @@ export namespace Prisma {
     connect?: OfficerProfileWhereUniqueInput | OfficerProfileWhereUniqueInput[]
   }
 
+  export type SamadhanTicketCreateNestedManyWithoutSectionInput = {
+    create?: XOR<SamadhanTicketCreateWithoutSectionInput, SamadhanTicketUncheckedCreateWithoutSectionInput> | SamadhanTicketCreateWithoutSectionInput[] | SamadhanTicketUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutSectionInput | SamadhanTicketCreateOrConnectWithoutSectionInput[]
+    createMany?: SamadhanTicketCreateManySectionInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
   export type OfficerProfileUncheckedCreateNestedManyWithoutSectionInput = {
     create?: XOR<OfficerProfileCreateWithoutSectionInput, OfficerProfileUncheckedCreateWithoutSectionInput> | OfficerProfileCreateWithoutSectionInput[] | OfficerProfileUncheckedCreateWithoutSectionInput[]
     connectOrCreate?: OfficerProfileCreateOrConnectWithoutSectionInput | OfficerProfileCreateOrConnectWithoutSectionInput[]
     createMany?: OfficerProfileCreateManySectionInputEnvelope
     connect?: OfficerProfileWhereUniqueInput | OfficerProfileWhereUniqueInput[]
+  }
+
+  export type SamadhanTicketUncheckedCreateNestedManyWithoutSectionInput = {
+    create?: XOR<SamadhanTicketCreateWithoutSectionInput, SamadhanTicketUncheckedCreateWithoutSectionInput> | SamadhanTicketCreateWithoutSectionInput[] | SamadhanTicketUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutSectionInput | SamadhanTicketCreateOrConnectWithoutSectionInput[]
+    createMany?: SamadhanTicketCreateManySectionInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
   }
 
   export type OfficerProfileUpdateManyWithoutSectionNestedInput = {
@@ -38668,6 +50494,20 @@ export namespace Prisma {
     deleteMany?: OfficerProfileScalarWhereInput | OfficerProfileScalarWhereInput[]
   }
 
+  export type SamadhanTicketUpdateManyWithoutSectionNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutSectionInput, SamadhanTicketUncheckedCreateWithoutSectionInput> | SamadhanTicketCreateWithoutSectionInput[] | SamadhanTicketUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutSectionInput | SamadhanTicketCreateOrConnectWithoutSectionInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutSectionInput | SamadhanTicketUpsertWithWhereUniqueWithoutSectionInput[]
+    createMany?: SamadhanTicketCreateManySectionInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutSectionInput | SamadhanTicketUpdateWithWhereUniqueWithoutSectionInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutSectionInput | SamadhanTicketUpdateManyWithWhereWithoutSectionInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
   export type OfficerProfileUncheckedUpdateManyWithoutSectionNestedInput = {
     create?: XOR<OfficerProfileCreateWithoutSectionInput, OfficerProfileUncheckedCreateWithoutSectionInput> | OfficerProfileCreateWithoutSectionInput[] | OfficerProfileUncheckedCreateWithoutSectionInput[]
     connectOrCreate?: OfficerProfileCreateOrConnectWithoutSectionInput | OfficerProfileCreateOrConnectWithoutSectionInput[]
@@ -38680,6 +50520,20 @@ export namespace Prisma {
     update?: OfficerProfileUpdateWithWhereUniqueWithoutSectionInput | OfficerProfileUpdateWithWhereUniqueWithoutSectionInput[]
     updateMany?: OfficerProfileUpdateManyWithWhereWithoutSectionInput | OfficerProfileUpdateManyWithWhereWithoutSectionInput[]
     deleteMany?: OfficerProfileScalarWhereInput | OfficerProfileScalarWhereInput[]
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyWithoutSectionNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutSectionInput, SamadhanTicketUncheckedCreateWithoutSectionInput> | SamadhanTicketCreateWithoutSectionInput[] | SamadhanTicketUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutSectionInput | SamadhanTicketCreateOrConnectWithoutSectionInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutSectionInput | SamadhanTicketUpsertWithWhereUniqueWithoutSectionInput[]
+    createMany?: SamadhanTicketCreateManySectionInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutSectionInput | SamadhanTicketUpdateWithWhereUniqueWithoutSectionInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutSectionInput | SamadhanTicketUpdateManyWithWhereWithoutSectionInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
   }
 
   export type ApplicationCreateNestedManyWithoutDepartmentInput = {
@@ -39586,6 +51440,492 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOfficerForwardedToInput, UserUpdateWithoutOfficerForwardedToInput>, UserUncheckedUpdateWithoutOfficerForwardedToInput>
   }
 
+  export type UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput = {
+    create?: XOR<UserCreateWithoutSamadhanTicketsAsCitizenInput, UserUncheckedCreateWithoutSamadhanTicketsAsCitizenInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanTicketsAsCitizenInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type SectionCreateNestedOneWithoutSamadhanTicketsInput = {
+    create?: XOR<SectionCreateWithoutSamadhanTicketsInput, SectionUncheckedCreateWithoutSamadhanTicketsInput>
+    connectOrCreate?: SectionCreateOrConnectWithoutSamadhanTicketsInput
+    connect?: SectionWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput = {
+    create?: XOR<UserCreateWithoutSamadhanTicketsAsOfficerInput, UserUncheckedCreateWithoutSamadhanTicketsAsOfficerInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanTicketsAsOfficerInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput = {
+    create?: XOR<UserCreateWithoutSamadhanTicketsEscalatedInput, UserUncheckedCreateWithoutSamadhanTicketsEscalatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanTicketsEscalatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type SamadhanTicketCreateNestedOneWithoutAppealsInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAppealsInput, SamadhanTicketUncheckedCreateWithoutAppealsInput>
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAppealsInput
+    connect?: SamadhanTicketWhereUniqueInput
+  }
+
+  export type SamadhanTicketCreateNestedManyWithoutOriginalTicketInput = {
+    create?: XOR<SamadhanTicketCreateWithoutOriginalTicketInput, SamadhanTicketUncheckedCreateWithoutOriginalTicketInput> | SamadhanTicketCreateWithoutOriginalTicketInput[] | SamadhanTicketUncheckedCreateWithoutOriginalTicketInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutOriginalTicketInput | SamadhanTicketCreateOrConnectWithoutOriginalTicketInput[]
+    createMany?: SamadhanTicketCreateManyOriginalTicketInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
+  export type SamadhanAttachmentCreateNestedManyWithoutTicketInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutTicketInput, SamadhanAttachmentUncheckedCreateWithoutTicketInput> | SamadhanAttachmentCreateWithoutTicketInput[] | SamadhanAttachmentUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutTicketInput | SamadhanAttachmentCreateOrConnectWithoutTicketInput[]
+    createMany?: SamadhanAttachmentCreateManyTicketInputEnvelope
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+  }
+
+  export type SamadhanInfoRequestCreateNestedManyWithoutTicketInput = {
+    create?: XOR<SamadhanInfoRequestCreateWithoutTicketInput, SamadhanInfoRequestUncheckedCreateWithoutTicketInput> | SamadhanInfoRequestCreateWithoutTicketInput[] | SamadhanInfoRequestUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanInfoRequestCreateOrConnectWithoutTicketInput | SamadhanInfoRequestCreateOrConnectWithoutTicketInput[]
+    createMany?: SamadhanInfoRequestCreateManyTicketInputEnvelope
+    connect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+  }
+
+  export type SamadhanStatusHistoryCreateNestedManyWithoutTicketInput = {
+    create?: XOR<SamadhanStatusHistoryCreateWithoutTicketInput, SamadhanStatusHistoryUncheckedCreateWithoutTicketInput> | SamadhanStatusHistoryCreateWithoutTicketInput[] | SamadhanStatusHistoryUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanStatusHistoryCreateOrConnectWithoutTicketInput | SamadhanStatusHistoryCreateOrConnectWithoutTicketInput[]
+    createMany?: SamadhanStatusHistoryCreateManyTicketInputEnvelope
+    connect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+  }
+
+  export type SamadhanInternalNoteCreateNestedManyWithoutTicketInput = {
+    create?: XOR<SamadhanInternalNoteCreateWithoutTicketInput, SamadhanInternalNoteUncheckedCreateWithoutTicketInput> | SamadhanInternalNoteCreateWithoutTicketInput[] | SamadhanInternalNoteUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanInternalNoteCreateOrConnectWithoutTicketInput | SamadhanInternalNoteCreateOrConnectWithoutTicketInput[]
+    createMany?: SamadhanInternalNoteCreateManyTicketInputEnvelope
+    connect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+  }
+
+  export type SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput = {
+    create?: XOR<SamadhanTicketCreateWithoutOriginalTicketInput, SamadhanTicketUncheckedCreateWithoutOriginalTicketInput> | SamadhanTicketCreateWithoutOriginalTicketInput[] | SamadhanTicketUncheckedCreateWithoutOriginalTicketInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutOriginalTicketInput | SamadhanTicketCreateOrConnectWithoutOriginalTicketInput[]
+    createMany?: SamadhanTicketCreateManyOriginalTicketInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
+  export type SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutTicketInput, SamadhanAttachmentUncheckedCreateWithoutTicketInput> | SamadhanAttachmentCreateWithoutTicketInput[] | SamadhanAttachmentUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutTicketInput | SamadhanAttachmentCreateOrConnectWithoutTicketInput[]
+    createMany?: SamadhanAttachmentCreateManyTicketInputEnvelope
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+  }
+
+  export type SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput = {
+    create?: XOR<SamadhanInfoRequestCreateWithoutTicketInput, SamadhanInfoRequestUncheckedCreateWithoutTicketInput> | SamadhanInfoRequestCreateWithoutTicketInput[] | SamadhanInfoRequestUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanInfoRequestCreateOrConnectWithoutTicketInput | SamadhanInfoRequestCreateOrConnectWithoutTicketInput[]
+    createMany?: SamadhanInfoRequestCreateManyTicketInputEnvelope
+    connect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+  }
+
+  export type SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput = {
+    create?: XOR<SamadhanStatusHistoryCreateWithoutTicketInput, SamadhanStatusHistoryUncheckedCreateWithoutTicketInput> | SamadhanStatusHistoryCreateWithoutTicketInput[] | SamadhanStatusHistoryUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanStatusHistoryCreateOrConnectWithoutTicketInput | SamadhanStatusHistoryCreateOrConnectWithoutTicketInput[]
+    createMany?: SamadhanStatusHistoryCreateManyTicketInputEnvelope
+    connect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+  }
+
+  export type SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput = {
+    create?: XOR<SamadhanInternalNoteCreateWithoutTicketInput, SamadhanInternalNoteUncheckedCreateWithoutTicketInput> | SamadhanInternalNoteCreateWithoutTicketInput[] | SamadhanInternalNoteUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanInternalNoteCreateOrConnectWithoutTicketInput | SamadhanInternalNoteCreateOrConnectWithoutTicketInput[]
+    createMany?: SamadhanInternalNoteCreateManyTicketInputEnvelope
+    connect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+  }
+
+  export type EnumSamadhanQueryTypeFieldUpdateOperationsInput = {
+    set?: $Enums.SamadhanQueryType
+  }
+
+  export type EnumSamadhanPriorityFieldUpdateOperationsInput = {
+    set?: $Enums.SamadhanPriority
+  }
+
+  export type EnumSamadhanTicketStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SamadhanTicketStatus
+  }
+
+  export type EnumSamadhanSubmissionChannelFieldUpdateOperationsInput = {
+    set?: $Enums.SamadhanSubmissionChannel
+  }
+
+  export type UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput = {
+    create?: XOR<UserCreateWithoutSamadhanTicketsAsCitizenInput, UserUncheckedCreateWithoutSamadhanTicketsAsCitizenInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanTicketsAsCitizenInput
+    upsert?: UserUpsertWithoutSamadhanTicketsAsCitizenInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSamadhanTicketsAsCitizenInput, UserUpdateWithoutSamadhanTicketsAsCitizenInput>, UserUncheckedUpdateWithoutSamadhanTicketsAsCitizenInput>
+  }
+
+  export type SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput = {
+    create?: XOR<SectionCreateWithoutSamadhanTicketsInput, SectionUncheckedCreateWithoutSamadhanTicketsInput>
+    connectOrCreate?: SectionCreateOrConnectWithoutSamadhanTicketsInput
+    upsert?: SectionUpsertWithoutSamadhanTicketsInput
+    connect?: SectionWhereUniqueInput
+    update?: XOR<XOR<SectionUpdateToOneWithWhereWithoutSamadhanTicketsInput, SectionUpdateWithoutSamadhanTicketsInput>, SectionUncheckedUpdateWithoutSamadhanTicketsInput>
+  }
+
+  export type UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput = {
+    create?: XOR<UserCreateWithoutSamadhanTicketsAsOfficerInput, UserUncheckedCreateWithoutSamadhanTicketsAsOfficerInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanTicketsAsOfficerInput
+    upsert?: UserUpsertWithoutSamadhanTicketsAsOfficerInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSamadhanTicketsAsOfficerInput, UserUpdateWithoutSamadhanTicketsAsOfficerInput>, UserUncheckedUpdateWithoutSamadhanTicketsAsOfficerInput>
+  }
+
+  export type UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput = {
+    create?: XOR<UserCreateWithoutSamadhanTicketsEscalatedInput, UserUncheckedCreateWithoutSamadhanTicketsEscalatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanTicketsEscalatedInput
+    upsert?: UserUpsertWithoutSamadhanTicketsEscalatedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSamadhanTicketsEscalatedInput, UserUpdateWithoutSamadhanTicketsEscalatedInput>, UserUncheckedUpdateWithoutSamadhanTicketsEscalatedInput>
+  }
+
+  export type SamadhanTicketUpdateOneWithoutAppealsNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAppealsInput, SamadhanTicketUncheckedCreateWithoutAppealsInput>
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAppealsInput
+    upsert?: SamadhanTicketUpsertWithoutAppealsInput
+    disconnect?: SamadhanTicketWhereInput | boolean
+    delete?: SamadhanTicketWhereInput | boolean
+    connect?: SamadhanTicketWhereUniqueInput
+    update?: XOR<XOR<SamadhanTicketUpdateToOneWithWhereWithoutAppealsInput, SamadhanTicketUpdateWithoutAppealsInput>, SamadhanTicketUncheckedUpdateWithoutAppealsInput>
+  }
+
+  export type SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutOriginalTicketInput, SamadhanTicketUncheckedCreateWithoutOriginalTicketInput> | SamadhanTicketCreateWithoutOriginalTicketInput[] | SamadhanTicketUncheckedCreateWithoutOriginalTicketInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutOriginalTicketInput | SamadhanTicketCreateOrConnectWithoutOriginalTicketInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutOriginalTicketInput | SamadhanTicketUpsertWithWhereUniqueWithoutOriginalTicketInput[]
+    createMany?: SamadhanTicketCreateManyOriginalTicketInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutOriginalTicketInput | SamadhanTicketUpdateWithWhereUniqueWithoutOriginalTicketInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutOriginalTicketInput | SamadhanTicketUpdateManyWithWhereWithoutOriginalTicketInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
+  export type SamadhanAttachmentUpdateManyWithoutTicketNestedInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutTicketInput, SamadhanAttachmentUncheckedCreateWithoutTicketInput> | SamadhanAttachmentCreateWithoutTicketInput[] | SamadhanAttachmentUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutTicketInput | SamadhanAttachmentCreateOrConnectWithoutTicketInput[]
+    upsert?: SamadhanAttachmentUpsertWithWhereUniqueWithoutTicketInput | SamadhanAttachmentUpsertWithWhereUniqueWithoutTicketInput[]
+    createMany?: SamadhanAttachmentCreateManyTicketInputEnvelope
+    set?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    disconnect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    delete?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    update?: SamadhanAttachmentUpdateWithWhereUniqueWithoutTicketInput | SamadhanAttachmentUpdateWithWhereUniqueWithoutTicketInput[]
+    updateMany?: SamadhanAttachmentUpdateManyWithWhereWithoutTicketInput | SamadhanAttachmentUpdateManyWithWhereWithoutTicketInput[]
+    deleteMany?: SamadhanAttachmentScalarWhereInput | SamadhanAttachmentScalarWhereInput[]
+  }
+
+  export type SamadhanInfoRequestUpdateManyWithoutTicketNestedInput = {
+    create?: XOR<SamadhanInfoRequestCreateWithoutTicketInput, SamadhanInfoRequestUncheckedCreateWithoutTicketInput> | SamadhanInfoRequestCreateWithoutTicketInput[] | SamadhanInfoRequestUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanInfoRequestCreateOrConnectWithoutTicketInput | SamadhanInfoRequestCreateOrConnectWithoutTicketInput[]
+    upsert?: SamadhanInfoRequestUpsertWithWhereUniqueWithoutTicketInput | SamadhanInfoRequestUpsertWithWhereUniqueWithoutTicketInput[]
+    createMany?: SamadhanInfoRequestCreateManyTicketInputEnvelope
+    set?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    disconnect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    delete?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    connect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    update?: SamadhanInfoRequestUpdateWithWhereUniqueWithoutTicketInput | SamadhanInfoRequestUpdateWithWhereUniqueWithoutTicketInput[]
+    updateMany?: SamadhanInfoRequestUpdateManyWithWhereWithoutTicketInput | SamadhanInfoRequestUpdateManyWithWhereWithoutTicketInput[]
+    deleteMany?: SamadhanInfoRequestScalarWhereInput | SamadhanInfoRequestScalarWhereInput[]
+  }
+
+  export type SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput = {
+    create?: XOR<SamadhanStatusHistoryCreateWithoutTicketInput, SamadhanStatusHistoryUncheckedCreateWithoutTicketInput> | SamadhanStatusHistoryCreateWithoutTicketInput[] | SamadhanStatusHistoryUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanStatusHistoryCreateOrConnectWithoutTicketInput | SamadhanStatusHistoryCreateOrConnectWithoutTicketInput[]
+    upsert?: SamadhanStatusHistoryUpsertWithWhereUniqueWithoutTicketInput | SamadhanStatusHistoryUpsertWithWhereUniqueWithoutTicketInput[]
+    createMany?: SamadhanStatusHistoryCreateManyTicketInputEnvelope
+    set?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    disconnect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    delete?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    connect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    update?: SamadhanStatusHistoryUpdateWithWhereUniqueWithoutTicketInput | SamadhanStatusHistoryUpdateWithWhereUniqueWithoutTicketInput[]
+    updateMany?: SamadhanStatusHistoryUpdateManyWithWhereWithoutTicketInput | SamadhanStatusHistoryUpdateManyWithWhereWithoutTicketInput[]
+    deleteMany?: SamadhanStatusHistoryScalarWhereInput | SamadhanStatusHistoryScalarWhereInput[]
+  }
+
+  export type SamadhanInternalNoteUpdateManyWithoutTicketNestedInput = {
+    create?: XOR<SamadhanInternalNoteCreateWithoutTicketInput, SamadhanInternalNoteUncheckedCreateWithoutTicketInput> | SamadhanInternalNoteCreateWithoutTicketInput[] | SamadhanInternalNoteUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanInternalNoteCreateOrConnectWithoutTicketInput | SamadhanInternalNoteCreateOrConnectWithoutTicketInput[]
+    upsert?: SamadhanInternalNoteUpsertWithWhereUniqueWithoutTicketInput | SamadhanInternalNoteUpsertWithWhereUniqueWithoutTicketInput[]
+    createMany?: SamadhanInternalNoteCreateManyTicketInputEnvelope
+    set?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    disconnect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    delete?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    connect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    update?: SamadhanInternalNoteUpdateWithWhereUniqueWithoutTicketInput | SamadhanInternalNoteUpdateWithWhereUniqueWithoutTicketInput[]
+    updateMany?: SamadhanInternalNoteUpdateManyWithWhereWithoutTicketInput | SamadhanInternalNoteUpdateManyWithWhereWithoutTicketInput[]
+    deleteMany?: SamadhanInternalNoteScalarWhereInput | SamadhanInternalNoteScalarWhereInput[]
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutOriginalTicketInput, SamadhanTicketUncheckedCreateWithoutOriginalTicketInput> | SamadhanTicketCreateWithoutOriginalTicketInput[] | SamadhanTicketUncheckedCreateWithoutOriginalTicketInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutOriginalTicketInput | SamadhanTicketCreateOrConnectWithoutOriginalTicketInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutOriginalTicketInput | SamadhanTicketUpsertWithWhereUniqueWithoutOriginalTicketInput[]
+    createMany?: SamadhanTicketCreateManyOriginalTicketInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutOriginalTicketInput | SamadhanTicketUpdateWithWhereUniqueWithoutOriginalTicketInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutOriginalTicketInput | SamadhanTicketUpdateManyWithWhereWithoutOriginalTicketInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutTicketInput, SamadhanAttachmentUncheckedCreateWithoutTicketInput> | SamadhanAttachmentCreateWithoutTicketInput[] | SamadhanAttachmentUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutTicketInput | SamadhanAttachmentCreateOrConnectWithoutTicketInput[]
+    upsert?: SamadhanAttachmentUpsertWithWhereUniqueWithoutTicketInput | SamadhanAttachmentUpsertWithWhereUniqueWithoutTicketInput[]
+    createMany?: SamadhanAttachmentCreateManyTicketInputEnvelope
+    set?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    disconnect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    delete?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    update?: SamadhanAttachmentUpdateWithWhereUniqueWithoutTicketInput | SamadhanAttachmentUpdateWithWhereUniqueWithoutTicketInput[]
+    updateMany?: SamadhanAttachmentUpdateManyWithWhereWithoutTicketInput | SamadhanAttachmentUpdateManyWithWhereWithoutTicketInput[]
+    deleteMany?: SamadhanAttachmentScalarWhereInput | SamadhanAttachmentScalarWhereInput[]
+  }
+
+  export type SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput = {
+    create?: XOR<SamadhanInfoRequestCreateWithoutTicketInput, SamadhanInfoRequestUncheckedCreateWithoutTicketInput> | SamadhanInfoRequestCreateWithoutTicketInput[] | SamadhanInfoRequestUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanInfoRequestCreateOrConnectWithoutTicketInput | SamadhanInfoRequestCreateOrConnectWithoutTicketInput[]
+    upsert?: SamadhanInfoRequestUpsertWithWhereUniqueWithoutTicketInput | SamadhanInfoRequestUpsertWithWhereUniqueWithoutTicketInput[]
+    createMany?: SamadhanInfoRequestCreateManyTicketInputEnvelope
+    set?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    disconnect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    delete?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    connect?: SamadhanInfoRequestWhereUniqueInput | SamadhanInfoRequestWhereUniqueInput[]
+    update?: SamadhanInfoRequestUpdateWithWhereUniqueWithoutTicketInput | SamadhanInfoRequestUpdateWithWhereUniqueWithoutTicketInput[]
+    updateMany?: SamadhanInfoRequestUpdateManyWithWhereWithoutTicketInput | SamadhanInfoRequestUpdateManyWithWhereWithoutTicketInput[]
+    deleteMany?: SamadhanInfoRequestScalarWhereInput | SamadhanInfoRequestScalarWhereInput[]
+  }
+
+  export type SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput = {
+    create?: XOR<SamadhanStatusHistoryCreateWithoutTicketInput, SamadhanStatusHistoryUncheckedCreateWithoutTicketInput> | SamadhanStatusHistoryCreateWithoutTicketInput[] | SamadhanStatusHistoryUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanStatusHistoryCreateOrConnectWithoutTicketInput | SamadhanStatusHistoryCreateOrConnectWithoutTicketInput[]
+    upsert?: SamadhanStatusHistoryUpsertWithWhereUniqueWithoutTicketInput | SamadhanStatusHistoryUpsertWithWhereUniqueWithoutTicketInput[]
+    createMany?: SamadhanStatusHistoryCreateManyTicketInputEnvelope
+    set?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    disconnect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    delete?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    connect?: SamadhanStatusHistoryWhereUniqueInput | SamadhanStatusHistoryWhereUniqueInput[]
+    update?: SamadhanStatusHistoryUpdateWithWhereUniqueWithoutTicketInput | SamadhanStatusHistoryUpdateWithWhereUniqueWithoutTicketInput[]
+    updateMany?: SamadhanStatusHistoryUpdateManyWithWhereWithoutTicketInput | SamadhanStatusHistoryUpdateManyWithWhereWithoutTicketInput[]
+    deleteMany?: SamadhanStatusHistoryScalarWhereInput | SamadhanStatusHistoryScalarWhereInput[]
+  }
+
+  export type SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput = {
+    create?: XOR<SamadhanInternalNoteCreateWithoutTicketInput, SamadhanInternalNoteUncheckedCreateWithoutTicketInput> | SamadhanInternalNoteCreateWithoutTicketInput[] | SamadhanInternalNoteUncheckedCreateWithoutTicketInput[]
+    connectOrCreate?: SamadhanInternalNoteCreateOrConnectWithoutTicketInput | SamadhanInternalNoteCreateOrConnectWithoutTicketInput[]
+    upsert?: SamadhanInternalNoteUpsertWithWhereUniqueWithoutTicketInput | SamadhanInternalNoteUpsertWithWhereUniqueWithoutTicketInput[]
+    createMany?: SamadhanInternalNoteCreateManyTicketInputEnvelope
+    set?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    disconnect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    delete?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    connect?: SamadhanInternalNoteWhereUniqueInput | SamadhanInternalNoteWhereUniqueInput[]
+    update?: SamadhanInternalNoteUpdateWithWhereUniqueWithoutTicketInput | SamadhanInternalNoteUpdateWithWhereUniqueWithoutTicketInput[]
+    updateMany?: SamadhanInternalNoteUpdateManyWithWhereWithoutTicketInput | SamadhanInternalNoteUpdateManyWithWhereWithoutTicketInput[]
+    deleteMany?: SamadhanInternalNoteScalarWhereInput | SamadhanInternalNoteScalarWhereInput[]
+  }
+
+  export type SamadhanTicketCreateNestedOneWithoutAttachmentsInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAttachmentsInput, SamadhanTicketUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAttachmentsInput
+    connect?: SamadhanTicketWhereUniqueInput
+  }
+
+  export type SamadhanInfoRequestCreateNestedOneWithoutAttachmentsInput = {
+    create?: XOR<SamadhanInfoRequestCreateWithoutAttachmentsInput, SamadhanInfoRequestUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: SamadhanInfoRequestCreateOrConnectWithoutAttachmentsInput
+    connect?: SamadhanInfoRequestWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSamadhanAttachmentsUploadedInput = {
+    create?: XOR<UserCreateWithoutSamadhanAttachmentsUploadedInput, UserUncheckedCreateWithoutSamadhanAttachmentsUploadedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanAttachmentsUploadedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type SamadhanTicketUpdateOneRequiredWithoutAttachmentsNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAttachmentsInput, SamadhanTicketUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAttachmentsInput
+    upsert?: SamadhanTicketUpsertWithoutAttachmentsInput
+    connect?: SamadhanTicketWhereUniqueInput
+    update?: XOR<XOR<SamadhanTicketUpdateToOneWithWhereWithoutAttachmentsInput, SamadhanTicketUpdateWithoutAttachmentsInput>, SamadhanTicketUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type SamadhanInfoRequestUpdateOneWithoutAttachmentsNestedInput = {
+    create?: XOR<SamadhanInfoRequestCreateWithoutAttachmentsInput, SamadhanInfoRequestUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: SamadhanInfoRequestCreateOrConnectWithoutAttachmentsInput
+    upsert?: SamadhanInfoRequestUpsertWithoutAttachmentsInput
+    disconnect?: SamadhanInfoRequestWhereInput | boolean
+    delete?: SamadhanInfoRequestWhereInput | boolean
+    connect?: SamadhanInfoRequestWhereUniqueInput
+    update?: XOR<XOR<SamadhanInfoRequestUpdateToOneWithWhereWithoutAttachmentsInput, SamadhanInfoRequestUpdateWithoutAttachmentsInput>, SamadhanInfoRequestUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type UserUpdateOneWithoutSamadhanAttachmentsUploadedNestedInput = {
+    create?: XOR<UserCreateWithoutSamadhanAttachmentsUploadedInput, UserUncheckedCreateWithoutSamadhanAttachmentsUploadedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanAttachmentsUploadedInput
+    upsert?: UserUpsertWithoutSamadhanAttachmentsUploadedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSamadhanAttachmentsUploadedInput, UserUpdateWithoutSamadhanAttachmentsUploadedInput>, UserUncheckedUpdateWithoutSamadhanAttachmentsUploadedInput>
+  }
+
+  export type SamadhanTicketCreateNestedOneWithoutInfoRequestsInput = {
+    create?: XOR<SamadhanTicketCreateWithoutInfoRequestsInput, SamadhanTicketUncheckedCreateWithoutInfoRequestsInput>
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutInfoRequestsInput
+    connect?: SamadhanTicketWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSamadhanInfoRequestsInput = {
+    create?: XOR<UserCreateWithoutSamadhanInfoRequestsInput, UserUncheckedCreateWithoutSamadhanInfoRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanInfoRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type SamadhanAttachmentCreateNestedManyWithoutInfoRequestInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutInfoRequestInput, SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput> | SamadhanAttachmentCreateWithoutInfoRequestInput[] | SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutInfoRequestInput | SamadhanAttachmentCreateOrConnectWithoutInfoRequestInput[]
+    createMany?: SamadhanAttachmentCreateManyInfoRequestInputEnvelope
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+  }
+
+  export type SamadhanAttachmentUncheckedCreateNestedManyWithoutInfoRequestInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutInfoRequestInput, SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput> | SamadhanAttachmentCreateWithoutInfoRequestInput[] | SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutInfoRequestInput | SamadhanAttachmentCreateOrConnectWithoutInfoRequestInput[]
+    createMany?: SamadhanAttachmentCreateManyInfoRequestInputEnvelope
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+  }
+
+  export type EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SamadhanInfoRequestStatus
+  }
+
+  export type SamadhanTicketUpdateOneRequiredWithoutInfoRequestsNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutInfoRequestsInput, SamadhanTicketUncheckedCreateWithoutInfoRequestsInput>
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutInfoRequestsInput
+    upsert?: SamadhanTicketUpsertWithoutInfoRequestsInput
+    connect?: SamadhanTicketWhereUniqueInput
+    update?: XOR<XOR<SamadhanTicketUpdateToOneWithWhereWithoutInfoRequestsInput, SamadhanTicketUpdateWithoutInfoRequestsInput>, SamadhanTicketUncheckedUpdateWithoutInfoRequestsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutSamadhanInfoRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutSamadhanInfoRequestsInput, UserUncheckedCreateWithoutSamadhanInfoRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanInfoRequestsInput
+    upsert?: UserUpsertWithoutSamadhanInfoRequestsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSamadhanInfoRequestsInput, UserUpdateWithoutSamadhanInfoRequestsInput>, UserUncheckedUpdateWithoutSamadhanInfoRequestsInput>
+  }
+
+  export type SamadhanAttachmentUpdateManyWithoutInfoRequestNestedInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutInfoRequestInput, SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput> | SamadhanAttachmentCreateWithoutInfoRequestInput[] | SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutInfoRequestInput | SamadhanAttachmentCreateOrConnectWithoutInfoRequestInput[]
+    upsert?: SamadhanAttachmentUpsertWithWhereUniqueWithoutInfoRequestInput | SamadhanAttachmentUpsertWithWhereUniqueWithoutInfoRequestInput[]
+    createMany?: SamadhanAttachmentCreateManyInfoRequestInputEnvelope
+    set?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    disconnect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    delete?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    update?: SamadhanAttachmentUpdateWithWhereUniqueWithoutInfoRequestInput | SamadhanAttachmentUpdateWithWhereUniqueWithoutInfoRequestInput[]
+    updateMany?: SamadhanAttachmentUpdateManyWithWhereWithoutInfoRequestInput | SamadhanAttachmentUpdateManyWithWhereWithoutInfoRequestInput[]
+    deleteMany?: SamadhanAttachmentScalarWhereInput | SamadhanAttachmentScalarWhereInput[]
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateManyWithoutInfoRequestNestedInput = {
+    create?: XOR<SamadhanAttachmentCreateWithoutInfoRequestInput, SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput> | SamadhanAttachmentCreateWithoutInfoRequestInput[] | SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput[]
+    connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutInfoRequestInput | SamadhanAttachmentCreateOrConnectWithoutInfoRequestInput[]
+    upsert?: SamadhanAttachmentUpsertWithWhereUniqueWithoutInfoRequestInput | SamadhanAttachmentUpsertWithWhereUniqueWithoutInfoRequestInput[]
+    createMany?: SamadhanAttachmentCreateManyInfoRequestInputEnvelope
+    set?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    disconnect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    delete?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    connect?: SamadhanAttachmentWhereUniqueInput | SamadhanAttachmentWhereUniqueInput[]
+    update?: SamadhanAttachmentUpdateWithWhereUniqueWithoutInfoRequestInput | SamadhanAttachmentUpdateWithWhereUniqueWithoutInfoRequestInput[]
+    updateMany?: SamadhanAttachmentUpdateManyWithWhereWithoutInfoRequestInput | SamadhanAttachmentUpdateManyWithWhereWithoutInfoRequestInput[]
+    deleteMany?: SamadhanAttachmentScalarWhereInput | SamadhanAttachmentScalarWhereInput[]
+  }
+
+  export type SamadhanTicketCreateNestedOneWithoutStatusHistoryInput = {
+    create?: XOR<SamadhanTicketCreateWithoutStatusHistoryInput, SamadhanTicketUncheckedCreateWithoutStatusHistoryInput>
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutStatusHistoryInput
+    connect?: SamadhanTicketWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSamadhanStatusChangesInput = {
+    create?: XOR<UserCreateWithoutSamadhanStatusChangesInput, UserUncheckedCreateWithoutSamadhanStatusChangesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanStatusChangesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SamadhanTicketStatus | null
+  }
+
+  export type SamadhanTicketUpdateOneRequiredWithoutStatusHistoryNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutStatusHistoryInput, SamadhanTicketUncheckedCreateWithoutStatusHistoryInput>
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutStatusHistoryInput
+    upsert?: SamadhanTicketUpsertWithoutStatusHistoryInput
+    connect?: SamadhanTicketWhereUniqueInput
+    update?: XOR<XOR<SamadhanTicketUpdateToOneWithWhereWithoutStatusHistoryInput, SamadhanTicketUpdateWithoutStatusHistoryInput>, SamadhanTicketUncheckedUpdateWithoutStatusHistoryInput>
+  }
+
+  export type UserUpdateOneWithoutSamadhanStatusChangesNestedInput = {
+    create?: XOR<UserCreateWithoutSamadhanStatusChangesInput, UserUncheckedCreateWithoutSamadhanStatusChangesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanStatusChangesInput
+    upsert?: UserUpsertWithoutSamadhanStatusChangesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSamadhanStatusChangesInput, UserUpdateWithoutSamadhanStatusChangesInput>, UserUncheckedUpdateWithoutSamadhanStatusChangesInput>
+  }
+
+  export type SamadhanTicketCreateNestedOneWithoutInternalNotesInput = {
+    create?: XOR<SamadhanTicketCreateWithoutInternalNotesInput, SamadhanTicketUncheckedCreateWithoutInternalNotesInput>
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutInternalNotesInput
+    connect?: SamadhanTicketWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSamadhanInternalNotesInput = {
+    create?: XOR<UserCreateWithoutSamadhanInternalNotesInput, UserUncheckedCreateWithoutSamadhanInternalNotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanInternalNotesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type SamadhanTicketUpdateOneRequiredWithoutInternalNotesNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutInternalNotesInput, SamadhanTicketUncheckedCreateWithoutInternalNotesInput>
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutInternalNotesInput
+    upsert?: SamadhanTicketUpsertWithoutInternalNotesInput
+    connect?: SamadhanTicketWhereUniqueInput
+    update?: XOR<XOR<SamadhanTicketUpdateToOneWithWhereWithoutInternalNotesInput, SamadhanTicketUpdateWithoutInternalNotesInput>, SamadhanTicketUncheckedUpdateWithoutInternalNotesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutSamadhanInternalNotesNestedInput = {
+    create?: XOR<UserCreateWithoutSamadhanInternalNotesInput, UserUncheckedCreateWithoutSamadhanInternalNotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanInternalNotesInput
+    upsert?: UserUpsertWithoutSamadhanInternalNotesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSamadhanInternalNotesInput, UserUpdateWithoutSamadhanInternalNotesInput>, UserUncheckedUpdateWithoutSamadhanInternalNotesInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -39912,6 +52252,108 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedEnumSamadhanQueryTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanQueryType | EnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanQueryType[] | ListEnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanQueryType[] | ListEnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanQueryTypeFilter<$PrismaModel> | $Enums.SamadhanQueryType
+  }
+
+  export type NestedEnumSamadhanPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanPriority | EnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanPriority[] | ListEnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanPriority[] | ListEnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanPriorityFilter<$PrismaModel> | $Enums.SamadhanPriority
+  }
+
+  export type NestedEnumSamadhanTicketStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanTicketStatus | EnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel> | $Enums.SamadhanTicketStatus
+  }
+
+  export type NestedEnumSamadhanSubmissionChannelFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanSubmissionChannel | EnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanSubmissionChannelFilter<$PrismaModel> | $Enums.SamadhanSubmissionChannel
+  }
+
+  export type NestedEnumSamadhanQueryTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanQueryType | EnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanQueryType[] | ListEnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanQueryType[] | ListEnumSamadhanQueryTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanQueryTypeWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanQueryType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanQueryTypeFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanQueryTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSamadhanPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanPriority | EnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanPriority[] | ListEnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanPriority[] | ListEnumSamadhanPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanPriorityWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanPriorityFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanPriorityFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSamadhanTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanTicketStatus | EnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanTicketStatusWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanTicketStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSamadhanSubmissionChannelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanSubmissionChannel | EnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanSubmissionChannelWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanSubmissionChannel
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanSubmissionChannelFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanSubmissionChannelFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSamadhanInfoRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanInfoRequestStatus | EnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanInfoRequestStatus[] | ListEnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanInfoRequestStatus[] | ListEnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanInfoRequestStatusFilter<$PrismaModel> | $Enums.SamadhanInfoRequestStatus
+  }
+
+  export type NestedEnumSamadhanInfoRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanInfoRequestStatus | EnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SamadhanInfoRequestStatus[] | ListEnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SamadhanInfoRequestStatus[] | ListEnumSamadhanInfoRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSamadhanInfoRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanInfoRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanInfoRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanInfoRequestStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSamadhanTicketStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanTicketStatus | EnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSamadhanTicketStatusNullableFilter<$PrismaModel> | $Enums.SamadhanTicketStatus | null
+  }
+
+  export type NestedEnumSamadhanTicketStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SamadhanTicketStatus | EnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SamadhanTicketStatus[] | ListEnumSamadhanTicketStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSamadhanTicketStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.SamadhanTicketStatus | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSamadhanTicketStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumSamadhanTicketStatusNullableFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutUserSettingsInput = {
     id?: string
     email: string
@@ -39942,6 +52384,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutUserSettingsInput = {
@@ -39974,6 +52423,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutUserSettingsInput = {
@@ -40022,6 +52478,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserSettingsInput = {
@@ -40054,6 +52517,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ApplicationAuditLogCreateWithoutPerformedByInput = {
@@ -40306,6 +52776,7 @@ export namespace Prisma {
     phone: string
     address: string
     aadhaarNumber?: string | null
+    samadhanPseudonym?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -40316,6 +52787,7 @@ export namespace Prisma {
     phone: string
     address: string
     aadhaarNumber?: string | null
+    samadhanPseudonym?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -40783,6 +53255,386 @@ export namespace Prisma {
     create: XOR<UserSettingsCreateWithoutUserInput, UserSettingsUncheckedCreateWithoutUserInput>
   }
 
+  export type SamadhanTicketCreateWithoutCitizenInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutCitizenInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutCitizenInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutCitizenInput, SamadhanTicketUncheckedCreateWithoutCitizenInput>
+  }
+
+  export type SamadhanTicketCreateManyCitizenInputEnvelope = {
+    data: SamadhanTicketCreateManyCitizenInput | SamadhanTicketCreateManyCitizenInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanTicketCreateWithoutAssignedOfficerInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutAssignedOfficerInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutAssignedOfficerInput, SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput>
+  }
+
+  export type SamadhanTicketCreateManyAssignedOfficerInputEnvelope = {
+    data: SamadhanTicketCreateManyAssignedOfficerInput | SamadhanTicketCreateManyAssignedOfficerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanTicketCreateWithoutEscalatedToInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutEscalatedToInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutEscalatedToInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutEscalatedToInput, SamadhanTicketUncheckedCreateWithoutEscalatedToInput>
+  }
+
+  export type SamadhanTicketCreateManyEscalatedToInputEnvelope = {
+    data: SamadhanTicketCreateManyEscalatedToInput | SamadhanTicketCreateManyEscalatedToInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanAttachmentCreateWithoutUploadedByInput = {
+    id?: string
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedByType?: string
+    createdAt?: Date | string
+    ticket: SamadhanTicketCreateNestedOneWithoutAttachmentsInput
+    infoRequest?: SamadhanInfoRequestCreateNestedOneWithoutAttachmentsInput
+  }
+
+  export type SamadhanAttachmentUncheckedCreateWithoutUploadedByInput = {
+    id?: string
+    ticketId: string
+    infoRequestId?: string | null
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedByType?: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanAttachmentCreateOrConnectWithoutUploadedByInput = {
+    where: SamadhanAttachmentWhereUniqueInput
+    create: XOR<SamadhanAttachmentCreateWithoutUploadedByInput, SamadhanAttachmentUncheckedCreateWithoutUploadedByInput>
+  }
+
+  export type SamadhanAttachmentCreateManyUploadedByInputEnvelope = {
+    data: SamadhanAttachmentCreateManyUploadedByInput | SamadhanAttachmentCreateManyUploadedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanInfoRequestCreateWithoutRequestedByInput = {
+    id?: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ticket: SamadhanTicketCreateNestedOneWithoutInfoRequestsInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutInfoRequestInput
+  }
+
+  export type SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput = {
+    id?: string
+    ticketId: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutInfoRequestInput
+  }
+
+  export type SamadhanInfoRequestCreateOrConnectWithoutRequestedByInput = {
+    where: SamadhanInfoRequestWhereUniqueInput
+    create: XOR<SamadhanInfoRequestCreateWithoutRequestedByInput, SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput>
+  }
+
+  export type SamadhanInfoRequestCreateManyRequestedByInputEnvelope = {
+    data: SamadhanInfoRequestCreateManyRequestedByInput | SamadhanInfoRequestCreateManyRequestedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanStatusHistoryCreateWithoutChangedByInput = {
+    id?: string
+    fromStatus?: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus
+    changeReason?: string | null
+    isSystemGenerated?: boolean
+    createdAt?: Date | string
+    ticket: SamadhanTicketCreateNestedOneWithoutStatusHistoryInput
+  }
+
+  export type SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput = {
+    id?: string
+    ticketId: string
+    fromStatus?: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus
+    changeReason?: string | null
+    isSystemGenerated?: boolean
+    createdAt?: Date | string
+  }
+
+  export type SamadhanStatusHistoryCreateOrConnectWithoutChangedByInput = {
+    where: SamadhanStatusHistoryWhereUniqueInput
+    create: XOR<SamadhanStatusHistoryCreateWithoutChangedByInput, SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput>
+  }
+
+  export type SamadhanStatusHistoryCreateManyChangedByInputEnvelope = {
+    data: SamadhanStatusHistoryCreateManyChangedByInput | SamadhanStatusHistoryCreateManyChangedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanInternalNoteCreateWithoutCreatedByInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    ticket: SamadhanTicketCreateNestedOneWithoutInternalNotesInput
+  }
+
+  export type SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    ticketId: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanInternalNoteCreateOrConnectWithoutCreatedByInput = {
+    where: SamadhanInternalNoteWhereUniqueInput
+    create: XOR<SamadhanInternalNoteCreateWithoutCreatedByInput, SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type SamadhanInternalNoteCreateManyCreatedByInputEnvelope = {
+    data: SamadhanInternalNoteCreateManyCreatedByInput | SamadhanInternalNoteCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ApplicationAuditLogUpsertWithWhereUniqueWithoutPerformedByInput = {
     where: ApplicationAuditLogWhereUniqueInput
     update: XOR<ApplicationAuditLogUpdateWithoutPerformedByInput, ApplicationAuditLogUncheckedUpdateWithoutPerformedByInput>
@@ -40949,6 +53801,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     aadhaarNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    samadhanPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -40959,6 +53812,7 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     address?: StringFieldUpdateOperationsInput | string
     aadhaarNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    samadhanPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -41359,6 +54213,213 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SamadhanTicketUpsertWithWhereUniqueWithoutCitizenInput = {
+    where: SamadhanTicketWhereUniqueInput
+    update: XOR<SamadhanTicketUpdateWithoutCitizenInput, SamadhanTicketUncheckedUpdateWithoutCitizenInput>
+    create: XOR<SamadhanTicketCreateWithoutCitizenInput, SamadhanTicketUncheckedCreateWithoutCitizenInput>
+  }
+
+  export type SamadhanTicketUpdateWithWhereUniqueWithoutCitizenInput = {
+    where: SamadhanTicketWhereUniqueInput
+    data: XOR<SamadhanTicketUpdateWithoutCitizenInput, SamadhanTicketUncheckedUpdateWithoutCitizenInput>
+  }
+
+  export type SamadhanTicketUpdateManyWithWhereWithoutCitizenInput = {
+    where: SamadhanTicketScalarWhereInput
+    data: XOR<SamadhanTicketUpdateManyMutationInput, SamadhanTicketUncheckedUpdateManyWithoutCitizenInput>
+  }
+
+  export type SamadhanTicketScalarWhereInput = {
+    AND?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+    OR?: SamadhanTicketScalarWhereInput[]
+    NOT?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+    id?: StringFilter<"SamadhanTicket"> | string
+    referenceId?: StringFilter<"SamadhanTicket"> | string
+    queryType?: EnumSamadhanQueryTypeFilter<"SamadhanTicket"> | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFilter<"SamadhanTicket"> | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFilter<"SamadhanTicket"> | $Enums.SamadhanTicketStatus
+    citizenId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenName?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenEmail?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenPhone?: StringNullableFilter<"SamadhanTicket"> | string | null
+    citizenPseudonym?: StringNullableFilter<"SamadhanTicket"> | string | null
+    isAnonymous?: BoolFilter<"SamadhanTicket"> | boolean
+    isAnonymousToOfficer?: BoolFilter<"SamadhanTicket"> | boolean
+    sectionId?: StringFilter<"SamadhanTicket"> | string
+    serviceAvailed?: StringNullableFilter<"SamadhanTicket"> | string | null
+    description?: StringFilter<"SamadhanTicket"> | string
+    assignedOfficerId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    escalatedToId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFilter<"SamadhanTicket"> | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: StringNullableFilter<"SamadhanTicket"> | string | null
+    slaDeadline?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    seenAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    acknowledgedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    resolvedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    slaBreachedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    resolutionMessage?: StringNullableFilter<"SamadhanTicket"> | string | null
+    isAppeal?: BoolFilter<"SamadhanTicket"> | boolean
+    originalTicketId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    createdAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
+  }
+
+  export type SamadhanTicketUpsertWithWhereUniqueWithoutAssignedOfficerInput = {
+    where: SamadhanTicketWhereUniqueInput
+    update: XOR<SamadhanTicketUpdateWithoutAssignedOfficerInput, SamadhanTicketUncheckedUpdateWithoutAssignedOfficerInput>
+    create: XOR<SamadhanTicketCreateWithoutAssignedOfficerInput, SamadhanTicketUncheckedCreateWithoutAssignedOfficerInput>
+  }
+
+  export type SamadhanTicketUpdateWithWhereUniqueWithoutAssignedOfficerInput = {
+    where: SamadhanTicketWhereUniqueInput
+    data: XOR<SamadhanTicketUpdateWithoutAssignedOfficerInput, SamadhanTicketUncheckedUpdateWithoutAssignedOfficerInput>
+  }
+
+  export type SamadhanTicketUpdateManyWithWhereWithoutAssignedOfficerInput = {
+    where: SamadhanTicketScalarWhereInput
+    data: XOR<SamadhanTicketUpdateManyMutationInput, SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerInput>
+  }
+
+  export type SamadhanTicketUpsertWithWhereUniqueWithoutEscalatedToInput = {
+    where: SamadhanTicketWhereUniqueInput
+    update: XOR<SamadhanTicketUpdateWithoutEscalatedToInput, SamadhanTicketUncheckedUpdateWithoutEscalatedToInput>
+    create: XOR<SamadhanTicketCreateWithoutEscalatedToInput, SamadhanTicketUncheckedCreateWithoutEscalatedToInput>
+  }
+
+  export type SamadhanTicketUpdateWithWhereUniqueWithoutEscalatedToInput = {
+    where: SamadhanTicketWhereUniqueInput
+    data: XOR<SamadhanTicketUpdateWithoutEscalatedToInput, SamadhanTicketUncheckedUpdateWithoutEscalatedToInput>
+  }
+
+  export type SamadhanTicketUpdateManyWithWhereWithoutEscalatedToInput = {
+    where: SamadhanTicketScalarWhereInput
+    data: XOR<SamadhanTicketUpdateManyMutationInput, SamadhanTicketUncheckedUpdateManyWithoutEscalatedToInput>
+  }
+
+  export type SamadhanAttachmentUpsertWithWhereUniqueWithoutUploadedByInput = {
+    where: SamadhanAttachmentWhereUniqueInput
+    update: XOR<SamadhanAttachmentUpdateWithoutUploadedByInput, SamadhanAttachmentUncheckedUpdateWithoutUploadedByInput>
+    create: XOR<SamadhanAttachmentCreateWithoutUploadedByInput, SamadhanAttachmentUncheckedCreateWithoutUploadedByInput>
+  }
+
+  export type SamadhanAttachmentUpdateWithWhereUniqueWithoutUploadedByInput = {
+    where: SamadhanAttachmentWhereUniqueInput
+    data: XOR<SamadhanAttachmentUpdateWithoutUploadedByInput, SamadhanAttachmentUncheckedUpdateWithoutUploadedByInput>
+  }
+
+  export type SamadhanAttachmentUpdateManyWithWhereWithoutUploadedByInput = {
+    where: SamadhanAttachmentScalarWhereInput
+    data: XOR<SamadhanAttachmentUpdateManyMutationInput, SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByInput>
+  }
+
+  export type SamadhanAttachmentScalarWhereInput = {
+    AND?: SamadhanAttachmentScalarWhereInput | SamadhanAttachmentScalarWhereInput[]
+    OR?: SamadhanAttachmentScalarWhereInput[]
+    NOT?: SamadhanAttachmentScalarWhereInput | SamadhanAttachmentScalarWhereInput[]
+    id?: StringFilter<"SamadhanAttachment"> | string
+    ticketId?: StringFilter<"SamadhanAttachment"> | string
+    infoRequestId?: StringNullableFilter<"SamadhanAttachment"> | string | null
+    fileName?: StringFilter<"SamadhanAttachment"> | string
+    originalName?: StringFilter<"SamadhanAttachment"> | string
+    filePath?: StringFilter<"SamadhanAttachment"> | string
+    fileType?: StringFilter<"SamadhanAttachment"> | string
+    fileSize?: IntFilter<"SamadhanAttachment"> | number
+    uploadedById?: StringNullableFilter<"SamadhanAttachment"> | string | null
+    uploadedByType?: StringFilter<"SamadhanAttachment"> | string
+    createdAt?: DateTimeFilter<"SamadhanAttachment"> | Date | string
+  }
+
+  export type SamadhanInfoRequestUpsertWithWhereUniqueWithoutRequestedByInput = {
+    where: SamadhanInfoRequestWhereUniqueInput
+    update: XOR<SamadhanInfoRequestUpdateWithoutRequestedByInput, SamadhanInfoRequestUncheckedUpdateWithoutRequestedByInput>
+    create: XOR<SamadhanInfoRequestCreateWithoutRequestedByInput, SamadhanInfoRequestUncheckedCreateWithoutRequestedByInput>
+  }
+
+  export type SamadhanInfoRequestUpdateWithWhereUniqueWithoutRequestedByInput = {
+    where: SamadhanInfoRequestWhereUniqueInput
+    data: XOR<SamadhanInfoRequestUpdateWithoutRequestedByInput, SamadhanInfoRequestUncheckedUpdateWithoutRequestedByInput>
+  }
+
+  export type SamadhanInfoRequestUpdateManyWithWhereWithoutRequestedByInput = {
+    where: SamadhanInfoRequestScalarWhereInput
+    data: XOR<SamadhanInfoRequestUpdateManyMutationInput, SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByInput>
+  }
+
+  export type SamadhanInfoRequestScalarWhereInput = {
+    AND?: SamadhanInfoRequestScalarWhereInput | SamadhanInfoRequestScalarWhereInput[]
+    OR?: SamadhanInfoRequestScalarWhereInput[]
+    NOT?: SamadhanInfoRequestScalarWhereInput | SamadhanInfoRequestScalarWhereInput[]
+    id?: StringFilter<"SamadhanInfoRequest"> | string
+    ticketId?: StringFilter<"SamadhanInfoRequest"> | string
+    requestedById?: StringFilter<"SamadhanInfoRequest"> | string
+    description?: StringFilter<"SamadhanInfoRequest"> | string
+    documentTypes?: StringNullableFilter<"SamadhanInfoRequest"> | string | null
+    deadline?: DateTimeFilter<"SamadhanInfoRequest"> | Date | string
+    status?: EnumSamadhanInfoRequestStatusFilter<"SamadhanInfoRequest"> | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: StringNullableFilter<"SamadhanInfoRequest"> | string | null
+    respondedAt?: DateTimeNullableFilter<"SamadhanInfoRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"SamadhanInfoRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanInfoRequest"> | Date | string
+  }
+
+  export type SamadhanStatusHistoryUpsertWithWhereUniqueWithoutChangedByInput = {
+    where: SamadhanStatusHistoryWhereUniqueInput
+    update: XOR<SamadhanStatusHistoryUpdateWithoutChangedByInput, SamadhanStatusHistoryUncheckedUpdateWithoutChangedByInput>
+    create: XOR<SamadhanStatusHistoryCreateWithoutChangedByInput, SamadhanStatusHistoryUncheckedCreateWithoutChangedByInput>
+  }
+
+  export type SamadhanStatusHistoryUpdateWithWhereUniqueWithoutChangedByInput = {
+    where: SamadhanStatusHistoryWhereUniqueInput
+    data: XOR<SamadhanStatusHistoryUpdateWithoutChangedByInput, SamadhanStatusHistoryUncheckedUpdateWithoutChangedByInput>
+  }
+
+  export type SamadhanStatusHistoryUpdateManyWithWhereWithoutChangedByInput = {
+    where: SamadhanStatusHistoryScalarWhereInput
+    data: XOR<SamadhanStatusHistoryUpdateManyMutationInput, SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByInput>
+  }
+
+  export type SamadhanStatusHistoryScalarWhereInput = {
+    AND?: SamadhanStatusHistoryScalarWhereInput | SamadhanStatusHistoryScalarWhereInput[]
+    OR?: SamadhanStatusHistoryScalarWhereInput[]
+    NOT?: SamadhanStatusHistoryScalarWhereInput | SamadhanStatusHistoryScalarWhereInput[]
+    id?: StringFilter<"SamadhanStatusHistory"> | string
+    ticketId?: StringFilter<"SamadhanStatusHistory"> | string
+    fromStatus?: EnumSamadhanTicketStatusNullableFilter<"SamadhanStatusHistory"> | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFilter<"SamadhanStatusHistory"> | $Enums.SamadhanTicketStatus
+    changedById?: StringNullableFilter<"SamadhanStatusHistory"> | string | null
+    changeReason?: StringNullableFilter<"SamadhanStatusHistory"> | string | null
+    isSystemGenerated?: BoolFilter<"SamadhanStatusHistory"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanStatusHistory"> | Date | string
+  }
+
+  export type SamadhanInternalNoteUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: SamadhanInternalNoteWhereUniqueInput
+    update: XOR<SamadhanInternalNoteUpdateWithoutCreatedByInput, SamadhanInternalNoteUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<SamadhanInternalNoteCreateWithoutCreatedByInput, SamadhanInternalNoteUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type SamadhanInternalNoteUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: SamadhanInternalNoteWhereUniqueInput
+    data: XOR<SamadhanInternalNoteUpdateWithoutCreatedByInput, SamadhanInternalNoteUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type SamadhanInternalNoteUpdateManyWithWhereWithoutCreatedByInput = {
+    where: SamadhanInternalNoteScalarWhereInput
+    data: XOR<SamadhanInternalNoteUpdateManyMutationInput, SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type SamadhanInternalNoteScalarWhereInput = {
+    AND?: SamadhanInternalNoteScalarWhereInput | SamadhanInternalNoteScalarWhereInput[]
+    OR?: SamadhanInternalNoteScalarWhereInput[]
+    NOT?: SamadhanInternalNoteScalarWhereInput | SamadhanInternalNoteScalarWhereInput[]
+    id?: StringFilter<"SamadhanInternalNote"> | string
+    ticketId?: StringFilter<"SamadhanInternalNote"> | string
+    createdById?: StringFilter<"SamadhanInternalNote"> | string
+    content?: StringFilter<"SamadhanInternalNote"> | string
+    createdAt?: DateTimeFilter<"SamadhanInternalNote"> | Date | string
+  }
+
   export type UserCreateWithoutCitizenProfileInput = {
     id?: string
     email: string
@@ -41389,6 +54450,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutCitizenProfileInput = {
@@ -41421,6 +54489,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutCitizenProfileInput = {
@@ -41469,6 +54544,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCitizenProfileInput = {
@@ -41501,6 +54583,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type FrontdeskOfficerCreateWithoutOfficerInput = {
@@ -41532,6 +54621,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    samadhanTickets?: SamadhanTicketCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUncheckedCreateWithoutOfficersInput = {
@@ -41541,6 +54631,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    samadhanTickets?: SamadhanTicketUncheckedCreateNestedManyWithoutSectionInput
   }
 
   export type SectionCreateOrConnectWithoutOfficersInput = {
@@ -41578,6 +54669,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutOfficerProfileInput = {
@@ -41610,6 +54708,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutOfficerProfileInput = {
@@ -41651,6 +54756,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    samadhanTickets?: SamadhanTicketUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionUncheckedUpdateWithoutOfficersInput = {
@@ -41660,6 +54766,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    samadhanTickets?: SamadhanTicketUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type UserUpsertWithoutOfficerProfileInput = {
@@ -41703,6 +54810,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfficerProfileInput = {
@@ -41735,6 +54849,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutFrontdeskAssignmentsInput = {
@@ -41767,6 +54888,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutFrontdeskAssignmentsInput = {
@@ -41799,6 +54927,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutFrontdeskAssignmentsInput = {
@@ -41878,6 +55013,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFrontdeskAssignmentsInput = {
@@ -41910,6 +55052,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type OfficerProfileUpsertWithoutFrontdeskUsersInput = {
@@ -42167,6 +55316,90 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SamadhanTicketCreateWithoutSectionInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutSectionInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutSectionInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutSectionInput, SamadhanTicketUncheckedCreateWithoutSectionInput>
+  }
+
+  export type SamadhanTicketCreateManySectionInputEnvelope = {
+    data: SamadhanTicketCreateManySectionInput | SamadhanTicketCreateManySectionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OfficerProfileUpsertWithWhereUniqueWithoutSectionInput = {
     where: OfficerProfileWhereUniqueInput
     update: XOR<OfficerProfileUpdateWithoutSectionInput, OfficerProfileUncheckedUpdateWithoutSectionInput>
@@ -42197,6 +55430,22 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"OfficerProfile"> | Date | string
     updatedAt?: DateTimeFilter<"OfficerProfile"> | Date | string
     sectionId?: StringNullableFilter<"OfficerProfile"> | string | null
+  }
+
+  export type SamadhanTicketUpsertWithWhereUniqueWithoutSectionInput = {
+    where: SamadhanTicketWhereUniqueInput
+    update: XOR<SamadhanTicketUpdateWithoutSectionInput, SamadhanTicketUncheckedUpdateWithoutSectionInput>
+    create: XOR<SamadhanTicketCreateWithoutSectionInput, SamadhanTicketUncheckedCreateWithoutSectionInput>
+  }
+
+  export type SamadhanTicketUpdateWithWhereUniqueWithoutSectionInput = {
+    where: SamadhanTicketWhereUniqueInput
+    data: XOR<SamadhanTicketUpdateWithoutSectionInput, SamadhanTicketUncheckedUpdateWithoutSectionInput>
+  }
+
+  export type SamadhanTicketUpdateManyWithWhereWithoutSectionInput = {
+    where: SamadhanTicketScalarWhereInput
+    data: XOR<SamadhanTicketUpdateManyMutationInput, SamadhanTicketUncheckedUpdateManyWithoutSectionInput>
   }
 
   export type ApplicationCreateWithoutDepartmentInput = {
@@ -42406,6 +55655,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutCurrentHolderFilesInput = {
@@ -42438,6 +55694,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutCurrentHolderFilesInput = {
@@ -42498,6 +55761,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutDispatchedApplicationsInput = {
@@ -42530,6 +55800,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutDispatchedApplicationsInput = {
@@ -42896,6 +56173,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCurrentHolderFilesInput = {
@@ -42928,6 +56212,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type DepartmentUpsertWithoutApplicationsInput = {
@@ -43000,6 +56291,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDispatchedApplicationsInput = {
@@ -43032,6 +56330,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ServiceCategoryUpsertWithoutApplicationsInput = {
@@ -43284,6 +56589,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutWorkflowChangesInput = {
@@ -43316,6 +56628,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutWorkflowChangesInput = {
@@ -43443,6 +56762,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkflowChangesInput = {
@@ -43475,6 +56801,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ApplicationCreateWithoutValidationInput = {
@@ -43580,6 +56913,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutValidationsInput = {
@@ -43612,6 +56952,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutValidationsInput = {
@@ -43739,6 +57086,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutValidationsInput = {
@@ -43771,6 +57125,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ApplicationCreateWithoutServiceCategoryChangesInput = {
@@ -43876,6 +57237,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutServiceCategoryChangesInput = {
@@ -43908,6 +57276,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutServiceCategoryChangesInput = {
@@ -44093,6 +57468,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutServiceCategoryChangesInput = {
@@ -44125,6 +57507,13 @@ export namespace Prisma {
     officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ServiceCategoryUpsertWithoutNewCategoryChangesInput = {
@@ -44300,6 +57689,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutAssignmentsGivenInput = {
@@ -44332,6 +57728,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutAssignmentsGivenInput = {
@@ -44369,6 +57772,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutAssignmentsReceivedInput = {
@@ -44401,6 +57811,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutAssignmentsReceivedInput = {
@@ -44528,6 +57945,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignmentsGivenInput = {
@@ -44560,6 +57984,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutAssignmentsReceivedInput = {
@@ -44603,6 +58034,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssignmentsReceivedInput = {
@@ -44635,6 +58073,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ApplicationCreateWithoutDocumentsInput = {
@@ -44740,6 +58185,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutUploadedDocumentsInput = {
@@ -44772,6 +58224,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutUploadedDocumentsInput = {
@@ -44809,6 +58268,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutVerifiedDocumentsInput = {
@@ -44841,6 +58307,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutVerifiedDocumentsInput = {
@@ -44968,6 +58441,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUploadedDocumentsInput = {
@@ -45000,6 +58480,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutVerifiedDocumentsInput = {
@@ -45043,6 +58530,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVerifiedDocumentsInput = {
@@ -45075,6 +58569,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ApplicationCreateWithoutDocumentRequestsInput = {
@@ -45180,6 +58681,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutDocumentRequestsInput = {
@@ -45212,6 +58720,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutDocumentRequestsInput = {
@@ -45339,6 +58854,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDocumentRequestsInput = {
@@ -45371,6 +58893,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ApplicationCreateWithoutNotificationsInput = {
@@ -45476,6 +59005,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -45508,6 +59044,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -45635,6 +59178,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -45667,6 +59217,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ApplicationCreateWithoutAuditLogsInput = {
@@ -45772,6 +59329,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -45804,6 +59368,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -45931,6 +59502,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -45963,6 +59541,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ApplicationCreateWithoutFrontdeskForwardingsInput = {
@@ -46068,6 +59653,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutForwardedFromInput = {
@@ -46100,6 +59692,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutForwardedFromInput = {
@@ -46137,6 +59736,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutForwardedToInput = {
@@ -46169,6 +59775,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutForwardedToInput = {
@@ -46296,6 +59909,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForwardedFromInput = {
@@ -46328,6 +59948,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutForwardedToInput = {
@@ -46371,6 +59998,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutForwardedToInput = {
@@ -46403,6 +60037,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ApplicationCreateWithoutOfficerForwardingsInput = {
@@ -46508,6 +60149,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutOfficerForwardedFromInput = {
@@ -46540,6 +60188,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutOfficerForwardedFromInput = {
@@ -46577,6 +60232,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutOfficerForwardedToInput = {
@@ -46609,6 +60271,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutOfficerForwardedToInput = {
@@ -46736,6 +60405,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfficerForwardedFromInput = {
@@ -46768,6 +60444,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutOfficerForwardedToInput = {
@@ -46811,6 +60494,13 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfficerForwardedToInput = {
@@ -46843,6 +60533,2509 @@ export namespace Prisma {
     officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
     serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserCreateWithoutSamadhanTicketsAsCitizenInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSamadhanTicketsAsCitizenInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSamadhanTicketsAsCitizenInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSamadhanTicketsAsCitizenInput, UserUncheckedCreateWithoutSamadhanTicketsAsCitizenInput>
+  }
+
+  export type SectionCreateWithoutSamadhanTicketsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    officers?: OfficerProfileCreateNestedManyWithoutSectionInput
+  }
+
+  export type SectionUncheckedCreateWithoutSamadhanTicketsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    officers?: OfficerProfileUncheckedCreateNestedManyWithoutSectionInput
+  }
+
+  export type SectionCreateOrConnectWithoutSamadhanTicketsInput = {
+    where: SectionWhereUniqueInput
+    create: XOR<SectionCreateWithoutSamadhanTicketsInput, SectionUncheckedCreateWithoutSamadhanTicketsInput>
+  }
+
+  export type UserCreateWithoutSamadhanTicketsAsOfficerInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSamadhanTicketsAsOfficerInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSamadhanTicketsAsOfficerInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSamadhanTicketsAsOfficerInput, UserUncheckedCreateWithoutSamadhanTicketsAsOfficerInput>
+  }
+
+  export type UserCreateWithoutSamadhanTicketsEscalatedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSamadhanTicketsEscalatedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSamadhanTicketsEscalatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSamadhanTicketsEscalatedInput, UserUncheckedCreateWithoutSamadhanTicketsEscalatedInput>
+  }
+
+  export type SamadhanTicketCreateWithoutAppealsInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutAppealsInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutAppealsInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutAppealsInput, SamadhanTicketUncheckedCreateWithoutAppealsInput>
+  }
+
+  export type SamadhanTicketCreateWithoutOriginalTicketInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutOriginalTicketInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutOriginalTicketInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutOriginalTicketInput, SamadhanTicketUncheckedCreateWithoutOriginalTicketInput>
+  }
+
+  export type SamadhanTicketCreateManyOriginalTicketInputEnvelope = {
+    data: SamadhanTicketCreateManyOriginalTicketInput | SamadhanTicketCreateManyOriginalTicketInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanAttachmentCreateWithoutTicketInput = {
+    id?: string
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedByType?: string
+    createdAt?: Date | string
+    infoRequest?: SamadhanInfoRequestCreateNestedOneWithoutAttachmentsInput
+    uploadedBy?: UserCreateNestedOneWithoutSamadhanAttachmentsUploadedInput
+  }
+
+  export type SamadhanAttachmentUncheckedCreateWithoutTicketInput = {
+    id?: string
+    infoRequestId?: string | null
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedById?: string | null
+    uploadedByType?: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanAttachmentCreateOrConnectWithoutTicketInput = {
+    where: SamadhanAttachmentWhereUniqueInput
+    create: XOR<SamadhanAttachmentCreateWithoutTicketInput, SamadhanAttachmentUncheckedCreateWithoutTicketInput>
+  }
+
+  export type SamadhanAttachmentCreateManyTicketInputEnvelope = {
+    data: SamadhanAttachmentCreateManyTicketInput | SamadhanAttachmentCreateManyTicketInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanInfoRequestCreateWithoutTicketInput = {
+    id?: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    requestedBy: UserCreateNestedOneWithoutSamadhanInfoRequestsInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutInfoRequestInput
+  }
+
+  export type SamadhanInfoRequestUncheckedCreateWithoutTicketInput = {
+    id?: string
+    requestedById: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutInfoRequestInput
+  }
+
+  export type SamadhanInfoRequestCreateOrConnectWithoutTicketInput = {
+    where: SamadhanInfoRequestWhereUniqueInput
+    create: XOR<SamadhanInfoRequestCreateWithoutTicketInput, SamadhanInfoRequestUncheckedCreateWithoutTicketInput>
+  }
+
+  export type SamadhanInfoRequestCreateManyTicketInputEnvelope = {
+    data: SamadhanInfoRequestCreateManyTicketInput | SamadhanInfoRequestCreateManyTicketInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanStatusHistoryCreateWithoutTicketInput = {
+    id?: string
+    fromStatus?: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus
+    changeReason?: string | null
+    isSystemGenerated?: boolean
+    createdAt?: Date | string
+    changedBy?: UserCreateNestedOneWithoutSamadhanStatusChangesInput
+  }
+
+  export type SamadhanStatusHistoryUncheckedCreateWithoutTicketInput = {
+    id?: string
+    fromStatus?: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus
+    changedById?: string | null
+    changeReason?: string | null
+    isSystemGenerated?: boolean
+    createdAt?: Date | string
+  }
+
+  export type SamadhanStatusHistoryCreateOrConnectWithoutTicketInput = {
+    where: SamadhanStatusHistoryWhereUniqueInput
+    create: XOR<SamadhanStatusHistoryCreateWithoutTicketInput, SamadhanStatusHistoryUncheckedCreateWithoutTicketInput>
+  }
+
+  export type SamadhanStatusHistoryCreateManyTicketInputEnvelope = {
+    data: SamadhanStatusHistoryCreateManyTicketInput | SamadhanStatusHistoryCreateManyTicketInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanInternalNoteCreateWithoutTicketInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutSamadhanInternalNotesInput
+  }
+
+  export type SamadhanInternalNoteUncheckedCreateWithoutTicketInput = {
+    id?: string
+    createdById: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanInternalNoteCreateOrConnectWithoutTicketInput = {
+    where: SamadhanInternalNoteWhereUniqueInput
+    create: XOR<SamadhanInternalNoteCreateWithoutTicketInput, SamadhanInternalNoteUncheckedCreateWithoutTicketInput>
+  }
+
+  export type SamadhanInternalNoteCreateManyTicketInputEnvelope = {
+    data: SamadhanInternalNoteCreateManyTicketInput | SamadhanInternalNoteCreateManyTicketInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutSamadhanTicketsAsCitizenInput = {
+    update: XOR<UserUpdateWithoutSamadhanTicketsAsCitizenInput, UserUncheckedUpdateWithoutSamadhanTicketsAsCitizenInput>
+    create: XOR<UserCreateWithoutSamadhanTicketsAsCitizenInput, UserUncheckedCreateWithoutSamadhanTicketsAsCitizenInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSamadhanTicketsAsCitizenInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSamadhanTicketsAsCitizenInput, UserUncheckedUpdateWithoutSamadhanTicketsAsCitizenInput>
+  }
+
+  export type UserUpdateWithoutSamadhanTicketsAsCitizenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSamadhanTicketsAsCitizenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type SectionUpsertWithoutSamadhanTicketsInput = {
+    update: XOR<SectionUpdateWithoutSamadhanTicketsInput, SectionUncheckedUpdateWithoutSamadhanTicketsInput>
+    create: XOR<SectionCreateWithoutSamadhanTicketsInput, SectionUncheckedCreateWithoutSamadhanTicketsInput>
+    where?: SectionWhereInput
+  }
+
+  export type SectionUpdateToOneWithWhereWithoutSamadhanTicketsInput = {
+    where?: SectionWhereInput
+    data: XOR<SectionUpdateWithoutSamadhanTicketsInput, SectionUncheckedUpdateWithoutSamadhanTicketsInput>
+  }
+
+  export type SectionUpdateWithoutSamadhanTicketsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    officers?: OfficerProfileUpdateManyWithoutSectionNestedInput
+  }
+
+  export type SectionUncheckedUpdateWithoutSamadhanTicketsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    officers?: OfficerProfileUncheckedUpdateManyWithoutSectionNestedInput
+  }
+
+  export type UserUpsertWithoutSamadhanTicketsAsOfficerInput = {
+    update: XOR<UserUpdateWithoutSamadhanTicketsAsOfficerInput, UserUncheckedUpdateWithoutSamadhanTicketsAsOfficerInput>
+    create: XOR<UserCreateWithoutSamadhanTicketsAsOfficerInput, UserUncheckedCreateWithoutSamadhanTicketsAsOfficerInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSamadhanTicketsAsOfficerInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSamadhanTicketsAsOfficerInput, UserUncheckedUpdateWithoutSamadhanTicketsAsOfficerInput>
+  }
+
+  export type UserUpdateWithoutSamadhanTicketsAsOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSamadhanTicketsAsOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUpsertWithoutSamadhanTicketsEscalatedInput = {
+    update: XOR<UserUpdateWithoutSamadhanTicketsEscalatedInput, UserUncheckedUpdateWithoutSamadhanTicketsEscalatedInput>
+    create: XOR<UserCreateWithoutSamadhanTicketsEscalatedInput, UserUncheckedCreateWithoutSamadhanTicketsEscalatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSamadhanTicketsEscalatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSamadhanTicketsEscalatedInput, UserUncheckedUpdateWithoutSamadhanTicketsEscalatedInput>
+  }
+
+  export type UserUpdateWithoutSamadhanTicketsEscalatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSamadhanTicketsEscalatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type SamadhanTicketUpsertWithoutAppealsInput = {
+    update: XOR<SamadhanTicketUpdateWithoutAppealsInput, SamadhanTicketUncheckedUpdateWithoutAppealsInput>
+    create: XOR<SamadhanTicketCreateWithoutAppealsInput, SamadhanTicketUncheckedCreateWithoutAppealsInput>
+    where?: SamadhanTicketWhereInput
+  }
+
+  export type SamadhanTicketUpdateToOneWithWhereWithoutAppealsInput = {
+    where?: SamadhanTicketWhereInput
+    data: XOR<SamadhanTicketUpdateWithoutAppealsInput, SamadhanTicketUncheckedUpdateWithoutAppealsInput>
+  }
+
+  export type SamadhanTicketUpdateWithoutAppealsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutAppealsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUpsertWithWhereUniqueWithoutOriginalTicketInput = {
+    where: SamadhanTicketWhereUniqueInput
+    update: XOR<SamadhanTicketUpdateWithoutOriginalTicketInput, SamadhanTicketUncheckedUpdateWithoutOriginalTicketInput>
+    create: XOR<SamadhanTicketCreateWithoutOriginalTicketInput, SamadhanTicketUncheckedCreateWithoutOriginalTicketInput>
+  }
+
+  export type SamadhanTicketUpdateWithWhereUniqueWithoutOriginalTicketInput = {
+    where: SamadhanTicketWhereUniqueInput
+    data: XOR<SamadhanTicketUpdateWithoutOriginalTicketInput, SamadhanTicketUncheckedUpdateWithoutOriginalTicketInput>
+  }
+
+  export type SamadhanTicketUpdateManyWithWhereWithoutOriginalTicketInput = {
+    where: SamadhanTicketScalarWhereInput
+    data: XOR<SamadhanTicketUpdateManyMutationInput, SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketInput>
+  }
+
+  export type SamadhanAttachmentUpsertWithWhereUniqueWithoutTicketInput = {
+    where: SamadhanAttachmentWhereUniqueInput
+    update: XOR<SamadhanAttachmentUpdateWithoutTicketInput, SamadhanAttachmentUncheckedUpdateWithoutTicketInput>
+    create: XOR<SamadhanAttachmentCreateWithoutTicketInput, SamadhanAttachmentUncheckedCreateWithoutTicketInput>
+  }
+
+  export type SamadhanAttachmentUpdateWithWhereUniqueWithoutTicketInput = {
+    where: SamadhanAttachmentWhereUniqueInput
+    data: XOR<SamadhanAttachmentUpdateWithoutTicketInput, SamadhanAttachmentUncheckedUpdateWithoutTicketInput>
+  }
+
+  export type SamadhanAttachmentUpdateManyWithWhereWithoutTicketInput = {
+    where: SamadhanAttachmentScalarWhereInput
+    data: XOR<SamadhanAttachmentUpdateManyMutationInput, SamadhanAttachmentUncheckedUpdateManyWithoutTicketInput>
+  }
+
+  export type SamadhanInfoRequestUpsertWithWhereUniqueWithoutTicketInput = {
+    where: SamadhanInfoRequestWhereUniqueInput
+    update: XOR<SamadhanInfoRequestUpdateWithoutTicketInput, SamadhanInfoRequestUncheckedUpdateWithoutTicketInput>
+    create: XOR<SamadhanInfoRequestCreateWithoutTicketInput, SamadhanInfoRequestUncheckedCreateWithoutTicketInput>
+  }
+
+  export type SamadhanInfoRequestUpdateWithWhereUniqueWithoutTicketInput = {
+    where: SamadhanInfoRequestWhereUniqueInput
+    data: XOR<SamadhanInfoRequestUpdateWithoutTicketInput, SamadhanInfoRequestUncheckedUpdateWithoutTicketInput>
+  }
+
+  export type SamadhanInfoRequestUpdateManyWithWhereWithoutTicketInput = {
+    where: SamadhanInfoRequestScalarWhereInput
+    data: XOR<SamadhanInfoRequestUpdateManyMutationInput, SamadhanInfoRequestUncheckedUpdateManyWithoutTicketInput>
+  }
+
+  export type SamadhanStatusHistoryUpsertWithWhereUniqueWithoutTicketInput = {
+    where: SamadhanStatusHistoryWhereUniqueInput
+    update: XOR<SamadhanStatusHistoryUpdateWithoutTicketInput, SamadhanStatusHistoryUncheckedUpdateWithoutTicketInput>
+    create: XOR<SamadhanStatusHistoryCreateWithoutTicketInput, SamadhanStatusHistoryUncheckedCreateWithoutTicketInput>
+  }
+
+  export type SamadhanStatusHistoryUpdateWithWhereUniqueWithoutTicketInput = {
+    where: SamadhanStatusHistoryWhereUniqueInput
+    data: XOR<SamadhanStatusHistoryUpdateWithoutTicketInput, SamadhanStatusHistoryUncheckedUpdateWithoutTicketInput>
+  }
+
+  export type SamadhanStatusHistoryUpdateManyWithWhereWithoutTicketInput = {
+    where: SamadhanStatusHistoryScalarWhereInput
+    data: XOR<SamadhanStatusHistoryUpdateManyMutationInput, SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketInput>
+  }
+
+  export type SamadhanInternalNoteUpsertWithWhereUniqueWithoutTicketInput = {
+    where: SamadhanInternalNoteWhereUniqueInput
+    update: XOR<SamadhanInternalNoteUpdateWithoutTicketInput, SamadhanInternalNoteUncheckedUpdateWithoutTicketInput>
+    create: XOR<SamadhanInternalNoteCreateWithoutTicketInput, SamadhanInternalNoteUncheckedCreateWithoutTicketInput>
+  }
+
+  export type SamadhanInternalNoteUpdateWithWhereUniqueWithoutTicketInput = {
+    where: SamadhanInternalNoteWhereUniqueInput
+    data: XOR<SamadhanInternalNoteUpdateWithoutTicketInput, SamadhanInternalNoteUncheckedUpdateWithoutTicketInput>
+  }
+
+  export type SamadhanInternalNoteUpdateManyWithWhereWithoutTicketInput = {
+    where: SamadhanInternalNoteScalarWhereInput
+    data: XOR<SamadhanInternalNoteUpdateManyMutationInput, SamadhanInternalNoteUncheckedUpdateManyWithoutTicketInput>
+  }
+
+  export type SamadhanTicketCreateWithoutAttachmentsInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutAttachmentsInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutAttachmentsInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutAttachmentsInput, SamadhanTicketUncheckedCreateWithoutAttachmentsInput>
+  }
+
+  export type SamadhanInfoRequestCreateWithoutAttachmentsInput = {
+    id?: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ticket: SamadhanTicketCreateNestedOneWithoutInfoRequestsInput
+    requestedBy: UserCreateNestedOneWithoutSamadhanInfoRequestsInput
+  }
+
+  export type SamadhanInfoRequestUncheckedCreateWithoutAttachmentsInput = {
+    id?: string
+    ticketId: string
+    requestedById: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanInfoRequestCreateOrConnectWithoutAttachmentsInput = {
+    where: SamadhanInfoRequestWhereUniqueInput
+    create: XOR<SamadhanInfoRequestCreateWithoutAttachmentsInput, SamadhanInfoRequestUncheckedCreateWithoutAttachmentsInput>
+  }
+
+  export type UserCreateWithoutSamadhanAttachmentsUploadedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSamadhanAttachmentsUploadedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSamadhanAttachmentsUploadedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSamadhanAttachmentsUploadedInput, UserUncheckedCreateWithoutSamadhanAttachmentsUploadedInput>
+  }
+
+  export type SamadhanTicketUpsertWithoutAttachmentsInput = {
+    update: XOR<SamadhanTicketUpdateWithoutAttachmentsInput, SamadhanTicketUncheckedUpdateWithoutAttachmentsInput>
+    create: XOR<SamadhanTicketCreateWithoutAttachmentsInput, SamadhanTicketUncheckedCreateWithoutAttachmentsInput>
+    where?: SamadhanTicketWhereInput
+  }
+
+  export type SamadhanTicketUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: SamadhanTicketWhereInput
+    data: XOR<SamadhanTicketUpdateWithoutAttachmentsInput, SamadhanTicketUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type SamadhanTicketUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanInfoRequestUpsertWithoutAttachmentsInput = {
+    update: XOR<SamadhanInfoRequestUpdateWithoutAttachmentsInput, SamadhanInfoRequestUncheckedUpdateWithoutAttachmentsInput>
+    create: XOR<SamadhanInfoRequestCreateWithoutAttachmentsInput, SamadhanInfoRequestUncheckedCreateWithoutAttachmentsInput>
+    where?: SamadhanInfoRequestWhereInput
+  }
+
+  export type SamadhanInfoRequestUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: SamadhanInfoRequestWhereInput
+    data: XOR<SamadhanInfoRequestUpdateWithoutAttachmentsInput, SamadhanInfoRequestUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type SamadhanInfoRequestUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: SamadhanTicketUpdateOneRequiredWithoutInfoRequestsNestedInput
+    requestedBy?: UserUpdateOneRequiredWithoutSamadhanInfoRequestsNestedInput
+  }
+
+  export type SamadhanInfoRequestUncheckedUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    requestedById?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUpsertWithoutSamadhanAttachmentsUploadedInput = {
+    update: XOR<UserUpdateWithoutSamadhanAttachmentsUploadedInput, UserUncheckedUpdateWithoutSamadhanAttachmentsUploadedInput>
+    create: XOR<UserCreateWithoutSamadhanAttachmentsUploadedInput, UserUncheckedCreateWithoutSamadhanAttachmentsUploadedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSamadhanAttachmentsUploadedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSamadhanAttachmentsUploadedInput, UserUncheckedUpdateWithoutSamadhanAttachmentsUploadedInput>
+  }
+
+  export type UserUpdateWithoutSamadhanAttachmentsUploadedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSamadhanAttachmentsUploadedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type SamadhanTicketCreateWithoutInfoRequestsInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutInfoRequestsInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutInfoRequestsInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutInfoRequestsInput, SamadhanTicketUncheckedCreateWithoutInfoRequestsInput>
+  }
+
+  export type UserCreateWithoutSamadhanInfoRequestsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSamadhanInfoRequestsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSamadhanInfoRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSamadhanInfoRequestsInput, UserUncheckedCreateWithoutSamadhanInfoRequestsInput>
+  }
+
+  export type SamadhanAttachmentCreateWithoutInfoRequestInput = {
+    id?: string
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedByType?: string
+    createdAt?: Date | string
+    ticket: SamadhanTicketCreateNestedOneWithoutAttachmentsInput
+    uploadedBy?: UserCreateNestedOneWithoutSamadhanAttachmentsUploadedInput
+  }
+
+  export type SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput = {
+    id?: string
+    ticketId: string
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedById?: string | null
+    uploadedByType?: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanAttachmentCreateOrConnectWithoutInfoRequestInput = {
+    where: SamadhanAttachmentWhereUniqueInput
+    create: XOR<SamadhanAttachmentCreateWithoutInfoRequestInput, SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput>
+  }
+
+  export type SamadhanAttachmentCreateManyInfoRequestInputEnvelope = {
+    data: SamadhanAttachmentCreateManyInfoRequestInput | SamadhanAttachmentCreateManyInfoRequestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanTicketUpsertWithoutInfoRequestsInput = {
+    update: XOR<SamadhanTicketUpdateWithoutInfoRequestsInput, SamadhanTicketUncheckedUpdateWithoutInfoRequestsInput>
+    create: XOR<SamadhanTicketCreateWithoutInfoRequestsInput, SamadhanTicketUncheckedCreateWithoutInfoRequestsInput>
+    where?: SamadhanTicketWhereInput
+  }
+
+  export type SamadhanTicketUpdateToOneWithWhereWithoutInfoRequestsInput = {
+    where?: SamadhanTicketWhereInput
+    data: XOR<SamadhanTicketUpdateWithoutInfoRequestsInput, SamadhanTicketUncheckedUpdateWithoutInfoRequestsInput>
+  }
+
+  export type SamadhanTicketUpdateWithoutInfoRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutInfoRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type UserUpsertWithoutSamadhanInfoRequestsInput = {
+    update: XOR<UserUpdateWithoutSamadhanInfoRequestsInput, UserUncheckedUpdateWithoutSamadhanInfoRequestsInput>
+    create: XOR<UserCreateWithoutSamadhanInfoRequestsInput, UserUncheckedCreateWithoutSamadhanInfoRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSamadhanInfoRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSamadhanInfoRequestsInput, UserUncheckedUpdateWithoutSamadhanInfoRequestsInput>
+  }
+
+  export type UserUpdateWithoutSamadhanInfoRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSamadhanInfoRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type SamadhanAttachmentUpsertWithWhereUniqueWithoutInfoRequestInput = {
+    where: SamadhanAttachmentWhereUniqueInput
+    update: XOR<SamadhanAttachmentUpdateWithoutInfoRequestInput, SamadhanAttachmentUncheckedUpdateWithoutInfoRequestInput>
+    create: XOR<SamadhanAttachmentCreateWithoutInfoRequestInput, SamadhanAttachmentUncheckedCreateWithoutInfoRequestInput>
+  }
+
+  export type SamadhanAttachmentUpdateWithWhereUniqueWithoutInfoRequestInput = {
+    where: SamadhanAttachmentWhereUniqueInput
+    data: XOR<SamadhanAttachmentUpdateWithoutInfoRequestInput, SamadhanAttachmentUncheckedUpdateWithoutInfoRequestInput>
+  }
+
+  export type SamadhanAttachmentUpdateManyWithWhereWithoutInfoRequestInput = {
+    where: SamadhanAttachmentScalarWhereInput
+    data: XOR<SamadhanAttachmentUpdateManyMutationInput, SamadhanAttachmentUncheckedUpdateManyWithoutInfoRequestInput>
+  }
+
+  export type SamadhanTicketCreateWithoutStatusHistoryInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutStatusHistoryInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutStatusHistoryInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutStatusHistoryInput, SamadhanTicketUncheckedCreateWithoutStatusHistoryInput>
+  }
+
+  export type UserCreateWithoutSamadhanStatusChangesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSamadhanStatusChangesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSamadhanStatusChangesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSamadhanStatusChangesInput, UserUncheckedCreateWithoutSamadhanStatusChangesInput>
+  }
+
+  export type SamadhanTicketUpsertWithoutStatusHistoryInput = {
+    update: XOR<SamadhanTicketUpdateWithoutStatusHistoryInput, SamadhanTicketUncheckedUpdateWithoutStatusHistoryInput>
+    create: XOR<SamadhanTicketCreateWithoutStatusHistoryInput, SamadhanTicketUncheckedCreateWithoutStatusHistoryInput>
+    where?: SamadhanTicketWhereInput
+  }
+
+  export type SamadhanTicketUpdateToOneWithWhereWithoutStatusHistoryInput = {
+    where?: SamadhanTicketWhereInput
+    data: XOR<SamadhanTicketUpdateWithoutStatusHistoryInput, SamadhanTicketUncheckedUpdateWithoutStatusHistoryInput>
+  }
+
+  export type SamadhanTicketUpdateWithoutStatusHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutStatusHistoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type UserUpsertWithoutSamadhanStatusChangesInput = {
+    update: XOR<UserUpdateWithoutSamadhanStatusChangesInput, UserUncheckedUpdateWithoutSamadhanStatusChangesInput>
+    create: XOR<UserCreateWithoutSamadhanStatusChangesInput, UserUncheckedCreateWithoutSamadhanStatusChangesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSamadhanStatusChangesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSamadhanStatusChangesInput, UserUncheckedUpdateWithoutSamadhanStatusChangesInput>
+  }
+
+  export type UserUpdateWithoutSamadhanStatusChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSamadhanStatusChangesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type SamadhanTicketCreateWithoutInternalNotesInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutInternalNotesInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutInternalNotesInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutInternalNotesInput, SamadhanTicketUncheckedCreateWithoutInternalNotesInput>
+  }
+
+  export type UserCreateWithoutSamadhanInternalNotesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSamadhanInternalNotesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSamadhanInternalNotesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSamadhanInternalNotesInput, UserUncheckedCreateWithoutSamadhanInternalNotesInput>
+  }
+
+  export type SamadhanTicketUpsertWithoutInternalNotesInput = {
+    update: XOR<SamadhanTicketUpdateWithoutInternalNotesInput, SamadhanTicketUncheckedUpdateWithoutInternalNotesInput>
+    create: XOR<SamadhanTicketCreateWithoutInternalNotesInput, SamadhanTicketUncheckedCreateWithoutInternalNotesInput>
+    where?: SamadhanTicketWhereInput
+  }
+
+  export type SamadhanTicketUpdateToOneWithWhereWithoutInternalNotesInput = {
+    where?: SamadhanTicketWhereInput
+    data: XOR<SamadhanTicketUpdateWithoutInternalNotesInput, SamadhanTicketUncheckedUpdateWithoutInternalNotesInput>
+  }
+
+  export type SamadhanTicketUpdateWithoutInternalNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutInternalNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type UserUpsertWithoutSamadhanInternalNotesInput = {
+    update: XOR<UserUpdateWithoutSamadhanInternalNotesInput, UserUncheckedUpdateWithoutSamadhanInternalNotesInput>
+    create: XOR<UserCreateWithoutSamadhanInternalNotesInput, UserUncheckedCreateWithoutSamadhanInternalNotesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSamadhanInternalNotesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSamadhanInternalNotesInput, UserUncheckedUpdateWithoutSamadhanInternalNotesInput>
+  }
+
+  export type UserUpdateWithoutSamadhanInternalNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSamadhanInternalNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   }
 
   export type ApplicationAuditLogCreateManyPerformedByInput = {
@@ -47050,6 +63243,145 @@ export namespace Prisma {
     previousCategoryId?: string | null
     newCategoryId: string
     reason?: string | null
+    createdAt?: Date | string
+  }
+
+  export type SamadhanTicketCreateManyCitizenInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanTicketCreateManyAssignedOfficerInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanTicketCreateManyEscalatedToInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanAttachmentCreateManyUploadedByInput = {
+    id?: string
+    ticketId: string
+    infoRequestId?: string | null
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedByType?: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanInfoRequestCreateManyRequestedByInput = {
+    id?: string
+    ticketId: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanStatusHistoryCreateManyChangedByInput = {
+    id?: string
+    ticketId: string
+    fromStatus?: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus
+    changeReason?: string | null
+    isSystemGenerated?: boolean
+    createdAt?: Date | string
+  }
+
+  export type SamadhanInternalNoteCreateManyCreatedByInput = {
+    id?: string
+    ticketId: string
+    content: string
     createdAt?: Date | string
   }
 
@@ -47717,6 +64049,455 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SamadhanTicketUpdateWithoutCitizenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutCitizenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyWithoutCitizenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanTicketUpdateWithoutAssignedOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutAssignedOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanTicketUpdateWithoutEscalatedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutEscalatedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyWithoutEscalatedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanAttachmentUpdateWithoutUploadedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: SamadhanTicketUpdateOneRequiredWithoutAttachmentsNestedInput
+    infoRequest?: SamadhanInfoRequestUpdateOneWithoutAttachmentsNestedInput
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateWithoutUploadedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    infoRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    infoRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInfoRequestUpdateWithoutRequestedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: SamadhanTicketUpdateOneRequiredWithoutInfoRequestsNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutInfoRequestNestedInput
+  }
+
+  export type SamadhanInfoRequestUncheckedUpdateWithoutRequestedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutInfoRequestNestedInput
+  }
+
+  export type SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanStatusHistoryUpdateWithoutChangedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    changeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystemGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: SamadhanTicketUpdateOneRequiredWithoutStatusHistoryNestedInput
+  }
+
+  export type SamadhanStatusHistoryUncheckedUpdateWithoutChangedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    changeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystemGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    changeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystemGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInternalNoteUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: SamadhanTicketUpdateOneRequiredWithoutInternalNotesNestedInput
+  }
+
+  export type SamadhanInternalNoteUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type FrontdeskOfficerCreateManyOfficerInput = {
     id?: string
     frontdeskUserId: string
@@ -47941,6 +64722,38 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type SamadhanTicketCreateManySectionInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type OfficerProfileUpdateWithoutSectionInput = {
     id?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
@@ -47975,6 +64788,112 @@ export namespace Prisma {
     department?: StringFieldUpdateOperationsInput | string
     officeLocation?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanTicketUpdateWithoutSectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutSectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyWithoutSectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -48480,6 +65399,370 @@ export namespace Prisma {
     newCategoryId?: StringFieldUpdateOperationsInput | string
     changedById?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanTicketCreateManyOriginalTicketInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    serviceAvailed?: string | null
+    description: string
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanAttachmentCreateManyTicketInput = {
+    id?: string
+    infoRequestId?: string | null
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedById?: string | null
+    uploadedByType?: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanInfoRequestCreateManyTicketInput = {
+    id?: string
+    requestedById: string
+    description: string
+    documentTypes?: string | null
+    deadline: Date | string
+    status?: $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: string | null
+    respondedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanStatusHistoryCreateManyTicketInput = {
+    id?: string
+    fromStatus?: $Enums.SamadhanTicketStatus | null
+    toStatus: $Enums.SamadhanTicketStatus
+    changedById?: string | null
+    changeReason?: string | null
+    isSystemGenerated?: boolean
+    createdAt?: Date | string
+  }
+
+  export type SamadhanInternalNoteCreateManyTicketInput = {
+    id?: string
+    createdById: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanTicketUpdateWithoutOriginalTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutOriginalTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanAttachmentUpdateWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    infoRequest?: SamadhanInfoRequestUpdateOneWithoutAttachmentsNestedInput
+    uploadedBy?: UserUpdateOneWithoutSamadhanAttachmentsUploadedNestedInput
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    infoRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateManyWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    infoRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInfoRequestUpdateWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    requestedBy?: UserUpdateOneRequiredWithoutSamadhanInfoRequestsNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutInfoRequestNestedInput
+  }
+
+  export type SamadhanInfoRequestUncheckedUpdateWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    requestedById?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutInfoRequestNestedInput
+  }
+
+  export type SamadhanInfoRequestUncheckedUpdateManyWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    requestedById?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    documentTypes?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumSamadhanInfoRequestStatusFieldUpdateOperationsInput | $Enums.SamadhanInfoRequestStatus
+    citizenResponse?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanStatusHistoryUpdateWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    changeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystemGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    changedBy?: UserUpdateOneWithoutSamadhanStatusChangesNestedInput
+  }
+
+  export type SamadhanStatusHistoryUncheckedUpdateWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    changedById?: NullableStringFieldUpdateOperationsInput | string | null
+    changeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystemGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fromStatus?: NullableEnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus | null
+    toStatus?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    changedById?: NullableStringFieldUpdateOperationsInput | string | null
+    changeReason?: NullableStringFieldUpdateOperationsInput | string | null
+    isSystemGenerated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInternalNoteUpdateWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutSamadhanInternalNotesNestedInput
+  }
+
+  export type SamadhanInternalNoteUncheckedUpdateWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanInternalNoteUncheckedUpdateManyWithoutTicketInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanAttachmentCreateManyInfoRequestInput = {
+    id?: string
+    ticketId: string
+    fileName: string
+    originalName: string
+    filePath: string
+    fileType: string
+    fileSize: number
+    uploadedById?: string | null
+    uploadedByType?: string
+    createdAt?: Date | string
+  }
+
+  export type SamadhanAttachmentUpdateWithoutInfoRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ticket?: SamadhanTicketUpdateOneRequiredWithoutAttachmentsNestedInput
+    uploadedBy?: UserUpdateOneWithoutSamadhanAttachmentsUploadedNestedInput
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateWithoutInfoRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedByType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanAttachmentUncheckedUpdateManyWithoutInfoRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ticketId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    filePath?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedByType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

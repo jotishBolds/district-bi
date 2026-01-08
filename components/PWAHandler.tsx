@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import SplashScreen from "./SplashScreen";
 import NoInternet, { ConnectionRestored } from "./NoInternet";
@@ -20,11 +21,22 @@ export default function PWAHandler({
     boolean | null
   >(null);
   const networkStatus = useNetworkStatus();
+  const pathname = usePathname();
+
+  // Check if we're on SAMADHAN routes - SAMADHAN has its own splash screen
+  const isSamadhanRoute = pathname?.startsWith("/samadhan");
 
   // Handle splash screen completion
   const handleSplashComplete = () => {
     setIsAppReady(true);
   };
+
+  // Auto-skip splash for SAMADHAN routes
+  useEffect(() => {
+    if (isSamadhanRoute) {
+      setIsAppReady(true);
+    }
+  }, [isSamadhanRoute]);
 
   // Handle connection status changes
   useEffect(() => {
@@ -48,8 +60,9 @@ export default function PWAHandler({
     }
   };
 
-  // Show splash screen if not ready and splash is enabled
-  if (showSplash && !isAppReady) {
+  // Show splash screen if not ready, splash is enabled, and NOT on SAMADHAN route
+  // SAMADHAN has its own dedicated splash screen in SamadhanPWAHandler
+  if (showSplash && !isAppReady && !isSamadhanRoute) {
     return <SplashScreen onFinishAction={handleSplashComplete} />;
   }
 
@@ -57,14 +70,18 @@ export default function PWAHandler({
     <>
       {children}
 
-      {/* No Internet Overlay */}
-      <NoInternet isVisible={!networkStatus.isOnline} onRetry={handleRetry} />
+      {/* No Internet Overlay - Skip for SAMADHAN routes (SAMADHAN has its own handling) */}
+      {!isSamadhanRoute && (
+        <NoInternet isVisible={!networkStatus.isOnline} onRetry={handleRetry} />
+      )}
 
-      {/* Connection Restored Notification */}
-      <ConnectionRestored
-        isVisible={showConnectionRestored}
-        onClose={() => setShowConnectionRestored(false)}
-      />
+      {/* Connection Restored Notification - Skip for SAMADHAN routes */}
+      {!isSamadhanRoute && (
+        <ConnectionRestored
+          isVisible={showConnectionRestored}
+          onClose={() => setShowConnectionRestored(false)}
+        />
+      )}
     </>
   );
 }

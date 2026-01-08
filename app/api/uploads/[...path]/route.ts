@@ -7,14 +7,30 @@ import {
 } from "@/lib/s3-storage";
 import prisma from "@/lib/prisma";
 
-// Handle CORS preflight requests
+// Handle CORS preflight requests with secure origin validation
 export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get("origin");
+  const allowedOrigins = [
+    process.env.NEXT_PUBLIC_APP_URL,
+    "https://dacgangtok.in",
+    "https://samadhan.dacgangtok.in",
+    "https://myapplication.dacgangtok.in",
+    ...(process.env.NODE_ENV === "development"
+      ? ["http://localhost:3000"]
+      : []),
+  ].filter(Boolean);
+
+  const isAllowed = origin && allowedOrigins.includes(origin);
+
   return new NextResponse(null, {
     status: 200,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": isAllowed
+        ? origin
+        : allowedOrigins[0] || "",
       "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Credentials": "true",
       "Access-Control-Max-Age": "86400",
     },
   });
