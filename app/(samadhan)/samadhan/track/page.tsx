@@ -53,59 +53,65 @@ export default function TrackPage() {
     <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto">
         <Link
-          href="/samadhan"
-          className="inline-flex items-center text-sm text-gray-600 hover:text-blue-600 mb-8"
+          href="/"
+          className="inline-flex items-center text-sm text-gray-600 hover:text-green-600 mb-8"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
         </Link>
 
-        <Card>
-          <CardHeader className="text-center">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="h-8 w-8 text-blue-600" />
+        <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden">
+          <CardHeader className="text-center pb-2 pt-8 bg-gradient-to-b from-green-50 to-white">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <Search className="h-8 w-8 text-white" />
             </div>
-            <CardTitle>Track Your Query</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-2xl font-bold text-gray-900">
+              Track Your Query
+            </CardTitle>
+            <CardDescription className="text-gray-600">
               Enter your reference ID to check the status of your query
             </CardDescription>
           </CardHeader>
 
-          <CardContent>
+          <CardContent className="px-6 pb-8">
             <form onSubmit={handleSearch} className="space-y-4">
               <div>
-                <Input
-                  placeholder="SAMADHAN-2025-12-24-00001"
-                  value={referenceId}
-                  onChange={(e) => setReferenceId(e.target.value)}
-                  className="text-center font-mono"
-                />
+                <div className="relative">
+                  <Input
+                    placeholder="SAMADHAN-2025-XX-XX-XXXXX"
+                    value={referenceId}
+                    onChange={(e) => setReferenceId(e.target.value)}
+                    className="h-14 pl-6 pr-14 text-center font-mono text-base border-2 rounded-full border-green-200 focus:border-green-500 focus:ring-green-500 bg-white shadow-sm"
+                  />
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                    <button
+                      type="submit"
+                      disabled={isSearching || !referenceId.trim()}
+                      className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSearching ? (
+                        <Loader2 className="w-5 h-5 text-white animate-spin" />
+                      ) : (
+                        <Search className="w-5 h-5 text-white" />
+                      )}
+                    </button>
+                  </div>
+                </div>
                 <p className="text-xs text-gray-500 mt-2 text-center">
                   Reference ID was provided when you submitted your query
                 </p>
               </div>
-
-              <Button type="submit" className="w-full" disabled={isSearching}>
-                {isSearching ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Searching...
-                  </>
-                ) : (
-                  <>
-                    <Search className="h-4 w-4 mr-2" />
-                    Track Status
-                  </>
-                )}
-              </Button>
             </form>
 
-            <div className="mt-6 pt-6 border-t text-center">
-              <p className="text-sm text-gray-600 mb-2">
+            <div className="mt-6 pt-6 border-t border-gray-100 text-center">
+              <p className="text-sm text-gray-600 mb-3">
                 Don&apos;t have a reference ID?
               </p>
               <Link href="/samadhan/login">
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  className="rounded-full border-2 border-green-200 hover:bg-green-50 hover:border-green-400"
+                >
                   Login to View Your Queries
                 </Button>
               </Link>

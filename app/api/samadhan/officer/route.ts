@@ -75,7 +75,12 @@ export async function GET(request: NextRequest) {
 
     // Build filter based on role and view
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = {
+      // Base filters: exclude drafts and queued tickets from officer dashboard
+      // QUEUED tickets should only be visible in the queue management page
+      isDraft: false,
+      status: { not: "QUEUED" },
+    };
 
     if (view === "my") {
       // My tickets - assigned to me or escalated to me

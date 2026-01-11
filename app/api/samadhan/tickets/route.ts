@@ -6,17 +6,19 @@ import {
   generateSamadhanReferenceId,
   generateCitizenPseudonym,
   calculateSLADeadline,
-  findAvailableOfficer,
 } from "@/lib/samadhan";
 import { getSamadhanSession } from "@/lib/samadhan-auth";
 
 // Validation schema for ticket submission
 const ticketSchema = z.object({
-  queryType: z.enum(["FEEDBACK", "GRIEVANCE", "SUGGESTION"]),
+  queryType: z.enum(["FEEDBACK", "GRIEVANCE"]),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
   sectionId: z.string().min(1, "Section is required"),
-  serviceAvailed: z.string().optional(),
+  subject: z.string().optional(),
+  serviceAvailed: z.string().optional(), // JSON array of service IDs
   description: z.string().min(10, "Description must be at least 10 characters"),
+  visitedDC: z.boolean().optional(),
+  visitDate: z.string().optional(), // ISO date string
   citizenName: z.string().optional(),
   citizenEmail: z.string().email().optional().or(z.literal("")),
   citizenPhone: z.string().optional(),
@@ -25,6 +27,8 @@ const ticketSchema = z.object({
     .enum(["WEB_PORTAL", "WHATSAPP", "MOBILE_APP"])
     .optional(),
   whatsappNumber: z.string().optional(),
+  isDraft: z.boolean().optional(), // Save as draft
+  ticketId: z.string().optional(), // For updating existing draft
 });
 
 export async function POST(request: NextRequest) {
@@ -103,33 +107,123 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if updating existing draft
+    if (validatedData.ticketId) {
+      const existingTicket = await prisma.samadhanTicket.findFirst({
+        where: {
+          id: validatedData.ticketId,
+          citizenId: citizenId,
+          isDraft: true,
+        },
+      });
+
+      if (!existingTicket) {
+        return NextResponse.json(
+          { success: false, message: "Draft ticket not found" },
+          { status: 404 }
+        );
+      }
+
+      // Set priority - default to MEDIUM for feedback, respect user choice for grievances
+      const priority =
+        validatedData.queryType === "GRIEVANCE"
+          ? validatedData.priority || "MEDIUM"
+          : "MEDIUM";
+
+      // Calculate SLA deadline only if submitting (not saving draft)
+      const slaDeadline = validatedData.isDraft
+        ? null
+        : await calculateSLADeadline(
+            validatedData.queryType,
+            priority as "LOW" | "MEDIUM" | "HIGH"
+          );
+
+      // Update existing draft
+      const updatedTicket = await prisma.samadhanTicket.update({
+        where: { id: validatedData.ticketId },
+        data: {
+          queryType: validatedData.queryType,
+          priority: priority as "LOW" | "MEDIUM" | "HIGH",
+          status: validatedData.isDraft ? "DRAFT" : "QUEUED",
+          citizenName,
+          citizenEmail,
+          citizenPhone,
+          citizenPseudonym,
+          isAnonymousToOfficer: validatedData.isAnonymousToOfficer || false,
+          sectionId: validatedData.sectionId,
+          subject: validatedData.subject,
+          serviceAvailed: validatedData.serviceAvailed,
+          description: validatedData.description,
+          visitedDC: validatedData.visitedDC,
+          visitDate: validatedData.visitDate
+            ? new Date(validatedData.visitDate)
+            : null,
+          slaDeadline,
+          isDraft: validatedData.isDraft || false,
+          lastSavedAt: new Date(),
+          queuedAt: validatedData.isDraft ? null : new Date(),
+        },
+        include: {
+          section: { select: { name: true } },
+        },
+      });
+
+      // Create status history if submitting
+      if (!validatedData.isDraft) {
+        await prisma.samadhanStatusHistory.create({
+          data: {
+            ticketId: updatedTicket.id,
+            fromStatus: "DRAFT",
+            toStatus: "QUEUED",
+            isSystemGenerated: true,
+            changeReason: "Ticket submitted from draft",
+          },
+        });
+      }
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: validatedData.isDraft
+            ? "Draft saved successfully"
+            : "Your query has been submitted successfully",
+          data: {
+            referenceId: updatedTicket.referenceId,
+            ticketId: updatedTicket.id,
+            status: updatedTicket.status,
+            sectionName: updatedTicket.section.name,
+            slaDeadline: updatedTicket.slaDeadline,
+            isDraft: updatedTicket.isDraft,
+          },
+        },
+        { status: 200 }
+      );
+    }
+
     // Generate unique reference ID
     const referenceId = await generateSamadhanReferenceId();
 
-    // Set priority - default to MEDIUM for feedback/suggestions, respect user choice for grievances
+    // Set priority - default to MEDIUM for feedback, respect user choice for grievances
     const priority =
       validatedData.queryType === "GRIEVANCE"
         ? validatedData.priority || "MEDIUM"
         : "MEDIUM";
 
-    // Find available officer in the section
-    const assignedOfficerId = await findAvailableOfficer(
-      validatedData.sectionId
-    );
+    // Calculate SLA deadline only if submitting (not saving draft)
+    const slaDeadline = validatedData.isDraft
+      ? null
+      : await calculateSLADeadline(
+          validatedData.queryType,
+          priority as "LOW" | "MEDIUM" | "HIGH"
+        );
 
-    // Calculate SLA deadline
-    const slaDeadline = await calculateSLADeadline(
-      validatedData.queryType,
-      priority as "LOW" | "MEDIUM" | "HIGH"
-    );
-
-    // Create the ticket
+    // Create the ticket - goes to queue (QUEUED status) not direct assignment
     const ticket = await prisma.samadhanTicket.create({
       data: {
         referenceId,
         queryType: validatedData.queryType,
         priority: priority as "LOW" | "MEDIUM" | "HIGH",
-        status: "UNSEEN",
+        status: validatedData.isDraft ? "DRAFT" : "QUEUED",
         citizenId,
         citizenName,
         citizenEmail,
@@ -138,20 +232,23 @@ export async function POST(request: NextRequest) {
         isAnonymous,
         isAnonymousToOfficer: validatedData.isAnonymousToOfficer || false,
         sectionId: validatedData.sectionId,
+        subject: validatedData.subject,
         serviceAvailed: validatedData.serviceAvailed,
         description: validatedData.description,
-        assignedOfficerId,
+        visitedDC: validatedData.visitedDC,
+        visitDate: validatedData.visitDate
+          ? new Date(validatedData.visitDate)
+          : null,
+        // No assignedOfficerId - ticket goes to queue first
         slaDeadline,
         submissionChannel: validatedData.submissionChannel || "WEB_PORTAL",
         whatsappNumber: validatedData.whatsappNumber,
+        isDraft: validatedData.isDraft || false,
+        lastSavedAt: new Date(),
+        queuedAt: validatedData.isDraft ? null : new Date(),
       },
       include: {
         section: { select: { name: true } },
-        assignedOfficer: {
-          select: {
-            officerProfile: { select: { fullName: true } },
-          },
-        },
       },
     });
 
@@ -159,28 +256,30 @@ export async function POST(request: NextRequest) {
     await prisma.samadhanStatusHistory.create({
       data: {
         ticketId: ticket.id,
-        toStatus: "UNSEEN",
+        toStatus: validatedData.isDraft ? "DRAFT" : "QUEUED",
         isSystemGenerated: true,
-        changeReason: "Ticket submitted",
+        changeReason: validatedData.isDraft
+          ? "Draft created"
+          : "Ticket submitted to queue",
       },
     });
 
-    // TODO: Send notifications (SMS, Email) to citizen and officer
-    // This would integrate with the existing notification system
+    // TODO: Send notifications (SMS, Email) to citizen
+    // Queue managers will be notified of new tickets
 
     return NextResponse.json(
       {
         success: true,
-        message: "Your query has been submitted successfully",
+        message: validatedData.isDraft
+          ? "Draft saved successfully"
+          : "Your query has been submitted successfully and is awaiting review",
         data: {
           referenceId: ticket.referenceId,
           ticketId: ticket.id,
           status: ticket.status,
           sectionName: ticket.section.name,
-          assignedOfficer:
-            ticket.assignedOfficer?.officerProfile?.fullName ||
-            "Pending assignment",
           slaDeadline: ticket.slaDeadline,
+          isDraft: ticket.isDraft,
         },
       },
       { status: 201 }
@@ -219,7 +318,21 @@ export async function GET(request: NextRequest) {
     if (referenceId) {
       const ticket = await prisma.samadhanTicket.findUnique({
         where: { referenceId },
-        include: {
+        select: {
+          id: true,
+          referenceId: true,
+          queryType: true,
+          priority: true,
+          status: true,
+          serviceAvailed: true,
+          description: true,
+          resolutionMessage: true,
+          createdAt: true,
+          slaDeadline: true,
+          isAppeal: true,
+          originalTicketId: true,
+          citizenId: true, // Include for auth check
+          citizenPhone: true, // Include masked version for verification
           section: { select: { id: true, name: true } },
           assignedOfficer: {
             select: {
@@ -243,6 +356,7 @@ export async function GET(request: NextRequest) {
               fileName: true,
               originalName: true,
               fileType: true,
+              fileSize: true,
               createdAt: true,
             },
           },
@@ -285,6 +399,24 @@ export async function GET(request: NextRequest) {
           { success: false, message: "Ticket not found" },
           { status: 404 }
         );
+      }
+
+      // Resolve service IDs to names if serviceAvailed exists
+      let serviceNames: string | null = null;
+      if (ticket.serviceAvailed) {
+        try {
+          const serviceIds = JSON.parse(ticket.serviceAvailed);
+          if (Array.isArray(serviceIds) && serviceIds.length > 0) {
+            const services = await prisma.samadhanService.findMany({
+              where: { id: { in: serviceIds } },
+              select: { name: true },
+            });
+            serviceNames = services.map((s) => s.name).join(", ");
+          }
+        } catch {
+          // If not valid JSON, use as-is
+          serviceNames = ticket.serviceAvailed;
+        }
       }
 
       // Return ticket details for public view
@@ -344,7 +476,7 @@ export async function GET(request: NextRequest) {
           priority: ticket.priority,
           status: ticket.status,
           section: ticket.section,
-          serviceAvailed: ticket.serviceAvailed,
+          serviceAvailed: serviceNames, // Use resolved service names instead of IDs
           description: ticket.description,
           resolutionMessage: ticket.resolutionMessage,
           createdAt: ticket.createdAt,
@@ -352,6 +484,13 @@ export async function GET(request: NextRequest) {
           isAppeal: ticket.isAppeal,
           originalTicketId: ticket.originalTicketId,
           originalTicket: originalTicketData,
+          // Include citizenId and masked phone for access control
+          citizenId: ticket.citizenId,
+          citizenPhone: ticket.citizenPhone
+            ? ticket.citizenPhone.substring(0, 4) +
+              "****" +
+              ticket.citizenPhone.slice(-2)
+            : null,
           attachments: ticket.attachments.map((att) => ({
             ...att,
             viewUrl: `/api/samadhan/tickets/${ticket.id}/attachments/${att.id}`,
@@ -425,11 +564,13 @@ export async function GET(request: NextRequest) {
         priority: ticket.priority,
         status: ticket.status,
         section: ticket.section,
+        subject: ticket.subject,
         description: ticket.description.substring(0, 200),
         createdAt: ticket.createdAt,
         slaDeadline: ticket.slaDeadline,
         hasAttachments: ticket.attachments.length > 0,
         hasPendingInfoRequest: ticket.infoRequests.length > 0,
+        isDraft: ticket.isDraft,
       })),
     });
   } catch (error) {

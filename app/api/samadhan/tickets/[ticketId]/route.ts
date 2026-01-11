@@ -308,12 +308,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (isHigherAuthority) {
       // Higher authorities can edit almost any active ticket
       // They can intervene on appealed, overdue, SLA breached, escalated tickets
+      // BUT NOT QUEUED tickets - those should only be assigned from the queue page
       const isClosedStatus = [
         "CLOSED",
         "RESOLVED",
         "CLOSED_NO_RESPONSE",
       ].includes(ticket.status);
-      canEdit = !isClosedStatus; // Can edit any non-closed ticket
+      const isQueuedStatus = ticket.status === "QUEUED";
+      canEdit = !isClosedStatus && !isQueuedStatus; // Can edit any non-closed, non-queued ticket
     } else if (isAssignedOfficer || isEscalatedOfficer) {
       // Regular officers can edit if:
       // - They are assigned or escalated to them
@@ -326,6 +328,24 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         !isAppealed;
     }
 
+    // Resolve service UUIDs to names
+    let resolvedServiceNames: string | null = ticket.serviceAvailed;
+    if (ticket.serviceAvailed) {
+      try {
+        const serviceIds = JSON.parse(ticket.serviceAvailed);
+        if (Array.isArray(serviceIds) && serviceIds.length > 0) {
+          const services = await prisma.samadhanService.findMany({
+            where: { id: { in: serviceIds } },
+            select: { name: true },
+          });
+          resolvedServiceNames = services.map((s) => s.name).join(", ");
+        }
+      } catch {
+        // If parsing fails, keep the original value
+        resolvedServiceNames = ticket.serviceAvailed;
+      }
+    }
+
     return NextResponse.json({
       success: true,
       data: {
@@ -335,7 +355,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         priority: ticket.priority,
         status: ticket.status,
         section: ticket.section,
-        serviceAvailed: ticket.serviceAvailed,
+        serviceAvailed: resolvedServiceNames,
         description: ticket.description,
         resolutionMessage: ticket.resolutionMessage,
         isAppeal: ticket.isAppeal,

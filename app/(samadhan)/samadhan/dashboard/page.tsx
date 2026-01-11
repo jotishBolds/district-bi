@@ -10,7 +10,6 @@ import {
   Plus,
   MessageSquare,
   AlertCircle,
-  Lightbulb,
   Clock,
   CheckCircle,
   Search,
@@ -61,7 +60,7 @@ import { format, formatDistanceToNow } from "date-fns";
 
 interface Ticket {
   referenceId: string;
-  queryType: "FEEDBACK" | "GRIEVANCE" | "SUGGESTION";
+  queryType: "FEEDBACK" | "GRIEVANCE";
   priority: "LOW" | "MEDIUM" | "HIGH";
   status: string;
   section: { id: string; name: string };
@@ -70,6 +69,8 @@ interface Ticket {
   slaDeadline: string | null;
   hasAttachments: boolean;
   hasPendingInfoRequest?: boolean;
+  isDraft?: boolean;
+  subject?: string;
 }
 
 interface SamadhanUser {
@@ -83,6 +84,18 @@ const statusConfig: Record<
   string,
   { color: string; bgColor: string; label: string; icon: React.ElementType }
 > = {
+  DRAFT: {
+    color: "text-gray-600",
+    bgColor: "bg-gray-100",
+    label: "Draft",
+    icon: FileText,
+  },
+  QUEUED: {
+    color: "text-blue-600",
+    bgColor: "bg-blue-100",
+    label: "Queued",
+    icon: Clock,
+  },
   UNSEEN: {
     color: "text-slate-600",
     bgColor: "bg-slate-100",
@@ -145,12 +158,6 @@ const queryTypeConfig = {
     color: "text-red-600",
     bgColor: "bg-red-100",
     label: "Grievance",
-  },
-  SUGGESTION: {
-    icon: Lightbulb,
-    color: "text-amber-600",
-    bgColor: "bg-amber-100",
-    label: "Suggestion",
   },
 };
 
@@ -219,19 +226,22 @@ export default function CitizenDashboardPage() {
   const handleLogout = async () => {
     try {
       await fetch("/api/samadhan/auth?action=logout", { method: "POST" });
-      window.location.href = "/samadhan/login";
+      window.location.href = "/";
     } catch (error) {
       console.error("Logout error:", error);
-      window.location.href = "/samadhan/login";
+      window.location.href = "/";
     }
   };
 
   // Filter tickets by tab
   const getTabFilteredTickets = () => {
     switch (activeTab) {
+      case "drafts":
+        return tickets.filter((t) => t.status === "DRAFT");
       case "active":
         return tickets.filter((t) =>
           [
+            "QUEUED",
             "UNSEEN",
             "SEEN",
             "ACKNOWLEDGED",
@@ -246,7 +256,7 @@ export default function CitizenDashboardPage() {
       case "resolved":
         return tickets.filter((t) => ["RESOLVED", "CLOSED"].includes(t.status));
       default:
-        return tickets;
+        return tickets.filter((t) => t.status !== "DRAFT"); // Don't show drafts in "all" tab
     }
   };
 
@@ -274,9 +284,12 @@ export default function CitizenDashboardPage() {
 
   // Stats calculations
   const stats = {
-    total: tickets.length,
+    total: tickets.filter((t) => t.status !== "DRAFT").length,
+    drafts: tickets.filter((t) => t.status === "DRAFT").length,
     active: tickets.filter((t) =>
-      ["UNSEEN", "SEEN", "ACKNOWLEDGED", "IN_PROGRESS"].includes(t.status)
+      ["QUEUED", "UNSEEN", "SEEN", "ACKNOWLEDGED", "IN_PROGRESS"].includes(
+        t.status
+      )
     ).length,
     actionRequired: tickets.filter(
       (t) => t.hasPendingInfoRequest && t.status === "PENDING_INFORMATION"
@@ -320,7 +333,7 @@ export default function CitizenDashboardPage() {
 
             {/* User Info and Actions */}
             <div className="flex items-center gap-2 sm:gap-4">
-              <Link href="/samadhan" className="hidden sm:flex">
+              <Link href="/" className="hidden sm:flex">
                 <Button variant="ghost" size="sm">
                   <Home className="h-4 w-4 mr-2" />
                   Home
@@ -526,8 +539,16 @@ export default function CitizenDashboardPage() {
                       value="all"
                       className="data-[state=active]:bg-white px-4 py-2"
                     >
-                      All ({tickets.length})
+                      All ({stats.total})
                     </TabsTrigger>
+                    {stats.drafts > 0 && (
+                      <TabsTrigger
+                        value="drafts"
+                        className="data-[state=active]:bg-white px-4 py-2 text-gray-600"
+                      >
+                        Drafts ({stats.drafts})
+                      </TabsTrigger>
+                    )}
                     <TabsTrigger
                       value="active"
                       className="data-[state=active]:bg-white px-4 py-2"
@@ -622,7 +643,9 @@ export default function CitizenDashboardPage() {
               ) : (
                 <div className="divide-y divide-gray-100">
                   {currentTickets.map((ticket, index) => {
-                    const queryConfig = queryTypeConfig[ticket.queryType];
+                    const queryConfig =
+                      queryTypeConfig[ticket.queryType] ||
+                      queryTypeConfig.FEEDBACK;
                     const status =
                       statusConfig[ticket.status] || statusConfig.UNSEEN;
                     const priority = priorityConfig[ticket.priority];
@@ -631,6 +654,114 @@ export default function CitizenDashboardPage() {
                     const needsResponse =
                       ticket.hasPendingInfoRequest &&
                       ticket.status === "PENDING_INFORMATION";
+                    const isDraft = ticket.status === "DRAFT";
+
+                    const ticketContent = (
+                      <div
+                        className={`p-4 sm:p-6 hover:bg-gray-50 transition-colors cursor-pointer ${
+                          needsResponse
+                            ? "bg-orange-50/50 hover:bg-orange-50"
+                            : isDraft
+                            ? "bg-gray-50/50 hover:bg-gray-100"
+                            : ""
+                        }`}
+                      >
+                        <div className="flex items-start gap-4">
+                          {/* Icon */}
+                          <div
+                            className={`w-10 h-10 sm:w-12 sm:h-12 ${queryConfig.bgColor} rounded-xl flex items-center justify-center flex-shrink-0`}
+                          >
+                            <QueryIcon
+                              className={`h-5 w-5 sm:h-6 sm:w-6 ${queryConfig.color}`}
+                            />
+                          </div>
+
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="font-mono text-sm font-semibold text-gray-900">
+                                  {isDraft ? "Draft" : ticket.referenceId}
+                                </span>
+                                <Badge
+                                  variant="outline"
+                                  className={`${queryConfig.bgColor} ${queryConfig.color} border-0 text-xs`}
+                                >
+                                  {queryConfig.label}
+                                </Badge>
+                                {ticket.queryType === "GRIEVANCE" && (
+                                  <Badge
+                                    variant="outline"
+                                    className={`${priority.bgColor} ${priority.color} border-0 text-xs`}
+                                  >
+                                    {priority.label}
+                                  </Badge>
+                                )}
+                                {needsResponse && (
+                                  <Badge className="bg-orange-500 text-white text-xs animate-pulse">
+                                    Action Required
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1.5 flex-shrink-0">
+                                <StatusIcon
+                                  className={`h-4 w-4 ${status.color}`}
+                                />
+                                <span
+                                  className={`text-sm font-medium ${status.color}`}
+                                >
+                                  {status.label}
+                                </span>
+                              </div>
+                            </div>
+
+                            <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                              {ticket.subject || ticket.description}
+                            </p>
+
+                            <div className="flex items-center justify-between gap-4 text-xs text-gray-500 flex-wrap">
+                              <div className="flex items-center gap-4 flex-wrap">
+                                <span className="flex items-center gap-1">
+                                  <LayoutDashboard className="h-3.5 w-3.5" />
+                                  {ticket.section.name}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <Calendar className="h-3.5 w-3.5" />
+                                  {format(
+                                    new Date(ticket.createdAt),
+                                    "MMM d, yyyy"
+                                  )}
+                                </span>
+                                <span className="text-gray-400">
+                                  {formatDistanceToNow(
+                                    new Date(ticket.createdAt),
+                                    { addSuffix: true }
+                                  )}
+                                </span>
+                                {needsResponse && (
+                                  <span className="text-orange-600 font-medium">
+                                    Officer requested additional information
+                                  </span>
+                                )}
+                              </div>
+                              {isDraft && (
+                                <Button
+                                  size="sm"
+                                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                                >
+                                  Continue Draft
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Arrow - hide for drafts */}
+                          {!isDraft && (
+                            <ChevronRight className="h-5 w-5 text-gray-400 flex-shrink-0 hidden sm:block" />
+                          )}
+                        </div>
+                      </div>
+                    );
 
                     return (
                       <motion.div
@@ -639,98 +770,17 @@ export default function CitizenDashboardPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
                       >
-                        <Link href={`/samadhan/track/${ticket.referenceId}`}>
-                          <div
-                            className={`p-4 sm:p-6 hover:bg-gray-50 transition-colors cursor-pointer ${
-                              needsResponse
-                                ? "bg-orange-50/50 hover:bg-orange-50"
-                                : ""
-                            }`}
+                        {isDraft ? (
+                          <Link
+                            href={`/samadhan/submit?draft=${ticket.referenceId}`}
                           >
-                            <div className="flex items-start gap-4">
-                              {/* Icon */}
-                              <div
-                                className={`w-10 h-10 sm:w-12 sm:h-12 ${queryConfig.bgColor} rounded-xl flex items-center justify-center flex-shrink-0`}
-                              >
-                                <QueryIcon
-                                  className={`h-5 w-5 sm:h-6 sm:w-6 ${queryConfig.color}`}
-                                />
-                              </div>
-
-                              {/* Content */}
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-start justify-between gap-2 mb-2">
-                                  <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="font-mono text-sm font-semibold text-gray-900">
-                                      {ticket.referenceId}
-                                    </span>
-                                    <Badge
-                                      variant="outline"
-                                      className={`${queryConfig.bgColor} ${queryConfig.color} border-0 text-xs`}
-                                    >
-                                      {queryConfig.label}
-                                    </Badge>
-                                    {ticket.queryType === "GRIEVANCE" && (
-                                      <Badge
-                                        variant="outline"
-                                        className={`${priority.bgColor} ${priority.color} border-0 text-xs`}
-                                      >
-                                        {priority.label}
-                                      </Badge>
-                                    )}
-                                    {needsResponse && (
-                                      <Badge className="bg-orange-500 text-white text-xs animate-pulse">
-                                        Action Required
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  <div className="flex items-center gap-1.5 flex-shrink-0">
-                                    <StatusIcon
-                                      className={`h-4 w-4 ${status.color}`}
-                                    />
-                                    <span
-                                      className={`text-sm font-medium ${status.color}`}
-                                    >
-                                      {status.label}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                <p className="text-gray-600 text-sm line-clamp-2 mb-3">
-                                  {ticket.description}
-                                </p>
-
-                                <div className="flex items-center gap-4 text-xs text-gray-500 flex-wrap">
-                                  <span className="flex items-center gap-1">
-                                    <LayoutDashboard className="h-3.5 w-3.5" />
-                                    {ticket.section.name}
-                                  </span>
-                                  <span className="flex items-center gap-1">
-                                    <Calendar className="h-3.5 w-3.5" />
-                                    {format(
-                                      new Date(ticket.createdAt),
-                                      "MMM d, yyyy"
-                                    )}
-                                  </span>
-                                  <span className="text-gray-400">
-                                    {formatDistanceToNow(
-                                      new Date(ticket.createdAt),
-                                      { addSuffix: true }
-                                    )}
-                                  </span>
-                                  {needsResponse && (
-                                    <span className="text-orange-600 font-medium">
-                                      Officer requested additional information
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-
-                              {/* Arrow */}
-                              <ChevronRight className="h-5 w-5 text-gray-400 flex-shrink-0 hidden sm:block" />
-                            </div>
-                          </div>
-                        </Link>
+                            {ticketContent}
+                          </Link>
+                        ) : (
+                          <Link href={`/samadhan/track/${ticket.referenceId}`}>
+                            {ticketContent}
+                          </Link>
+                        )}
                       </motion.div>
                     );
                   })}
@@ -848,7 +898,7 @@ export default function CitizenDashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4"
+          className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
           <Link href="/samadhan/submit?type=FEEDBACK">
             <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-all cursor-pointer group">
@@ -877,22 +927,6 @@ export default function CitizenDashboardPage() {
                     File Grievance
                   </h3>
                   <p className="text-sm text-gray-500">Report an issue</p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link href="/samadhan/submit?type=SUGGESTION">
-            <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-all cursor-pointer group">
-              <CardContent className="p-4 sm:p-6 flex items-center gap-4">
-                <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Lightbulb className="h-6 w-6 text-amber-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">
-                    Share Suggestion
-                  </h3>
-                  <p className="text-sm text-gray-500">Propose improvements</p>
                 </div>
               </CardContent>
             </Card>

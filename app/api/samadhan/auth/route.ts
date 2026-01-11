@@ -15,11 +15,17 @@ import { sendSms, generateOTPMessage } from "@/lib/thundersms.server";
 
 const phoneSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  action: z.string().optional(),
+  verifyOnly: z.boolean().optional(), // Just verify, don't create session
+  referenceId: z.string().optional(), // For tracking verification
 });
 
 const verifySchema = z.object({
   phone: z.string().min(10),
   otp: z.string().length(6, "OTP must be 6 digits"),
+  action: z.string().optional(),
+  verifyOnly: z.boolean().optional(),
+  referenceId: z.string().optional(),
 });
 
 // GET - Check session status
@@ -64,19 +70,32 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const action = searchParams.get("action");
+    let action = searchParams.get("action");
 
-    if (action === "verify") {
-      return verifyOTP(request);
-    }
-
+    // Handle logout first - doesn't need body parsing
     if (action === "logout") {
       return handleLogout();
     }
 
-    // Send OTP
-    const body = await request.json();
-    const { phone } = phoneSchema.parse(body);
+    // Parse body for other actions
+    let body: Record<string, unknown> = {};
+    try {
+      body = await request.json();
+    } catch {
+      // Body might be empty for some requests
+    }
+
+    // Support action from body as well
+    if (body.action) {
+      action = body.action as string;
+    }
+
+    if (action === "verify" || action === "verify-otp") {
+      return verifyOTP(request, body);
+    }
+
+    // Send OTP (default action or action === "send-otp")
+    const { phone, verifyOnly, referenceId } = phoneSchema.parse(body);
 
     // Clean phone number
     const cleanPhone = phone.replace(/[\s\-\(\)]/g, "");
@@ -147,10 +166,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function verifyOTP(request: NextRequest) {
+async function verifyOTP(request: NextRequest, body?: Record<string, unknown>) {
   try {
-    const body = await request.json();
-    const { phone, otp } = verifySchema.parse(body);
+    const data = body || (await request.json());
+    const { phone, otp, verifyOnly, referenceId } = verifySchema.parse(data);
 
     const cleanPhone = phone.replace(/[\s\-\(\)]/g, "");
 
@@ -178,6 +197,41 @@ async function verifyOTP(request: NextRequest) {
       where: { id: otpRecord.id },
       data: { isUsed: true, status: "USED" },
     });
+
+    // If verifyOnly mode, just return success without creating session
+    // This is used for attachment access verification
+    if (verifyOnly) {
+      // Optionally verify if phone matches the ticket owner
+      if (referenceId) {
+        const ticket = await prisma.samadhanTicket.findUnique({
+          where: { referenceId },
+          select: { citizenPhone: true },
+        });
+
+        if (
+          ticket &&
+          ticket.citizenPhone &&
+          ticket.citizenPhone !== cleanPhone
+        ) {
+          return NextResponse.json(
+            {
+              success: false,
+              message: "Phone number doesn't match the ticket owner",
+            },
+            { status: 403 }
+          );
+        }
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: "Phone verified successfully",
+        data: {
+          phone: cleanPhone,
+          verified: true,
+        },
+      });
+    }
 
     // Check if user exists with CITIZEN role (SAMADHAN-specific users)
     let user = await prisma.user.findFirst({

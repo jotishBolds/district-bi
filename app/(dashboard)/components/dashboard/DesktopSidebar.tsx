@@ -160,6 +160,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       icon: Layers,
     },
     {
+      name: "SAMADHAN Services",
+      href: "/admin/samadhan-services",
+      icon: ListChecks,
+    },
+    {
       name: "Frontdesk Management",
       href: "/admin/frontdesk-management",
       icon: Shield,
@@ -168,6 +173,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       name: "SAMADHAN Tickets",
       href: "/dashboard/samadhan",
       icon: MessageSquareDot,
+    },
+    {
+      name: "SAMADHAN Queue",
+      href: "/dashboard/samadhan-queue",
+      icon: Gavel,
     },
     // { name: "System Settings", href: "/admin/settings", icon: Settings },
     // { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
@@ -195,6 +205,11 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       name: "SAMADHAN Tickets",
       href: "/dashboard/samadhan",
       icon: MessageSquareDot,
+    },
+    {
+      name: "SAMADHAN Queue",
+      href: "/dashboard/samadhan-queue",
+      icon: Gavel,
     },
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];

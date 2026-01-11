@@ -2,43 +2,48 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  MessageSquare,
-  AlertCircle,
-  Lightbulb,
+  ArrowLeft,
+  ArrowRight,
+  Check,
   Upload,
   X,
-  ArrowLeft,
-  Check,
+  Loader2,
+  Building2,
+  FileText,
+  MessageSquare,
+  AlertCircle,
   Eye,
   EyeOff,
-  Loader2,
-  User,
+  Save,
+  Send,
+  Paperclip,
+  CheckCircle2,
+  Calendar,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
+import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Section {
   id: string;
@@ -46,80 +51,315 @@ interface Section {
   description: string | null;
 }
 
-type QueryType = "FEEDBACK" | "GRIEVANCE" | "SUGGESTION";
+interface Service {
+  id: string;
+  name: string;
+  description: string | null;
+  sectionId: string;
+}
 
-const queryTypeConfig = {
-  FEEDBACK: {
-    icon: MessageSquare,
-    color: "green",
-    title: "Submit Feedback",
-    description: "Share your experience or appreciation about our services",
-  },
-  GRIEVANCE: {
-    icon: AlertCircle,
-    color: "red",
-    title: "File Grievance",
-    description: "Report a complaint or issue you faced",
-  },
-  SUGGESTION: {
-    icon: Lightbulb,
-    color: "amber",
-    title: "Share Suggestion",
-    description: "Propose ideas for improving our services",
-  },
-};
+type QueryType = "FEEDBACK" | "GRIEVANCE";
 
-export default function SubmitQueryPage() {
+// Steps for Grievance form
+const GRIEVANCE_STEPS = [
+  {
+    id: "type",
+    title: "Query Type",
+    description: "What would you like to submit?",
+  },
+  {
+    id: "visit",
+    title: "DC Visit",
+    description: "Did you visit the DC office?",
+  },
+  { id: "date", title: "Visit Date", description: "When did you visit?" },
+  {
+    id: "section",
+    title: "Section",
+    description: "Which section did you visit?",
+  },
+  {
+    id: "services",
+    title: "Services",
+    description: "What services did you avail?",
+  },
+  {
+    id: "subject",
+    title: "Subject",
+    description: "Brief title for your query",
+  },
+  {
+    id: "description",
+    title: "Details",
+    description: "Describe your experience",
+  },
+  {
+    id: "attachments",
+    title: "Proof",
+    description: "Upload supporting documents",
+  },
+  { id: "contact", title: "Contact", description: "Your contact information" },
+  { id: "review", title: "Review", description: "Review and submit" },
+];
+
+// Steps for Feedback form
+const FEEDBACK_STEPS = [
+  {
+    id: "type",
+    title: "Query Type",
+    description: "What would you like to submit?",
+  },
+  {
+    id: "subject",
+    title: "Subject",
+    description: "Brief title for your feedback",
+  },
+  { id: "description", title: "Details", description: "Share your feedback" },
+  {
+    id: "attachments",
+    title: "Attachments",
+    description: "Add any documents (optional)",
+  },
+  { id: "contact", title: "Contact", description: "Your contact information" },
+  { id: "review", title: "Review", description: "Review and submit" },
+];
+
+// Success confirmation modal component
+function SuccessModal({
+  isOpen,
+  referenceId,
+  onClose,
+}: {
+  isOpen: boolean;
+  referenceId: string;
+  onClose: () => void;
+}) {
+  const router = useRouter();
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader className="text-center">
+          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle2 className="h-10 w-10 text-white" />
+          </div>
+          <DialogTitle className="text-2xl text-center">
+            🎉 Successfully Submitted!
+          </DialogTitle>
+          <DialogDescription asChild>
+            <div className="text-center space-y-2">
+              <span className="block">
+                Your query has been submitted and is now in the review queue.
+              </span>
+              <span className="block text-sm text-gray-500">
+                A senior officer will review and assign your ticket shortly.
+              </span>
+            </div>
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center">
+          <p className="text-sm text-gray-600 mb-2">Your Reference ID</p>
+          <p className="text-xl font-mono font-bold text-blue-700 bg-white rounded-lg px-4 py-2 inline-block">
+            {referenceId}
+          </p>
+          <p className="text-xs text-gray-500 mt-3">
+            Save this ID to track your query status
+          </p>
+        </div>
+
+        <DialogFooter className="flex flex-col gap-2 sm:flex-col">
+          <Button
+            onClick={() => router.push(`/samadhan/track/${referenceId}`)}
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
+          >
+            Track Status
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => router.push("/samadhan/dashboard")}
+            className="w-full"
+          >
+            Go to Dashboard
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => router.push("/")}
+            className="w-full"
+          >
+            Back to Home
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export default function TypeFormSubmitPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-green-50">
-          <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       }
     >
-      <SubmitQueryContent />
+      <TypeFormContent />
     </Suspense>
   );
 }
 
-function SubmitQueryContent() {
+function TypeFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { data: session } = useSession();
 
-  const [sections, setSections] = useState<Section[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
-  const [successData, setSuccessData] = useState<{
-    referenceId: string;
-    slaDeadline: string;
+  // Use SAMADHAN session instead of NextAuth
+  const [samadhanSession, setSamadhanSession] = useState<{
+    userId: string;
+    phone: string;
+    name: string;
   } | null>(null);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
+
+  // Current step tracking
+  const [currentStep, setCurrentStep] = useState(0);
+  const [queryType, setQueryType] = useState<QueryType>(
+    (searchParams.get("type") as QueryType) || "GRIEVANCE"
+  );
+
+  // Data
+  const [sections, setSections] = useState<Section[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [filteredServices, setFilteredServices] = useState<Service[]>([]);
 
   // Form state
-  const [queryType, setQueryType] = useState<QueryType>(
-    (searchParams.get("type") as QueryType) || "FEEDBACK"
-  );
+  const [visitedDC, setVisitedDC] = useState<boolean | null>(null);
+  const [visitDate, setVisitDate] = useState<string>("");
+  const [visitDateOption, setVisitDateOption] = useState<string>("");
   const [sectionId, setSectionId] = useState("");
-  const [serviceAvailed, setServiceAvailed] = useState("");
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH">("MEDIUM");
-  const [citizenName, setCitizenName] = useState(session?.user?.fullName || "");
-  const [citizenEmail, setCitizenEmail] = useState(session?.user?.email || "");
+  const [citizenName, setCitizenName] = useState("");
+  const [citizenEmail, setCitizenEmail] = useState("");
   const [citizenPhone, setCitizenPhone] = useState("");
   const [isAnonymousToOfficer, setIsAnonymousToOfficer] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
 
-  useEffect(() => {
-    fetchSections();
-  }, []);
+  // UI state
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showDraftSuccessModal, setShowDraftSuccessModal] = useState(false);
+  const [submittedReferenceId, setSubmittedReferenceId] = useState("");
+  const [existingDraftId, setExistingDraftId] = useState<string | null>(null);
+  const [isLoadingDraft, setIsLoadingDraft] = useState(false);
 
-  useEffect(() => {
-    if (session?.user) {
-      setCitizenName(session.user.fullName || "");
-      setCitizenEmail(session.user.email || "");
+  // Get current steps based on query type
+  const steps = queryType === "GRIEVANCE" ? GRIEVANCE_STEPS : FEEDBACK_STEPS;
+  const currentStepData = steps[currentStep];
+
+  // Load draft data if draft parameter is present
+  const loadDraft = async (draftReferenceId: string) => {
+    setIsLoadingDraft(true);
+    try {
+      const response = await fetch(
+        `/api/samadhan/tickets/draft/${draftReferenceId}`
+      );
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        const draft = data.data;
+
+        // Set all form fields from draft data
+        setQueryType(draft.queryType || "GRIEVANCE");
+        setPriority(draft.priority || "MEDIUM");
+        setSectionId(draft.sectionId || "");
+        setSubject(draft.subject || "");
+        setSelectedServices(draft.selectedServices || []);
+        setDescription(draft.description || "");
+        setVisitedDC(draft.visitedDC ?? null);
+        setVisitDate(draft.visitDate || "");
+        setCitizenName(draft.citizenName || "");
+        setCitizenEmail(draft.citizenEmail || "");
+        setCitizenPhone(draft.citizenPhone || "");
+        setIsAnonymousToOfficer(draft.isAnonymousToOfficer || false);
+        setExistingDraftId(draft.id);
+
+        // Set visit date option if date exists
+        if (draft.visitDate) {
+          const today = new Date().toISOString().split("T")[0];
+          if (draft.visitDate === today) {
+            setVisitDateOption("today");
+          } else {
+            setVisitDateOption("specific");
+          }
+        }
+
+        toast.success("Draft loaded successfully");
+      } else {
+        toast.error(data.message || "Failed to load draft");
+      }
+    } catch (error) {
+      console.error("Failed to load draft:", error);
+      toast.error("Failed to load draft");
+    } finally {
+      setIsLoadingDraft(false);
     }
-  }, [session]);
+  };
+
+  // Check SAMADHAN session on mount
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch("/api/samadhan/auth?action=session");
+        const data = await response.json();
+        if (data.authenticated && data.session) {
+          setSamadhanSession(data.session);
+          // Pre-fill contact info from session (only if not loading a draft)
+          const draftId = searchParams.get("draft");
+          if (!draftId) {
+            setCitizenName(data.session.name || "");
+            setCitizenPhone(data.session.phone || "");
+          }
+        }
+      } catch (error) {
+        console.error("Session check error:", error);
+      } finally {
+        setIsCheckingSession(false);
+      }
+    };
+    checkSession();
+    fetchSections();
+    fetchServices();
+  }, [searchParams]);
+
+  // Load draft when draft parameter is present and services are loaded
+  useEffect(() => {
+    const draftId = searchParams.get("draft");
+    if (draftId && samadhanSession && services.length > 0) {
+      loadDraft(draftId);
+    }
+  }, [searchParams, samadhanSession, services]);
+
+  // Track if section was manually changed (not from draft loading)
+  const [sectionChangedManually, setSectionChangedManually] = useState(false);
+
+  useEffect(() => {
+    // Filter services by selected section
+    if (sectionId) {
+      setFilteredServices(services.filter((s) => s.sectionId === sectionId));
+      // Reset selection only if section was changed manually (not from draft loading)
+      if (sectionChangedManually) {
+        setSelectedServices([]);
+        setSectionChangedManually(false);
+      }
+    } else {
+      setFilteredServices([]);
+    }
+  }, [sectionId, services, sectionChangedManually]);
 
   const fetchSections = async () => {
     try {
@@ -133,10 +373,21 @@ function SubmitQueryContent() {
     }
   };
 
+  const fetchServices = async () => {
+    try {
+      const response = await fetch("/api/samadhan/services");
+      const data = await response.json();
+      if (data.success) {
+        setServices(data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch services:", error);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = Array.from(e.target.files || []);
     const validFiles = newFiles.filter((file) => {
-      // Validate file type and size
       const allowedTypes = [
         "image/jpeg",
         "image/png",
@@ -169,39 +420,114 @@ function SubmitQueryContent() {
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Validation for current step
+  const validateCurrentStep = (): boolean => {
+    switch (currentStepData.id) {
+      case "type":
+        return !!queryType;
+      case "visit":
+        return visitedDC !== null;
+      case "date":
+        if (!visitedDC) return true; // Skip if didn't visit
+        return !!visitDate || !!visitDateOption;
+      case "section":
+        return !!sectionId;
+      case "services":
+        return true; // Optional
+      case "subject":
+        return subject.trim().length >= 3;
+      case "description":
+        return description.trim().length >= 10;
+      case "attachments":
+        return true; // Optional
+      case "contact":
+        return true; // Optional but we have defaults
+      case "review":
+        return true;
+      default:
+        return true;
+    }
+  };
 
-    if (!sectionId) {
-      toast.error("Please select a section");
+  const goToNextStep = () => {
+    if (!validateCurrentStep()) {
+      toast.error("Please complete this step before continuing");
       return;
     }
-    if (!description.trim() || description.length < 10) {
-      toast.error(
-        "Please provide a detailed description (at least 10 characters)"
-      );
-      return;
+
+    // Skip date step if didn't visit DC
+    if (currentStepData.id === "visit" && !visitedDC) {
+      // For grievance, skip to section; for feedback, skip differently
+      if (queryType === "GRIEVANCE") {
+        const dateStepIndex = steps.findIndex((s) => s.id === "date");
+        if (dateStepIndex !== -1) {
+          setCurrentStep(dateStepIndex + 1);
+          return;
+        }
+      }
     }
 
-    setIsSubmitting(true);
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const goToPrevStep = () => {
+    // Skip date step if didn't visit DC OR if visited today (date was skipped)
+    if (currentStep > 0) {
+      const prevStepId = steps[currentStep - 1].id;
+      // Skip date step when going back if:
+      // 1. User didn't visit DC (!visitedDC)
+      // 2. User selected "Yes, I visited today" (visitDateOption === "today")
+      if (
+        prevStepId === "date" &&
+        (!visitedDC || visitDateOption === "today")
+      ) {
+        setCurrentStep(currentStep - 2);
+        return;
+      }
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmit = async (asDraft: boolean = false) => {
+    if (asDraft) {
+      setIsSavingDraft(true);
+    } else {
+      setIsSubmitting(true);
+    }
 
     try {
-      // Always send contact info to be stored in DB
-      // The isAnonymousToOfficer flag controls what officers can see
+      // Prepare date
+      let finalVisitDate = visitDate;
+      if (visitDateOption === "today") {
+        finalVisitDate = new Date().toISOString();
+      } else if (visitDateOption === "yesterday") {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        finalVisitDate = yesterday.toISOString();
+      }
+
       const submissionData = {
         queryType,
         priority: queryType === "GRIEVANCE" ? priority : undefined,
-        sectionId,
-        serviceAvailed,
+        sectionId: sectionId || sections[0]?.id, // Use first section for feedback if not selected
+        subject,
+        serviceAvailed:
+          selectedServices.length > 0
+            ? JSON.stringify(selectedServices)
+            : undefined,
         description,
-        // Always send contact info - API will store it privately when anonymous
+        visitedDC: visitedDC ?? false,
+        visitDate: finalVisitDate || undefined,
         citizenName: citizenName || undefined,
         citizenEmail: citizenEmail || undefined,
         citizenPhone: citizenPhone || undefined,
         isAnonymousToOfficer,
+        isDraft: asDraft,
+        ticketId: existingDraftId || undefined,
       };
 
-      // Submit ticket
       const response = await fetch("/api/samadhan/tickets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -214,8 +540,8 @@ function SubmitQueryContent() {
         throw new Error(data.message || "Failed to submit");
       }
 
-      // Upload attachments if any
-      if (files.length > 0) {
+      // Upload attachments if any and not draft
+      if (files.length > 0 && !asDraft) {
         for (const file of files) {
           const formData = new FormData();
           formData.append("file", file);
@@ -230,386 +556,473 @@ function SubmitQueryContent() {
         }
       }
 
-      setSuccessData({
-        referenceId: data.data.referenceId,
-        slaDeadline: data.data.slaDeadline,
-      });
-
-      toast.success("Query submitted successfully!");
+      if (asDraft) {
+        setExistingDraftId(data.data.ticketId);
+        setSubmittedReferenceId(data.data.referenceId);
+        setShowDraftSuccessModal(true);
+      } else {
+        setSubmittedReferenceId(data.data.referenceId);
+        setShowSuccessModal(true);
+      }
     } catch (error) {
       const err = error instanceof Error ? error : new Error("Unknown error");
       toast.error(err.message || "Failed to submit query");
     } finally {
       setIsSubmitting(false);
+      setIsSavingDraft(false);
     }
   };
 
-  const config = queryTypeConfig[queryType];
-  const IconComponent = config.icon;
+  // Progress percentage
+  const progressPercentage = ((currentStep + 1) / steps.length) * 100;
 
-  // Success screen
-  if (successData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full"
-        >
-          <Card className="text-center">
-            <CardHeader>
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Check className="h-10 w-10 text-green-600" />
-              </div>
-              <CardTitle className="text-2xl text-green-700">
-                Query Submitted!
-              </CardTitle>
-              <CardDescription>
-                Your {queryType.toLowerCase()} has been received and assigned.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-sm text-gray-500 mb-1">Reference ID</p>
-                <p className="text-lg font-mono font-bold text-gray-900">
-                  {successData.referenceId}
-                </p>
-              </div>
-              <p className="text-sm text-gray-600">
-                Please save this reference ID to track your query status.
-              </p>
-              <div className="flex flex-col gap-2">
-                <Link href={`/samadhan/track/${successData.referenceId}`}>
-                  <Button className="w-full">Track Status</Button>
-                </Link>
-                <Link href="/samadhan">
-                  <Button variant="outline" className="w-full">
-                    Back to Home
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    );
-  }
+  // Render step content
+  const renderStepContent = () => {
+    const stepId = currentStepData.id;
 
-  return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-      {/* Header */}
-      <div className="max-w-3xl mx-auto mb-8">
-        <Link
-          href="/samadhan"
-          className="inline-flex items-center text-sm text-gray-600 hover:text-blue-600 mb-4"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Home
-        </Link>
-
-        {/* Query Type Selector */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          {(["FEEDBACK", "GRIEVANCE", "SUGGESTION"] as QueryType[]).map(
-            (type) => {
-              const typeConfig = queryTypeConfig[type];
-              const TypeIcon = typeConfig.icon;
-              const isSelected = queryType === type;
-
-              return (
-                <button
-                  key={type}
-                  onClick={() => setQueryType(type)}
-                  className={`p-4 rounded-xl border-2 transition-all ${
-                    isSelected
-                      ? `border-${typeConfig.color}-500 bg-${typeConfig.color}-50`
-                      : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <TypeIcon
-                    className={`h-6 w-6 mx-auto mb-2 ${
-                      isSelected
-                        ? `text-${typeConfig.color}-600`
-                        : "text-gray-400"
-                    }`}
-                  />
-                  <p
-                    className={`text-sm font-medium ${
-                      isSelected
-                        ? `text-${typeConfig.color}-700`
-                        : "text-gray-600"
-                    }`}
-                  >
-                    {type.charAt(0) + type.slice(1).toLowerCase()}
-                  </p>
-                </button>
-              );
-            }
-          )}
-        </div>
-      </div>
-
-      {/* Form */}
-      <Card className="max-w-3xl mx-auto">
-        <CardHeader>
-          <div className="flex items-center space-x-3">
-            <div
-              className={`w-10 h-10 bg-${config.color}-100 rounded-lg flex items-center justify-center`}
-            >
-              <IconComponent className={`h-5 w-5 text-${config.color}-600`} />
+    switch (stepId) {
+      case "type":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                What would you like to submit?
+              </h2>
+              <p className="text-gray-500">Choose the type of query</p>
             </div>
-            <div>
-              <CardTitle>{config.title}</CardTitle>
-              <CardDescription>{config.description}</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Contact Information */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-700">
-                  Contact Information (Optional)
-                </h3>
-              </div>
-
-              {/* Anonymous Toggle - Always show for all users */}
-              <div
-                className={`flex items-center justify-between p-4 rounded-lg border-2 transition-all ${
-                  isAnonymousToOfficer
-                    ? "bg-green-50 border-green-300"
-                    : "bg-gray-50 border-gray-200"
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
+              <button
+                onClick={() => {
+                  setQueryType("GRIEVANCE");
+                  goToNextStep();
+                }}
+                className={`p-6 rounded-2xl border-2 transition-all hover:shadow-lg ${
+                  queryType === "GRIEVANCE"
+                    ? "border-red-500 bg-red-50 shadow-md"
+                    : "border-gray-200 hover:border-red-300"
                 }`}
               >
-                <div className="flex items-center space-x-3">
-                  {isAnonymousToOfficer ? (
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <EyeOff className="h-5 w-5 text-green-600" />
-                    </div>
-                  ) : (
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Eye className="h-5 w-5 text-blue-600" />
-                    </div>
-                  )}
-                  <div>
-                    <p className="text-sm font-semibold">
-                      {isAnonymousToOfficer
-                        ? "Anonymous Submission"
-                        : "Share My Contact Details"}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {isAnonymousToOfficer
-                        ? "Officers will only see a pseudonym (e.g., Brave Tiger 1234)"
-                        : "Officers will see your name, phone & email for direct contact"}
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={isAnonymousToOfficer}
-                  onCheckedChange={(checked) => {
-                    setIsAnonymousToOfficer(checked);
-                  }}
-                />
-              </div>
-
-              {/* Anonymous mode notice - what officers will see */}
-              {isAnonymousToOfficer && (
-                <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Check className="h-4 w-4 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-green-800 mb-1">
-                        🔒 Privacy Protected
-                      </p>
-                      <p className="text-sm text-green-700">
-                        Your identity will be hidden from officers. They&apos;ll
-                        only see a pseudonym like{" "}
-                        <span className="font-mono bg-green-100 px-1.5 py-0.5 rounded">
-                          &quot;Brave Tiger 1234&quot;
-                        </span>
-                        .
-                        {session
-                          ? " Your real info is stored securely and only visible to DC/Admin for verification."
-                          : " You can still provide contact info below if you want to receive updates."}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Non-anonymous mode notice */}
-              {!isAnonymousToOfficer && (
-                <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <User className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-blue-800 mb-1">
-                        📞 Direct Contact Enabled
-                      </p>
-                      <p className="text-sm text-blue-700">
-                        Officers will be able to see your contact details and
-                        reach out directly for faster resolution. Fill in the
-                        information below.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Contact Information Fields */}
-              <div className="space-y-4 p-4 bg-white border border-gray-200 rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-medium text-gray-700">
-                    {isAnonymousToOfficer
-                      ? "Your Details (Private - for updates only)"
-                      : "Your Details (Visible to Officers)"}
-                  </p>
-                  {isAnonymousToOfficer && (
-                    <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full font-medium">
-                      Hidden from officers
-                    </span>
-                  )}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="name" className="text-sm text-gray-600">
-                      Your Name
-                    </Label>
-                    <Input
-                      id="name"
-                      value={citizenName}
-                      onChange={(e) => setCitizenName(e.target.value)}
-                      placeholder="Enter your full name"
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone" className="text-sm text-gray-600">
-                      Phone Number
-                    </Label>
-                    <Input
-                      id="phone"
-                      value={citizenPhone}
-                      onChange={(e) => setCitizenPhone(e.target.value)}
-                      placeholder="Enter your phone number"
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="email" className="text-sm text-gray-600">
-                    Email Address
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={citizenEmail}
-                    onChange={(e) => setCitizenEmail(e.target.value)}
-                    placeholder="Enter your email address"
-                    className="mt-1"
-                  />
-                </div>
-
-                {isAnonymousToOfficer &&
-                  (citizenName || citizenPhone || citizenEmail) && (
-                    <p className="text-xs text-gray-500 flex items-center gap-1.5 mt-2">
-                      <EyeOff className="h-3 w-3" />
-                      This information will be stored privately and NOT shown to
-                      officers
-                    </p>
-                  )}
-              </div>
-            </div>
-
-            {/* Section Selection */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium text-gray-700">
-                Query Details
-              </h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="section">Section Visited *</Label>
-                  <Select value={sectionId} onValueChange={setSectionId}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select section" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {sections.map((section) => (
-                        <SelectItem key={section.id} value={section.id}>
-                          {section.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="service">Service Availed</Label>
-                  <Input
-                    id="service"
-                    value={serviceAvailed}
-                    onChange={(e) => setServiceAvailed(e.target.value)}
-                    placeholder="e.g., Birth Certificate, Land Records"
-                  />
-                </div>
-              </div>
-
-              {/* Priority (for Grievance only) */}
-              {queryType === "GRIEVANCE" && (
-                <div>
-                  <Label htmlFor="priority">Priority Level</Label>
-                  <Select
-                    value={priority}
-                    onValueChange={(v) =>
-                      setPriority(v as "LOW" | "MEDIUM" | "HIGH")
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="LOW">
-                        Low - Non-urgent issue
-                      </SelectItem>
-                      <SelectItem value="MEDIUM">
-                        Medium - Normal priority
-                      </SelectItem>
-                      <SelectItem value="HIGH">High - Urgent matter</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              {/* Description */}
-              <div>
-                <Label htmlFor="description">Description *</Label>
-                <Textarea
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder={`Describe your ${queryType.toLowerCase()} in detail...`}
-                  rows={6}
-                  className="resize-none"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  {description.length}/10 minimum characters
+                <AlertCircle className="h-10 w-10 text-red-500 mx-auto mb-3" />
+                <h3 className="font-semibold text-lg">Grievance</h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  Report a complaint or issue
                 </p>
+              </button>
+              <button
+                onClick={() => {
+                  setQueryType("FEEDBACK");
+                  goToNextStep();
+                }}
+                className={`p-6 rounded-2xl border-2 transition-all hover:shadow-lg ${
+                  queryType === "FEEDBACK"
+                    ? "border-green-500 bg-green-50 shadow-md"
+                    : "border-gray-200 hover:border-green-300"
+                }`}
+              >
+                <MessageSquare className="h-10 w-10 text-green-500 mx-auto mb-3" />
+                <h3 className="font-semibold text-lg">Feedback</h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  Share your experience
+                </p>
+              </button>
+            </div>
+          </div>
+        );
+
+      case "visit":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                Did you visit the DC office today?
+              </h2>
+              <p className="text-gray-500">
+                Help us understand your experience better
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-4 max-w-lg mx-auto">
+              <button
+                onClick={() => {
+                  setVisitedDC(true);
+                  setVisitDateOption("today");
+                  // Skip the date step since we know it's today
+                  const sectionStepIndex = steps.findIndex(
+                    (s) => s.id === "section"
+                  );
+                  if (sectionStepIndex !== -1) {
+                    setTimeout(() => setCurrentStep(sectionStepIndex), 300);
+                  }
+                }}
+                className={`p-6 rounded-2xl border-2 transition-all hover:shadow-lg ${
+                  visitedDC === true && visitDateOption === "today"
+                    ? "border-green-500 bg-green-50 shadow-md"
+                    : "border-gray-200 hover:border-green-300"
+                }`}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center">
+                    <Building2 className="h-8 w-8 text-green-600" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-semibold text-lg">
+                      Yes, I visited today
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      {format(new Date(), "EEEE, MMMM d, yyyy")}
+                    </p>
+                  </div>
+                </div>
+              </button>
+              <button
+                onClick={() => {
+                  setVisitedDC(true);
+                  setVisitDateOption("");
+                  setTimeout(goToNextStep, 300);
+                }}
+                className={`p-6 rounded-2xl border-2 transition-all hover:shadow-lg ${
+                  visitedDC === true &&
+                  visitDateOption !== "today" &&
+                  visitDateOption !== ""
+                    ? "border-blue-500 bg-blue-50 shadow-md"
+                    : "border-gray-200 hover:border-blue-300"
+                }`}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Calendar className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-semibold text-lg">
+                      Yes, but some other day
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      I&apos;ll select the date
+                    </p>
+                  </div>
+                </div>
+              </button>
+              <button
+                onClick={() => {
+                  setVisitedDC(false);
+                  setVisitDateOption("");
+                  // Skip directly to section
+                  const sectionStepIndex = steps.findIndex(
+                    (s) => s.id === "section"
+                  );
+                  if (sectionStepIndex !== -1) {
+                    setTimeout(() => setCurrentStep(sectionStepIndex), 300);
+                  }
+                }}
+                className={`p-6 rounded-2xl border-2 transition-all hover:shadow-lg ${
+                  visitedDC === false
+                    ? "border-gray-500 bg-gray-50 shadow-md"
+                    : "border-gray-200 hover:border-gray-400"
+                }`}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center">
+                    <X className="h-8 w-8 text-gray-500" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-semibold text-lg">
+                      No, I haven&apos;t visited
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      I have a general query
+                    </p>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        );
+
+      case "date":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                When did you visit?
+              </h2>
+              <p className="text-gray-500">Select the date of your visit</p>
+            </div>
+            <div className="max-w-md mx-auto space-y-4">
+              <RadioGroup
+                value={visitDateOption}
+                onValueChange={(value) => {
+                  setVisitDateOption(value);
+                  if (value !== "other") setVisitDate("");
+                }}
+                className="space-y-3"
+              >
+                <div
+                  className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                    visitDateOption === "today"
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 hover:border-blue-300"
+                  }`}
+                  onClick={() => setVisitDateOption("today")}
+                >
+                  <RadioGroupItem value="today" id="today" />
+                  <Label htmlFor="today" className="flex-1 cursor-pointer">
+                    <span className="font-medium">Today</span>
+                    <span className="text-gray-500 ml-2">
+                      ({format(new Date(), "MMM d, yyyy")})
+                    </span>
+                  </Label>
+                </div>
+                <div
+                  className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                    visitDateOption === "yesterday"
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 hover:border-blue-300"
+                  }`}
+                  onClick={() => setVisitDateOption("yesterday")}
+                >
+                  <RadioGroupItem value="yesterday" id="yesterday" />
+                  <Label htmlFor="yesterday" className="flex-1 cursor-pointer">
+                    <span className="font-medium">Yesterday</span>
+                    <span className="text-gray-500 ml-2">
+                      ({format(new Date(Date.now() - 86400000), "MMM d, yyyy")})
+                    </span>
+                  </Label>
+                </div>
+                <div
+                  className={`flex items-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                    visitDateOption === "other"
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 hover:border-blue-300"
+                  }`}
+                  onClick={() => setVisitDateOption("other")}
+                >
+                  <RadioGroupItem value="other" id="other" />
+                  <Label htmlFor="other" className="flex-1 cursor-pointer">
+                    <span className="font-medium">Pick a date</span>
+                  </Label>
+                </div>
+              </RadioGroup>
+
+              {visitDateOption === "other" && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="pt-2"
+                >
+                  <Input
+                    type="date"
+                    value={visitDate ? visitDate.split("T")[0] : ""}
+                    onChange={(e) => setVisitDate(e.target.value)}
+                    max={new Date().toISOString().split("T")[0]}
+                    className="text-center text-lg py-6"
+                  />
+                </motion.div>
+              )}
+            </div>
+          </div>
+        );
+
+      case "section":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                Which section?
+              </h2>
+              <p className="text-gray-500">
+                Select the section related to your query
+              </p>
+            </div>
+            <div className="max-w-lg mx-auto">
+              <div className="grid gap-3 max-h-[400px] overflow-y-auto pr-2">
+                {sections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => {
+                      if (sectionId !== section.id) {
+                        setSectionChangedManually(true);
+                      }
+                      setSectionId(section.id);
+                    }}
+                    className={`p-4 rounded-xl border-2 text-left transition-all hover:shadow-md ${
+                      sectionId === section.id
+                        ? "border-blue-500 bg-blue-50 shadow-md"
+                        : "border-gray-200 hover:border-blue-300"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold">{section.name}</h3>
+                        {section.description && (
+                          <p className="text-sm text-gray-500 mt-1">
+                            {section.description}
+                          </p>
+                        )}
+                      </div>
+                      {sectionId === section.id && (
+                        <Check className="h-5 w-5 text-blue-500" />
+                      )}
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
+          </div>
+        );
 
-            {/* Attachments */}
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium text-gray-700">
-                Attachments (Optional)
-              </h3>
-              <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center">
-                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600 mb-2">
+      case "services":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                What services did you avail?
+              </h2>
+              <p className="text-gray-500">Select all that apply (optional)</p>
+            </div>
+            <div className="max-w-lg mx-auto">
+              {filteredServices.length > 0 ? (
+                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                  {filteredServices.map((service) => (
+                    <label
+                      key={service.id}
+                      className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
+                        selectedServices.includes(service.id)
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-200 hover:border-blue-300"
+                      }`}
+                    >
+                      <Checkbox
+                        checked={selectedServices.includes(service.id)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedServices([
+                              ...selectedServices,
+                              service.id,
+                            ]);
+                          } else {
+                            setSelectedServices(
+                              selectedServices.filter((id) => id !== service.id)
+                            );
+                          }
+                        }}
+                        className="mr-3"
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium">{service.name}</p>
+                        {service.description && (
+                          <p className="text-sm text-gray-500">
+                            {service.description}
+                          </p>
+                        )}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p>No services available for this section</p>
+                  <p className="text-sm mt-1">You can skip this step</p>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+
+      case "subject":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                What&apos;s this about?
+              </h2>
+              <p className="text-gray-500">
+                Give a brief title for your {queryType.toLowerCase()}
+              </p>
+            </div>
+            <div className="max-w-lg mx-auto">
+              <Input
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                placeholder="e.g., Delay in document processing"
+                className="text-lg py-6 text-center"
+                autoFocus
+              />
+              <p className="text-sm text-gray-500 text-center mt-2">
+                {subject.length}/100 characters
+              </p>
+
+              {queryType === "GRIEVANCE" && (
+                <div className="mt-6">
+                  <Label className="text-center block mb-3">
+                    Priority Level
+                  </Label>
+                  <div className="flex gap-3 justify-center">
+                    {(["LOW", "MEDIUM", "HIGH"] as const).map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => setPriority(p)}
+                        className={`px-4 py-2 rounded-lg border-2 transition-all ${
+                          priority === p
+                            ? p === "HIGH"
+                              ? "border-red-500 bg-red-50 text-red-700"
+                              : p === "MEDIUM"
+                              ? "border-amber-500 bg-amber-50 text-amber-700"
+                              : "border-gray-500 bg-gray-50 text-gray-700"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        {p.charAt(0) + p.slice(1).toLowerCase()}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+
+      case "description":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                Tell us more
+              </h2>
+              <p className="text-gray-500">
+                Describe your {queryType.toLowerCase()} in detail
+              </p>
+            </div>
+            <div className="max-w-lg mx-auto">
+              <Textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder={`Describe your ${queryType.toLowerCase()} in detail. Include any relevant information that will help us understand and address your concern...`}
+                rows={8}
+                className="resize-none text-base"
+                autoFocus
+              />
+              <p className="text-sm text-gray-500 text-center mt-2">
+                {description.length} characters (minimum 10)
+              </p>
+            </div>
+          </div>
+        );
+
+      case "attachments":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                Add supporting documents
+              </h2>
+              <p className="text-gray-500">
+                Upload any proof or relevant files (optional)
+              </p>
+            </div>
+            <div className="max-w-lg mx-auto">
+              <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:border-blue-400 transition-colors">
+                <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 mb-2">
                   Drag and drop files here, or click to select
                 </p>
                 <input
@@ -621,29 +1034,33 @@ function SubmitQueryContent() {
                   accept="image/*,.pdf,.doc,.docx,.mp4,.mov"
                 />
                 <label htmlFor="file-upload">
-                  <Button type="button" variant="outline" size="sm" asChild>
-                    <span>Select Files</span>
+                  <Button type="button" variant="outline" asChild>
+                    <span>
+                      <Paperclip className="h-4 w-4 mr-2" />
+                      Select Files
+                    </span>
                   </Button>
                 </label>
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-gray-400 mt-4">
                   Images (5MB), PDF (10MB), Videos (50MB)
                 </p>
               </div>
 
-              {/* File List */}
               {files.length > 0 && (
-                <div className="space-y-2">
+                <div className="mt-4 space-y-2">
                   {files.map((file, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
                     >
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-                          <Upload className="h-4 w-4 text-blue-600" />
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <FileText className="h-5 w-5 text-blue-600" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium">{file.name}</p>
+                          <p className="text-sm font-medium truncate max-w-[200px]">
+                            {file.name}
+                          </p>
                           <p className="text-xs text-gray-500">
                             {(file.size / 1024 / 1024).toFixed(2)} MB
                           </p>
@@ -662,13 +1079,443 @@ function SubmitQueryContent() {
                 </div>
               )}
             </div>
+          </div>
+        );
 
-            {/* Submit Button */}
+      case "contact":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                Contact Information
+              </h2>
+              <p className="text-gray-500">
+                How should we reach you? (optional)
+              </p>
+            </div>
+            <div className="max-w-lg mx-auto space-y-4">
+              {/* Anonymous toggle */}
+              <div
+                className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                  isAnonymousToOfficer
+                    ? "bg-green-50 border-green-300"
+                    : "bg-gray-50 border-gray-200"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  {isAnonymousToOfficer ? (
+                    <EyeOff className="h-5 w-5 text-green-600" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-blue-600" />
+                  )}
+                  <div>
+                    <p className="font-medium text-sm">
+                      {isAnonymousToOfficer
+                        ? "Anonymous Submission"
+                        : "Share Contact Details"}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {isAnonymousToOfficer
+                        ? "Officers will see a pseudonym only"
+                        : "Officers can contact you directly"}
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={isAnonymousToOfficer}
+                  onCheckedChange={setIsAnonymousToOfficer}
+                />
+              </div>
+
+              {/* Contact fields */}
+              <div className="space-y-4 pt-4">
+                <div>
+                  <Label>Your Name</Label>
+                  <Input
+                    value={citizenName}
+                    onChange={(e) => setCitizenName(e.target.value)}
+                    placeholder="Enter your full name"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Phone Number</Label>
+                  <Input
+                    value={citizenPhone}
+                    onChange={(e) => setCitizenPhone(e.target.value)}
+                    placeholder="Enter your phone number"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Email Address</Label>
+                  <Input
+                    type="email"
+                    value={citizenEmail}
+                    onChange={(e) => setCitizenEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+
+              {isAnonymousToOfficer &&
+                (citizenName || citizenPhone || citizenEmail) && (
+                  <p className="text-xs text-green-600 flex items-center gap-1">
+                    <EyeOff className="h-3 w-3" />
+                    Your info is stored privately and NOT shown to officers
+                  </p>
+                )}
+            </div>
+          </div>
+        );
+
+      case "review":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                Review Your Submission
+              </h2>
+              <p className="text-gray-500">
+                Make sure everything looks good before submitting
+              </p>
+            </div>
+            <div className="max-w-lg mx-auto space-y-4">
+              <Card>
+                <CardContent className="p-4 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">Type</span>
+                    <Badge
+                      variant={
+                        queryType === "GRIEVANCE" ? "destructive" : "default"
+                      }
+                    >
+                      {queryType}
+                    </Badge>
+                  </div>
+
+                  {queryType === "GRIEVANCE" && (
+                    <>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-500">Visited DC</span>
+                        <span>{visitedDC ? "Yes" : "No"}</span>
+                      </div>
+                      {visitedDC && visitDateOption && (
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-500">Visit Date</span>
+                          <span>
+                            {visitDateOption === "today"
+                              ? "Today"
+                              : visitDateOption === "yesterday"
+                              ? "Yesterday"
+                              : visitDate
+                              ? format(new Date(visitDate), "MMM d, yyyy")
+                              : "Not specified"}
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-500">Section</span>
+                        <span>
+                          {sections.find((s) => s.id === sectionId)?.name ||
+                            "N/A"}
+                        </span>
+                      </div>
+                      {selectedServices.length > 0 && (
+                        <div className="flex justify-between items-start">
+                          <span className="text-gray-500">Services</span>
+                          <div className="text-right">
+                            {selectedServices.map((id) => {
+                              const service = services.find((s) => s.id === id);
+                              return service ? (
+                                <Badge
+                                  key={id}
+                                  variant="outline"
+                                  className="ml-1 mb-1"
+                                >
+                                  {service.name}
+                                </Badge>
+                              ) : null;
+                            })}
+                          </div>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-500">Priority</span>
+                        <Badge
+                          variant={
+                            priority === "HIGH"
+                              ? "destructive"
+                              : priority === "MEDIUM"
+                              ? "default"
+                              : "secondary"
+                          }
+                        >
+                          {priority}
+                        </Badge>
+                      </div>
+                    </>
+                  )}
+
+                  <div className="border-t pt-4">
+                    <p className="text-gray-500 text-sm mb-1">Subject</p>
+                    <p className="font-medium">{subject || "Not specified"}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-gray-500 text-sm mb-1">Description</p>
+                    <p className="text-sm line-clamp-3">{description}</p>
+                  </div>
+
+                  {files.length > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-500">Attachments</span>
+                      <Badge variant="outline">{files.length} file(s)</Badge>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center border-t pt-4">
+                    <span className="text-gray-500">Privacy</span>
+                    <span className="flex items-center gap-1">
+                      {isAnonymousToOfficer ? (
+                        <>
+                          <EyeOff className="h-4 w-4 text-green-600" />
+                          <span className="text-green-600">Anonymous</span>
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="h-4 w-4 text-blue-600" />
+                          <span className="text-blue-600">Visible</span>
+                        </>
+                      )}
+                    </span>
+                  </div>
+
+                  {/* Show logged in status */}
+                  <div className="flex justify-between items-center border-t pt-4">
+                    <span className="text-gray-500">Submitted as</span>
+                    {samadhanSession ? (
+                      <span className="flex items-center gap-1 text-green-600">
+                        <ShieldCheck className="h-4 w-4" />
+                        Registered ({samadhanSession.name})
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1 text-orange-600">
+                        <AlertCircle className="h-4 w-4" />
+                        Guest User
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Guest user warning */}
+                  {!samadhanSession && (
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mt-2">
+                      <p className="text-xs text-orange-700">
+                        <strong>Note:</strong> You&apos;re submitting as a
+                        guest. To access attachments and full tracking features
+                        later, consider{" "}
+                        <Link
+                          href="/samadhan/login"
+                          className="underline font-medium"
+                        >
+                          registering/logging in
+                        </Link>{" "}
+                        first.
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Action buttons */}
+              <div className="flex flex-col gap-3 pt-4">
+                <Button
+                  onClick={() => setShowConfirmDialog(true)}
+                  disabled={isSubmitting || isSavingDraft}
+                  className="w-full py-6 text-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                >
+                  <Send className="h-5 w-5 mr-2" />
+                  Submit {queryType === "GRIEVANCE" ? "Grievance" : "Feedback"}
+                </Button>
+                {/* Only show Save as Draft for logged-in users */}
+                {samadhanSession && (
+                  <Button
+                    variant="outline"
+                    onClick={() => handleSubmit(true)}
+                    disabled={isSubmitting || isSavingDraft}
+                    className="w-full"
+                  >
+                    {isSavingDraft ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-4 w-4 mr-2" />
+                        Save as Draft
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  // Show loading state while loading draft
+  if (isLoadingDraft) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600 mb-4" />
+        <p className="text-gray-600">Loading your draft...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      {/* Progress bar */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-gray-200 z-50">
+        <motion.div
+          className="h-full bg-gradient-to-r from-blue-500 to-indigo-500"
+          initial={{ width: 0 }}
+          animate={{ width: `${progressPercentage}%` }}
+          transition={{ duration: 0.3 }}
+        />
+      </div>
+
+      {/* Header */}
+      <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-40">
+        <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+          <button
+            onClick={() => router.push("/")}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span className="hidden sm:inline">Exit</span>
+          </button>
+
+          <div className="flex items-center gap-3">
+            <Image
+              src="/assets/seal_of_sikkim.png"
+              width={32}
+              height={32}
+              alt="Seal"
+              className="object-contain"
+            />
+            <div className="flex flex-col items-center">
+              <span className="font-semibold text-gray-900">SAMADHAN</span>
+              {existingDraftId && (
+                <Badge
+                  variant="outline"
+                  className="text-xs bg-amber-50 text-amber-700 border-amber-300"
+                >
+                  Editing Draft
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          <div className="text-sm text-gray-500">
+            {currentStep + 1} / {steps.length}
+          </div>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {renderStepContent()}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Footer navigation */}
+      {currentStepData.id !== "type" && currentStepData.id !== "review" && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+          <div className="max-w-3xl mx-auto flex items-center justify-between">
             <Button
-              type="submit"
-              size="lg"
-              className="w-full"
+              variant="ghost"
+              onClick={goToPrevStep}
+              disabled={currentStep === 0}
+              className="gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+
+            <Button onClick={goToNextStep} className="gap-2">
+              {currentStep === steps.length - 2 ? "Review" : "Continue"}
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        referenceId={submittedReferenceId}
+        onClose={() => setShowSuccessModal(false)}
+      />
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="text-center">
+            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mb-4">
+              <ShieldCheck className="h-10 w-10 text-white" />
+            </div>
+            <DialogTitle className="text-2xl text-center">
+              Ready to Submit?
+            </DialogTitle>
+            <DialogDescription asChild>
+              <div className="text-center space-y-3 pt-2">
+                <span className="block text-base">
+                  Please verify all details before submitting your{" "}
+                  {queryType.toLowerCase()}.
+                </span>
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-left">
+                  <span className="text-amber-800 text-sm font-medium flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4" />
+                    Before you submit:
+                  </span>
+                  <ul className="text-amber-700 text-xs mt-2 space-y-1 ml-6 list-disc">
+                    <li>Ensure all information is accurate</li>
+                    <li>Verify your contact details are correct</li>
+                    <li>Review attached documents if any</li>
+                  </ul>
+                </div>
+                <span className="block text-sm text-gray-500">
+                  Once submitted, your {queryType.toLowerCase()} will be sent to
+                  the review queue.
+                </span>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="flex flex-col gap-2 sm:flex-col pt-4">
+            <Button
+              onClick={() => {
+                setShowConfirmDialog(false);
+                handleSubmit(false);
+              }}
               disabled={isSubmitting}
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
             >
               {isSubmitting ? (
                 <>
@@ -677,14 +1524,77 @@ function SubmitQueryContent() {
                 </>
               ) : (
                 <>
-                  Submit{" "}
-                  {queryType.charAt(0) + queryType.slice(1).toLowerCase()}
+                  <Send className="h-4 w-4 mr-2" />
+                  Yes, Submit Now
                 </>
               )}
             </Button>
-          </form>
-        </CardContent>
-      </Card>
+            <Button
+              variant="outline"
+              onClick={() => setShowConfirmDialog(false)}
+              disabled={isSubmitting}
+              className="w-full"
+            >
+              Go Back & Review
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Draft Success Modal */}
+      <Dialog
+        open={showDraftSuccessModal}
+        onOpenChange={setShowDraftSuccessModal}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="text-center">
+            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mb-4">
+              <Save className="h-10 w-10 text-white" />
+            </div>
+            <DialogTitle className="text-2xl text-center">
+              ✨ Draft Saved!
+            </DialogTitle>
+            <DialogDescription asChild>
+              <div className="text-center space-y-2">
+                <span className="block">
+                  Your {queryType.toLowerCase()} has been saved as a draft.
+                </span>
+                <span className="block text-sm text-gray-500">
+                  You can continue editing and submit it later from your
+                  dashboard.
+                </span>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 text-center">
+            <span className="text-sm text-gray-600 block mb-2">
+              Your Draft Reference
+            </span>
+            <span className="text-xl font-mono font-bold text-amber-700 bg-white rounded-lg px-4 py-2 inline-block">
+              {submittedReferenceId}
+            </span>
+          </div>
+
+          <DialogFooter className="flex flex-col gap-2 sm:flex-col">
+            <Button
+              onClick={() => router.push("/samadhan/dashboard")}
+              className="w-full bg-gradient-to-r from-amber-500 to-orange-500"
+            >
+              Go to Dashboard
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowDraftSuccessModal(false);
+              }}
+              className="w-full"
+            >
+              Continue Editing
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

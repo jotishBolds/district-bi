@@ -23,19 +23,24 @@ type RouteParams = {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { ticketId, attachmentId } = await params;
+    const { searchParams } = new URL(request.url);
+    const action = searchParams.get("action");
+    const trackingToken = searchParams.get("trackingToken"); // For verified tracking access
 
     // Check authentication - either NextAuth session OR SAMADHAN citizen session
     const officerSession = await getServerSession(authOptions);
     const citizenSession = await getSamadhanSession();
 
-    // Get attachment
+    // Get attachment with ticket info
     const attachment = await prisma.samadhanAttachment.findUnique({
       where: { id: attachmentId },
       include: {
         ticket: {
           select: {
             id: true,
+            referenceId: true,
             citizenId: true,
+            citizenPhone: true,
             assignedOfficerId: true,
             escalatedToId: true,
           },
@@ -64,23 +69,55 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       citizenSession?.userId === attachment.ticket.citizenId ||
       officerSession?.user?.id === attachment.ticket.citizenId;
 
-    // Allow access to: admin, assigned officer, escalated officer, or the citizen
+    // Check if user has verified tracking access (OTP verified for this ticket)
+    let hasTrackingAccess = false;
+    if (trackingToken) {
+      // Verify tracking token format: referenceId:phone:timestamp:hash
+      try {
+        const [tokenRefId, , timestamp] = trackingToken.split(":");
+        const tokenTime = parseInt(timestamp, 10);
+        const now = Date.now();
+        // Token valid for 1 hour
+        if (
+          tokenRefId === attachment.ticket.referenceId &&
+          now - tokenTime < 3600000
+        ) {
+          hasTrackingAccess = true;
+        }
+      } catch {
+        // Invalid token format
+      }
+    }
+
+    // Allow access to: admin, assigned officer, escalated officer, the citizen, or verified tracking
     if (
       !isAdmin &&
       !isAssignedOfficer &&
       !isEscalatedOfficer &&
       !isCitizen &&
-      !isOfficer
+      !isOfficer &&
+      !hasTrackingAccess
     ) {
+      // Check if this is a guest ticket (no citizenId)
+      const isGuestTicket = !attachment.ticket.citizenId;
+
       return NextResponse.json(
-        { success: false, message: "Not authorized to view this attachment" },
+        {
+          success: false,
+          message: isGuestTicket
+            ? "Attachments are only available to registered users. Please register or login to access attachments."
+            : "Not authorized to view this attachment. Please login to your SAMADHAN account to access attachments.",
+          isGuestTicket,
+          requiresAuth: true,
+          ticketPhone: attachment.ticket.citizenPhone
+            ? attachment.ticket.citizenPhone.substring(0, 4) +
+              "****" +
+              attachment.ticket.citizenPhone.slice(-2)
+            : null,
+        },
         { status: 403 }
       );
     }
-
-    // Check if inline view requested
-    const { searchParams } = new URL(request.url);
-    const action = searchParams.get("action");
 
     // Generate pre-signed URL for S3
     const command = new GetObjectCommand({

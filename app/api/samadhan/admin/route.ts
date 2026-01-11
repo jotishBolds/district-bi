@@ -8,7 +8,7 @@ import { getTicketStatistics, DEFAULT_SLA_CONFIG } from "@/lib/samadhan";
 
 // SLA Config schema
 const slaConfigSchema = z.object({
-  queryType: z.enum(["FEEDBACK", "GRIEVANCE", "SUGGESTION"]),
+  queryType: z.enum(["FEEDBACK", "GRIEVANCE"]),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]),
   slaHours: z.number().min(1).max(2160), // Max 90 days
 });

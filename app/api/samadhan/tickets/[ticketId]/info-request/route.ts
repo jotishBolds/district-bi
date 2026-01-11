@@ -19,7 +19,7 @@ const HIGHER_AUTHORITY_ROLES = [
 ];
 
 const infoRequestSchema = z.object({
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  description: z.string().min(5, "Description must be at least 5 characters"),
   documentTypes: z.array(z.string()).optional(),
   deadlineDays: z.number().min(1).max(30).default(7),
 });

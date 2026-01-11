@@ -19,6 +19,10 @@ import {
   Calendar,
   User,
   Building,
+  Lock,
+  Shield,
+  Phone,
+  LogIn,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +35,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -48,6 +64,8 @@ interface TicketData {
   createdAt: string;
   slaDeadline: string | null;
   isAppeal?: boolean;
+  citizenId?: string | null; // Track if ticket belongs to registered user
+  citizenPhone?: string | null; // Masked phone for verification
   originalTicketId?: string;
   originalTicket?: {
     referenceId: string;
@@ -154,9 +172,49 @@ export default function TicketDetailPage({
   const [isAppealModalOpen, setIsAppealModalOpen] = useState(false);
   const [appealReason, setAppealReason] = useState("");
 
+  // Session and attachment access state
+  const [samadhanSession, setSamadhanSession] = useState<{
+    userId: string;
+    phone: string;
+    name: string;
+  } | null>(null);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [attachmentAccessToken, setAttachmentAccessToken] = useState<
+    string | null
+  >(null);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [verifyPhone, setVerifyPhone] = useState("");
+  const [verifyOtp, setVerifyOtp] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [isGuestTicket, setIsGuestTicket] = useState(false);
+  const [ticketOwnerPhone, setTicketOwnerPhone] = useState<string | null>(null);
+
+  // Check SAMADHAN session on mount
   useEffect(() => {
-    fetchTicket();
-  }, [referenceId]);
+    const checkSession = async () => {
+      try {
+        const response = await fetch("/api/samadhan/auth?action=session");
+        const data = await response.json();
+        if (data.authenticated && data.session) {
+          setSamadhanSession(data.session);
+        }
+      } catch (error) {
+        console.error("Session check error:", error);
+      } finally {
+        setIsCheckingSession(false);
+      }
+    };
+    checkSession();
+  }, []);
+
+  useEffect(() => {
+    // Wait for session check to complete before fetching ticket
+    if (!isCheckingSession) {
+      fetchTicket();
+    }
+  }, [referenceId, isCheckingSession, samadhanSession]);
 
   const fetchTicket = async () => {
     try {
@@ -167,15 +225,134 @@ export default function TicketDetailPage({
 
       if (data.success) {
         setTicket(data.data);
+        // Check if this is a guest ticket (no citizenId)
+        setIsGuestTicket(!data.data.citizenId);
+        setTicketOwnerPhone(data.data.citizenPhone || null);
+
+        // If user is logged in and owns this ticket, generate access token
+        if (samadhanSession && data.data.citizenId === samadhanSession.userId) {
+          const token = `${data.data.referenceId}:${
+            samadhanSession.phone
+          }:${Date.now()}:verified`;
+          setAttachmentAccessToken(token);
+        }
       } else {
         toast.error("Ticket not found");
-        router.push("/samadhan/track");
+        router.push("/");
       }
     } catch (error) {
       toast.error("Failed to load ticket");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Send OTP for attachment verification
+  const handleSendVerificationOtp = async () => {
+    if (!verifyPhone || verifyPhone.length < 10) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+
+    setIsSendingOtp(true);
+    try {
+      const response = await fetch("/api/samadhan/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: verifyPhone,
+          action: "send-otp",
+          verifyOnly: true, // Just verify, don't create session
+          referenceId: ticket?.referenceId,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setOtpSent(true);
+        toast.success("OTP sent to your phone");
+      } else {
+        toast.error(data.message || "Failed to send OTP");
+      }
+    } catch (error) {
+      toast.error("Failed to send OTP");
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
+
+  // Verify OTP for attachment access
+  const handleVerifyOtp = async () => {
+    if (!verifyOtp || verifyOtp.length !== 6) {
+      toast.error("Please enter a valid 6-digit OTP");
+      return;
+    }
+
+    setIsVerifying(true);
+    try {
+      const response = await fetch("/api/samadhan/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: verifyPhone,
+          otp: verifyOtp,
+          action: "verify-otp",
+          verifyOnly: true,
+          referenceId: ticket?.referenceId,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        // Generate attachment access token
+        const token = `${
+          ticket?.referenceId
+        }:${verifyPhone}:${Date.now()}:verified`;
+        setAttachmentAccessToken(token);
+        setShowVerifyModal(false);
+        toast.success("Verified! You can now access attachments");
+
+        // Reset verification state
+        setVerifyOtp("");
+        setOtpSent(false);
+      } else {
+        toast.error(data.message || "Invalid OTP");
+      }
+    } catch (error) {
+      toast.error("Verification failed");
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  // Handle attachment click
+  const handleAttachmentClick = async (
+    attachment: TicketData["attachments"][0],
+    action: "view" | "download"
+  ) => {
+    // If user has access token, open directly
+    if (attachmentAccessToken || samadhanSession) {
+      const baseUrl = `/api/samadhan/tickets/${ticket?.id}/attachments/${attachment.id}`;
+      const url = attachmentAccessToken
+        ? `${baseUrl}?trackingToken=${encodeURIComponent(
+            attachmentAccessToken
+          )}${action === "download" ? "&action=download" : ""}`
+        : `${baseUrl}${action === "download" ? "?action=download" : ""}`;
+      window.open(url, "_blank");
+      return;
+    }
+
+    // Guest ticket - show message
+    if (isGuestTicket) {
+      toast.error(
+        "You submitted this as a guest. Attachments are only available to registered users. Please register to access full features.",
+        { duration: 5000 }
+      );
+      return;
+    }
+
+    // Registered ticket but not logged in - prompt for verification
+    setShowVerifyModal(true);
   };
 
   const handleAcceptResolution = async () => {
@@ -308,12 +485,43 @@ export default function TicketDetailPage({
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <Link
-          href="/samadhan"
-          className="inline-flex items-center text-sm text-gray-600 hover:text-blue-600 mb-6"
+          href="/"
+          className="inline-flex items-center text-sm text-gray-600 hover:text-green-600 mb-6"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
         </Link>
+
+        {/* User Authentication Banner */}
+        {!samadhanSession && !isCheckingSession && (
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <User className="h-5 w-5 text-amber-600" />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-amber-800">
+                  Login Required for Full Access
+                </p>
+                <p className="text-sm text-amber-700 mt-1">
+                  {isGuestTicket
+                    ? "This ticket was submitted without an account. Attachments are not accessible for such submissions."
+                    : "Login with the phone number used during submission to access attachments and full features."}
+                </p>
+                <Link href="/samadhan/login" className="inline-block mt-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-1 border-amber-300 text-amber-800 hover:bg-amber-100"
+                  >
+                    <LogIn className="h-3 w-3" />
+                    Login / Register
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Card */}
         <Card className="mb-6">
@@ -405,23 +613,85 @@ export default function TicketDetailPage({
               <>
                 <Separator />
                 <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-3">
-                    Attachments
-                  </h3>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-medium text-gray-700">
+                      Attachments
+                    </h3>
+                    {/* Show access status */}
+                    {!attachmentAccessToken && !samadhanSession && (
+                      <div className="flex items-center gap-2">
+                        {isGuestTicket ? (
+                          <span className="text-xs text-orange-600 flex items-center gap-1">
+                            <Lock className="h-3 w-3" />
+                            Guest - Login to access
+                          </span>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowVerifyModal(true)}
+                            className="text-xs h-7 gap-1"
+                          >
+                            <Shield className="h-3 w-3" />
+                            Verify to Access
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                    {(attachmentAccessToken || samadhanSession) && (
+                      <span className="text-xs text-green-600 flex items-center gap-1">
+                        <CheckCircle className="h-3 w-3" />
+                        Access Granted
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Guest ticket warning */}
+                  {isGuestTicket && !samadhanSession && (
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-3">
+                      <div className="flex gap-2">
+                        <AlertCircle className="h-4 w-4 text-orange-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm text-orange-800 font-medium">
+                            Guest Submission
+                          </p>
+                          <p className="text-xs text-orange-700 mt-1">
+                            You submitted this query as a guest. Attachments are
+                            only accessible to registered users.
+                          </p>
+                          <Link
+                            href="/samadhan/login"
+                            className="inline-block mt-2"
+                          >
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-7 text-xs gap-1 border-orange-300 text-orange-700 hover:bg-orange-100"
+                            >
+                              <LogIn className="h-3 w-3" />
+                              Register / Login for Full Access
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {ticket.attachments.map((attachment) => {
                       const isImage = attachment.fileType?.startsWith("image/");
                       const isPdf = attachment.fileType === "application/pdf";
-                      const viewUrl =
-                        attachment.viewUrl ||
-                        `/api/samadhan/tickets/${ticket.id}/attachments/${attachment.id}`;
-                      const downloadUrl =
-                        attachment.downloadUrl || `${viewUrl}?action=download`;
+                      const hasAccess =
+                        !!attachmentAccessToken || !!samadhanSession;
 
                       return (
                         <div
                           key={attachment.id}
-                          className="flex items-center space-x-2 p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+                          className={`flex items-center space-x-2 p-3 rounded-lg transition-colors ${
+                            hasAccess
+                              ? "bg-gray-50 hover:bg-gray-100"
+                              : "bg-gray-50/50 opacity-75"
+                          }`}
                         >
                           <FileText className="h-5 w-5 text-gray-400 flex-shrink-0" />
                           <div className="flex-1 min-w-0">
@@ -442,24 +712,50 @@ export default function TicketDetailPage({
                             </p>
                           </div>
                           <div className="flex gap-1 flex-shrink-0">
-                            {(isImage || isPdf) && (
+                            {hasAccess ? (
+                              <>
+                                {(isImage || isPdf) && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() =>
+                                      handleAttachmentClick(attachment, "view")
+                                    }
+                                    title="View"
+                                  >
+                                    <FileText className="h-4 w-4" />
+                                  </Button>
+                                )}
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    handleAttachmentClick(
+                                      attachment,
+                                      "download"
+                                    )
+                                  }
+                                  title="Download"
+                                >
+                                  <Download className="h-4 w-4" />
+                                </Button>
+                              </>
+                            ) : (
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => window.open(viewUrl, "_blank")}
-                                title="View"
+                                onClick={() =>
+                                  handleAttachmentClick(attachment, "view")
+                                }
+                                title={
+                                  isGuestTicket
+                                    ? "Login required"
+                                    : "Verify to access"
+                                }
                               >
-                                <FileText className="h-4 w-4" />
+                                <Lock className="h-4 w-4 text-gray-400" />
                               </Button>
                             )}
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => window.open(downloadUrl, "_blank")}
-                              title="Download"
-                            >
-                              <Download className="h-4 w-4" />
-                            </Button>
                           </div>
                         </div>
                       );
@@ -698,6 +994,139 @@ export default function TicketDetailPage({
             </Card>
           </div>
         )}
+
+        {/* OTP Verification Modal for Attachments */}
+        <Dialog open={showVerifyModal} onOpenChange={setShowVerifyModal}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                <Shield className="h-7 w-7 text-white" />
+              </div>
+              <DialogTitle className="text-center">
+                Verify Your Identity
+              </DialogTitle>
+              <DialogDescription className="text-center">
+                {ticketOwnerPhone ? (
+                  <>
+                    Enter your phone number ({ticketOwnerPhone}) and verify with
+                    OTP to access attachments
+                  </>
+                ) : (
+                  <>
+                    Enter your phone number to verify ownership and access
+                    attachments
+                  </>
+                )}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4 py-4">
+              {!otpSent ? (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Phone Number</label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Input
+                        type="tel"
+                        placeholder="Enter your phone number"
+                        value={verifyPhone}
+                        onChange={(e) =>
+                          setVerifyPhone(
+                            e.target.value.replace(/\D/g, "").slice(0, 10)
+                          )
+                        }
+                        className="pl-10"
+                        maxLength={10}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Enter the phone number used when submitting this query
+                    </p>
+                  </div>
+                  <Button
+                    onClick={handleSendVerificationOtp}
+                    disabled={isSendingOtp || verifyPhone.length < 10}
+                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600"
+                  >
+                    {isSendingOtp ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Sending OTP...
+                      </>
+                    ) : (
+                      "Send OTP"
+                    )}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-center block">
+                      Enter OTP
+                    </label>
+                    <p className="text-xs text-gray-500 text-center mb-4">
+                      We&apos;ve sent a 6-digit code to {verifyPhone}
+                    </p>
+                    <div className="flex justify-center">
+                      <InputOTP
+                        value={verifyOtp}
+                        onChange={setVerifyOtp}
+                        maxLength={6}
+                      >
+                        <InputOTPGroup>
+                          {[0, 1, 2, 3, 4, 5].map((index) => (
+                            <InputOTPSlot
+                              key={index}
+                              index={index}
+                              className="border-green-200 focus:border-green-500"
+                            />
+                          ))}
+                        </InputOTPGroup>
+                      </InputOTP>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleVerifyOtp}
+                    disabled={isVerifying || verifyOtp.length !== 6}
+                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600"
+                  >
+                    {isVerifying ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Verifying...
+                      </>
+                    ) : (
+                      "Verify & Access"
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setOtpSent(false);
+                      setVerifyOtp("");
+                    }}
+                    className="w-full"
+                  >
+                    Change Phone Number
+                  </Button>
+                </>
+              )}
+
+              <div className="text-center pt-2 border-t">
+                <p className="text-xs text-gray-500 mb-2">
+                  Or login to your account for full access
+                </p>
+                <Link href="/samadhan/login">
+                  <Button variant="outline" size="sm" className="gap-1">
+                    <LogIn className="h-3 w-3" />
+                    Login / Register
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

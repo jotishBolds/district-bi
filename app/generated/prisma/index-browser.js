@@ -205,6 +205,16 @@ exports.Prisma.SectionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SamadhanServiceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  sectionId: 'sectionId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.DepartmentScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -426,10 +436,15 @@ exports.Prisma.SamadhanTicketScalarFieldEnum = {
   isAnonymous: 'isAnonymous',
   isAnonymousToOfficer: 'isAnonymousToOfficer',
   sectionId: 'sectionId',
+  subject: 'subject',
   serviceAvailed: 'serviceAvailed',
   description: 'description',
+  visitedDC: 'visitedDC',
+  visitDate: 'visitDate',
   assignedOfficerId: 'assignedOfficerId',
   escalatedToId: 'escalatedToId',
+  assignedById: 'assignedById',
+  assignedAt: 'assignedAt',
   submissionChannel: 'submissionChannel',
   whatsappNumber: 'whatsappNumber',
   slaDeadline: 'slaDeadline',
@@ -438,9 +453,12 @@ exports.Prisma.SamadhanTicketScalarFieldEnum = {
   resolvedAt: 'resolvedAt',
   closedAt: 'closedAt',
   slaBreachedAt: 'slaBreachedAt',
+  queuedAt: 'queuedAt',
   resolutionMessage: 'resolutionMessage',
   isAppeal: 'isAppeal',
   originalTicketId: 'originalTicketId',
+  isDraft: 'isDraft',
+  lastSavedAt: 'lastSavedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -597,8 +615,7 @@ exports.NotificationType = exports.$Enums.NotificationType = {
 
 exports.SamadhanQueryType = exports.$Enums.SamadhanQueryType = {
   FEEDBACK: 'FEEDBACK',
-  GRIEVANCE: 'GRIEVANCE',
-  SUGGESTION: 'SUGGESTION'
+  GRIEVANCE: 'GRIEVANCE'
 };
 
 exports.SamadhanPriority = exports.$Enums.SamadhanPriority = {
@@ -608,6 +625,8 @@ exports.SamadhanPriority = exports.$Enums.SamadhanPriority = {
 };
 
 exports.SamadhanTicketStatus = exports.$Enums.SamadhanTicketStatus = {
+  DRAFT: 'DRAFT',
+  QUEUED: 'QUEUED',
   UNSEEN: 'UNSEEN',
   SEEN: 'SEEN',
   ACKNOWLEDGED: 'ACKNOWLEDGED',
@@ -643,6 +662,7 @@ exports.Prisma.ModelName = {
   FrontdeskOfficer: 'FrontdeskOfficer',
   ServiceCategory: 'ServiceCategory',
   Section: 'Section',
+  SamadhanService: 'SamadhanService',
   Department: 'Department',
   Application: 'Application',
   ApplicationWorkflow: 'ApplicationWorkflow',

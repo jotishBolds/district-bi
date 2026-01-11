@@ -1,6 +1,5 @@
 // SAMADHAN Citizen Portal Layout
 import type { Metadata, Viewport } from "next";
-import SamadhanPWAHandler from "@/components/samadhan/SamadhanPWAHandler";
 
 export const metadata: Metadata = {
   title: "SAMADHAN - Citizen Grievance Portal | DAC Gangtok",
@@ -15,16 +14,6 @@ export const metadata: Metadata = {
     "Gangtok",
     "government",
   ],
-  manifest: "/samadhan-manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "SAMADHAN",
-  },
-  applicationName: "SAMADHAN",
-  formatDetection: {
-    telephone: true,
-  },
   openGraph: {
     title: "SAMADHAN - Citizen Grievance Portal",
     description:
@@ -39,7 +28,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#2563eb",
+  themeColor: "#16a34a",
 };
 
 export default function SamadhanLayout({
@@ -48,8 +37,7 @@ export default function SamadhanLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      <SamadhanPWAHandler />
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
       {children}
     </div>
   );

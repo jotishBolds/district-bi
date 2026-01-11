@@ -72,6 +72,7 @@ model User {
   samadhanTicketsAsCitizen    SamadhanTicket[]         @relation("SamadhanCitizenTickets")
   samadhanTicketsAsOfficer    SamadhanTicket[]         @relation("SamadhanAssignedOfficer")
   samadhanTicketsEscalated    SamadhanTicket[]         @relation("SamadhanEscalatedTo")
+  samadhanTicketsAssigned     SamadhanTicket[]         @relation("SamadhanAssignedBy")
   samadhanAttachmentsUploaded SamadhanAttachment[]     @relation("SamadhanAttachmentUploader")
   samadhanInfoRequests        SamadhanInfoRequest[]    @relation("SamadhanInfoRequestedBy")
   samadhanStatusChanges       SamadhanStatusHistory[]  @relation("SamadhanStatusChangedBy")
@@ -149,8 +150,25 @@ model Section {
   updatedAt       DateTime         @updatedAt
   officers        OfficerProfile[]
   samadhanTickets SamadhanTicket[] @relation("SamadhanTicketSection")
+  samadhanServices SamadhanService[] @relation("SectionServices")
 
   @@map("sections")
+}
+
+// SAMADHAN Services - Services offered by each section
+model SamadhanService {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  sectionId   String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  section     Section  @relation("SectionServices", fields: [sectionId], references: [id], onDelete: Cascade)
+  
+  @@unique([name, sectionId])
+  @@map("samadhan_services")
 }
 
 model Department {
@@ -502,7 +520,6 @@ enum ApplicationSource {
 enum SamadhanQueryType {
   FEEDBACK
   GRIEVANCE
-  SUGGESTION
 }
 
 enum SamadhanPriority {
@@ -512,6 +529,8 @@ enum SamadhanPriority {
 }
 
 enum SamadhanTicketStatus {
+  DRAFT             // Ticket saved as draft by citizen
+  QUEUED            // Ticket submitted and in queue for assignment
   UNSEEN
   SEEN
   ACKNOWLEDGED
@@ -545,7 +564,7 @@ model SamadhanTicket {
   referenceId           String                     @unique // SAMADHAN-YYYY-MM-DD-XXXXX format
   queryType             SamadhanQueryType
   priority              SamadhanPriority           @default(MEDIUM)
-  status                SamadhanTicketStatus       @default(UNSEEN)
+  status                SamadhanTicketStatus       @default(DRAFT)
   
   // Citizen Information
   citizenId             String?                    // Nullable for anonymous submissions
@@ -556,14 +575,19 @@ model SamadhanTicket {
   isAnonymous           Boolean                    @default(false)
   isAnonymousToOfficer  Boolean                    @default(false)
   
-  // Query Details
+  // Query Details - Updated for TypeForm flow
   sectionId             String
-  serviceAvailed        String?
+  subject               String?                    // Subject/title for the grievance/feedback
+  serviceAvailed        String?                    // JSON array of service IDs
   description           String                     @db.Text
+  visitedDC             Boolean?                   // Did citizen visit DC office
+  visitDate             DateTime?                  // When did they visit
   
   // Assignment
   assignedOfficerId     String?
   escalatedToId         String?
+  assignedById          String?                    // Who assigned the ticket from queue
+  assignedAt            DateTime?                  // When was the ticket assigned
   
   // Submission Channel
   submissionChannel     SamadhanSubmissionChannel  @default(WEB_PORTAL)
@@ -576,6 +600,7 @@ model SamadhanTicket {
   resolvedAt            DateTime?
   closedAt              DateTime?
   slaBreachedAt         DateTime?
+  queuedAt              DateTime?                  // When ticket entered queue
   
   // Resolution
   resolutionMessage     String?                    @db.Text
@@ -583,6 +608,10 @@ model SamadhanTicket {
   // Appeal
   isAppeal              Boolean                    @default(false)
   originalTicketId      String?
+  
+  // Draft functionality
+  isDraft               Boolean                    @default(false)
+  lastSavedAt           DateTime?
   
   // Timestamps
   createdAt             DateTime                   @default(now())
@@ -593,6 +622,7 @@ model SamadhanTicket {
   section               Section                    @relation("SamadhanTicketSection", fields: [sectionId], references: [id])
   assignedOfficer       User?                      @relation("SamadhanAssignedOfficer", fields: [assignedOfficerId], references: [id])
   escalatedTo           User?                      @relation("SamadhanEscalatedTo", fields: [escalatedToId], references: [id])
+  assignedBy            User?                      @relation("SamadhanAssignedBy", fields: [assignedById], references: [id])
   originalTicket        SamadhanTicket?            @relation("TicketAppeals", fields: [originalTicketId], references: [id])
   appeals               SamadhanTicket[]           @relation("TicketAppeals")
   attachments           SamadhanAttachment[]

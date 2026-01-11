@@ -49,6 +49,11 @@ export type ServiceCategory = $Result.DefaultSelection<Prisma.$ServiceCategoryPa
  */
 export type Section = $Result.DefaultSelection<Prisma.$SectionPayload>
 /**
+ * Model SamadhanService
+ * 
+ */
+export type SamadhanService = $Result.DefaultSelection<Prisma.$SamadhanServicePayload>
+/**
  * Model Department
  * 
  */
@@ -250,8 +255,7 @@ export type ApplicationSource = (typeof ApplicationSource)[keyof typeof Applicat
 
 export const SamadhanQueryType: {
   FEEDBACK: 'FEEDBACK',
-  GRIEVANCE: 'GRIEVANCE',
-  SUGGESTION: 'SUGGESTION'
+  GRIEVANCE: 'GRIEVANCE'
 };
 
 export type SamadhanQueryType = (typeof SamadhanQueryType)[keyof typeof SamadhanQueryType]
@@ -267,6 +271,8 @@ export type SamadhanPriority = (typeof SamadhanPriority)[keyof typeof SamadhanPr
 
 
 export const SamadhanTicketStatus: {
+  DRAFT: 'DRAFT',
+  QUEUED: 'QUEUED',
   UNSEEN: 'UNSEEN',
   SEEN: 'SEEN',
   ACKNOWLEDGED: 'ACKNOWLEDGED',
@@ -531,6 +537,16 @@ export class PrismaClient<
     * ```
     */
   get section(): Prisma.SectionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.samadhanService`: Exposes CRUD operations for the **SamadhanService** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SamadhanServices
+    * const samadhanServices = await prisma.samadhanService.findMany()
+    * ```
+    */
+  get samadhanService(): Prisma.SamadhanServiceDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.department`: Exposes CRUD operations for the **Department** model.
@@ -1218,6 +1234,7 @@ export namespace Prisma {
     FrontdeskOfficer: 'FrontdeskOfficer',
     ServiceCategory: 'ServiceCategory',
     Section: 'Section',
+    SamadhanService: 'SamadhanService',
     Department: 'Department',
     Application: 'Application',
     ApplicationWorkflow: 'ApplicationWorkflow',
@@ -1260,7 +1277,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "userSettings" | "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "serviceCategoryChange" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "smsOtp" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory" | "samadhanTicket" | "samadhanAttachment" | "samadhanInfoRequest" | "samadhanStatusHistory" | "samadhanInternalNote" | "samadhanSLAConfig" | "samadhanDailySequence"
+      modelProps: "userSettings" | "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "samadhanService" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "serviceCategoryChange" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "smsOtp" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory" | "samadhanTicket" | "samadhanAttachment" | "samadhanInfoRequest" | "samadhanStatusHistory" | "samadhanInternalNote" | "samadhanSLAConfig" | "samadhanDailySequence"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1779,6 +1796,80 @@ export namespace Prisma {
           count: {
             args: Prisma.SectionCountArgs<ExtArgs>
             result: $Utils.Optional<SectionCountAggregateOutputType> | number
+          }
+        }
+      }
+      SamadhanService: {
+        payload: Prisma.$SamadhanServicePayload<ExtArgs>
+        fields: Prisma.SamadhanServiceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SamadhanServiceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SamadhanServiceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload>
+          }
+          findFirst: {
+            args: Prisma.SamadhanServiceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SamadhanServiceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload>
+          }
+          findMany: {
+            args: Prisma.SamadhanServiceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload>[]
+          }
+          create: {
+            args: Prisma.SamadhanServiceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload>
+          }
+          createMany: {
+            args: Prisma.SamadhanServiceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SamadhanServiceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload>[]
+          }
+          delete: {
+            args: Prisma.SamadhanServiceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload>
+          }
+          update: {
+            args: Prisma.SamadhanServiceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload>
+          }
+          deleteMany: {
+            args: Prisma.SamadhanServiceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SamadhanServiceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SamadhanServiceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload>[]
+          }
+          upsert: {
+            args: Prisma.SamadhanServiceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServicePayload>
+          }
+          aggregate: {
+            args: Prisma.SamadhanServiceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSamadhanService>
+          }
+          groupBy: {
+            args: Prisma.SamadhanServiceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanServiceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SamadhanServiceCountArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanServiceCountAggregateOutputType> | number
           }
         }
       }
@@ -3657,6 +3748,7 @@ export namespace Prisma {
     frontdeskOfficer?: FrontdeskOfficerOmit
     serviceCategory?: ServiceCategoryOmit
     section?: SectionOmit
+    samadhanService?: SamadhanServiceOmit
     department?: DepartmentOmit
     application?: ApplicationOmit
     applicationWorkflow?: ApplicationWorkflowOmit
@@ -3781,6 +3873,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen: number
     samadhanTicketsAsOfficer: number
     samadhanTicketsEscalated: number
+    samadhanTicketsAssigned: number
     samadhanAttachmentsUploaded: number
     samadhanInfoRequests: number
     samadhanStatusChanges: number
@@ -3808,6 +3901,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: boolean | UserCountOutputTypeCountSamadhanTicketsAsCitizenArgs
     samadhanTicketsAsOfficer?: boolean | UserCountOutputTypeCountSamadhanTicketsAsOfficerArgs
     samadhanTicketsEscalated?: boolean | UserCountOutputTypeCountSamadhanTicketsEscalatedArgs
+    samadhanTicketsAssigned?: boolean | UserCountOutputTypeCountSamadhanTicketsAssignedArgs
     samadhanAttachmentsUploaded?: boolean | UserCountOutputTypeCountSamadhanAttachmentsUploadedArgs
     samadhanInfoRequests?: boolean | UserCountOutputTypeCountSamadhanInfoRequestsArgs
     samadhanStatusChanges?: boolean | UserCountOutputTypeCountSamadhanStatusChangesArgs
@@ -3968,6 +4062,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountSamadhanTicketsAssignedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanTicketWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountSamadhanAttachmentsUploadedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SamadhanAttachmentWhereInput
   }
@@ -4081,11 +4182,13 @@ export namespace Prisma {
   export type SectionCountOutputType = {
     officers: number
     samadhanTickets: number
+    samadhanServices: number
   }
 
   export type SectionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     officers?: boolean | SectionCountOutputTypeCountOfficersArgs
     samadhanTickets?: boolean | SectionCountOutputTypeCountSamadhanTicketsArgs
+    samadhanServices?: boolean | SectionCountOutputTypeCountSamadhanServicesArgs
   }
 
   // Custom InputTypes
@@ -4111,6 +4214,13 @@ export namespace Prisma {
    */
   export type SectionCountOutputTypeCountSamadhanTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SamadhanTicketWhereInput
+  }
+
+  /**
+   * SectionCountOutputType without action
+   */
+  export type SectionCountOutputTypeCountSamadhanServicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanServiceWhereInput
   }
 
 
@@ -5872,6 +5982,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: boolean | User$samadhanTicketsAsCitizenArgs<ExtArgs>
     samadhanTicketsAsOfficer?: boolean | User$samadhanTicketsAsOfficerArgs<ExtArgs>
     samadhanTicketsEscalated?: boolean | User$samadhanTicketsEscalatedArgs<ExtArgs>
+    samadhanTicketsAssigned?: boolean | User$samadhanTicketsAssignedArgs<ExtArgs>
     samadhanAttachmentsUploaded?: boolean | User$samadhanAttachmentsUploadedArgs<ExtArgs>
     samadhanInfoRequests?: boolean | User$samadhanInfoRequestsArgs<ExtArgs>
     samadhanStatusChanges?: boolean | User$samadhanStatusChangesArgs<ExtArgs>
@@ -5943,6 +6054,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: boolean | User$samadhanTicketsAsCitizenArgs<ExtArgs>
     samadhanTicketsAsOfficer?: boolean | User$samadhanTicketsAsOfficerArgs<ExtArgs>
     samadhanTicketsEscalated?: boolean | User$samadhanTicketsEscalatedArgs<ExtArgs>
+    samadhanTicketsAssigned?: boolean | User$samadhanTicketsAssignedArgs<ExtArgs>
     samadhanAttachmentsUploaded?: boolean | User$samadhanAttachmentsUploadedArgs<ExtArgs>
     samadhanInfoRequests?: boolean | User$samadhanInfoRequestsArgs<ExtArgs>
     samadhanStatusChanges?: boolean | User$samadhanStatusChangesArgs<ExtArgs>
@@ -5978,6 +6090,7 @@ export namespace Prisma {
       samadhanTicketsAsCitizen: Prisma.$SamadhanTicketPayload<ExtArgs>[]
       samadhanTicketsAsOfficer: Prisma.$SamadhanTicketPayload<ExtArgs>[]
       samadhanTicketsEscalated: Prisma.$SamadhanTicketPayload<ExtArgs>[]
+      samadhanTicketsAssigned: Prisma.$SamadhanTicketPayload<ExtArgs>[]
       samadhanAttachmentsUploaded: Prisma.$SamadhanAttachmentPayload<ExtArgs>[]
       samadhanInfoRequests: Prisma.$SamadhanInfoRequestPayload<ExtArgs>[]
       samadhanStatusChanges: Prisma.$SamadhanStatusHistoryPayload<ExtArgs>[]
@@ -6411,6 +6524,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen<T extends User$samadhanTicketsAsCitizenArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanTicketsAsCitizenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     samadhanTicketsAsOfficer<T extends User$samadhanTicketsAsOfficerArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanTicketsAsOfficerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     samadhanTicketsEscalated<T extends User$samadhanTicketsEscalatedArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanTicketsEscalatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    samadhanTicketsAssigned<T extends User$samadhanTicketsAssignedArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanTicketsAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     samadhanAttachmentsUploaded<T extends User$samadhanAttachmentsUploadedArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanAttachmentsUploadedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     samadhanInfoRequests<T extends User$samadhanInfoRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanInfoRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanInfoRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     samadhanStatusChanges<T extends User$samadhanStatusChangesArgs<ExtArgs> = {}>(args?: Subset<T, User$samadhanStatusChangesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7358,6 +7472,30 @@ export namespace Prisma {
    * User.samadhanTicketsEscalated
    */
   export type User$samadhanTicketsEscalatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanTicket
+     */
+    select?: SamadhanTicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanTicket
+     */
+    omit?: SamadhanTicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanTicketInclude<ExtArgs> | null
+    where?: SamadhanTicketWhereInput
+    orderBy?: SamadhanTicketOrderByWithRelationInput | SamadhanTicketOrderByWithRelationInput[]
+    cursor?: SamadhanTicketWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanTicketScalarFieldEnum | SamadhanTicketScalarFieldEnum[]
+  }
+
+  /**
+   * User.samadhanTicketsAssigned
+   */
+  export type User$samadhanTicketsAssignedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SamadhanTicket
      */
@@ -12181,6 +12319,7 @@ export namespace Prisma {
     updatedAt?: boolean
     officers?: boolean | Section$officersArgs<ExtArgs>
     samadhanTickets?: boolean | Section$samadhanTicketsArgs<ExtArgs>
+    samadhanServices?: boolean | Section$samadhanServicesArgs<ExtArgs>
     _count?: boolean | SectionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["section"]>
 
@@ -12215,6 +12354,7 @@ export namespace Prisma {
   export type SectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     officers?: boolean | Section$officersArgs<ExtArgs>
     samadhanTickets?: boolean | Section$samadhanTicketsArgs<ExtArgs>
+    samadhanServices?: boolean | Section$samadhanServicesArgs<ExtArgs>
     _count?: boolean | SectionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -12225,6 +12365,7 @@ export namespace Prisma {
     objects: {
       officers: Prisma.$OfficerProfilePayload<ExtArgs>[]
       samadhanTickets: Prisma.$SamadhanTicketPayload<ExtArgs>[]
+      samadhanServices: Prisma.$SamadhanServicePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12629,6 +12770,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     officers<T extends Section$officersArgs<ExtArgs> = {}>(args?: Subset<T, Section$officersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfficerProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     samadhanTickets<T extends Section$samadhanTicketsArgs<ExtArgs> = {}>(args?: Subset<T, Section$samadhanTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    samadhanServices<T extends Section$samadhanServicesArgs<ExtArgs> = {}>(args?: Subset<T, Section$samadhanServicesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13100,6 +13242,30 @@ export namespace Prisma {
   }
 
   /**
+   * Section.samadhanServices
+   */
+  export type Section$samadhanServicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
+    where?: SamadhanServiceWhereInput
+    orderBy?: SamadhanServiceOrderByWithRelationInput | SamadhanServiceOrderByWithRelationInput[]
+    cursor?: SamadhanServiceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanServiceScalarFieldEnum | SamadhanServiceScalarFieldEnum[]
+  }
+
+  /**
    * Section without action
    */
   export type SectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13115,6 +13281,1090 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SectionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SamadhanService
+   */
+
+  export type AggregateSamadhanService = {
+    _count: SamadhanServiceCountAggregateOutputType | null
+    _min: SamadhanServiceMinAggregateOutputType | null
+    _max: SamadhanServiceMaxAggregateOutputType | null
+  }
+
+  export type SamadhanServiceMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    sectionId: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanServiceMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    sectionId: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanServiceCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    sectionId: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SamadhanServiceMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    sectionId?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanServiceMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    sectionId?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanServiceCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    sectionId?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SamadhanServiceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanService to aggregate.
+     */
+    where?: SamadhanServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanServices to fetch.
+     */
+    orderBy?: SamadhanServiceOrderByWithRelationInput | SamadhanServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SamadhanServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanServices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanServices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SamadhanServices
+    **/
+    _count?: true | SamadhanServiceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SamadhanServiceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SamadhanServiceMaxAggregateInputType
+  }
+
+  export type GetSamadhanServiceAggregateType<T extends SamadhanServiceAggregateArgs> = {
+        [P in keyof T & keyof AggregateSamadhanService]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSamadhanService[P]>
+      : GetScalarType<T[P], AggregateSamadhanService[P]>
+  }
+
+
+
+
+  export type SamadhanServiceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanServiceWhereInput
+    orderBy?: SamadhanServiceOrderByWithAggregationInput | SamadhanServiceOrderByWithAggregationInput[]
+    by: SamadhanServiceScalarFieldEnum[] | SamadhanServiceScalarFieldEnum
+    having?: SamadhanServiceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SamadhanServiceCountAggregateInputType | true
+    _min?: SamadhanServiceMinAggregateInputType
+    _max?: SamadhanServiceMaxAggregateInputType
+  }
+
+  export type SamadhanServiceGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    sectionId: string
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: SamadhanServiceCountAggregateOutputType | null
+    _min: SamadhanServiceMinAggregateOutputType | null
+    _max: SamadhanServiceMaxAggregateOutputType | null
+  }
+
+  type GetSamadhanServiceGroupByPayload<T extends SamadhanServiceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SamadhanServiceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SamadhanServiceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SamadhanServiceGroupByOutputType[P]>
+            : GetScalarType<T[P], SamadhanServiceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SamadhanServiceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    sectionId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanService"]>
+
+  export type SamadhanServiceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    sectionId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanService"]>
+
+  export type SamadhanServiceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    sectionId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanService"]>
+
+  export type SamadhanServiceSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    sectionId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SamadhanServiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "sectionId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["samadhanService"]>
+  export type SamadhanServiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+  }
+  export type SamadhanServiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+  }
+  export type SamadhanServiceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    section?: boolean | SectionDefaultArgs<ExtArgs>
+  }
+
+  export type $SamadhanServicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SamadhanService"
+    objects: {
+      section: Prisma.$SectionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      sectionId: string
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["samadhanService"]>
+    composites: {}
+  }
+
+  type SamadhanServiceGetPayload<S extends boolean | null | undefined | SamadhanServiceDefaultArgs> = $Result.GetResult<Prisma.$SamadhanServicePayload, S>
+
+  type SamadhanServiceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SamadhanServiceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SamadhanServiceCountAggregateInputType | true
+    }
+
+  export interface SamadhanServiceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SamadhanService'], meta: { name: 'SamadhanService' } }
+    /**
+     * Find zero or one SamadhanService that matches the filter.
+     * @param {SamadhanServiceFindUniqueArgs} args - Arguments to find a SamadhanService
+     * @example
+     * // Get one SamadhanService
+     * const samadhanService = await prisma.samadhanService.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SamadhanServiceFindUniqueArgs>(args: SelectSubset<T, SamadhanServiceFindUniqueArgs<ExtArgs>>): Prisma__SamadhanServiceClient<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SamadhanService that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SamadhanServiceFindUniqueOrThrowArgs} args - Arguments to find a SamadhanService
+     * @example
+     * // Get one SamadhanService
+     * const samadhanService = await prisma.samadhanService.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SamadhanServiceFindUniqueOrThrowArgs>(args: SelectSubset<T, SamadhanServiceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SamadhanServiceClient<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanService that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceFindFirstArgs} args - Arguments to find a SamadhanService
+     * @example
+     * // Get one SamadhanService
+     * const samadhanService = await prisma.samadhanService.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SamadhanServiceFindFirstArgs>(args?: SelectSubset<T, SamadhanServiceFindFirstArgs<ExtArgs>>): Prisma__SamadhanServiceClient<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanService that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceFindFirstOrThrowArgs} args - Arguments to find a SamadhanService
+     * @example
+     * // Get one SamadhanService
+     * const samadhanService = await prisma.samadhanService.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SamadhanServiceFindFirstOrThrowArgs>(args?: SelectSubset<T, SamadhanServiceFindFirstOrThrowArgs<ExtArgs>>): Prisma__SamadhanServiceClient<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SamadhanServices that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SamadhanServices
+     * const samadhanServices = await prisma.samadhanService.findMany()
+     * 
+     * // Get first 10 SamadhanServices
+     * const samadhanServices = await prisma.samadhanService.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const samadhanServiceWithIdOnly = await prisma.samadhanService.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SamadhanServiceFindManyArgs>(args?: SelectSubset<T, SamadhanServiceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SamadhanService.
+     * @param {SamadhanServiceCreateArgs} args - Arguments to create a SamadhanService.
+     * @example
+     * // Create one SamadhanService
+     * const SamadhanService = await prisma.samadhanService.create({
+     *   data: {
+     *     // ... data to create a SamadhanService
+     *   }
+     * })
+     * 
+     */
+    create<T extends SamadhanServiceCreateArgs>(args: SelectSubset<T, SamadhanServiceCreateArgs<ExtArgs>>): Prisma__SamadhanServiceClient<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SamadhanServices.
+     * @param {SamadhanServiceCreateManyArgs} args - Arguments to create many SamadhanServices.
+     * @example
+     * // Create many SamadhanServices
+     * const samadhanService = await prisma.samadhanService.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SamadhanServiceCreateManyArgs>(args?: SelectSubset<T, SamadhanServiceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SamadhanServices and returns the data saved in the database.
+     * @param {SamadhanServiceCreateManyAndReturnArgs} args - Arguments to create many SamadhanServices.
+     * @example
+     * // Create many SamadhanServices
+     * const samadhanService = await prisma.samadhanService.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SamadhanServices and only return the `id`
+     * const samadhanServiceWithIdOnly = await prisma.samadhanService.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SamadhanServiceCreateManyAndReturnArgs>(args?: SelectSubset<T, SamadhanServiceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SamadhanService.
+     * @param {SamadhanServiceDeleteArgs} args - Arguments to delete one SamadhanService.
+     * @example
+     * // Delete one SamadhanService
+     * const SamadhanService = await prisma.samadhanService.delete({
+     *   where: {
+     *     // ... filter to delete one SamadhanService
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SamadhanServiceDeleteArgs>(args: SelectSubset<T, SamadhanServiceDeleteArgs<ExtArgs>>): Prisma__SamadhanServiceClient<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SamadhanService.
+     * @param {SamadhanServiceUpdateArgs} args - Arguments to update one SamadhanService.
+     * @example
+     * // Update one SamadhanService
+     * const samadhanService = await prisma.samadhanService.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SamadhanServiceUpdateArgs>(args: SelectSubset<T, SamadhanServiceUpdateArgs<ExtArgs>>): Prisma__SamadhanServiceClient<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SamadhanServices.
+     * @param {SamadhanServiceDeleteManyArgs} args - Arguments to filter SamadhanServices to delete.
+     * @example
+     * // Delete a few SamadhanServices
+     * const { count } = await prisma.samadhanService.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SamadhanServiceDeleteManyArgs>(args?: SelectSubset<T, SamadhanServiceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanServices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SamadhanServices
+     * const samadhanService = await prisma.samadhanService.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SamadhanServiceUpdateManyArgs>(args: SelectSubset<T, SamadhanServiceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanServices and returns the data updated in the database.
+     * @param {SamadhanServiceUpdateManyAndReturnArgs} args - Arguments to update many SamadhanServices.
+     * @example
+     * // Update many SamadhanServices
+     * const samadhanService = await prisma.samadhanService.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SamadhanServices and only return the `id`
+     * const samadhanServiceWithIdOnly = await prisma.samadhanService.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SamadhanServiceUpdateManyAndReturnArgs>(args: SelectSubset<T, SamadhanServiceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SamadhanService.
+     * @param {SamadhanServiceUpsertArgs} args - Arguments to update or create a SamadhanService.
+     * @example
+     * // Update or create a SamadhanService
+     * const samadhanService = await prisma.samadhanService.upsert({
+     *   create: {
+     *     // ... data to create a SamadhanService
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SamadhanService we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SamadhanServiceUpsertArgs>(args: SelectSubset<T, SamadhanServiceUpsertArgs<ExtArgs>>): Prisma__SamadhanServiceClient<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SamadhanServices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceCountArgs} args - Arguments to filter SamadhanServices to count.
+     * @example
+     * // Count the number of SamadhanServices
+     * const count = await prisma.samadhanService.count({
+     *   where: {
+     *     // ... the filter for the SamadhanServices we want to count
+     *   }
+     * })
+    **/
+    count<T extends SamadhanServiceCountArgs>(
+      args?: Subset<T, SamadhanServiceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SamadhanServiceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SamadhanService.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SamadhanServiceAggregateArgs>(args: Subset<T, SamadhanServiceAggregateArgs>): Prisma.PrismaPromise<GetSamadhanServiceAggregateType<T>>
+
+    /**
+     * Group by SamadhanService.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SamadhanServiceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SamadhanServiceGroupByArgs['orderBy'] }
+        : { orderBy?: SamadhanServiceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SamadhanServiceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSamadhanServiceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SamadhanService model
+   */
+  readonly fields: SamadhanServiceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SamadhanService.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SamadhanServiceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    section<T extends SectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SectionDefaultArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SamadhanService model
+   */
+  interface SamadhanServiceFieldRefs {
+    readonly id: FieldRef<"SamadhanService", 'String'>
+    readonly name: FieldRef<"SamadhanService", 'String'>
+    readonly description: FieldRef<"SamadhanService", 'String'>
+    readonly sectionId: FieldRef<"SamadhanService", 'String'>
+    readonly isActive: FieldRef<"SamadhanService", 'Boolean'>
+    readonly createdAt: FieldRef<"SamadhanService", 'DateTime'>
+    readonly updatedAt: FieldRef<"SamadhanService", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SamadhanService findUnique
+   */
+  export type SamadhanServiceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanService to fetch.
+     */
+    where: SamadhanServiceWhereUniqueInput
+  }
+
+  /**
+   * SamadhanService findUniqueOrThrow
+   */
+  export type SamadhanServiceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanService to fetch.
+     */
+    where: SamadhanServiceWhereUniqueInput
+  }
+
+  /**
+   * SamadhanService findFirst
+   */
+  export type SamadhanServiceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanService to fetch.
+     */
+    where?: SamadhanServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanServices to fetch.
+     */
+    orderBy?: SamadhanServiceOrderByWithRelationInput | SamadhanServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanServices.
+     */
+    cursor?: SamadhanServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanServices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanServices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanServices.
+     */
+    distinct?: SamadhanServiceScalarFieldEnum | SamadhanServiceScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanService findFirstOrThrow
+   */
+  export type SamadhanServiceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanService to fetch.
+     */
+    where?: SamadhanServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanServices to fetch.
+     */
+    orderBy?: SamadhanServiceOrderByWithRelationInput | SamadhanServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanServices.
+     */
+    cursor?: SamadhanServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanServices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanServices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanServices.
+     */
+    distinct?: SamadhanServiceScalarFieldEnum | SamadhanServiceScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanService findMany
+   */
+  export type SamadhanServiceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanServices to fetch.
+     */
+    where?: SamadhanServiceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanServices to fetch.
+     */
+    orderBy?: SamadhanServiceOrderByWithRelationInput | SamadhanServiceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SamadhanServices.
+     */
+    cursor?: SamadhanServiceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanServices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanServices.
+     */
+    skip?: number
+    distinct?: SamadhanServiceScalarFieldEnum | SamadhanServiceScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanService create
+   */
+  export type SamadhanServiceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SamadhanService.
+     */
+    data: XOR<SamadhanServiceCreateInput, SamadhanServiceUncheckedCreateInput>
+  }
+
+  /**
+   * SamadhanService createMany
+   */
+  export type SamadhanServiceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SamadhanServices.
+     */
+    data: SamadhanServiceCreateManyInput | SamadhanServiceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanService createManyAndReturn
+   */
+  export type SamadhanServiceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * The data used to create many SamadhanServices.
+     */
+    data: SamadhanServiceCreateManyInput | SamadhanServiceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanService update
+   */
+  export type SamadhanServiceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SamadhanService.
+     */
+    data: XOR<SamadhanServiceUpdateInput, SamadhanServiceUncheckedUpdateInput>
+    /**
+     * Choose, which SamadhanService to update.
+     */
+    where: SamadhanServiceWhereUniqueInput
+  }
+
+  /**
+   * SamadhanService updateMany
+   */
+  export type SamadhanServiceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SamadhanServices.
+     */
+    data: XOR<SamadhanServiceUpdateManyMutationInput, SamadhanServiceUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanServices to update
+     */
+    where?: SamadhanServiceWhereInput
+    /**
+     * Limit how many SamadhanServices to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanService updateManyAndReturn
+   */
+  export type SamadhanServiceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * The data used to update SamadhanServices.
+     */
+    data: XOR<SamadhanServiceUpdateManyMutationInput, SamadhanServiceUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanServices to update
+     */
+    where?: SamadhanServiceWhereInput
+    /**
+     * Limit how many SamadhanServices to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanService upsert
+   */
+  export type SamadhanServiceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SamadhanService to update in case it exists.
+     */
+    where: SamadhanServiceWhereUniqueInput
+    /**
+     * In case the SamadhanService found by the `where` argument doesn't exist, create a new SamadhanService with this data.
+     */
+    create: XOR<SamadhanServiceCreateInput, SamadhanServiceUncheckedCreateInput>
+    /**
+     * In case the SamadhanService was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SamadhanServiceUpdateInput, SamadhanServiceUncheckedUpdateInput>
+  }
+
+  /**
+   * SamadhanService delete
+   */
+  export type SamadhanServiceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
+    /**
+     * Filter which SamadhanService to delete.
+     */
+    where: SamadhanServiceWhereUniqueInput
+  }
+
+  /**
+   * SamadhanService deleteMany
+   */
+  export type SamadhanServiceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanServices to delete
+     */
+    where?: SamadhanServiceWhereInput
+    /**
+     * Limit how many SamadhanServices to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanService without action
+   */
+  export type SamadhanServiceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanService
+     */
+    select?: SamadhanServiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanService
+     */
+    omit?: SamadhanServiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceInclude<ExtArgs> | null
   }
 
 
@@ -32503,10 +33753,15 @@ export namespace Prisma {
     isAnonymous: boolean | null
     isAnonymousToOfficer: boolean | null
     sectionId: string | null
+    subject: string | null
     serviceAvailed: string | null
     description: string | null
+    visitedDC: boolean | null
+    visitDate: Date | null
     assignedOfficerId: string | null
     escalatedToId: string | null
+    assignedById: string | null
+    assignedAt: Date | null
     submissionChannel: $Enums.SamadhanSubmissionChannel | null
     whatsappNumber: string | null
     slaDeadline: Date | null
@@ -32515,9 +33770,12 @@ export namespace Prisma {
     resolvedAt: Date | null
     closedAt: Date | null
     slaBreachedAt: Date | null
+    queuedAt: Date | null
     resolutionMessage: string | null
     isAppeal: boolean | null
     originalTicketId: string | null
+    isDraft: boolean | null
+    lastSavedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -32536,10 +33794,15 @@ export namespace Prisma {
     isAnonymous: boolean | null
     isAnonymousToOfficer: boolean | null
     sectionId: string | null
+    subject: string | null
     serviceAvailed: string | null
     description: string | null
+    visitedDC: boolean | null
+    visitDate: Date | null
     assignedOfficerId: string | null
     escalatedToId: string | null
+    assignedById: string | null
+    assignedAt: Date | null
     submissionChannel: $Enums.SamadhanSubmissionChannel | null
     whatsappNumber: string | null
     slaDeadline: Date | null
@@ -32548,9 +33811,12 @@ export namespace Prisma {
     resolvedAt: Date | null
     closedAt: Date | null
     slaBreachedAt: Date | null
+    queuedAt: Date | null
     resolutionMessage: string | null
     isAppeal: boolean | null
     originalTicketId: string | null
+    isDraft: boolean | null
+    lastSavedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -32569,10 +33835,15 @@ export namespace Prisma {
     isAnonymous: number
     isAnonymousToOfficer: number
     sectionId: number
+    subject: number
     serviceAvailed: number
     description: number
+    visitedDC: number
+    visitDate: number
     assignedOfficerId: number
     escalatedToId: number
+    assignedById: number
+    assignedAt: number
     submissionChannel: number
     whatsappNumber: number
     slaDeadline: number
@@ -32581,9 +33852,12 @@ export namespace Prisma {
     resolvedAt: number
     closedAt: number
     slaBreachedAt: number
+    queuedAt: number
     resolutionMessage: number
     isAppeal: number
     originalTicketId: number
+    isDraft: number
+    lastSavedAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -32604,10 +33878,15 @@ export namespace Prisma {
     isAnonymous?: true
     isAnonymousToOfficer?: true
     sectionId?: true
+    subject?: true
     serviceAvailed?: true
     description?: true
+    visitedDC?: true
+    visitDate?: true
     assignedOfficerId?: true
     escalatedToId?: true
+    assignedById?: true
+    assignedAt?: true
     submissionChannel?: true
     whatsappNumber?: true
     slaDeadline?: true
@@ -32616,9 +33895,12 @@ export namespace Prisma {
     resolvedAt?: true
     closedAt?: true
     slaBreachedAt?: true
+    queuedAt?: true
     resolutionMessage?: true
     isAppeal?: true
     originalTicketId?: true
+    isDraft?: true
+    lastSavedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -32637,10 +33919,15 @@ export namespace Prisma {
     isAnonymous?: true
     isAnonymousToOfficer?: true
     sectionId?: true
+    subject?: true
     serviceAvailed?: true
     description?: true
+    visitedDC?: true
+    visitDate?: true
     assignedOfficerId?: true
     escalatedToId?: true
+    assignedById?: true
+    assignedAt?: true
     submissionChannel?: true
     whatsappNumber?: true
     slaDeadline?: true
@@ -32649,9 +33936,12 @@ export namespace Prisma {
     resolvedAt?: true
     closedAt?: true
     slaBreachedAt?: true
+    queuedAt?: true
     resolutionMessage?: true
     isAppeal?: true
     originalTicketId?: true
+    isDraft?: true
+    lastSavedAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -32670,10 +33960,15 @@ export namespace Prisma {
     isAnonymous?: true
     isAnonymousToOfficer?: true
     sectionId?: true
+    subject?: true
     serviceAvailed?: true
     description?: true
+    visitedDC?: true
+    visitDate?: true
     assignedOfficerId?: true
     escalatedToId?: true
+    assignedById?: true
+    assignedAt?: true
     submissionChannel?: true
     whatsappNumber?: true
     slaDeadline?: true
@@ -32682,9 +33977,12 @@ export namespace Prisma {
     resolvedAt?: true
     closedAt?: true
     slaBreachedAt?: true
+    queuedAt?: true
     resolutionMessage?: true
     isAppeal?: true
     originalTicketId?: true
+    isDraft?: true
+    lastSavedAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -32776,10 +34074,15 @@ export namespace Prisma {
     isAnonymous: boolean
     isAnonymousToOfficer: boolean
     sectionId: string
+    subject: string | null
     serviceAvailed: string | null
     description: string
+    visitedDC: boolean | null
+    visitDate: Date | null
     assignedOfficerId: string | null
     escalatedToId: string | null
+    assignedById: string | null
+    assignedAt: Date | null
     submissionChannel: $Enums.SamadhanSubmissionChannel
     whatsappNumber: string | null
     slaDeadline: Date | null
@@ -32788,9 +34091,12 @@ export namespace Prisma {
     resolvedAt: Date | null
     closedAt: Date | null
     slaBreachedAt: Date | null
+    queuedAt: Date | null
     resolutionMessage: string | null
     isAppeal: boolean
     originalTicketId: string | null
+    isDraft: boolean
+    lastSavedAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: SamadhanTicketCountAggregateOutputType | null
@@ -32826,10 +34132,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId?: boolean
+    subject?: boolean
     serviceAvailed?: boolean
     description?: boolean
+    visitedDC?: boolean
+    visitDate?: boolean
     assignedOfficerId?: boolean
     escalatedToId?: boolean
+    assignedById?: boolean
+    assignedAt?: boolean
     submissionChannel?: boolean
     whatsappNumber?: boolean
     slaDeadline?: boolean
@@ -32838,15 +34149,19 @@ export namespace Prisma {
     resolvedAt?: boolean
     closedAt?: boolean
     slaBreachedAt?: boolean
+    queuedAt?: boolean
     resolutionMessage?: boolean
     isAppeal?: boolean
     originalTicketId?: boolean
+    isDraft?: boolean
+    lastSavedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     citizen?: boolean | SamadhanTicket$citizenArgs<ExtArgs>
     section?: boolean | SectionDefaultArgs<ExtArgs>
     assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
     escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    assignedBy?: boolean | SamadhanTicket$assignedByArgs<ExtArgs>
     originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
     appeals?: boolean | SamadhanTicket$appealsArgs<ExtArgs>
     attachments?: boolean | SamadhanTicket$attachmentsArgs<ExtArgs>
@@ -32870,10 +34185,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId?: boolean
+    subject?: boolean
     serviceAvailed?: boolean
     description?: boolean
+    visitedDC?: boolean
+    visitDate?: boolean
     assignedOfficerId?: boolean
     escalatedToId?: boolean
+    assignedById?: boolean
+    assignedAt?: boolean
     submissionChannel?: boolean
     whatsappNumber?: boolean
     slaDeadline?: boolean
@@ -32882,15 +34202,19 @@ export namespace Prisma {
     resolvedAt?: boolean
     closedAt?: boolean
     slaBreachedAt?: boolean
+    queuedAt?: boolean
     resolutionMessage?: boolean
     isAppeal?: boolean
     originalTicketId?: boolean
+    isDraft?: boolean
+    lastSavedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     citizen?: boolean | SamadhanTicket$citizenArgs<ExtArgs>
     section?: boolean | SectionDefaultArgs<ExtArgs>
     assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
     escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    assignedBy?: boolean | SamadhanTicket$assignedByArgs<ExtArgs>
     originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
   }, ExtArgs["result"]["samadhanTicket"]>
 
@@ -32908,10 +34232,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId?: boolean
+    subject?: boolean
     serviceAvailed?: boolean
     description?: boolean
+    visitedDC?: boolean
+    visitDate?: boolean
     assignedOfficerId?: boolean
     escalatedToId?: boolean
+    assignedById?: boolean
+    assignedAt?: boolean
     submissionChannel?: boolean
     whatsappNumber?: boolean
     slaDeadline?: boolean
@@ -32920,15 +34249,19 @@ export namespace Prisma {
     resolvedAt?: boolean
     closedAt?: boolean
     slaBreachedAt?: boolean
+    queuedAt?: boolean
     resolutionMessage?: boolean
     isAppeal?: boolean
     originalTicketId?: boolean
+    isDraft?: boolean
+    lastSavedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     citizen?: boolean | SamadhanTicket$citizenArgs<ExtArgs>
     section?: boolean | SectionDefaultArgs<ExtArgs>
     assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
     escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    assignedBy?: boolean | SamadhanTicket$assignedByArgs<ExtArgs>
     originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
   }, ExtArgs["result"]["samadhanTicket"]>
 
@@ -32946,10 +34279,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId?: boolean
+    subject?: boolean
     serviceAvailed?: boolean
     description?: boolean
+    visitedDC?: boolean
+    visitDate?: boolean
     assignedOfficerId?: boolean
     escalatedToId?: boolean
+    assignedById?: boolean
+    assignedAt?: boolean
     submissionChannel?: boolean
     whatsappNumber?: boolean
     slaDeadline?: boolean
@@ -32958,19 +34296,23 @@ export namespace Prisma {
     resolvedAt?: boolean
     closedAt?: boolean
     slaBreachedAt?: boolean
+    queuedAt?: boolean
     resolutionMessage?: boolean
     isAppeal?: boolean
     originalTicketId?: boolean
+    isDraft?: boolean
+    lastSavedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SamadhanTicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "referenceId" | "queryType" | "priority" | "status" | "citizenId" | "citizenName" | "citizenEmail" | "citizenPhone" | "citizenPseudonym" | "isAnonymous" | "isAnonymousToOfficer" | "sectionId" | "serviceAvailed" | "description" | "assignedOfficerId" | "escalatedToId" | "submissionChannel" | "whatsappNumber" | "slaDeadline" | "seenAt" | "acknowledgedAt" | "resolvedAt" | "closedAt" | "slaBreachedAt" | "resolutionMessage" | "isAppeal" | "originalTicketId" | "createdAt" | "updatedAt", ExtArgs["result"]["samadhanTicket"]>
+  export type SamadhanTicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "referenceId" | "queryType" | "priority" | "status" | "citizenId" | "citizenName" | "citizenEmail" | "citizenPhone" | "citizenPseudonym" | "isAnonymous" | "isAnonymousToOfficer" | "sectionId" | "subject" | "serviceAvailed" | "description" | "visitedDC" | "visitDate" | "assignedOfficerId" | "escalatedToId" | "assignedById" | "assignedAt" | "submissionChannel" | "whatsappNumber" | "slaDeadline" | "seenAt" | "acknowledgedAt" | "resolvedAt" | "closedAt" | "slaBreachedAt" | "queuedAt" | "resolutionMessage" | "isAppeal" | "originalTicketId" | "isDraft" | "lastSavedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["samadhanTicket"]>
   export type SamadhanTicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     citizen?: boolean | SamadhanTicket$citizenArgs<ExtArgs>
     section?: boolean | SectionDefaultArgs<ExtArgs>
     assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
     escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    assignedBy?: boolean | SamadhanTicket$assignedByArgs<ExtArgs>
     originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
     appeals?: boolean | SamadhanTicket$appealsArgs<ExtArgs>
     attachments?: boolean | SamadhanTicket$attachmentsArgs<ExtArgs>
@@ -32984,6 +34326,7 @@ export namespace Prisma {
     section?: boolean | SectionDefaultArgs<ExtArgs>
     assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
     escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    assignedBy?: boolean | SamadhanTicket$assignedByArgs<ExtArgs>
     originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
   }
   export type SamadhanTicketIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -32991,6 +34334,7 @@ export namespace Prisma {
     section?: boolean | SectionDefaultArgs<ExtArgs>
     assignedOfficer?: boolean | SamadhanTicket$assignedOfficerArgs<ExtArgs>
     escalatedTo?: boolean | SamadhanTicket$escalatedToArgs<ExtArgs>
+    assignedBy?: boolean | SamadhanTicket$assignedByArgs<ExtArgs>
     originalTicket?: boolean | SamadhanTicket$originalTicketArgs<ExtArgs>
   }
 
@@ -33001,6 +34345,7 @@ export namespace Prisma {
       section: Prisma.$SectionPayload<ExtArgs>
       assignedOfficer: Prisma.$UserPayload<ExtArgs> | null
       escalatedTo: Prisma.$UserPayload<ExtArgs> | null
+      assignedBy: Prisma.$UserPayload<ExtArgs> | null
       originalTicket: Prisma.$SamadhanTicketPayload<ExtArgs> | null
       appeals: Prisma.$SamadhanTicketPayload<ExtArgs>[]
       attachments: Prisma.$SamadhanAttachmentPayload<ExtArgs>[]
@@ -33022,10 +34367,15 @@ export namespace Prisma {
       isAnonymous: boolean
       isAnonymousToOfficer: boolean
       sectionId: string
+      subject: string | null
       serviceAvailed: string | null
       description: string
+      visitedDC: boolean | null
+      visitDate: Date | null
       assignedOfficerId: string | null
       escalatedToId: string | null
+      assignedById: string | null
+      assignedAt: Date | null
       submissionChannel: $Enums.SamadhanSubmissionChannel
       whatsappNumber: string | null
       slaDeadline: Date | null
@@ -33034,9 +34384,12 @@ export namespace Prisma {
       resolvedAt: Date | null
       closedAt: Date | null
       slaBreachedAt: Date | null
+      queuedAt: Date | null
       resolutionMessage: string | null
       isAppeal: boolean
       originalTicketId: string | null
+      isDraft: boolean
+      lastSavedAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["samadhanTicket"]>
@@ -33437,6 +34790,7 @@ export namespace Prisma {
     section<T extends SectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SectionDefaultArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     assignedOfficer<T extends SamadhanTicket$assignedOfficerArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$assignedOfficerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     escalatedTo<T extends SamadhanTicket$escalatedToArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$escalatedToArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    assignedBy<T extends SamadhanTicket$assignedByArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$assignedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     originalTicket<T extends SamadhanTicket$originalTicketArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$originalTicketArgs<ExtArgs>>): Prisma__SamadhanTicketClient<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     appeals<T extends SamadhanTicket$appealsArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$appealsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     attachments<T extends SamadhanTicket$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanTicket$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -33485,10 +34839,15 @@ export namespace Prisma {
     readonly isAnonymous: FieldRef<"SamadhanTicket", 'Boolean'>
     readonly isAnonymousToOfficer: FieldRef<"SamadhanTicket", 'Boolean'>
     readonly sectionId: FieldRef<"SamadhanTicket", 'String'>
+    readonly subject: FieldRef<"SamadhanTicket", 'String'>
     readonly serviceAvailed: FieldRef<"SamadhanTicket", 'String'>
     readonly description: FieldRef<"SamadhanTicket", 'String'>
+    readonly visitedDC: FieldRef<"SamadhanTicket", 'Boolean'>
+    readonly visitDate: FieldRef<"SamadhanTicket", 'DateTime'>
     readonly assignedOfficerId: FieldRef<"SamadhanTicket", 'String'>
     readonly escalatedToId: FieldRef<"SamadhanTicket", 'String'>
+    readonly assignedById: FieldRef<"SamadhanTicket", 'String'>
+    readonly assignedAt: FieldRef<"SamadhanTicket", 'DateTime'>
     readonly submissionChannel: FieldRef<"SamadhanTicket", 'SamadhanSubmissionChannel'>
     readonly whatsappNumber: FieldRef<"SamadhanTicket", 'String'>
     readonly slaDeadline: FieldRef<"SamadhanTicket", 'DateTime'>
@@ -33497,9 +34856,12 @@ export namespace Prisma {
     readonly resolvedAt: FieldRef<"SamadhanTicket", 'DateTime'>
     readonly closedAt: FieldRef<"SamadhanTicket", 'DateTime'>
     readonly slaBreachedAt: FieldRef<"SamadhanTicket", 'DateTime'>
+    readonly queuedAt: FieldRef<"SamadhanTicket", 'DateTime'>
     readonly resolutionMessage: FieldRef<"SamadhanTicket", 'String'>
     readonly isAppeal: FieldRef<"SamadhanTicket", 'Boolean'>
     readonly originalTicketId: FieldRef<"SamadhanTicket", 'String'>
+    readonly isDraft: FieldRef<"SamadhanTicket", 'Boolean'>
+    readonly lastSavedAt: FieldRef<"SamadhanTicket", 'DateTime'>
     readonly createdAt: FieldRef<"SamadhanTicket", 'DateTime'>
     readonly updatedAt: FieldRef<"SamadhanTicket", 'DateTime'>
   }
@@ -33939,6 +35301,25 @@ export namespace Prisma {
    * SamadhanTicket.escalatedTo
    */
   export type SamadhanTicket$escalatedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * SamadhanTicket.assignedBy
+   */
+  export type SamadhanTicket$assignedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
@@ -40904,6 +42285,19 @@ export namespace Prisma {
   export type SectionScalarFieldEnum = (typeof SectionScalarFieldEnum)[keyof typeof SectionScalarFieldEnum]
 
 
+  export const SamadhanServiceScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    sectionId: 'sectionId',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SamadhanServiceScalarFieldEnum = (typeof SamadhanServiceScalarFieldEnum)[keyof typeof SamadhanServiceScalarFieldEnum]
+
+
   export const DepartmentScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -41176,10 +42570,15 @@ export namespace Prisma {
     isAnonymous: 'isAnonymous',
     isAnonymousToOfficer: 'isAnonymousToOfficer',
     sectionId: 'sectionId',
+    subject: 'subject',
     serviceAvailed: 'serviceAvailed',
     description: 'description',
+    visitedDC: 'visitedDC',
+    visitDate: 'visitDate',
     assignedOfficerId: 'assignedOfficerId',
     escalatedToId: 'escalatedToId',
+    assignedById: 'assignedById',
+    assignedAt: 'assignedAt',
     submissionChannel: 'submissionChannel',
     whatsappNumber: 'whatsappNumber',
     slaDeadline: 'slaDeadline',
@@ -41188,9 +42587,12 @@ export namespace Prisma {
     resolvedAt: 'resolvedAt',
     closedAt: 'closedAt',
     slaBreachedAt: 'slaBreachedAt',
+    queuedAt: 'queuedAt',
     resolutionMessage: 'resolutionMessage',
     isAppeal: 'isAppeal',
     originalTicketId: 'originalTicketId',
+    isDraft: 'isDraft',
+    lastSavedAt: 'lastSavedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -41706,6 +43108,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketListRelationFilter
     samadhanTicketsAsOfficer?: SamadhanTicketListRelationFilter
     samadhanTicketsEscalated?: SamadhanTicketListRelationFilter
+    samadhanTicketsAssigned?: SamadhanTicketListRelationFilter
     samadhanAttachmentsUploaded?: SamadhanAttachmentListRelationFilter
     samadhanInfoRequests?: SamadhanInfoRequestListRelationFilter
     samadhanStatusChanges?: SamadhanStatusHistoryListRelationFilter
@@ -41746,6 +43149,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketOrderByRelationAggregateInput
     samadhanTicketsAsOfficer?: SamadhanTicketOrderByRelationAggregateInput
     samadhanTicketsEscalated?: SamadhanTicketOrderByRelationAggregateInput
+    samadhanTicketsAssigned?: SamadhanTicketOrderByRelationAggregateInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentOrderByRelationAggregateInput
     samadhanInfoRequests?: SamadhanInfoRequestOrderByRelationAggregateInput
     samadhanStatusChanges?: SamadhanStatusHistoryOrderByRelationAggregateInput
@@ -41789,6 +43193,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketListRelationFilter
     samadhanTicketsAsOfficer?: SamadhanTicketListRelationFilter
     samadhanTicketsEscalated?: SamadhanTicketListRelationFilter
+    samadhanTicketsAssigned?: SamadhanTicketListRelationFilter
     samadhanAttachmentsUploaded?: SamadhanAttachmentListRelationFilter
     samadhanInfoRequests?: SamadhanInfoRequestListRelationFilter
     samadhanStatusChanges?: SamadhanStatusHistoryListRelationFilter
@@ -42127,6 +43532,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Section"> | Date | string
     officers?: OfficerProfileListRelationFilter
     samadhanTickets?: SamadhanTicketListRelationFilter
+    samadhanServices?: SamadhanServiceListRelationFilter
   }
 
   export type SectionOrderByWithRelationInput = {
@@ -42138,6 +43544,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     officers?: OfficerProfileOrderByRelationAggregateInput
     samadhanTickets?: SamadhanTicketOrderByRelationAggregateInput
+    samadhanServices?: SamadhanServiceOrderByRelationAggregateInput
   }
 
   export type SectionWhereUniqueInput = Prisma.AtLeast<{
@@ -42152,6 +43559,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Section"> | Date | string
     officers?: OfficerProfileListRelationFilter
     samadhanTickets?: SamadhanTicketListRelationFilter
+    samadhanServices?: SamadhanServiceListRelationFilter
   }, "id" | "name">
 
   export type SectionOrderByWithAggregationInput = {
@@ -42176,6 +43584,72 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"Section"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Section"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Section"> | Date | string
+  }
+
+  export type SamadhanServiceWhereInput = {
+    AND?: SamadhanServiceWhereInput | SamadhanServiceWhereInput[]
+    OR?: SamadhanServiceWhereInput[]
+    NOT?: SamadhanServiceWhereInput | SamadhanServiceWhereInput[]
+    id?: StringFilter<"SamadhanService"> | string
+    name?: StringFilter<"SamadhanService"> | string
+    description?: StringNullableFilter<"SamadhanService"> | string | null
+    sectionId?: StringFilter<"SamadhanService"> | string
+    isActive?: BoolFilter<"SamadhanService"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanService"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanService"> | Date | string
+    section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
+  }
+
+  export type SamadhanServiceOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    sectionId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    section?: SectionOrderByWithRelationInput
+  }
+
+  export type SamadhanServiceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name_sectionId?: SamadhanServiceNameSectionIdCompoundUniqueInput
+    AND?: SamadhanServiceWhereInput | SamadhanServiceWhereInput[]
+    OR?: SamadhanServiceWhereInput[]
+    NOT?: SamadhanServiceWhereInput | SamadhanServiceWhereInput[]
+    name?: StringFilter<"SamadhanService"> | string
+    description?: StringNullableFilter<"SamadhanService"> | string | null
+    sectionId?: StringFilter<"SamadhanService"> | string
+    isActive?: BoolFilter<"SamadhanService"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanService"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanService"> | Date | string
+    section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
+  }, "id" | "name_sectionId">
+
+  export type SamadhanServiceOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    sectionId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SamadhanServiceCountOrderByAggregateInput
+    _max?: SamadhanServiceMaxOrderByAggregateInput
+    _min?: SamadhanServiceMinOrderByAggregateInput
+  }
+
+  export type SamadhanServiceScalarWhereWithAggregatesInput = {
+    AND?: SamadhanServiceScalarWhereWithAggregatesInput | SamadhanServiceScalarWhereWithAggregatesInput[]
+    OR?: SamadhanServiceScalarWhereWithAggregatesInput[]
+    NOT?: SamadhanServiceScalarWhereWithAggregatesInput | SamadhanServiceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SamadhanService"> | string
+    name?: StringWithAggregatesFilter<"SamadhanService"> | string
+    description?: StringNullableWithAggregatesFilter<"SamadhanService"> | string | null
+    sectionId?: StringWithAggregatesFilter<"SamadhanService"> | string
+    isActive?: BoolWithAggregatesFilter<"SamadhanService"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"SamadhanService"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SamadhanService"> | Date | string
   }
 
   export type DepartmentWhereInput = {
@@ -43570,10 +45044,15 @@ export namespace Prisma {
     isAnonymous?: BoolFilter<"SamadhanTicket"> | boolean
     isAnonymousToOfficer?: BoolFilter<"SamadhanTicket"> | boolean
     sectionId?: StringFilter<"SamadhanTicket"> | string
+    subject?: StringNullableFilter<"SamadhanTicket"> | string | null
     serviceAvailed?: StringNullableFilter<"SamadhanTicket"> | string | null
     description?: StringFilter<"SamadhanTicket"> | string
+    visitedDC?: BoolNullableFilter<"SamadhanTicket"> | boolean | null
+    visitDate?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     assignedOfficerId?: StringNullableFilter<"SamadhanTicket"> | string | null
     escalatedToId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    assignedById?: StringNullableFilter<"SamadhanTicket"> | string | null
+    assignedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFilter<"SamadhanTicket"> | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: StringNullableFilter<"SamadhanTicket"> | string | null
     slaDeadline?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
@@ -43582,15 +45061,19 @@ export namespace Prisma {
     resolvedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     closedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     slaBreachedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    queuedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     resolutionMessage?: StringNullableFilter<"SamadhanTicket"> | string | null
     isAppeal?: BoolFilter<"SamadhanTicket"> | boolean
     originalTicketId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    isDraft?: BoolFilter<"SamadhanTicket"> | boolean
+    lastSavedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     createdAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
     updatedAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
     citizen?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
     assignedOfficer?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     escalatedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    assignedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     originalTicket?: XOR<SamadhanTicketNullableScalarRelationFilter, SamadhanTicketWhereInput> | null
     appeals?: SamadhanTicketListRelationFilter
     attachments?: SamadhanAttachmentListRelationFilter
@@ -43613,10 +45096,15 @@ export namespace Prisma {
     isAnonymous?: SortOrder
     isAnonymousToOfficer?: SortOrder
     sectionId?: SortOrder
+    subject?: SortOrderInput | SortOrder
     serviceAvailed?: SortOrderInput | SortOrder
     description?: SortOrder
+    visitedDC?: SortOrderInput | SortOrder
+    visitDate?: SortOrderInput | SortOrder
     assignedOfficerId?: SortOrderInput | SortOrder
     escalatedToId?: SortOrderInput | SortOrder
+    assignedById?: SortOrderInput | SortOrder
+    assignedAt?: SortOrderInput | SortOrder
     submissionChannel?: SortOrder
     whatsappNumber?: SortOrderInput | SortOrder
     slaDeadline?: SortOrderInput | SortOrder
@@ -43625,15 +45113,19 @@ export namespace Prisma {
     resolvedAt?: SortOrderInput | SortOrder
     closedAt?: SortOrderInput | SortOrder
     slaBreachedAt?: SortOrderInput | SortOrder
+    queuedAt?: SortOrderInput | SortOrder
     resolutionMessage?: SortOrderInput | SortOrder
     isAppeal?: SortOrder
     originalTicketId?: SortOrderInput | SortOrder
+    isDraft?: SortOrder
+    lastSavedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     citizen?: UserOrderByWithRelationInput
     section?: SectionOrderByWithRelationInput
     assignedOfficer?: UserOrderByWithRelationInput
     escalatedTo?: UserOrderByWithRelationInput
+    assignedBy?: UserOrderByWithRelationInput
     originalTicket?: SamadhanTicketOrderByWithRelationInput
     appeals?: SamadhanTicketOrderByRelationAggregateInput
     attachments?: SamadhanAttachmentOrderByRelationAggregateInput
@@ -43659,10 +45151,15 @@ export namespace Prisma {
     isAnonymous?: BoolFilter<"SamadhanTicket"> | boolean
     isAnonymousToOfficer?: BoolFilter<"SamadhanTicket"> | boolean
     sectionId?: StringFilter<"SamadhanTicket"> | string
+    subject?: StringNullableFilter<"SamadhanTicket"> | string | null
     serviceAvailed?: StringNullableFilter<"SamadhanTicket"> | string | null
     description?: StringFilter<"SamadhanTicket"> | string
+    visitedDC?: BoolNullableFilter<"SamadhanTicket"> | boolean | null
+    visitDate?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     assignedOfficerId?: StringNullableFilter<"SamadhanTicket"> | string | null
     escalatedToId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    assignedById?: StringNullableFilter<"SamadhanTicket"> | string | null
+    assignedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFilter<"SamadhanTicket"> | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: StringNullableFilter<"SamadhanTicket"> | string | null
     slaDeadline?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
@@ -43671,15 +45168,19 @@ export namespace Prisma {
     resolvedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     closedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     slaBreachedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    queuedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     resolutionMessage?: StringNullableFilter<"SamadhanTicket"> | string | null
     isAppeal?: BoolFilter<"SamadhanTicket"> | boolean
     originalTicketId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    isDraft?: BoolFilter<"SamadhanTicket"> | boolean
+    lastSavedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     createdAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
     updatedAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
     citizen?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
     assignedOfficer?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     escalatedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    assignedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     originalTicket?: XOR<SamadhanTicketNullableScalarRelationFilter, SamadhanTicketWhereInput> | null
     appeals?: SamadhanTicketListRelationFilter
     attachments?: SamadhanAttachmentListRelationFilter
@@ -43702,10 +45203,15 @@ export namespace Prisma {
     isAnonymous?: SortOrder
     isAnonymousToOfficer?: SortOrder
     sectionId?: SortOrder
+    subject?: SortOrderInput | SortOrder
     serviceAvailed?: SortOrderInput | SortOrder
     description?: SortOrder
+    visitedDC?: SortOrderInput | SortOrder
+    visitDate?: SortOrderInput | SortOrder
     assignedOfficerId?: SortOrderInput | SortOrder
     escalatedToId?: SortOrderInput | SortOrder
+    assignedById?: SortOrderInput | SortOrder
+    assignedAt?: SortOrderInput | SortOrder
     submissionChannel?: SortOrder
     whatsappNumber?: SortOrderInput | SortOrder
     slaDeadline?: SortOrderInput | SortOrder
@@ -43714,9 +45220,12 @@ export namespace Prisma {
     resolvedAt?: SortOrderInput | SortOrder
     closedAt?: SortOrderInput | SortOrder
     slaBreachedAt?: SortOrderInput | SortOrder
+    queuedAt?: SortOrderInput | SortOrder
     resolutionMessage?: SortOrderInput | SortOrder
     isAppeal?: SortOrder
     originalTicketId?: SortOrderInput | SortOrder
+    isDraft?: SortOrder
+    lastSavedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: SamadhanTicketCountOrderByAggregateInput
@@ -43741,10 +45250,15 @@ export namespace Prisma {
     isAnonymous?: BoolWithAggregatesFilter<"SamadhanTicket"> | boolean
     isAnonymousToOfficer?: BoolWithAggregatesFilter<"SamadhanTicket"> | boolean
     sectionId?: StringWithAggregatesFilter<"SamadhanTicket"> | string
+    subject?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
     serviceAvailed?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
     description?: StringWithAggregatesFilter<"SamadhanTicket"> | string
+    visitedDC?: BoolNullableWithAggregatesFilter<"SamadhanTicket"> | boolean | null
+    visitDate?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
     assignedOfficerId?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
     escalatedToId?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    assignedById?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    assignedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelWithAggregatesFilter<"SamadhanTicket"> | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
     slaDeadline?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
@@ -43753,9 +45267,12 @@ export namespace Prisma {
     resolvedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
     closedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
     slaBreachedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
+    queuedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
     resolutionMessage?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
     isAppeal?: BoolWithAggregatesFilter<"SamadhanTicket"> | boolean
     originalTicketId?: StringNullableWithAggregatesFilter<"SamadhanTicket"> | string | null
+    isDraft?: BoolWithAggregatesFilter<"SamadhanTicket"> | boolean
+    lastSavedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanTicket"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"SamadhanTicket"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"SamadhanTicket"> | Date | string
   }
@@ -44374,6 +45891,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -44414,6 +45932,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -44454,6 +45973,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -44494,6 +46014,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -44853,6 +46374,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     officers?: OfficerProfileCreateNestedManyWithoutSectionInput
     samadhanTickets?: SamadhanTicketCreateNestedManyWithoutSectionInput
+    samadhanServices?: SamadhanServiceCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUncheckedCreateInput = {
@@ -44864,6 +46386,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     officers?: OfficerProfileUncheckedCreateNestedManyWithoutSectionInput
     samadhanTickets?: SamadhanTicketUncheckedCreateNestedManyWithoutSectionInput
+    samadhanServices?: SamadhanServiceUncheckedCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUpdateInput = {
@@ -44875,6 +46398,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officers?: OfficerProfileUpdateManyWithoutSectionNestedInput
     samadhanTickets?: SamadhanTicketUpdateManyWithoutSectionNestedInput
+    samadhanServices?: SamadhanServiceUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionUncheckedUpdateInput = {
@@ -44886,6 +46410,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officers?: OfficerProfileUncheckedUpdateManyWithoutSectionNestedInput
     samadhanTickets?: SamadhanTicketUncheckedUpdateManyWithoutSectionNestedInput
+    samadhanServices?: SamadhanServiceUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionCreateManyInput = {
@@ -44910,6 +46435,75 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    section: SectionCreateNestedOneWithoutSamadhanServicesInput
+  }
+
+  export type SamadhanServiceUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    sectionId: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    section?: SectionUpdateOneRequiredWithoutSamadhanServicesNestedInput
+  }
+
+  export type SamadhanServiceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionId?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    sectionId: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionId?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46390,8 +47984,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -46400,14 +47998,18 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
     section: SectionCreateNestedOneWithoutSamadhanTicketsInput
     assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
     escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
     appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
     attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
@@ -46430,10 +48032,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -46442,9 +48049,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
@@ -46466,8 +48076,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -46476,14 +48090,18 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
     section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
     assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
     escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
     appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
     attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
@@ -46506,10 +48124,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -46518,9 +48141,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
@@ -46544,10 +48170,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -46556,9 +48187,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -46575,8 +48209,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -46585,8 +48223,11 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -46605,10 +48246,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -46617,9 +48263,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -47729,7 +49378,17 @@ export namespace Prisma {
     none?: OfficerProfileWhereInput
   }
 
+  export type SamadhanServiceListRelationFilter = {
+    every?: SamadhanServiceWhereInput
+    some?: SamadhanServiceWhereInput
+    none?: SamadhanServiceWhereInput
+  }
+
   export type OfficerProfileOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SamadhanServiceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -47755,6 +49414,46 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SectionScalarRelationFilter = {
+    is?: SectionWhereInput
+    isNot?: SectionWhereInput
+  }
+
+  export type SamadhanServiceNameSectionIdCompoundUniqueInput = {
+    name: string
+    sectionId: string
+  }
+
+  export type SamadhanServiceCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    sectionId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanServiceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    sectionId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanServiceMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    sectionId?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -48628,16 +50327,16 @@ export namespace Prisma {
     not?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel> | $Enums.SamadhanTicketStatus
   }
 
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type EnumSamadhanSubmissionChannelFilter<$PrismaModel = never> = {
     equals?: $Enums.SamadhanSubmissionChannel | EnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
     in?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
     notIn?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
     not?: NestedEnumSamadhanSubmissionChannelFilter<$PrismaModel> | $Enums.SamadhanSubmissionChannel
-  }
-
-  export type SectionScalarRelationFilter = {
-    is?: SectionWhereInput
-    isNot?: SectionWhereInput
   }
 
   export type SamadhanTicketNullableScalarRelationFilter = {
@@ -48659,10 +50358,15 @@ export namespace Prisma {
     isAnonymous?: SortOrder
     isAnonymousToOfficer?: SortOrder
     sectionId?: SortOrder
+    subject?: SortOrder
     serviceAvailed?: SortOrder
     description?: SortOrder
+    visitedDC?: SortOrder
+    visitDate?: SortOrder
     assignedOfficerId?: SortOrder
     escalatedToId?: SortOrder
+    assignedById?: SortOrder
+    assignedAt?: SortOrder
     submissionChannel?: SortOrder
     whatsappNumber?: SortOrder
     slaDeadline?: SortOrder
@@ -48671,9 +50375,12 @@ export namespace Prisma {
     resolvedAt?: SortOrder
     closedAt?: SortOrder
     slaBreachedAt?: SortOrder
+    queuedAt?: SortOrder
     resolutionMessage?: SortOrder
     isAppeal?: SortOrder
     originalTicketId?: SortOrder
+    isDraft?: SortOrder
+    lastSavedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -48692,10 +50399,15 @@ export namespace Prisma {
     isAnonymous?: SortOrder
     isAnonymousToOfficer?: SortOrder
     sectionId?: SortOrder
+    subject?: SortOrder
     serviceAvailed?: SortOrder
     description?: SortOrder
+    visitedDC?: SortOrder
+    visitDate?: SortOrder
     assignedOfficerId?: SortOrder
     escalatedToId?: SortOrder
+    assignedById?: SortOrder
+    assignedAt?: SortOrder
     submissionChannel?: SortOrder
     whatsappNumber?: SortOrder
     slaDeadline?: SortOrder
@@ -48704,9 +50416,12 @@ export namespace Prisma {
     resolvedAt?: SortOrder
     closedAt?: SortOrder
     slaBreachedAt?: SortOrder
+    queuedAt?: SortOrder
     resolutionMessage?: SortOrder
     isAppeal?: SortOrder
     originalTicketId?: SortOrder
+    isDraft?: SortOrder
+    lastSavedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -48725,10 +50440,15 @@ export namespace Prisma {
     isAnonymous?: SortOrder
     isAnonymousToOfficer?: SortOrder
     sectionId?: SortOrder
+    subject?: SortOrder
     serviceAvailed?: SortOrder
     description?: SortOrder
+    visitedDC?: SortOrder
+    visitDate?: SortOrder
     assignedOfficerId?: SortOrder
     escalatedToId?: SortOrder
+    assignedById?: SortOrder
+    assignedAt?: SortOrder
     submissionChannel?: SortOrder
     whatsappNumber?: SortOrder
     slaDeadline?: SortOrder
@@ -48737,9 +50457,12 @@ export namespace Prisma {
     resolvedAt?: SortOrder
     closedAt?: SortOrder
     slaBreachedAt?: SortOrder
+    queuedAt?: SortOrder
     resolutionMessage?: SortOrder
     isAppeal?: SortOrder
     originalTicketId?: SortOrder
+    isDraft?: SortOrder
+    lastSavedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -48772,6 +50495,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel>
     _max?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel>
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type EnumSamadhanSubmissionChannelWithAggregatesFilter<$PrismaModel = never> = {
@@ -49244,6 +50975,13 @@ export namespace Prisma {
     connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
   }
 
+  export type SamadhanTicketCreateNestedManyWithoutAssignedByInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAssignedByInput, SamadhanTicketUncheckedCreateWithoutAssignedByInput> | SamadhanTicketCreateWithoutAssignedByInput[] | SamadhanTicketUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAssignedByInput | SamadhanTicketCreateOrConnectWithoutAssignedByInput[]
+    createMany?: SamadhanTicketCreateManyAssignedByInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
   export type SamadhanAttachmentCreateNestedManyWithoutUploadedByInput = {
     create?: XOR<SamadhanAttachmentCreateWithoutUploadedByInput, SamadhanAttachmentUncheckedCreateWithoutUploadedByInput> | SamadhanAttachmentCreateWithoutUploadedByInput[] | SamadhanAttachmentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutUploadedByInput | SamadhanAttachmentCreateOrConnectWithoutUploadedByInput[]
@@ -49427,6 +51165,13 @@ export namespace Prisma {
     create?: XOR<SamadhanTicketCreateWithoutEscalatedToInput, SamadhanTicketUncheckedCreateWithoutEscalatedToInput> | SamadhanTicketCreateWithoutEscalatedToInput[] | SamadhanTicketUncheckedCreateWithoutEscalatedToInput[]
     connectOrCreate?: SamadhanTicketCreateOrConnectWithoutEscalatedToInput | SamadhanTicketCreateOrConnectWithoutEscalatedToInput[]
     createMany?: SamadhanTicketCreateManyEscalatedToInputEnvelope
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
+  export type SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAssignedByInput, SamadhanTicketUncheckedCreateWithoutAssignedByInput> | SamadhanTicketCreateWithoutAssignedByInput[] | SamadhanTicketUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAssignedByInput | SamadhanTicketCreateOrConnectWithoutAssignedByInput[]
+    createMany?: SamadhanTicketCreateManyAssignedByInputEnvelope
     connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
   }
 
@@ -49785,6 +51530,20 @@ export namespace Prisma {
     connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
     update?: SamadhanTicketUpdateWithWhereUniqueWithoutEscalatedToInput | SamadhanTicketUpdateWithWhereUniqueWithoutEscalatedToInput[]
     updateMany?: SamadhanTicketUpdateManyWithWhereWithoutEscalatedToInput | SamadhanTicketUpdateManyWithWhereWithoutEscalatedToInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
+  export type SamadhanTicketUpdateManyWithoutAssignedByNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAssignedByInput, SamadhanTicketUncheckedCreateWithoutAssignedByInput> | SamadhanTicketCreateWithoutAssignedByInput[] | SamadhanTicketUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAssignedByInput | SamadhanTicketCreateOrConnectWithoutAssignedByInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutAssignedByInput | SamadhanTicketUpsertWithWhereUniqueWithoutAssignedByInput[]
+    createMany?: SamadhanTicketCreateManyAssignedByInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutAssignedByInput | SamadhanTicketUpdateWithWhereUniqueWithoutAssignedByInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutAssignedByInput | SamadhanTicketUpdateManyWithWhereWithoutAssignedByInput[]
     deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
   }
 
@@ -50154,6 +51913,20 @@ export namespace Prisma {
     deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
   }
 
+  export type SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput = {
+    create?: XOR<SamadhanTicketCreateWithoutAssignedByInput, SamadhanTicketUncheckedCreateWithoutAssignedByInput> | SamadhanTicketCreateWithoutAssignedByInput[] | SamadhanTicketUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAssignedByInput | SamadhanTicketCreateOrConnectWithoutAssignedByInput[]
+    upsert?: SamadhanTicketUpsertWithWhereUniqueWithoutAssignedByInput | SamadhanTicketUpsertWithWhereUniqueWithoutAssignedByInput[]
+    createMany?: SamadhanTicketCreateManyAssignedByInputEnvelope
+    set?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    disconnect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    delete?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+    update?: SamadhanTicketUpdateWithWhereUniqueWithoutAssignedByInput | SamadhanTicketUpdateWithWhereUniqueWithoutAssignedByInput[]
+    updateMany?: SamadhanTicketUpdateManyWithWhereWithoutAssignedByInput | SamadhanTicketUpdateManyWithWhereWithoutAssignedByInput[]
+    deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
   export type SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput = {
     create?: XOR<SamadhanAttachmentCreateWithoutUploadedByInput, SamadhanAttachmentUncheckedCreateWithoutUploadedByInput> | SamadhanAttachmentCreateWithoutUploadedByInput[] | SamadhanAttachmentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SamadhanAttachmentCreateOrConnectWithoutUploadedByInput | SamadhanAttachmentCreateOrConnectWithoutUploadedByInput[]
@@ -50466,6 +52239,13 @@ export namespace Prisma {
     connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
   }
 
+  export type SamadhanServiceCreateNestedManyWithoutSectionInput = {
+    create?: XOR<SamadhanServiceCreateWithoutSectionInput, SamadhanServiceUncheckedCreateWithoutSectionInput> | SamadhanServiceCreateWithoutSectionInput[] | SamadhanServiceUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: SamadhanServiceCreateOrConnectWithoutSectionInput | SamadhanServiceCreateOrConnectWithoutSectionInput[]
+    createMany?: SamadhanServiceCreateManySectionInputEnvelope
+    connect?: SamadhanServiceWhereUniqueInput | SamadhanServiceWhereUniqueInput[]
+  }
+
   export type OfficerProfileUncheckedCreateNestedManyWithoutSectionInput = {
     create?: XOR<OfficerProfileCreateWithoutSectionInput, OfficerProfileUncheckedCreateWithoutSectionInput> | OfficerProfileCreateWithoutSectionInput[] | OfficerProfileUncheckedCreateWithoutSectionInput[]
     connectOrCreate?: OfficerProfileCreateOrConnectWithoutSectionInput | OfficerProfileCreateOrConnectWithoutSectionInput[]
@@ -50478,6 +52258,13 @@ export namespace Prisma {
     connectOrCreate?: SamadhanTicketCreateOrConnectWithoutSectionInput | SamadhanTicketCreateOrConnectWithoutSectionInput[]
     createMany?: SamadhanTicketCreateManySectionInputEnvelope
     connect?: SamadhanTicketWhereUniqueInput | SamadhanTicketWhereUniqueInput[]
+  }
+
+  export type SamadhanServiceUncheckedCreateNestedManyWithoutSectionInput = {
+    create?: XOR<SamadhanServiceCreateWithoutSectionInput, SamadhanServiceUncheckedCreateWithoutSectionInput> | SamadhanServiceCreateWithoutSectionInput[] | SamadhanServiceUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: SamadhanServiceCreateOrConnectWithoutSectionInput | SamadhanServiceCreateOrConnectWithoutSectionInput[]
+    createMany?: SamadhanServiceCreateManySectionInputEnvelope
+    connect?: SamadhanServiceWhereUniqueInput | SamadhanServiceWhereUniqueInput[]
   }
 
   export type OfficerProfileUpdateManyWithoutSectionNestedInput = {
@@ -50508,6 +52295,20 @@ export namespace Prisma {
     deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
   }
 
+  export type SamadhanServiceUpdateManyWithoutSectionNestedInput = {
+    create?: XOR<SamadhanServiceCreateWithoutSectionInput, SamadhanServiceUncheckedCreateWithoutSectionInput> | SamadhanServiceCreateWithoutSectionInput[] | SamadhanServiceUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: SamadhanServiceCreateOrConnectWithoutSectionInput | SamadhanServiceCreateOrConnectWithoutSectionInput[]
+    upsert?: SamadhanServiceUpsertWithWhereUniqueWithoutSectionInput | SamadhanServiceUpsertWithWhereUniqueWithoutSectionInput[]
+    createMany?: SamadhanServiceCreateManySectionInputEnvelope
+    set?: SamadhanServiceWhereUniqueInput | SamadhanServiceWhereUniqueInput[]
+    disconnect?: SamadhanServiceWhereUniqueInput | SamadhanServiceWhereUniqueInput[]
+    delete?: SamadhanServiceWhereUniqueInput | SamadhanServiceWhereUniqueInput[]
+    connect?: SamadhanServiceWhereUniqueInput | SamadhanServiceWhereUniqueInput[]
+    update?: SamadhanServiceUpdateWithWhereUniqueWithoutSectionInput | SamadhanServiceUpdateWithWhereUniqueWithoutSectionInput[]
+    updateMany?: SamadhanServiceUpdateManyWithWhereWithoutSectionInput | SamadhanServiceUpdateManyWithWhereWithoutSectionInput[]
+    deleteMany?: SamadhanServiceScalarWhereInput | SamadhanServiceScalarWhereInput[]
+  }
+
   export type OfficerProfileUncheckedUpdateManyWithoutSectionNestedInput = {
     create?: XOR<OfficerProfileCreateWithoutSectionInput, OfficerProfileUncheckedCreateWithoutSectionInput> | OfficerProfileCreateWithoutSectionInput[] | OfficerProfileUncheckedCreateWithoutSectionInput[]
     connectOrCreate?: OfficerProfileCreateOrConnectWithoutSectionInput | OfficerProfileCreateOrConnectWithoutSectionInput[]
@@ -50534,6 +52335,34 @@ export namespace Prisma {
     update?: SamadhanTicketUpdateWithWhereUniqueWithoutSectionInput | SamadhanTicketUpdateWithWhereUniqueWithoutSectionInput[]
     updateMany?: SamadhanTicketUpdateManyWithWhereWithoutSectionInput | SamadhanTicketUpdateManyWithWhereWithoutSectionInput[]
     deleteMany?: SamadhanTicketScalarWhereInput | SamadhanTicketScalarWhereInput[]
+  }
+
+  export type SamadhanServiceUncheckedUpdateManyWithoutSectionNestedInput = {
+    create?: XOR<SamadhanServiceCreateWithoutSectionInput, SamadhanServiceUncheckedCreateWithoutSectionInput> | SamadhanServiceCreateWithoutSectionInput[] | SamadhanServiceUncheckedCreateWithoutSectionInput[]
+    connectOrCreate?: SamadhanServiceCreateOrConnectWithoutSectionInput | SamadhanServiceCreateOrConnectWithoutSectionInput[]
+    upsert?: SamadhanServiceUpsertWithWhereUniqueWithoutSectionInput | SamadhanServiceUpsertWithWhereUniqueWithoutSectionInput[]
+    createMany?: SamadhanServiceCreateManySectionInputEnvelope
+    set?: SamadhanServiceWhereUniqueInput | SamadhanServiceWhereUniqueInput[]
+    disconnect?: SamadhanServiceWhereUniqueInput | SamadhanServiceWhereUniqueInput[]
+    delete?: SamadhanServiceWhereUniqueInput | SamadhanServiceWhereUniqueInput[]
+    connect?: SamadhanServiceWhereUniqueInput | SamadhanServiceWhereUniqueInput[]
+    update?: SamadhanServiceUpdateWithWhereUniqueWithoutSectionInput | SamadhanServiceUpdateWithWhereUniqueWithoutSectionInput[]
+    updateMany?: SamadhanServiceUpdateManyWithWhereWithoutSectionInput | SamadhanServiceUpdateManyWithWhereWithoutSectionInput[]
+    deleteMany?: SamadhanServiceScalarWhereInput | SamadhanServiceScalarWhereInput[]
+  }
+
+  export type SectionCreateNestedOneWithoutSamadhanServicesInput = {
+    create?: XOR<SectionCreateWithoutSamadhanServicesInput, SectionUncheckedCreateWithoutSamadhanServicesInput>
+    connectOrCreate?: SectionCreateOrConnectWithoutSamadhanServicesInput
+    connect?: SectionWhereUniqueInput
+  }
+
+  export type SectionUpdateOneRequiredWithoutSamadhanServicesNestedInput = {
+    create?: XOR<SectionCreateWithoutSamadhanServicesInput, SectionUncheckedCreateWithoutSamadhanServicesInput>
+    connectOrCreate?: SectionCreateOrConnectWithoutSamadhanServicesInput
+    upsert?: SectionUpsertWithoutSamadhanServicesInput
+    connect?: SectionWhereUniqueInput
+    update?: XOR<XOR<SectionUpdateToOneWithWhereWithoutSamadhanServicesInput, SectionUpdateWithoutSamadhanServicesInput>, SectionUncheckedUpdateWithoutSamadhanServicesInput>
   }
 
   export type ApplicationCreateNestedManyWithoutDepartmentInput = {
@@ -51464,6 +53293,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutSamadhanTicketsAssignedInput = {
+    create?: XOR<UserCreateWithoutSamadhanTicketsAssignedInput, UserUncheckedCreateWithoutSamadhanTicketsAssignedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanTicketsAssignedInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type SamadhanTicketCreateNestedOneWithoutAppealsInput = {
     create?: XOR<SamadhanTicketCreateWithoutAppealsInput, SamadhanTicketUncheckedCreateWithoutAppealsInput>
     connectOrCreate?: SamadhanTicketCreateOrConnectWithoutAppealsInput
@@ -51552,6 +53387,10 @@ export namespace Prisma {
     set?: $Enums.SamadhanTicketStatus
   }
 
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
   export type EnumSamadhanSubmissionChannelFieldUpdateOperationsInput = {
     set?: $Enums.SamadhanSubmissionChannel
   }
@@ -51592,6 +53431,16 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSamadhanTicketsEscalatedInput, UserUpdateWithoutSamadhanTicketsEscalatedInput>, UserUncheckedUpdateWithoutSamadhanTicketsEscalatedInput>
+  }
+
+  export type UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput = {
+    create?: XOR<UserCreateWithoutSamadhanTicketsAssignedInput, UserUncheckedCreateWithoutSamadhanTicketsAssignedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSamadhanTicketsAssignedInput
+    upsert?: UserUpsertWithoutSamadhanTicketsAssignedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSamadhanTicketsAssignedInput, UserUpdateWithoutSamadhanTicketsAssignedInput>, UserUncheckedUpdateWithoutSamadhanTicketsAssignedInput>
   }
 
   export type SamadhanTicketUpdateOneWithoutAppealsNestedInput = {
@@ -52273,6 +54122,11 @@ export namespace Prisma {
     not?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel> | $Enums.SamadhanTicketStatus
   }
 
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type NestedEnumSamadhanSubmissionChannelFilter<$PrismaModel = never> = {
     equals?: $Enums.SamadhanSubmissionChannel | EnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
     in?: $Enums.SamadhanSubmissionChannel[] | ListEnumSamadhanSubmissionChannelFieldRefInput<$PrismaModel>
@@ -52308,6 +54162,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel>
     _max?: NestedEnumSamadhanTicketStatusFilter<$PrismaModel>
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumSamadhanSubmissionChannelWithAggregatesFilter<$PrismaModel = never> = {
@@ -52387,6 +54249,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -52426,6 +54289,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -52481,6 +54345,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -52520,6 +54385,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -53267,8 +55133,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -53277,13 +55147,17 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     section: SectionCreateNestedOneWithoutSamadhanTicketsInput
     assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
     escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
     appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
     attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
@@ -53305,10 +55179,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -53317,9 +55196,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
@@ -53351,8 +55233,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -53361,13 +55247,17 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
     section: SectionCreateNestedOneWithoutSamadhanTicketsInput
     escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
     appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
     attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
@@ -53390,9 +55280,14 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -53401,9 +55296,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
@@ -53435,8 +55333,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -53445,13 +55347,17 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
     section: SectionCreateNestedOneWithoutSamadhanTicketsInput
     assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
     appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
     attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
@@ -53474,9 +55380,14 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -53485,9 +55396,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
@@ -53504,6 +55418,106 @@ export namespace Prisma {
 
   export type SamadhanTicketCreateManyEscalatedToInputEnvelope = {
     data: SamadhanTicketCreateManyEscalatedToInput | SamadhanTicketCreateManyEscalatedToInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanTicketCreateWithoutAssignedByInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    subject?: string | null
+    serviceAvailed?: string | null
+    description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
+    section: SectionCreateNestedOneWithoutSamadhanTicketsInput
+    assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
+    escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
+    appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketUncheckedCreateWithoutAssignedByInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    subject?: string | null
+    serviceAvailed?: string | null
+    description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    assignedAt?: Date | string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
+    attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
+    infoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutTicketInput
+    statusHistory?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutTicketInput
+    internalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type SamadhanTicketCreateOrConnectWithoutAssignedByInput = {
+    where: SamadhanTicketWhereUniqueInput
+    create: XOR<SamadhanTicketCreateWithoutAssignedByInput, SamadhanTicketUncheckedCreateWithoutAssignedByInput>
+  }
+
+  export type SamadhanTicketCreateManyAssignedByInputEnvelope = {
+    data: SamadhanTicketCreateManyAssignedByInput | SamadhanTicketCreateManyAssignedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -54246,10 +56260,15 @@ export namespace Prisma {
     isAnonymous?: BoolFilter<"SamadhanTicket"> | boolean
     isAnonymousToOfficer?: BoolFilter<"SamadhanTicket"> | boolean
     sectionId?: StringFilter<"SamadhanTicket"> | string
+    subject?: StringNullableFilter<"SamadhanTicket"> | string | null
     serviceAvailed?: StringNullableFilter<"SamadhanTicket"> | string | null
     description?: StringFilter<"SamadhanTicket"> | string
+    visitedDC?: BoolNullableFilter<"SamadhanTicket"> | boolean | null
+    visitDate?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     assignedOfficerId?: StringNullableFilter<"SamadhanTicket"> | string | null
     escalatedToId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    assignedById?: StringNullableFilter<"SamadhanTicket"> | string | null
+    assignedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFilter<"SamadhanTicket"> | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: StringNullableFilter<"SamadhanTicket"> | string | null
     slaDeadline?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
@@ -54258,9 +56277,12 @@ export namespace Prisma {
     resolvedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     closedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     slaBreachedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
+    queuedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     resolutionMessage?: StringNullableFilter<"SamadhanTicket"> | string | null
     isAppeal?: BoolFilter<"SamadhanTicket"> | boolean
     originalTicketId?: StringNullableFilter<"SamadhanTicket"> | string | null
+    isDraft?: BoolFilter<"SamadhanTicket"> | boolean
+    lastSavedAt?: DateTimeNullableFilter<"SamadhanTicket"> | Date | string | null
     createdAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
     updatedAt?: DateTimeFilter<"SamadhanTicket"> | Date | string
   }
@@ -54295,6 +56317,22 @@ export namespace Prisma {
   export type SamadhanTicketUpdateManyWithWhereWithoutEscalatedToInput = {
     where: SamadhanTicketScalarWhereInput
     data: XOR<SamadhanTicketUpdateManyMutationInput, SamadhanTicketUncheckedUpdateManyWithoutEscalatedToInput>
+  }
+
+  export type SamadhanTicketUpsertWithWhereUniqueWithoutAssignedByInput = {
+    where: SamadhanTicketWhereUniqueInput
+    update: XOR<SamadhanTicketUpdateWithoutAssignedByInput, SamadhanTicketUncheckedUpdateWithoutAssignedByInput>
+    create: XOR<SamadhanTicketCreateWithoutAssignedByInput, SamadhanTicketUncheckedCreateWithoutAssignedByInput>
+  }
+
+  export type SamadhanTicketUpdateWithWhereUniqueWithoutAssignedByInput = {
+    where: SamadhanTicketWhereUniqueInput
+    data: XOR<SamadhanTicketUpdateWithoutAssignedByInput, SamadhanTicketUncheckedUpdateWithoutAssignedByInput>
+  }
+
+  export type SamadhanTicketUpdateManyWithWhereWithoutAssignedByInput = {
+    where: SamadhanTicketScalarWhereInput
+    data: XOR<SamadhanTicketUpdateManyMutationInput, SamadhanTicketUncheckedUpdateManyWithoutAssignedByInput>
   }
 
   export type SamadhanAttachmentUpsertWithWhereUniqueWithoutUploadedByInput = {
@@ -54453,6 +56491,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -54492,6 +56531,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -54547,6 +56587,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -54586,6 +56627,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -54622,6 +56664,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     samadhanTickets?: SamadhanTicketCreateNestedManyWithoutSectionInput
+    samadhanServices?: SamadhanServiceCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUncheckedCreateWithoutOfficersInput = {
@@ -54632,6 +56675,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     samadhanTickets?: SamadhanTicketUncheckedCreateNestedManyWithoutSectionInput
+    samadhanServices?: SamadhanServiceUncheckedCreateNestedManyWithoutSectionInput
   }
 
   export type SectionCreateOrConnectWithoutOfficersInput = {
@@ -54672,6 +56716,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -54711,6 +56756,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -54757,6 +56803,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     samadhanTickets?: SamadhanTicketUpdateManyWithoutSectionNestedInput
+    samadhanServices?: SamadhanServiceUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionUncheckedUpdateWithoutOfficersInput = {
@@ -54767,6 +56814,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     samadhanTickets?: SamadhanTicketUncheckedUpdateManyWithoutSectionNestedInput
+    samadhanServices?: SamadhanServiceUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type UserUpsertWithoutOfficerProfileInput = {
@@ -54813,6 +56861,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -54852,6 +56901,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -54891,6 +56941,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -54930,6 +56981,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -55016,6 +57068,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -55055,6 +57108,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -55328,8 +57382,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -55338,13 +57396,17 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
     assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
     escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
     appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
     attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
@@ -55366,10 +57428,15 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -55378,9 +57445,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
@@ -55397,6 +57467,34 @@ export namespace Prisma {
 
   export type SamadhanTicketCreateManySectionInputEnvelope = {
     data: SamadhanTicketCreateManySectionInput | SamadhanTicketCreateManySectionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SamadhanServiceCreateWithoutSectionInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceUncheckedCreateWithoutSectionInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceCreateOrConnectWithoutSectionInput = {
+    where: SamadhanServiceWhereUniqueInput
+    create: XOR<SamadhanServiceCreateWithoutSectionInput, SamadhanServiceUncheckedCreateWithoutSectionInput>
+  }
+
+  export type SamadhanServiceCreateManySectionInputEnvelope = {
+    data: SamadhanServiceCreateManySectionInput | SamadhanServiceCreateManySectionInput[]
     skipDuplicates?: boolean
   }
 
@@ -55446,6 +57544,95 @@ export namespace Prisma {
   export type SamadhanTicketUpdateManyWithWhereWithoutSectionInput = {
     where: SamadhanTicketScalarWhereInput
     data: XOR<SamadhanTicketUpdateManyMutationInput, SamadhanTicketUncheckedUpdateManyWithoutSectionInput>
+  }
+
+  export type SamadhanServiceUpsertWithWhereUniqueWithoutSectionInput = {
+    where: SamadhanServiceWhereUniqueInput
+    update: XOR<SamadhanServiceUpdateWithoutSectionInput, SamadhanServiceUncheckedUpdateWithoutSectionInput>
+    create: XOR<SamadhanServiceCreateWithoutSectionInput, SamadhanServiceUncheckedCreateWithoutSectionInput>
+  }
+
+  export type SamadhanServiceUpdateWithWhereUniqueWithoutSectionInput = {
+    where: SamadhanServiceWhereUniqueInput
+    data: XOR<SamadhanServiceUpdateWithoutSectionInput, SamadhanServiceUncheckedUpdateWithoutSectionInput>
+  }
+
+  export type SamadhanServiceUpdateManyWithWhereWithoutSectionInput = {
+    where: SamadhanServiceScalarWhereInput
+    data: XOR<SamadhanServiceUpdateManyMutationInput, SamadhanServiceUncheckedUpdateManyWithoutSectionInput>
+  }
+
+  export type SamadhanServiceScalarWhereInput = {
+    AND?: SamadhanServiceScalarWhereInput | SamadhanServiceScalarWhereInput[]
+    OR?: SamadhanServiceScalarWhereInput[]
+    NOT?: SamadhanServiceScalarWhereInput | SamadhanServiceScalarWhereInput[]
+    id?: StringFilter<"SamadhanService"> | string
+    name?: StringFilter<"SamadhanService"> | string
+    description?: StringNullableFilter<"SamadhanService"> | string | null
+    sectionId?: StringFilter<"SamadhanService"> | string
+    isActive?: BoolFilter<"SamadhanService"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanService"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanService"> | Date | string
+  }
+
+  export type SectionCreateWithoutSamadhanServicesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    officers?: OfficerProfileCreateNestedManyWithoutSectionInput
+    samadhanTickets?: SamadhanTicketCreateNestedManyWithoutSectionInput
+  }
+
+  export type SectionUncheckedCreateWithoutSamadhanServicesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    officers?: OfficerProfileUncheckedCreateNestedManyWithoutSectionInput
+    samadhanTickets?: SamadhanTicketUncheckedCreateNestedManyWithoutSectionInput
+  }
+
+  export type SectionCreateOrConnectWithoutSamadhanServicesInput = {
+    where: SectionWhereUniqueInput
+    create: XOR<SectionCreateWithoutSamadhanServicesInput, SectionUncheckedCreateWithoutSamadhanServicesInput>
+  }
+
+  export type SectionUpsertWithoutSamadhanServicesInput = {
+    update: XOR<SectionUpdateWithoutSamadhanServicesInput, SectionUncheckedUpdateWithoutSamadhanServicesInput>
+    create: XOR<SectionCreateWithoutSamadhanServicesInput, SectionUncheckedCreateWithoutSamadhanServicesInput>
+    where?: SectionWhereInput
+  }
+
+  export type SectionUpdateToOneWithWhereWithoutSamadhanServicesInput = {
+    where?: SectionWhereInput
+    data: XOR<SectionUpdateWithoutSamadhanServicesInput, SectionUncheckedUpdateWithoutSamadhanServicesInput>
+  }
+
+  export type SectionUpdateWithoutSamadhanServicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    officers?: OfficerProfileUpdateManyWithoutSectionNestedInput
+    samadhanTickets?: SamadhanTicketUpdateManyWithoutSectionNestedInput
+  }
+
+  export type SectionUncheckedUpdateWithoutSamadhanServicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    officers?: OfficerProfileUncheckedUpdateManyWithoutSectionNestedInput
+    samadhanTickets?: SamadhanTicketUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type ApplicationCreateWithoutDepartmentInput = {
@@ -55658,6 +57845,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -55697,6 +57885,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -55764,6 +57953,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -55803,6 +57993,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -56176,6 +58367,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -56215,6 +58407,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -56294,6 +58487,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -56333,6 +58527,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -56592,6 +58787,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -56631,6 +58827,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -56765,6 +58962,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -56804,6 +59002,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -56916,6 +59115,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -56955,6 +59155,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -57089,6 +59290,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -57128,6 +59330,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -57240,6 +59443,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -57279,6 +59483,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -57471,6 +59676,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -57510,6 +59716,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -57692,6 +59899,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -57731,6 +59939,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -57775,6 +59984,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -57814,6 +60024,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -57948,6 +60159,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -57987,6 +60199,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -58037,6 +60250,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -58076,6 +60290,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -58188,6 +60403,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -58227,6 +60443,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -58271,6 +60488,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -58310,6 +60528,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -58444,6 +60663,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -58483,6 +60703,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -58533,6 +60754,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -58572,6 +60794,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -58684,6 +60907,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -58723,6 +60947,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -58857,6 +61082,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -58896,6 +61122,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -59008,6 +61235,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -59047,6 +61275,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -59181,6 +61410,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -59220,6 +61450,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -59332,6 +61563,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -59371,6 +61603,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -59505,6 +61738,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -59544,6 +61778,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -59656,6 +61891,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -59695,6 +61931,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -59739,6 +61976,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -59778,6 +62016,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -59912,6 +62151,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -59951,6 +62191,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -60001,6 +62242,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -60040,6 +62282,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -60152,6 +62395,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -60191,6 +62435,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -60235,6 +62480,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -60274,6 +62520,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -60408,6 +62655,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -60447,6 +62695,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -60497,6 +62746,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -60536,6 +62786,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -60575,6 +62826,7 @@ export namespace Prisma {
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -60614,6 +62866,7 @@ export namespace Prisma {
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -60633,6 +62886,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     officers?: OfficerProfileCreateNestedManyWithoutSectionInput
+    samadhanServices?: SamadhanServiceCreateNestedManyWithoutSectionInput
   }
 
   export type SectionUncheckedCreateWithoutSamadhanTicketsInput = {
@@ -60643,6 +62897,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     officers?: OfficerProfileUncheckedCreateNestedManyWithoutSectionInput
+    samadhanServices?: SamadhanServiceUncheckedCreateNestedManyWithoutSectionInput
   }
 
   export type SectionCreateOrConnectWithoutSamadhanTicketsInput = {
@@ -60683,6 +62938,7 @@ export namespace Prisma {
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -60722,6 +62978,7 @@ export namespace Prisma {
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -60766,6 +63023,7 @@ export namespace Prisma {
     userSettings?: UserSettingsCreateNestedOneWithoutUserInput
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -60805,6 +63063,7 @@ export namespace Prisma {
     userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -60814,6 +63073,91 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutSamadhanTicketsEscalatedInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutSamadhanTicketsEscalatedInput, UserUncheckedCreateWithoutSamadhanTicketsEscalatedInput>
+  }
+
+  export type UserCreateWithoutSamadhanTicketsAssignedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSamadhanTicketsAssignedInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    passwordHash?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    lastLoginAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    level?: number | null
+    auditLogs?: ApplicationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    validations?: ApplicationValidationUncheckedCreateNestedManyWithoutValidatedByInput
+    workflowChanges?: ApplicationWorkflowUncheckedCreateNestedManyWithoutChangedByInput
+    currentHolderFiles?: ApplicationUncheckedCreateNestedManyWithoutCurrentHolderInput
+    dispatchedApplications?: ApplicationUncheckedCreateNestedManyWithoutDispatchedByInput
+    citizenProfile?: CitizenProfileUncheckedCreateNestedOneWithoutUserInput
+    documentRequests?: DocumentRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    uploadedDocuments?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    verifiedDocuments?: DocumentUncheckedCreateNestedManyWithoutVerifiedByInput
+    forwardedFrom?: FrontdeskForwardingUncheckedCreateNestedManyWithoutFromFrontdeskInput
+    forwardedTo?: FrontdeskForwardingUncheckedCreateNestedManyWithoutToFrontdeskInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedCreateNestedManyWithoutFrontdeskUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    assignmentsGiven?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    assignmentsReceived?: OfficerAssignmentUncheckedCreateNestedManyWithoutAssignedToInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutFromOfficerInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedCreateNestedManyWithoutToOfficerInput
+    officerProfile?: OfficerProfileUncheckedCreateNestedOneWithoutUserInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedCreateNestedManyWithoutChangedByInput
+    userSettings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  }
+
+  export type UserCreateOrConnectWithoutSamadhanTicketsAssignedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSamadhanTicketsAssignedInput, UserUncheckedCreateWithoutSamadhanTicketsAssignedInput>
   }
 
   export type SamadhanTicketCreateWithoutAppealsInput = {
@@ -60828,8 +63172,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -60838,14 +63186,18 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
     section: SectionCreateNestedOneWithoutSamadhanTicketsInput
     assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
     escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
     attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
     infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
@@ -60867,10 +63219,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -60879,9 +63236,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     attachments?: SamadhanAttachmentUncheckedCreateNestedManyWithoutTicketInput
@@ -60907,8 +63267,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -60917,14 +63281,18 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
     section: SectionCreateNestedOneWithoutSamadhanTicketsInput
     assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
     escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
     attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
     infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
@@ -60946,10 +63314,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -60958,8 +63331,11 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
@@ -61151,6 +63527,7 @@ export namespace Prisma {
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -61190,6 +63567,7 @@ export namespace Prisma {
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -61215,6 +63593,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officers?: OfficerProfileUpdateManyWithoutSectionNestedInput
+    samadhanServices?: SamadhanServiceUpdateManyWithoutSectionNestedInput
   }
 
   export type SectionUncheckedUpdateWithoutSamadhanTicketsInput = {
@@ -61225,6 +63604,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officers?: OfficerProfileUncheckedUpdateManyWithoutSectionNestedInput
+    samadhanServices?: SamadhanServiceUncheckedUpdateManyWithoutSectionNestedInput
   }
 
   export type UserUpsertWithoutSamadhanTicketsAsOfficerInput = {
@@ -61271,6 +63651,7 @@ export namespace Prisma {
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -61310,6 +63691,7 @@ export namespace Prisma {
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -61360,6 +63742,7 @@ export namespace Prisma {
     userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -61399,6 +63782,98 @@ export namespace Prisma {
     userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUpsertWithoutSamadhanTicketsAssignedInput = {
+    update: XOR<UserUpdateWithoutSamadhanTicketsAssignedInput, UserUncheckedUpdateWithoutSamadhanTicketsAssignedInput>
+    create: XOR<UserCreateWithoutSamadhanTicketsAssignedInput, UserUncheckedCreateWithoutSamadhanTicketsAssignedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSamadhanTicketsAssignedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSamadhanTicketsAssignedInput, UserUncheckedUpdateWithoutSamadhanTicketsAssignedInput>
+  }
+
+  export type UserUpdateWithoutSamadhanTicketsAssignedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
+    samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
+    samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
+    samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSamadhanTicketsAssignedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    level?: NullableIntFieldUpdateOperationsInput | number | null
+    auditLogs?: ApplicationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    validations?: ApplicationValidationUncheckedUpdateManyWithoutValidatedByNestedInput
+    workflowChanges?: ApplicationWorkflowUncheckedUpdateManyWithoutChangedByNestedInput
+    currentHolderFiles?: ApplicationUncheckedUpdateManyWithoutCurrentHolderNestedInput
+    dispatchedApplications?: ApplicationUncheckedUpdateManyWithoutDispatchedByNestedInput
+    citizenProfile?: CitizenProfileUncheckedUpdateOneWithoutUserNestedInput
+    documentRequests?: DocumentRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    uploadedDocuments?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    verifiedDocuments?: DocumentUncheckedUpdateManyWithoutVerifiedByNestedInput
+    forwardedFrom?: FrontdeskForwardingUncheckedUpdateManyWithoutFromFrontdeskNestedInput
+    forwardedTo?: FrontdeskForwardingUncheckedUpdateManyWithoutToFrontdeskNestedInput
+    frontdeskAssignments?: FrontdeskOfficerUncheckedUpdateManyWithoutFrontdeskUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    assignmentsGiven?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    assignmentsReceived?: OfficerAssignmentUncheckedUpdateManyWithoutAssignedToNestedInput
+    officerForwardedFrom?: OfficerForwardingHistoryUncheckedUpdateManyWithoutFromOfficerNestedInput
+    officerForwardedTo?: OfficerForwardingHistoryUncheckedUpdateManyWithoutToOfficerNestedInput
+    officerProfile?: OfficerProfileUncheckedUpdateOneWithoutUserNestedInput
+    serviceCategoryChanges?: ServiceCategoryChangeUncheckedUpdateManyWithoutChangedByNestedInput
+    userSettings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
+    samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
+    samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -61428,8 +63903,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61438,14 +63917,18 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
     section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
     assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
     escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
     attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
     infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
@@ -61467,10 +63950,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61479,9 +63967,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
@@ -61582,8 +64073,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -61592,14 +64087,18 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
     section: SectionCreateNestedOneWithoutSamadhanTicketsInput
     assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
     escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
     appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
     infoRequests?: SamadhanInfoRequestCreateNestedManyWithoutTicketInput
@@ -61621,10 +64120,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -61633,9 +64137,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
@@ -61716,6 +64223,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
     samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
@@ -61755,6 +64263,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
     samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
@@ -61788,8 +64297,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61798,14 +64311,18 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
     section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
     assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
     escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
     appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
     infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
@@ -61827,10 +64344,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -61839,9 +64361,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
@@ -61934,6 +64459,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
     samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
@@ -61973,6 +64499,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
     samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -61990,8 +64517,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -62000,14 +64531,18 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
     section: SectionCreateNestedOneWithoutSamadhanTicketsInput
     assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
     escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
     appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
     attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
@@ -62029,10 +64564,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -62041,9 +64581,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
@@ -62091,6 +64634,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
     samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
@@ -62130,6 +64674,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
     samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
@@ -62199,8 +64744,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62209,14 +64758,18 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
     section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
     assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
     escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
     appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
     attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
@@ -62238,10 +64791,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62250,9 +64808,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
@@ -62306,6 +64867,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
     samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
@@ -62345,6 +64907,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
     samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -62378,8 +64941,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -62388,14 +64955,18 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
     section: SectionCreateNestedOneWithoutSamadhanTicketsInput
     assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
     escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
     appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
     attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
@@ -62417,10 +64988,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -62429,9 +65005,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
@@ -62479,6 +65058,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanInternalNotes?: SamadhanInternalNoteCreateNestedManyWithoutCreatedByInput
@@ -62518,6 +65098,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanInternalNotes?: SamadhanInternalNoteUncheckedCreateNestedManyWithoutCreatedByInput
@@ -62551,8 +65132,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62561,14 +65146,18 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
     section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
     assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
     escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
     appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
     attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
@@ -62590,10 +65179,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62602,9 +65196,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
@@ -62658,6 +65255,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanInternalNotes?: SamadhanInternalNoteUpdateManyWithoutCreatedByNestedInput
@@ -62697,6 +65295,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanInternalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -62714,8 +65313,12 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -62724,14 +65327,18 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     citizen?: UserCreateNestedOneWithoutSamadhanTicketsAsCitizenInput
     section: SectionCreateNestedOneWithoutSamadhanTicketsInput
     assignedOfficer?: UserCreateNestedOneWithoutSamadhanTicketsAsOfficerInput
     escalatedTo?: UserCreateNestedOneWithoutSamadhanTicketsEscalatedInput
+    assignedBy?: UserCreateNestedOneWithoutSamadhanTicketsAssignedInput
     originalTicket?: SamadhanTicketCreateNestedOneWithoutAppealsInput
     appeals?: SamadhanTicketCreateNestedManyWithoutOriginalTicketInput
     attachments?: SamadhanAttachmentCreateNestedManyWithoutTicketInput
@@ -62753,10 +65360,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -62765,9 +65377,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     appeals?: SamadhanTicketUncheckedCreateNestedManyWithoutOriginalTicketInput
@@ -62815,6 +65430,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryCreateNestedManyWithoutChangedByInput
@@ -62854,6 +65470,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedCreateNestedManyWithoutCitizenInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedOfficerInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedCreateNestedManyWithoutEscalatedToInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedCreateNestedManyWithoutAssignedByInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedCreateNestedManyWithoutUploadedByInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedCreateNestedManyWithoutRequestedByInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
@@ -62887,8 +65504,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62897,14 +65518,18 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
     section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
     assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
     escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
     appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
     attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
@@ -62926,10 +65551,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -62938,9 +65568,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
@@ -62994,6 +65627,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUpdateManyWithoutChangedByNestedInput
@@ -63033,6 +65667,7 @@ export namespace Prisma {
     samadhanTicketsAsCitizen?: SamadhanTicketUncheckedUpdateManyWithoutCitizenNestedInput
     samadhanTicketsAsOfficer?: SamadhanTicketUncheckedUpdateManyWithoutAssignedOfficerNestedInput
     samadhanTicketsEscalated?: SamadhanTicketUncheckedUpdateManyWithoutEscalatedToNestedInput
+    samadhanTicketsAssigned?: SamadhanTicketUncheckedUpdateManyWithoutAssignedByNestedInput
     samadhanAttachmentsUploaded?: SamadhanAttachmentUncheckedUpdateManyWithoutUploadedByNestedInput
     samadhanInfoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     samadhanStatusChanges?: SamadhanStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
@@ -63259,10 +65894,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -63271,9 +65911,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -63292,9 +65935,14 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -63303,9 +65951,12 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -63324,9 +65975,14 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -63335,9 +65991,52 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanTicketCreateManyAssignedByInput = {
+    id?: string
+    referenceId: string
+    queryType: $Enums.SamadhanQueryType
+    priority?: $Enums.SamadhanPriority
+    status?: $Enums.SamadhanTicketStatus
+    citizenId?: string | null
+    citizenName?: string | null
+    citizenEmail?: string | null
+    citizenPhone?: string | null
+    citizenPseudonym?: string | null
+    isAnonymous?: boolean
+    isAnonymousToOfficer?: boolean
+    sectionId: string
+    subject?: string | null
+    serviceAvailed?: string | null
+    description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
+    assignedOfficerId?: string | null
+    escalatedToId?: string | null
+    assignedAt?: Date | string | null
+    submissionChannel?: $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: string | null
+    slaDeadline?: Date | string | null
+    seenAt?: Date | string | null
+    acknowledgedAt?: Date | string | null
+    resolvedAt?: Date | string | null
+    closedAt?: Date | string | null
+    slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
+    resolutionMessage?: string | null
+    isAppeal?: boolean
+    originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -64061,8 +66760,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64071,13 +66774,17 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
     assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
     escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
     appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
     attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
@@ -64099,10 +66806,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64111,9 +66823,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
@@ -64136,10 +66851,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64148,9 +66868,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -64167,8 +66890,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64177,13 +66904,17 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
     section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
     escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
     appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
     attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
@@ -64206,9 +66937,14 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64217,9 +66953,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
@@ -64243,9 +66982,14 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64254,9 +66998,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -64273,8 +67020,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64283,13 +67034,17 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
     section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
     assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
     appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
     attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
@@ -64312,9 +67067,14 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64323,9 +67083,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
@@ -64349,9 +67112,14 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64360,9 +67128,142 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanTicketUpdateWithoutAssignedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
+    section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
+    assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
+    escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
+    appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateWithoutAssignedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
+    attachments?: SamadhanAttachmentUncheckedUpdateManyWithoutTicketNestedInput
+    infoRequests?: SamadhanInfoRequestUncheckedUpdateManyWithoutTicketNestedInput
+    statusHistory?: SamadhanStatusHistoryUncheckedUpdateManyWithoutTicketNestedInput
+    internalNotes?: SamadhanInternalNoteUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type SamadhanTicketUncheckedUpdateManyWithoutAssignedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    referenceId?: StringFieldUpdateOperationsInput | string
+    queryType?: EnumSamadhanQueryTypeFieldUpdateOperationsInput | $Enums.SamadhanQueryType
+    priority?: EnumSamadhanPriorityFieldUpdateOperationsInput | $Enums.SamadhanPriority
+    status?: EnumSamadhanTicketStatusFieldUpdateOperationsInput | $Enums.SamadhanTicketStatus
+    citizenId?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenName?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
+    isAnonymous?: BoolFieldUpdateOperationsInput | boolean
+    isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
+    escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
+    whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    seenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    acknowledgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -64735,10 +67636,15 @@ export namespace Prisma {
     citizenPseudonym?: string | null
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -64747,9 +67653,21 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
     originalTicketId?: string | null
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceCreateManySectionInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -64804,8 +67722,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64814,13 +67736,17 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
     assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
     escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     originalTicket?: SamadhanTicketUpdateOneWithoutAppealsNestedInput
     appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
     attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
@@ -64842,10 +67768,15 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64854,9 +67785,12 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
@@ -64879,10 +67813,15 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -64891,9 +67830,39 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
     originalTicketId?: NullableStringFieldUpdateOperationsInput | string | null
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceUpdateWithoutSectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceUncheckedUpdateWithoutSectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceUncheckedUpdateManyWithoutSectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -65416,10 +68385,15 @@ export namespace Prisma {
     isAnonymous?: boolean
     isAnonymousToOfficer?: boolean
     sectionId: string
+    subject?: string | null
     serviceAvailed?: string | null
     description: string
+    visitedDC?: boolean | null
+    visitDate?: Date | string | null
     assignedOfficerId?: string | null
     escalatedToId?: string | null
+    assignedById?: string | null
+    assignedAt?: Date | string | null
     submissionChannel?: $Enums.SamadhanSubmissionChannel
     whatsappNumber?: string | null
     slaDeadline?: Date | string | null
@@ -65428,8 +68402,11 @@ export namespace Prisma {
     resolvedAt?: Date | string | null
     closedAt?: Date | string | null
     slaBreachedAt?: Date | string | null
+    queuedAt?: Date | string | null
     resolutionMessage?: string | null
     isAppeal?: boolean
+    isDraft?: boolean
+    lastSavedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -65489,8 +68466,12 @@ export namespace Prisma {
     citizenPseudonym?: NullableStringFieldUpdateOperationsInput | string | null
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -65499,14 +68480,18 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     citizen?: UserUpdateOneWithoutSamadhanTicketsAsCitizenNestedInput
     section?: SectionUpdateOneRequiredWithoutSamadhanTicketsNestedInput
     assignedOfficer?: UserUpdateOneWithoutSamadhanTicketsAsOfficerNestedInput
     escalatedTo?: UserUpdateOneWithoutSamadhanTicketsEscalatedNestedInput
+    assignedBy?: UserUpdateOneWithoutSamadhanTicketsAssignedNestedInput
     appeals?: SamadhanTicketUpdateManyWithoutOriginalTicketNestedInput
     attachments?: SamadhanAttachmentUpdateManyWithoutTicketNestedInput
     infoRequests?: SamadhanInfoRequestUpdateManyWithoutTicketNestedInput
@@ -65528,10 +68513,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -65540,8 +68530,11 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     appeals?: SamadhanTicketUncheckedUpdateManyWithoutOriginalTicketNestedInput
@@ -65565,10 +68558,15 @@ export namespace Prisma {
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     isAnonymousToOfficer?: BoolFieldUpdateOperationsInput | boolean
     sectionId?: StringFieldUpdateOperationsInput | string
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
     serviceAvailed?: NullableStringFieldUpdateOperationsInput | string | null
     description?: StringFieldUpdateOperationsInput | string
+    visitedDC?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    visitDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedOfficerId?: NullableStringFieldUpdateOperationsInput | string | null
     escalatedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedById?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     submissionChannel?: EnumSamadhanSubmissionChannelFieldUpdateOperationsInput | $Enums.SamadhanSubmissionChannel
     whatsappNumber?: NullableStringFieldUpdateOperationsInput | string | null
     slaDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -65577,8 +68575,11 @@ export namespace Prisma {
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slaBreachedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    queuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     resolutionMessage?: NullableStringFieldUpdateOperationsInput | string | null
     isAppeal?: BoolFieldUpdateOperationsInput | boolean
+    isDraft?: BoolFieldUpdateOperationsInput | boolean
+    lastSavedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
