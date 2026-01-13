@@ -5,8 +5,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DIRECT_URL")
-  // url = env("DATABASE_URL")
+  // url      = env("DIRECT_URL")
+  url      = env("DATABASE_URL_MASTER")
 }
 
 model UserSettings {
@@ -451,6 +451,7 @@ enum UserRole {
   OS_RC
   RI_LEGAL
   DISPATCH_HANDLER
+  DEALING_HAND
 }
 
 enum ApplicationStatus {

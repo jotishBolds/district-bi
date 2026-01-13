@@ -29,7 +29,23 @@ import {
   Send,
   Grid3X3,
   List,
+  ChevronsUpDown,
+  Check,
 } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { ServiceCategoryBadge } from "@/components/ui/service-category-badge";
 import { ServiceCategoryEditModal } from "@/components/ui/service-category-edit-modal";
 import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
@@ -218,6 +234,7 @@ const OfficerDashboard = () => {
     instructions: "",
   });
   const [isSelfForward, setIsSelfForward] = useState(false);
+  const [officerDropdownOpen, setOfficerDropdownOpen] = useState(false);
 
   // Additional state for enhanced search and view modes
   const [searchQuery, setSearchQuery] = useState("");
@@ -3240,23 +3257,80 @@ const OfficerDashboard = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-3">
                           Select Officer to Forward To
                         </label>
-                        <select
-                          value={actionForm.forwardToOfficerId}
-                          onChange={(e) =>
-                            setActionForm({
-                              ...actionForm,
-                              forwardToOfficerId: e.target.value,
-                            })
-                          }
-                          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 focus:border-purple-500 focus:ring-purple-500 text-sm"
+                        <Popover
+                          open={officerDropdownOpen}
+                          onOpenChange={setOfficerDropdownOpen}
                         >
-                          <option value="">Choose an officer...</option>
-                          {availableOfficers.map((officer) => (
-                            <option key={officer.id} value={officer.id}>
-                              {officer.fullName} ({officer.designation})
-                            </option>
-                          ))}
-                        </select>
+                          <PopoverTrigger asChild>
+                            <button
+                              type="button"
+                              className="w-full flex items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-3 text-left text-sm focus:border-purple-500 focus:ring-purple-500 focus:outline-none"
+                            >
+                              <span
+                                className={
+                                  actionForm.forwardToOfficerId
+                                    ? "text-gray-900"
+                                    : "text-gray-500"
+                                }
+                              >
+                                {actionForm.forwardToOfficerId
+                                  ? availableOfficers.find(
+                                      (o) =>
+                                        o.id === actionForm.forwardToOfficerId
+                                    )?.fullName +
+                                    " (" +
+                                    availableOfficers.find(
+                                      (o) =>
+                                        o.id === actionForm.forwardToOfficerId
+                                    )?.designation +
+                                    ")"
+                                  : "Search and select an officer..."}
+                              </span>
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0" align="start">
+                            <Command>
+                              <CommandInput placeholder="Search officer by name or designation..." />
+                              <CommandList className="max-h-[300px]">
+                                <CommandEmpty>No officer found.</CommandEmpty>
+                                <CommandGroup>
+                                  {availableOfficers.map((officer) => (
+                                    <CommandItem
+                                      key={officer.id}
+                                      value={`${officer.fullName} ${officer.designation}`}
+                                      onSelect={() => {
+                                        setActionForm({
+                                          ...actionForm,
+                                          forwardToOfficerId: officer.id,
+                                        });
+                                        setOfficerDropdownOpen(false);
+                                      }}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          actionForm.forwardToOfficerId ===
+                                            officer.id
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                      <div className="flex flex-col">
+                                        <span className="font-medium">
+                                          {officer.fullName}
+                                        </span>
+                                        <span className="text-xs text-gray-500">
+                                          {officer.designation}
+                                        </span>
+                                      </div>
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
                       </div>
                     )}
 

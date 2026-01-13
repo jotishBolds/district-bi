@@ -163,7 +163,8 @@ export namespace $Enums {
   OS_COI_RC: 'OS_COI_RC',
   OS_RC: 'OS_RC',
   RI_LEGAL: 'RI_LEGAL',
-  DISPATCH_HANDLER: 'DISPATCH_HANDLER'
+  DISPATCH_HANDLER: 'DISPATCH_HANDLER',
+  DEALING_HAND: 'DEALING_HAND'
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]

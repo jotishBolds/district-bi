@@ -28,6 +28,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if this is a self-forward (forwarding to self)
+    const isSelfForward = toOfficerId === session.user.id;
+
     // Get the current frontdesk assignments
     const currentFrontdeskAssignments = await prisma.frontdeskOfficer.findMany({
       where: {
@@ -48,14 +51,19 @@ export async function POST(request: NextRequest) {
       allAssignments.every((assignment) => assignment.officerId === null);
 
     // If it's not a general frontdesk and has no specific assignments, deny access
-    if (!isGeneralFrontdesk && currentFrontdeskAssignments.length === 0) {
+    // But allow self-forward
+    if (
+      !isGeneralFrontdesk &&
+      currentFrontdeskAssignments.length === 0 &&
+      !isSelfForward
+    ) {
       return NextResponse.json(
         { error: "You are not assigned to any specific officers" },
         { status: 403 }
       );
     }
 
-    // Find the target officer profile by User ID
+    // Find the target user profile by User ID
     const targetOfficerProfile = await prisma.user.findUnique({
       where: { id: toOfficerId },
       include: {
@@ -63,7 +71,17 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (!targetOfficerProfile || !targetOfficerProfile.officerProfile) {
+    // For self-forward, the target is the frontdesk user themselves
+    // Allow even if they don't have an officer profile
+    if (!targetOfficerProfile) {
+      return NextResponse.json(
+        { error: "Target user not found" },
+        { status: 404 }
+      );
+    }
+
+    // Only require officer profile if not self-forward
+    if (!isSelfForward && !targetOfficerProfile.officerProfile) {
       return NextResponse.json(
         { error: "Target officer not found" },
         { status: 404 }
@@ -172,7 +190,10 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      if (!isAssignedToMyOfficers && !receivedByMe) {
+      // Check if this application is self-forwarded (current holder is this frontdesk user)
+      const isSelfForwarded = application.currentHolderId === session.user.id;
+
+      if (!isAssignedToMyOfficers && !receivedByMe && !isSelfForwarded) {
         return NextResponse.json(
           { error: "You don't have permission to forward this application" },
           { status: 403 }
@@ -192,7 +213,7 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // Update application holder to target officer
+      // Update application holder to target user
       const updatedApplication = await tx.application.update({
         where: { id: applicationId },
         data: {
@@ -201,8 +222,8 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // Create frontdesk forwarding record (only if target frontdesk exists)
-      if (targetFrontdeskAssignment) {
+      // Create frontdesk forwarding record (only if target frontdesk exists and not self-forward)
+      if (targetFrontdeskAssignment && !isSelfForward) {
         await tx.frontdeskForwarding.create({
           data: {
             applicationId,
@@ -216,16 +237,18 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // Create officer assignment record
-      await tx.officerAssignment.create({
-        data: {
-          applicationId,
-          assignedById: session.user.id,
-          assignedToId: targetOfficerProfile.id, // Use User ID
-          instructions: instructions || "Application forwarded by frontdesk",
-          priority: 1, // Always HIGH priority
-        },
-      });
+      // Create officer assignment record (skip for self-forward to avoid duplicate assignments)
+      if (!isSelfForward) {
+        await tx.officerAssignment.create({
+          data: {
+            applicationId,
+            assignedById: session.user.id,
+            assignedToId: targetOfficerProfile.id, // Use User ID
+            instructions: instructions || "Application forwarded by frontdesk",
+            priority: 1, // Always HIGH priority
+          },
+        });
+      }
 
       // Create workflow entry
       await tx.applicationWorkflow.create({
@@ -234,7 +257,11 @@ export async function POST(request: NextRequest) {
           fromStatus: application.status,
           toStatus: application.status, // Status remains same
           changedById: session.user.id,
-          comments: `Application forwarded by frontdesk to another officer`,
+          comments: isSelfForward
+            ? `Application self-forwarded by frontdesk with instructions: ${
+                instructions || "No specific instructions"
+              }`
+            : `Application forwarded by frontdesk to another officer`,
         },
       });
 
@@ -242,7 +269,9 @@ export async function POST(request: NextRequest) {
       await tx.applicationAuditLog.create({
         data: {
           applicationId,
-          action: "APPLICATION_FORWARDED_BY_FRONTDESK",
+          action: isSelfForward
+            ? "APPLICATION_SELF_FORWARDED"
+            : "APPLICATION_FORWARDED_BY_FRONTDESK",
           performedById: session.user.id,
           oldValues: { currentHolderId: application.currentHolderId },
           newValues: { currentHolderId: targetOfficerProfile.id },

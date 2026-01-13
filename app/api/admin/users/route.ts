@@ -6,7 +6,10 @@ import { authOptions } from "@/lib/auth";
 import * as bcrypt from "bcryptjs";
 import { z } from "zod";
 import { Prisma, UserRole } from "@/app/generated/prisma";
-import { OFFICER_ROLE_MAPPINGS } from "@/lib/officer-roles";
+import {
+  OFFICER_ROLE_MAPPINGS,
+  isOfficerRole as checkOfficerRole,
+} from "@/lib/officer-roles";
 
 // Schema for creating users
 const createUserSchema = z.object({
@@ -39,58 +42,9 @@ function generateRandomPassword(length = 12) {
   return password;
 }
 
-// Helper function to check if the role is an officer role
+// Use the centralized function from officer-roles.ts
 function isOfficerRole(role: UserRole) {
-  return (
-    [
-      UserRole.FRONT_DESK,
-      UserRole.DC,
-      UserRole.ADC,
-      UserRole.ADC_GTK,
-      UserRole.ADC_HQ,
-      UserRole.SDM,
-      UserRole.SDM_GTK,
-      UserRole.SDM_HQ,
-      UserRole.AC,
-      UserRole.DPO_DDMA,
-      UserRole.DD_REV,
-      UserRole.DD_ACQ,
-      UserRole.US_ADM,
-      UserRole.AO,
-      UserRole.TO_DDMA,
-      UserRole.AD_IT,
-      UserRole.US_ELECTION,
-      UserRole.OS_COI_RC,
-      UserRole.OS_RC,
-      UserRole.RI_LEGAL,
-      UserRole.RO,
-      UserRole.DYDIR,
-    ] as const
-  ).includes(
-    role as
-      | typeof UserRole.FRONT_DESK
-      | typeof UserRole.DC
-      | typeof UserRole.ADC
-      | typeof UserRole.ADC_GTK
-      | typeof UserRole.ADC_HQ
-      | typeof UserRole.SDM
-      | typeof UserRole.SDM_GTK
-      | typeof UserRole.SDM_HQ
-      | typeof UserRole.AC
-      | typeof UserRole.DPO_DDMA
-      | typeof UserRole.DD_REV
-      | typeof UserRole.DD_ACQ
-      | typeof UserRole.US_ADM
-      | typeof UserRole.AO
-      | typeof UserRole.TO_DDMA
-      | typeof UserRole.AD_IT
-      | typeof UserRole.US_ELECTION
-      | typeof UserRole.OS_COI_RC
-      | typeof UserRole.OS_RC
-      | typeof UserRole.RI_LEGAL
-      | typeof UserRole.RO
-      | typeof UserRole.DYDIR
-  );
+  return checkOfficerRole(role);
 }
 
 // GET all users

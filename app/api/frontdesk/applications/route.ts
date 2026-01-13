@@ -146,6 +146,7 @@ export async function GET(request: NextRequest) {
             id: true,
             documentType: true,
             fileName: true,
+            fileSize: true,
             isVerified: true,
             createdAt: true,
           },
@@ -210,6 +211,7 @@ export async function GET(request: NextRequest) {
             id: true,
             documentType: true,
             fileName: true,
+            fileSize: true,
             isVerified: true,
             createdAt: true,
           },
@@ -247,8 +249,22 @@ export async function GET(request: NextRequest) {
             forwarding.toFrontdeskId === session.user.id && forwarding.isActive
         ) || false;
 
-      // Application is active if it's held by my officers OR forwarded to me
-      // Even if it was previously forwarded by me, if it's back with my officers, it's active
+      // Check if application was forwarded OUT by this frontdesk but is no longer with assigned officers
+      const forwardedOutByMe =
+        app.frontdeskForwardings?.some(
+          (forwarding) =>
+            forwarding.fromFrontdeskId === session.user.id &&
+            forwarding.isActive
+        ) || false;
+
+      // Application is active ONLY if:
+      // 1. Currently held by my officers AND not forwarded out by me, OR
+      // 2. Forwarded TO this frontdesk (received from another frontdesk)
+      // If forwarded out by me and no longer with my officers, it should not be active
+      if (forwardedOutByMe && !heldByMyOfficers) {
+        return false; // Forwarded out and no longer with my officers
+      }
+
       return heldByMyOfficers || forwardedToMe;
     });
 
@@ -346,8 +362,91 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    // Get self-forwarded applications (applications where this frontdesk user is the current holder)
+    const selfForwardedByMe = await prisma.application.findMany({
+      where: {
+        AND: [
+          {
+            // Applications where current holder is this frontdesk user (self-forwarded)
+            currentHolderId: session.user.id,
+            status: {
+              in: [ApplicationStatus.IN_PROGRESS, ApplicationStatus.REOPENED],
+            },
+          },
+          searchConditions,
+        ],
+      },
+      include: {
+        serviceCategory: {
+          select: {
+            id: true,
+            name: true,
+            color: true,
+          },
+        },
+        currentHolder: {
+          include: {
+            officerProfile: true,
+          },
+        },
+        documents: {
+          select: {
+            id: true,
+            documentType: true,
+            fileName: true,
+            fileSize: true,
+            isVerified: true,
+            createdAt: true,
+          },
+        },
+        frontdeskForwardings: {
+          include: {
+            fromFrontdesk: {
+              include: {
+                citizenProfile: true,
+              },
+            },
+            toFrontdesk: {
+              include: {
+                citizenProfile: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        // Include audit log to show self-forward instructions
+        auditLogs: {
+          where: {
+            action: "APPLICATION_SELF_FORWARDED",
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+        },
+        // Include workflow to get the self-forward comments
+        workflow: {
+          where: {
+            comments: {
+              contains: "self-forwarded",
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+        },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
     // Debug categorization
     console.log("Debug - Active applications:", activeApplications.length);
+    console.log("Debug - Self-forwarded by me:", selfForwardedByMe.length);
     console.log("Debug - Forwarded out by me:", forwardedOutByMe.length);
     console.log("Debug - Received by me:", receivedByMe.length);
 
@@ -395,6 +494,7 @@ export async function GET(request: NextRequest) {
             id: true,
             documentType: true,
             fileName: true,
+            fileSize: true,
             isVerified: true,
             createdAt: true,
           },
@@ -431,6 +531,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       activeApplications: activeApplications,
+      selfForwardedByMe,
       forwardedOutByMe,
       receivedByMe,
       completedApplications,
@@ -442,10 +543,11 @@ export async function GET(request: NextRequest) {
       })),
       summary: {
         active: activeApplications.length,
+        selfForwarded: selfForwardedByMe.length,
         forwardedOut: forwardedOutByMe.length,
         received: receivedByMe.length,
         completed: completedApplications.length,
-        total: activeApplications.length,
+        total: activeApplications.length + selfForwardedByMe.length,
       },
     });
   } catch (error) {

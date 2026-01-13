@@ -51,6 +51,7 @@ import {
   Send,
   CheckCircle,
   Users,
+  User,
   ArrowRight,
   ArrowLeft,
   Activity,
@@ -155,12 +156,14 @@ interface FrontdeskAssignment {
 
 interface FrontdeskData {
   activeApplications: Application[];
+  selfForwardedByMe: Application[];
   forwardedOutByMe: Application[];
   receivedByMe: Application[];
   completedApplications: Application[];
   assignedOfficers: Officer[];
   summary: {
     active: number;
+    selfForwarded: number;
     forwardedOut: number;
     received: number;
     completed: number;
@@ -182,6 +185,7 @@ export default function FrontdeskDashboard() {
   const [instructions, setInstructions] = useState("");
   const [forwardingApp, setForwardingApp] = useState<Application | null>(null);
   const [isForwardDialogOpen, setIsForwardDialogOpen] = useState(false);
+  const [isSelfForward, setIsSelfForward] = useState(false);
   const [selectedCategoryFilter, setSelectedCategoryFilter] =
     useState<string>("all");
   const [serviceCategories, setServiceCategories] = useState<
@@ -201,6 +205,7 @@ export default function FrontdeskDashboard() {
   // Pagination state
   const [currentPage, setCurrentPage] = useState<Record<string, number>>({
     active: 1,
+    selfForward: 1,
     forwardedOut: 1,
     received: 1,
     completed: 1,
@@ -730,6 +735,7 @@ export default function FrontdeskDashboard() {
     setForwardingApp(null);
     setSelectedOfficer("");
     setInstructions("");
+    setIsSelfForward(false);
   };
 
   const handleCategoryEdit = (
@@ -770,13 +776,19 @@ export default function FrontdeskDashboard() {
   const ApplicationCard = ({
     application,
     showForwardButton = false,
+    isSelfForwardedCard = false,
   }: {
     application: Application;
     showForwardButton?: boolean;
+    isSelfForwardedCard?: boolean;
   }) => (
     <Card
       key={application.id}
-      className="mb-4 hover:shadow-md transition-shadow duration-200 border-l-4 border-l-blue-500"
+      className={`mb-4 hover:shadow-md transition-shadow duration-200 border-l-4 ${
+        isSelfForwardedCard
+          ? "border-l-blue-500 bg-blue-50/30"
+          : "border-l-blue-500"
+      }`}
     >
       <CardHeader className="pb-3">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
@@ -856,6 +868,23 @@ export default function FrontdeskDashboard() {
             </div>
           </div>
         )}
+
+      {/* Show self-forward indicator with instructions */}
+      {isSelfForwardedCard && (
+        <div className="mx-6 mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-start gap-2">
+            <User className="w-4 h-4 text-blue-600 mt-0.5" />
+            <div>
+              <p className="text-blue-700 font-medium text-sm">
+                Self-forwarded application
+              </p>
+              <p className="text-blue-600 text-xs mt-1">
+                You can forward this to an officer or keep it for later action.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <CardContent>
         <div className="space-y-4">
@@ -1299,7 +1328,7 @@ export default function FrontdeskDashboard() {
       </div> */}
 
       <Tabs defaultValue="active" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto p-1 bg-gray-100 rounded-lg">
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5 h-auto p-1 bg-gray-100 rounded-lg">
           <TabsTrigger
             value="active"
             className="data-[state=active]:bg-white data-[state=active]:shadow-sm py-3 px-2 text-xs sm:text-sm font-medium"
@@ -1311,6 +1340,25 @@ export default function FrontdeskDashboard() {
                 {selectedCategoryFilter !== "all" && data && (
                   <span className="text-gray-500">
                     /{data.activeApplications.length}
+                  </span>
+                )}
+              </Badge>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger
+            value="selfForward"
+            className="data-[state=active]:bg-white data-[state=active]:shadow-sm py-3 px-2 text-xs sm:text-sm font-medium"
+          >
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-blue-600">Self Forward</span>
+              <Badge
+                variant="secondary"
+                className="text-xs bg-blue-100 text-blue-800"
+              >
+                {data ? getFilteredCount(data.selfForwardedByMe || []) : 0}
+                {selectedCategoryFilter !== "all" && data && (
+                  <span className="text-gray-500">
+                    /{data.selfForwardedByMe?.length || 0}
                   </span>
                 )}
               </Badge>
@@ -1586,6 +1634,57 @@ export default function FrontdeskDashboard() {
           </div>
         </TabsContent>
 
+        <TabsContent value="selfForward" className="mt-6">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <User className="w-6 h-6 text-blue-600" />
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Self-Forwarded Applications
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Applications you forwarded to yourself for later action. You
+                  can forward these to officers from here.
+                </p>
+              </div>
+            </div>
+            {!data.selfForwardedByMe || data.selfForwardedByMe.length === 0 ? (
+              <Card className="p-8 text-center">
+                <User className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">
+                  No self-forwarded applications
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Applications you forward to yourself will appear here
+                </p>
+              </Card>
+            ) : (
+              <>
+                <div className="space-y-4">
+                  {paginateApplications(
+                    filterApplicationsByCategory(data.selfForwardedByMe),
+                    "selfForward"
+                  ).map((app) => (
+                    <ApplicationCard
+                      key={app.id}
+                      application={app}
+                      showForwardButton={true}
+                      isSelfForwardedCard={true}
+                    />
+                  ))}
+                </div>
+                <PaginationComponent
+                  tabKey="selfForward"
+                  totalItems={data.selfForwardedByMe.length}
+                  filteredItemsCount={
+                    filterApplicationsByCategory(data.selfForwardedByMe).length
+                  }
+                />
+              </>
+            )}
+          </div>
+        </TabsContent>
+
         <TabsContent value="forwarded" className="mt-6">
           <div className="space-y-6">
             <div className="flex items-center gap-3">
@@ -1753,81 +1852,132 @@ export default function FrontdeskDashboard() {
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="officer" className="text-sm font-medium">
-                Select Officer
-              </Label>
-              {filteredOfficers.length === 0 ? (
-                <div className="p-4 text-center border border-dashed border-gray-300 rounded-lg">
-                  <p className="text-sm text-gray-500 mb-2">
-                    No officers available for forwarding
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    {session?.user?.role === UserRole.FRONT_DESK
-                      ? frontdeskAssignments.length > 0
-                        ? `As a frontdesk assigned to work with officers, you can forward based on your assignment level`
-                        : "As general frontdesk, you can forward to all officers"
-                      : "You can only forward applications to officers at the same level or lower in the hierarchy"}
-                  </p>
-                </div>
-              ) : (
-                <Select
-                  onValueChange={setSelectedOfficer}
-                  value={selectedOfficer}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose an officer">
-                      {selectedOfficer &&
-                        (() => {
-                          const officer = filteredOfficers.find(
-                            (o) => o.id === selectedOfficer
-                          );
-                          return officer ? (
-                            <span className="truncate">{officer.fullName}</span>
-                          ) : (
-                            "Choose an officer"
-                          );
-                        })()}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filteredOfficers
-                      ?.filter(
-                        (officer) =>
-                          officer.id !== forwardingApp?.currentHolder?.id
-                      )
-                      .map((officer) => {
-                        const roleMapping = getRoleMapping(officer.role);
-                        return (
-                          <SelectItem key={officer.id} value={officer.id}>
-                            <div className="flex flex-col items-start w-full">
-                              <span className="font-medium text-sm">
+            {/* Self-Forward Checkbox */}
+            <div className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <input
+                type="checkbox"
+                id="selfForwardFrontdesk"
+                checked={isSelfForward}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setIsSelfForward(checked);
+                  if (checked) {
+                    setSelectedOfficer(session?.user?.id || "");
+                  } else {
+                    setSelectedOfficer("");
+                  }
+                }}
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label htmlFor="selfForwardFrontdesk" className="flex-1 text-sm">
+                <span className="font-medium text-blue-800">Self-forward</span>
+                <p className="text-blue-700 text-xs mt-1">
+                  Forward this application to myself with instructions for
+                  future action
+                </p>
+              </label>
+            </div>
+
+            {!isSelfForward && (
+              <div className="space-y-2">
+                <Label htmlFor="officer" className="text-sm font-medium">
+                  Select Officer
+                </Label>
+                {filteredOfficers.length === 0 ? (
+                  <div className="p-4 text-center border border-dashed border-gray-300 rounded-lg">
+                    <p className="text-sm text-gray-500 mb-2">
+                      No officers available for forwarding
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {session?.user?.role === UserRole.FRONT_DESK
+                        ? frontdeskAssignments.length > 0
+                          ? `As a frontdesk assigned to work with officers, you can forward based on your assignment level`
+                          : "As general frontdesk, you can forward to all officers"
+                        : "You can only forward applications to officers at the same level or lower in the hierarchy"}
+                    </p>
+                  </div>
+                ) : (
+                  <Select
+                    onValueChange={setSelectedOfficer}
+                    value={selectedOfficer}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose an officer">
+                        {selectedOfficer &&
+                          (() => {
+                            const officer = filteredOfficers.find(
+                              (o) => o.id === selectedOfficer
+                            );
+                            return officer ? (
+                              <span className="truncate">
                                 {officer.fullName}
                               </span>
-                              <span className="text-xs text-gray-500">
-                                {roleMapping?.shortDesignation ||
-                                  officer.designation}{" "}
-                                - Level {officer.level}
-                              </span>
-                              <span className="text-xs text-gray-400 truncate">
-                                {officer.department}
-                              </span>
-                            </div>
-                          </SelectItem>
-                        );
-                      })}
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
+                            ) : (
+                              "Choose an officer"
+                            );
+                          })()}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[300px] overflow-y-auto">
+                      {filteredOfficers
+                        ?.filter(
+                          (officer) =>
+                            officer.id !== forwardingApp?.currentHolder?.id
+                        )
+                        .map((officer) => {
+                          const roleMapping = getRoleMapping(officer.role);
+                          return (
+                            <SelectItem key={officer.id} value={officer.id}>
+                              <div className="flex flex-col items-start w-full">
+                                <span className="font-medium text-sm">
+                                  {officer.fullName}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {roleMapping?.shortDesignation ||
+                                    officer.designation}{" "}
+                                  - Level {officer.level}
+                                </span>
+                                <span className="text-xs text-gray-400 truncate">
+                                  {officer.department}
+                                </span>
+                              </div>
+                            </SelectItem>
+                          );
+                        })}
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
+            )}
+
+            {isSelfForward && (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-center gap-2 text-green-800">
+                  <User className="w-4 h-4" />
+                  <span className="font-medium">Self-forwarding to:</span>
+                </div>
+                <p className="text-green-700 text-sm mt-1">
+                  {session?.user?.email} (You)
+                </p>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="instructions" className="text-sm font-medium">
-                Instructions
+                {isSelfForward
+                  ? "Instructions for Self-Forward (Required)"
+                  : "Instructions"}
+                {isSelfForward && (
+                  <span className="text-red-500 text-sm ml-1">*</span>
+                )}
               </Label>
               <Textarea
                 id="instructions"
-                placeholder="Provide forwarding instructions..."
+                placeholder={
+                  isSelfForward
+                    ? "Add instructions for your future action..."
+                    : "Provide forwarding instructions..."
+                }
                 value={instructions}
                 onChange={(e) => setInstructions(e.target.value)}
                 className="min-h-[100px]"
@@ -1844,7 +1994,7 @@ export default function FrontdeskDashboard() {
               disabled={
                 !selectedOfficer ||
                 !instructions.trim() ||
-                filteredOfficers.length === 0 ||
+                (filteredOfficers.length === 0 && !isSelfForward) ||
                 forwarding
               }
               className="bg-blue-600 hover:bg-blue-700"

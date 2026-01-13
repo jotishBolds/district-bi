@@ -65,6 +65,7 @@ import {
   getRoleMapping,
   getAllRoles,
   getRolesByLevel,
+  getNonLegacyRolesByLevel,
   isOfficerRole as checkOfficerRole,
   isAdminRole,
 } from "@/lib/officer-roles";
@@ -967,9 +968,10 @@ export default function UserManagement() {
               <SelectItem value={UserRole.OS_COI_RC}>OS (COI & RC)</SelectItem>
               <SelectItem value={UserRole.OS_RC}>OS (Registration)</SelectItem>
               <SelectItem value={UserRole.RI_LEGAL}>RI (Legal)</SelectItem>
-              <SelectItem value={UserRole.DISPATCH_HANDLER}>
-                Dispatch Handler
+              <SelectItem value={UserRole.DEALING_HAND}>
+                Dealing Hand
               </SelectItem>
+              {/* DISPATCH_HANDLER is hidden/deprecated */}
               <SelectItem value={UserRole.ADC}>ADC (Legacy)</SelectItem>
               <SelectItem value={UserRole.RO}>RO (Legacy)</SelectItem>
               <SelectItem value={UserRole.SDM}>SDM (Legacy)</SelectItem>
@@ -1364,7 +1366,7 @@ export default function UserManagement() {
                               <SelectValue placeholder="Select a role" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="max-h-[200px] overflow-y-auto">
+                          <SelectContent className="max-h-[300px] overflow-y-auto">
                             <div className="px-2 py-1.5 text-sm font-semibold text-gray-900 bg-gray-50">
                               Administrative Roles
                             </div>
@@ -1383,19 +1385,25 @@ export default function UserManagement() {
                               </div>
                             </SelectItem>
 
-                            {Object.entries(getRolesByLevel()).map(
+                            {Object.entries(getNonLegacyRolesByLevel()).map(
                               ([level, roles]) => {
                                 const levelNum = parseInt(level);
-                                if (levelNum < 0 || levelNum > 7) return null;
+                                if (levelNum < 0 || levelNum > 8) return null;
 
                                 return (
                                   <div key={level}>
                                     <div className="px-2 py-1.5 text-sm font-semibold text-gray-900 bg-gray-50">
-                                      Level {level} Officers (
+                                      Level {level}{" "}
+                                      {levelNum === 8
+                                        ? "Officials"
+                                        : "Officers"}{" "}
+                                      (
                                       {levelNum === 0
                                         ? "Highest"
-                                        : levelNum === 6
-                                        ? "Standard"
+                                        : levelNum === 7
+                                        ? "Dealing Hands"
+                                        : levelNum === 8
+                                        ? "Support Staff"
                                         : `Priority ${levelNum}`}
                                       )
                                     </div>
@@ -1823,7 +1831,7 @@ export default function UserManagement() {
                               <SelectValue placeholder="Select a role" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="max-h-[200px] overflow-y-auto">
+                          <SelectContent className="max-h-[300px] overflow-y-auto">
                             {/* Role options same as create */}
                             <div className="px-2 py-1.5 text-sm font-semibold text-gray-900 bg-gray-50">
                               Administrative Roles
@@ -1843,19 +1851,25 @@ export default function UserManagement() {
                               </div>
                             </SelectItem>
 
-                            {Object.entries(getRolesByLevel()).map(
+                            {Object.entries(getNonLegacyRolesByLevel()).map(
                               ([level, roles]) => {
                                 const levelNum = parseInt(level);
-                                if (levelNum < 0 || levelNum > 7) return null;
+                                if (levelNum < 0 || levelNum > 8) return null;
 
                                 return (
                                   <div key={level}>
                                     <div className="px-2 py-1.5 text-sm font-semibold text-gray-900 bg-gray-50">
-                                      Level {level} Officers (
+                                      Level {level}{" "}
+                                      {levelNum === 8
+                                        ? "Officials"
+                                        : "Officers"}{" "}
+                                      (
                                       {levelNum === 0
                                         ? "Highest"
-                                        : levelNum === 6
-                                        ? "Standard"
+                                        : levelNum === 7
+                                        ? "Dealing Hands"
+                                        : levelNum === 8
+                                        ? "Support Staff"
                                         : `Priority ${levelNum}`}
                                       )
                                     </div>

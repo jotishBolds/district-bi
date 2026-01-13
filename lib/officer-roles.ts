@@ -200,22 +200,34 @@ export const OFFICER_ROLE_MAPPINGS: Record<UserRole, OfficerRoleMapping> = {
     isLegacy: true,
   },
 
+  // Level 7 - Dealing Hands (Under Level 7, same dashboard as officers)
+  [UserRole.DEALING_HAND]: {
+    role: UserRole.DEALING_HAND,
+    level: 7,
+    fullName: "Dealing Hand",
+    shortDesignation: "DH",
+    defaultSection: "General Section",
+    userType: "Officer", // Same as other officers - can receive and forward applications
+  },
+
   // Administrative roles
   [UserRole.FRONT_DESK]: {
     role: UserRole.FRONT_DESK,
-    level: 7, // Lower than officers for hierarchy
+    level: 8, // Lower than officers for hierarchy
     fullName: "Front Desk Officer",
     shortDesignation: "FD",
     defaultSection: "Front Desk",
     userType: "Official",
   },
+  // DISPATCH_HANDLER is hidden/deprecated - kept for backward compatibility
   [UserRole.DISPATCH_HANDLER]: {
     role: UserRole.DISPATCH_HANDLER,
-    level: 7, // Same as frontdesk level for support roles
+    level: 8, // Same as frontdesk level for support roles
     fullName: "Dispatch Handler",
     shortDesignation: "DH",
     defaultSection: "Dispatch Section",
     userType: "Official",
+    isLegacy: true, // Mark as legacy to hide from UI
   },
   [UserRole.ADMIN]: {
     role: UserRole.ADMIN,
@@ -315,6 +327,29 @@ export function getRolesByLevel(): Record<number, UserRole[]> {
 
   Object.values(UserRole).forEach((role) => {
     const mapping = OFFICER_ROLE_MAPPINGS[role];
+    const level = mapping.level;
+
+    if (!rolesByLevel[level]) {
+      rolesByLevel[level] = [];
+    }
+    rolesByLevel[level].push(role);
+  });
+
+  return rolesByLevel;
+}
+
+/**
+ * Get roles grouped by level, excluding legacy roles
+ * This is useful for UI dropdowns where we don't want to show deprecated roles
+ */
+export function getNonLegacyRolesByLevel(): Record<number, UserRole[]> {
+  const rolesByLevel: Record<number, UserRole[]> = {};
+
+  Object.values(UserRole).forEach((role) => {
+    const mapping = OFFICER_ROLE_MAPPINGS[role];
+    // Skip legacy roles
+    if (mapping?.isLegacy) return;
+
     const level = mapping.level;
 
     if (!rolesByLevel[level]) {
