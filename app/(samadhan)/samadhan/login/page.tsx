@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -23,8 +23,10 @@ import {
 } from "@/components/ui/input-otp";
 import { toast } from "sonner";
 
-export default function SamadhanLoginPage() {
+function SamadhanLoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect");
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
@@ -39,7 +41,8 @@ export default function SamadhanLoginPage() {
         const data = await response.json();
 
         if (data.authenticated) {
-          router.push("/samadhan/dashboard");
+          // Redirect to specified URL or dashboard
+          router.push(redirectUrl || "/samadhan/dashboard");
         }
       } catch (error) {
         console.error("Session check error:", error);
@@ -49,7 +52,7 @@ export default function SamadhanLoginPage() {
     };
 
     checkSession();
-  }, [router]);
+  }, [router, redirectUrl]);
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,7 +113,8 @@ export default function SamadhanLoginPage() {
 
       if (data.success) {
         toast.success("Login successful!");
-        window.location.href = "/samadhan/dashboard";
+        // Redirect to specified URL or dashboard
+        window.location.href = redirectUrl || "/samadhan/dashboard";
       } else {
         toast.error(data.message);
       }
@@ -315,5 +319,22 @@ export default function SamadhanLoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SamadhanLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <Loader2 className="h-10 w-10 animate-spin text-green-600 mx-auto mb-4" />
+            <p className="text-gray-500">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <SamadhanLoginContent />
+    </Suspense>
   );
 }

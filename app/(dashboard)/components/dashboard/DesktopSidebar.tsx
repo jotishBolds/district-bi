@@ -165,6 +165,16 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       icon: ListChecks,
     },
     {
+      name: "SAMADHAN Categories",
+      href: "/admin/samadhan-service-categories",
+      icon: Layers,
+    },
+    {
+      name: "SAMADHAN Query Requests",
+      href: "/admin/samadhan-queries",
+      icon: HelpCircle,
+    },
+    {
       name: "Frontdesk Management",
       href: "/admin/frontdesk-management",
       icon: Shield,

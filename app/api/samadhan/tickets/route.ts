@@ -15,7 +15,9 @@ const ticketSchema = z.object({
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
   sectionId: z.string().min(1, "Section is required"),
   subject: z.string().optional(),
-  serviceAvailed: z.string().optional(), // JSON array of service IDs
+  serviceAvailed: z.string().optional(), // JSON array of service IDs (legacy)
+  selectedServiceId: z.string().optional(), // Single service ID
+  selectedCategories: z.string().optional(), // JSON array of category IDs
   description: z.string().min(10, "Description must be at least 10 characters"),
   visitedDC: z.boolean().optional(),
   visitDate: z.string().optional(), // ISO date string
@@ -107,6 +109,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Convert selectedServiceId and selectedCategories to serviceAvailed format
+    // Store both the service ID and category IDs for proper restoration
+    let serviceAvailedData: string | undefined = validatedData.serviceAvailed;
+
+    if (validatedData.selectedServiceId || validatedData.selectedCategories) {
+      // Create a combined object that stores both service ID and category IDs
+      const serviceData = {
+        serviceId: validatedData.selectedServiceId || null,
+        categoryIds: validatedData.selectedCategories
+          ? JSON.parse(validatedData.selectedCategories)
+          : [],
+      };
+      serviceAvailedData = JSON.stringify(serviceData);
+    }
+
     // Check if updating existing draft
     if (validatedData.ticketId) {
       const existingTicket = await prisma.samadhanTicket.findFirst({
@@ -152,7 +169,7 @@ export async function POST(request: NextRequest) {
           isAnonymousToOfficer: validatedData.isAnonymousToOfficer || false,
           sectionId: validatedData.sectionId,
           subject: validatedData.subject,
-          serviceAvailed: validatedData.serviceAvailed,
+          serviceAvailed: serviceAvailedData,
           description: validatedData.description,
           visitedDC: validatedData.visitedDC,
           visitDate: validatedData.visitDate
@@ -233,7 +250,7 @@ export async function POST(request: NextRequest) {
         isAnonymousToOfficer: validatedData.isAnonymousToOfficer || false,
         sectionId: validatedData.sectionId,
         subject: validatedData.subject,
-        serviceAvailed: validatedData.serviceAvailed,
+        serviceAvailed: serviceAvailedData,
         description: validatedData.description,
         visitedDC: validatedData.visitedDC,
         visitDate: validatedData.visitDate

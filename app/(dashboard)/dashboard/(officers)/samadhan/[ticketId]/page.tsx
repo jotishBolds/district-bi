@@ -68,7 +68,11 @@ interface TicketDetail {
   priority: "LOW" | "MEDIUM" | "HIGH";
   status: string;
   section: { id: string; name: string };
+  subject: string | null;
   serviceAvailed: string | null;
+  serviceCategories: string | null;
+  visitDate: string | null;
+  visitedDC: boolean | null;
   description: string;
   resolutionMessage: string | null;
   isAppeal: boolean;
@@ -574,6 +578,18 @@ export default function OfficerTicketDetailPage({
               <CardTitle className="text-lg">Query Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Subject/Title if provided */}
+              {ticket.subject && (
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-sm text-gray-500 mb-1">
+                    Subject/Issue Title
+                  </p>
+                  <p className="font-semibold text-gray-900">
+                    {ticket.subject}
+                  </p>
+                </div>
+              )}
+
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="flex items-start space-x-3">
                   <Building className="h-5 w-5 text-gray-400 mt-0.5" />
@@ -591,6 +607,15 @@ export default function OfficerTicketDetailPage({
                     </div>
                   </div>
                 )}
+                {ticket.serviceCategories && (
+                  <div className="flex items-start space-x-3">
+                    <Lightbulb className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-gray-500">Service Category</p>
+                      <p className="font-medium">{ticket.serviceCategories}</p>
+                    </div>
+                  </div>
+                )}
                 <div className="flex items-start space-x-3">
                   <AlertCircle className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div>
@@ -598,6 +623,22 @@ export default function OfficerTicketDetailPage({
                     <Badge variant="outline">{ticket.priority}</Badge>
                   </div>
                 </div>
+                {ticket.visitDate && (
+                  <div className="flex items-start space-x-3">
+                    <Calendar className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-gray-500">Visit Date</p>
+                      <p className="font-medium">
+                        {format(new Date(ticket.visitDate), "PPP")}
+                        {ticket.visitedDC && (
+                          <span className="text-green-600 ml-2">
+                            (Visited DC Office)
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                )}
                 {ticket.sla.deadline && (
                   <div className="flex items-start space-x-3">
                     <Clock className="h-5 w-5 text-gray-400 mt-0.5" />

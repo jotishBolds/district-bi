@@ -54,6 +54,11 @@ export type Section = $Result.DefaultSelection<Prisma.$SectionPayload>
  */
 export type SamadhanService = $Result.DefaultSelection<Prisma.$SamadhanServicePayload>
 /**
+ * Model SamadhanServiceCategory
+ * 
+ */
+export type SamadhanServiceCategory = $Result.DefaultSelection<Prisma.$SamadhanServiceCategoryPayload>
+/**
  * Model Department
  * 
  */
@@ -173,6 +178,11 @@ export type SamadhanSLAConfig = $Result.DefaultSelection<Prisma.$SamadhanSLAConf
  * 
  */
 export type SamadhanDailySequence = $Result.DefaultSelection<Prisma.$SamadhanDailySequencePayload>
+/**
+ * Model SamadhanQueryStatusRequest
+ * 
+ */
+export type SamadhanQueryStatusRequest = $Result.DefaultSelection<Prisma.$SamadhanQueryStatusRequestPayload>
 
 /**
  * Enums
@@ -255,7 +265,8 @@ export type ApplicationSource = (typeof ApplicationSource)[keyof typeof Applicat
 
 export const SamadhanQueryType: {
   FEEDBACK: 'FEEDBACK',
-  GRIEVANCE: 'GRIEVANCE'
+  GRIEVANCE: 'GRIEVANCE',
+  SUGGESTION: 'SUGGESTION'
 };
 
 export type SamadhanQueryType = (typeof SamadhanQueryType)[keyof typeof SamadhanQueryType]
@@ -549,6 +560,16 @@ export class PrismaClient<
   get samadhanService(): Prisma.SamadhanServiceDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.samadhanServiceCategory`: Exposes CRUD operations for the **SamadhanServiceCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SamadhanServiceCategories
+    * const samadhanServiceCategories = await prisma.samadhanServiceCategory.findMany()
+    * ```
+    */
+  get samadhanServiceCategory(): Prisma.SamadhanServiceCategoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.department`: Exposes CRUD operations for the **Department** model.
     * Example usage:
     * ```ts
@@ -787,6 +808,16 @@ export class PrismaClient<
     * ```
     */
   get samadhanDailySequence(): Prisma.SamadhanDailySequenceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.samadhanQueryStatusRequest`: Exposes CRUD operations for the **SamadhanQueryStatusRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SamadhanQueryStatusRequests
+    * const samadhanQueryStatusRequests = await prisma.samadhanQueryStatusRequest.findMany()
+    * ```
+    */
+  get samadhanQueryStatusRequest(): Prisma.SamadhanQueryStatusRequestDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1235,6 +1266,7 @@ export namespace Prisma {
     ServiceCategory: 'ServiceCategory',
     Section: 'Section',
     SamadhanService: 'SamadhanService',
+    SamadhanServiceCategory: 'SamadhanServiceCategory',
     Department: 'Department',
     Application: 'Application',
     ApplicationWorkflow: 'ApplicationWorkflow',
@@ -1258,7 +1290,8 @@ export namespace Prisma {
     SamadhanStatusHistory: 'SamadhanStatusHistory',
     SamadhanInternalNote: 'SamadhanInternalNote',
     SamadhanSLAConfig: 'SamadhanSLAConfig',
-    SamadhanDailySequence: 'SamadhanDailySequence'
+    SamadhanDailySequence: 'SamadhanDailySequence',
+    SamadhanQueryStatusRequest: 'SamadhanQueryStatusRequest'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1277,7 +1310,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "userSettings" | "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "samadhanService" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "serviceCategoryChange" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "smsOtp" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory" | "samadhanTicket" | "samadhanAttachment" | "samadhanInfoRequest" | "samadhanStatusHistory" | "samadhanInternalNote" | "samadhanSLAConfig" | "samadhanDailySequence"
+      modelProps: "userSettings" | "user" | "citizenProfile" | "officerProfile" | "frontdeskOfficer" | "serviceCategory" | "section" | "samadhanService" | "samadhanServiceCategory" | "department" | "application" | "applicationWorkflow" | "applicationValidation" | "serviceCategoryChange" | "officerAssignment" | "document" | "documentRequest" | "notification" | "applicationAuditLog" | "dailyReport" | "systemSetting" | "verificationToken" | "smsOtp" | "applicationTrackingOTP" | "frontdeskForwarding" | "officerForwardingHistory" | "samadhanTicket" | "samadhanAttachment" | "samadhanInfoRequest" | "samadhanStatusHistory" | "samadhanInternalNote" | "samadhanSLAConfig" | "samadhanDailySequence" | "samadhanQueryStatusRequest"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1870,6 +1903,80 @@ export namespace Prisma {
           count: {
             args: Prisma.SamadhanServiceCountArgs<ExtArgs>
             result: $Utils.Optional<SamadhanServiceCountAggregateOutputType> | number
+          }
+        }
+      }
+      SamadhanServiceCategory: {
+        payload: Prisma.$SamadhanServiceCategoryPayload<ExtArgs>
+        fields: Prisma.SamadhanServiceCategoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SamadhanServiceCategoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SamadhanServiceCategoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload>
+          }
+          findFirst: {
+            args: Prisma.SamadhanServiceCategoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SamadhanServiceCategoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload>
+          }
+          findMany: {
+            args: Prisma.SamadhanServiceCategoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload>[]
+          }
+          create: {
+            args: Prisma.SamadhanServiceCategoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload>
+          }
+          createMany: {
+            args: Prisma.SamadhanServiceCategoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SamadhanServiceCategoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload>[]
+          }
+          delete: {
+            args: Prisma.SamadhanServiceCategoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload>
+          }
+          update: {
+            args: Prisma.SamadhanServiceCategoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.SamadhanServiceCategoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SamadhanServiceCategoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SamadhanServiceCategoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.SamadhanServiceCategoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanServiceCategoryPayload>
+          }
+          aggregate: {
+            args: Prisma.SamadhanServiceCategoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSamadhanServiceCategory>
+          }
+          groupBy: {
+            args: Prisma.SamadhanServiceCategoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanServiceCategoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SamadhanServiceCategoryCountArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanServiceCategoryCountAggregateOutputType> | number
           }
         }
       }
@@ -3649,6 +3756,80 @@ export namespace Prisma {
           }
         }
       }
+      SamadhanQueryStatusRequest: {
+        payload: Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>
+        fields: Prisma.SamadhanQueryStatusRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SamadhanQueryStatusRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SamadhanQueryStatusRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.SamadhanQueryStatusRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SamadhanQueryStatusRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload>
+          }
+          findMany: {
+            args: Prisma.SamadhanQueryStatusRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload>[]
+          }
+          create: {
+            args: Prisma.SamadhanQueryStatusRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload>
+          }
+          createMany: {
+            args: Prisma.SamadhanQueryStatusRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SamadhanQueryStatusRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.SamadhanQueryStatusRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload>
+          }
+          update: {
+            args: Prisma.SamadhanQueryStatusRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.SamadhanQueryStatusRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SamadhanQueryStatusRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SamadhanQueryStatusRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.SamadhanQueryStatusRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SamadhanQueryStatusRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.SamadhanQueryStatusRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSamadhanQueryStatusRequest>
+          }
+          groupBy: {
+            args: Prisma.SamadhanQueryStatusRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanQueryStatusRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SamadhanQueryStatusRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<SamadhanQueryStatusRequestCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3749,6 +3930,7 @@ export namespace Prisma {
     serviceCategory?: ServiceCategoryOmit
     section?: SectionOmit
     samadhanService?: SamadhanServiceOmit
+    samadhanServiceCategory?: SamadhanServiceCategoryOmit
     department?: DepartmentOmit
     application?: ApplicationOmit
     applicationWorkflow?: ApplicationWorkflowOmit
@@ -3773,6 +3955,7 @@ export namespace Prisma {
     samadhanInternalNote?: SamadhanInternalNoteOmit
     samadhanSLAConfig?: SamadhanSLAConfigOmit
     samadhanDailySequence?: SamadhanDailySequenceOmit
+    samadhanQueryStatusRequest?: SamadhanQueryStatusRequestOmit
   }
 
   /* Types for Logging */
@@ -4221,6 +4404,37 @@ export namespace Prisma {
    */
   export type SectionCountOutputTypeCountSamadhanServicesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SamadhanServiceWhereInput
+  }
+
+
+  /**
+   * Count Type SamadhanServiceCountOutputType
+   */
+
+  export type SamadhanServiceCountOutputType = {
+    categories: number
+  }
+
+  export type SamadhanServiceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    categories?: boolean | SamadhanServiceCountOutputTypeCountCategoriesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SamadhanServiceCountOutputType without action
+   */
+  export type SamadhanServiceCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCountOutputType
+     */
+    select?: SamadhanServiceCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanServiceCountOutputType without action
+   */
+  export type SamadhanServiceCountOutputTypeCountCategoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanServiceCategoryWhereInput
   }
 
 
@@ -13465,6 +13679,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     section?: boolean | SectionDefaultArgs<ExtArgs>
+    categories?: boolean | SamadhanService$categoriesArgs<ExtArgs>
+    _count?: boolean | SamadhanServiceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["samadhanService"]>
 
   export type SamadhanServiceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -13502,6 +13718,8 @@ export namespace Prisma {
   export type SamadhanServiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "sectionId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["samadhanService"]>
   export type SamadhanServiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     section?: boolean | SectionDefaultArgs<ExtArgs>
+    categories?: boolean | SamadhanService$categoriesArgs<ExtArgs>
+    _count?: boolean | SamadhanServiceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SamadhanServiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     section?: boolean | SectionDefaultArgs<ExtArgs>
@@ -13514,6 +13732,7 @@ export namespace Prisma {
     name: "SamadhanService"
     objects: {
       section: Prisma.$SectionPayload<ExtArgs>
+      categories: Prisma.$SamadhanServiceCategoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13918,6 +14137,7 @@ export namespace Prisma {
   export interface Prisma__SamadhanServiceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     section<T extends SectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SectionDefaultArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    categories<T extends SamadhanService$categoriesArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanService$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14350,6 +14570,30 @@ export namespace Prisma {
   }
 
   /**
+   * SamadhanService.categories
+   */
+  export type SamadhanService$categoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
+    where?: SamadhanServiceCategoryWhereInput
+    orderBy?: SamadhanServiceCategoryOrderByWithRelationInput | SamadhanServiceCategoryOrderByWithRelationInput[]
+    cursor?: SamadhanServiceCategoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SamadhanServiceCategoryScalarFieldEnum | SamadhanServiceCategoryScalarFieldEnum[]
+  }
+
+  /**
    * SamadhanService without action
    */
   export type SamadhanServiceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14365,6 +14609,1090 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SamadhanServiceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SamadhanServiceCategory
+   */
+
+  export type AggregateSamadhanServiceCategory = {
+    _count: SamadhanServiceCategoryCountAggregateOutputType | null
+    _min: SamadhanServiceCategoryMinAggregateOutputType | null
+    _max: SamadhanServiceCategoryMaxAggregateOutputType | null
+  }
+
+  export type SamadhanServiceCategoryMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    serviceId: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanServiceCategoryMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    serviceId: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanServiceCategoryCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    serviceId: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SamadhanServiceCategoryMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    serviceId?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanServiceCategoryMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    serviceId?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanServiceCategoryCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    serviceId?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SamadhanServiceCategoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanServiceCategory to aggregate.
+     */
+    where?: SamadhanServiceCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanServiceCategories to fetch.
+     */
+    orderBy?: SamadhanServiceCategoryOrderByWithRelationInput | SamadhanServiceCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SamadhanServiceCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanServiceCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanServiceCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SamadhanServiceCategories
+    **/
+    _count?: true | SamadhanServiceCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SamadhanServiceCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SamadhanServiceCategoryMaxAggregateInputType
+  }
+
+  export type GetSamadhanServiceCategoryAggregateType<T extends SamadhanServiceCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateSamadhanServiceCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSamadhanServiceCategory[P]>
+      : GetScalarType<T[P], AggregateSamadhanServiceCategory[P]>
+  }
+
+
+
+
+  export type SamadhanServiceCategoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanServiceCategoryWhereInput
+    orderBy?: SamadhanServiceCategoryOrderByWithAggregationInput | SamadhanServiceCategoryOrderByWithAggregationInput[]
+    by: SamadhanServiceCategoryScalarFieldEnum[] | SamadhanServiceCategoryScalarFieldEnum
+    having?: SamadhanServiceCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SamadhanServiceCategoryCountAggregateInputType | true
+    _min?: SamadhanServiceCategoryMinAggregateInputType
+    _max?: SamadhanServiceCategoryMaxAggregateInputType
+  }
+
+  export type SamadhanServiceCategoryGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    serviceId: string
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: SamadhanServiceCategoryCountAggregateOutputType | null
+    _min: SamadhanServiceCategoryMinAggregateOutputType | null
+    _max: SamadhanServiceCategoryMaxAggregateOutputType | null
+  }
+
+  type GetSamadhanServiceCategoryGroupByPayload<T extends SamadhanServiceCategoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SamadhanServiceCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SamadhanServiceCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SamadhanServiceCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], SamadhanServiceCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SamadhanServiceCategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    serviceId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    service?: boolean | SamadhanServiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanServiceCategory"]>
+
+  export type SamadhanServiceCategorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    serviceId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    service?: boolean | SamadhanServiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanServiceCategory"]>
+
+  export type SamadhanServiceCategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    serviceId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    service?: boolean | SamadhanServiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["samadhanServiceCategory"]>
+
+  export type SamadhanServiceCategorySelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    serviceId?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SamadhanServiceCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "serviceId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["samadhanServiceCategory"]>
+  export type SamadhanServiceCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    service?: boolean | SamadhanServiceDefaultArgs<ExtArgs>
+  }
+  export type SamadhanServiceCategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    service?: boolean | SamadhanServiceDefaultArgs<ExtArgs>
+  }
+  export type SamadhanServiceCategoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    service?: boolean | SamadhanServiceDefaultArgs<ExtArgs>
+  }
+
+  export type $SamadhanServiceCategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SamadhanServiceCategory"
+    objects: {
+      service: Prisma.$SamadhanServicePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      serviceId: string
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["samadhanServiceCategory"]>
+    composites: {}
+  }
+
+  type SamadhanServiceCategoryGetPayload<S extends boolean | null | undefined | SamadhanServiceCategoryDefaultArgs> = $Result.GetResult<Prisma.$SamadhanServiceCategoryPayload, S>
+
+  type SamadhanServiceCategoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SamadhanServiceCategoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SamadhanServiceCategoryCountAggregateInputType | true
+    }
+
+  export interface SamadhanServiceCategoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SamadhanServiceCategory'], meta: { name: 'SamadhanServiceCategory' } }
+    /**
+     * Find zero or one SamadhanServiceCategory that matches the filter.
+     * @param {SamadhanServiceCategoryFindUniqueArgs} args - Arguments to find a SamadhanServiceCategory
+     * @example
+     * // Get one SamadhanServiceCategory
+     * const samadhanServiceCategory = await prisma.samadhanServiceCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SamadhanServiceCategoryFindUniqueArgs>(args: SelectSubset<T, SamadhanServiceCategoryFindUniqueArgs<ExtArgs>>): Prisma__SamadhanServiceCategoryClient<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SamadhanServiceCategory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SamadhanServiceCategoryFindUniqueOrThrowArgs} args - Arguments to find a SamadhanServiceCategory
+     * @example
+     * // Get one SamadhanServiceCategory
+     * const samadhanServiceCategory = await prisma.samadhanServiceCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SamadhanServiceCategoryFindUniqueOrThrowArgs>(args: SelectSubset<T, SamadhanServiceCategoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SamadhanServiceCategoryClient<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanServiceCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceCategoryFindFirstArgs} args - Arguments to find a SamadhanServiceCategory
+     * @example
+     * // Get one SamadhanServiceCategory
+     * const samadhanServiceCategory = await prisma.samadhanServiceCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SamadhanServiceCategoryFindFirstArgs>(args?: SelectSubset<T, SamadhanServiceCategoryFindFirstArgs<ExtArgs>>): Prisma__SamadhanServiceCategoryClient<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanServiceCategory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceCategoryFindFirstOrThrowArgs} args - Arguments to find a SamadhanServiceCategory
+     * @example
+     * // Get one SamadhanServiceCategory
+     * const samadhanServiceCategory = await prisma.samadhanServiceCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SamadhanServiceCategoryFindFirstOrThrowArgs>(args?: SelectSubset<T, SamadhanServiceCategoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__SamadhanServiceCategoryClient<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SamadhanServiceCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceCategoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SamadhanServiceCategories
+     * const samadhanServiceCategories = await prisma.samadhanServiceCategory.findMany()
+     * 
+     * // Get first 10 SamadhanServiceCategories
+     * const samadhanServiceCategories = await prisma.samadhanServiceCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const samadhanServiceCategoryWithIdOnly = await prisma.samadhanServiceCategory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SamadhanServiceCategoryFindManyArgs>(args?: SelectSubset<T, SamadhanServiceCategoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SamadhanServiceCategory.
+     * @param {SamadhanServiceCategoryCreateArgs} args - Arguments to create a SamadhanServiceCategory.
+     * @example
+     * // Create one SamadhanServiceCategory
+     * const SamadhanServiceCategory = await prisma.samadhanServiceCategory.create({
+     *   data: {
+     *     // ... data to create a SamadhanServiceCategory
+     *   }
+     * })
+     * 
+     */
+    create<T extends SamadhanServiceCategoryCreateArgs>(args: SelectSubset<T, SamadhanServiceCategoryCreateArgs<ExtArgs>>): Prisma__SamadhanServiceCategoryClient<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SamadhanServiceCategories.
+     * @param {SamadhanServiceCategoryCreateManyArgs} args - Arguments to create many SamadhanServiceCategories.
+     * @example
+     * // Create many SamadhanServiceCategories
+     * const samadhanServiceCategory = await prisma.samadhanServiceCategory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SamadhanServiceCategoryCreateManyArgs>(args?: SelectSubset<T, SamadhanServiceCategoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SamadhanServiceCategories and returns the data saved in the database.
+     * @param {SamadhanServiceCategoryCreateManyAndReturnArgs} args - Arguments to create many SamadhanServiceCategories.
+     * @example
+     * // Create many SamadhanServiceCategories
+     * const samadhanServiceCategory = await prisma.samadhanServiceCategory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SamadhanServiceCategories and only return the `id`
+     * const samadhanServiceCategoryWithIdOnly = await prisma.samadhanServiceCategory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SamadhanServiceCategoryCreateManyAndReturnArgs>(args?: SelectSubset<T, SamadhanServiceCategoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SamadhanServiceCategory.
+     * @param {SamadhanServiceCategoryDeleteArgs} args - Arguments to delete one SamadhanServiceCategory.
+     * @example
+     * // Delete one SamadhanServiceCategory
+     * const SamadhanServiceCategory = await prisma.samadhanServiceCategory.delete({
+     *   where: {
+     *     // ... filter to delete one SamadhanServiceCategory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SamadhanServiceCategoryDeleteArgs>(args: SelectSubset<T, SamadhanServiceCategoryDeleteArgs<ExtArgs>>): Prisma__SamadhanServiceCategoryClient<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SamadhanServiceCategory.
+     * @param {SamadhanServiceCategoryUpdateArgs} args - Arguments to update one SamadhanServiceCategory.
+     * @example
+     * // Update one SamadhanServiceCategory
+     * const samadhanServiceCategory = await prisma.samadhanServiceCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SamadhanServiceCategoryUpdateArgs>(args: SelectSubset<T, SamadhanServiceCategoryUpdateArgs<ExtArgs>>): Prisma__SamadhanServiceCategoryClient<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SamadhanServiceCategories.
+     * @param {SamadhanServiceCategoryDeleteManyArgs} args - Arguments to filter SamadhanServiceCategories to delete.
+     * @example
+     * // Delete a few SamadhanServiceCategories
+     * const { count } = await prisma.samadhanServiceCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SamadhanServiceCategoryDeleteManyArgs>(args?: SelectSubset<T, SamadhanServiceCategoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanServiceCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SamadhanServiceCategories
+     * const samadhanServiceCategory = await prisma.samadhanServiceCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SamadhanServiceCategoryUpdateManyArgs>(args: SelectSubset<T, SamadhanServiceCategoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanServiceCategories and returns the data updated in the database.
+     * @param {SamadhanServiceCategoryUpdateManyAndReturnArgs} args - Arguments to update many SamadhanServiceCategories.
+     * @example
+     * // Update many SamadhanServiceCategories
+     * const samadhanServiceCategory = await prisma.samadhanServiceCategory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SamadhanServiceCategories and only return the `id`
+     * const samadhanServiceCategoryWithIdOnly = await prisma.samadhanServiceCategory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SamadhanServiceCategoryUpdateManyAndReturnArgs>(args: SelectSubset<T, SamadhanServiceCategoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SamadhanServiceCategory.
+     * @param {SamadhanServiceCategoryUpsertArgs} args - Arguments to update or create a SamadhanServiceCategory.
+     * @example
+     * // Update or create a SamadhanServiceCategory
+     * const samadhanServiceCategory = await prisma.samadhanServiceCategory.upsert({
+     *   create: {
+     *     // ... data to create a SamadhanServiceCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SamadhanServiceCategory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SamadhanServiceCategoryUpsertArgs>(args: SelectSubset<T, SamadhanServiceCategoryUpsertArgs<ExtArgs>>): Prisma__SamadhanServiceCategoryClient<$Result.GetResult<Prisma.$SamadhanServiceCategoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SamadhanServiceCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceCategoryCountArgs} args - Arguments to filter SamadhanServiceCategories to count.
+     * @example
+     * // Count the number of SamadhanServiceCategories
+     * const count = await prisma.samadhanServiceCategory.count({
+     *   where: {
+     *     // ... the filter for the SamadhanServiceCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends SamadhanServiceCategoryCountArgs>(
+      args?: Subset<T, SamadhanServiceCategoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SamadhanServiceCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SamadhanServiceCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SamadhanServiceCategoryAggregateArgs>(args: Subset<T, SamadhanServiceCategoryAggregateArgs>): Prisma.PrismaPromise<GetSamadhanServiceCategoryAggregateType<T>>
+
+    /**
+     * Group by SamadhanServiceCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanServiceCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SamadhanServiceCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SamadhanServiceCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: SamadhanServiceCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SamadhanServiceCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSamadhanServiceCategoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SamadhanServiceCategory model
+   */
+  readonly fields: SamadhanServiceCategoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SamadhanServiceCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SamadhanServiceCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    service<T extends SamadhanServiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SamadhanServiceDefaultArgs<ExtArgs>>): Prisma__SamadhanServiceClient<$Result.GetResult<Prisma.$SamadhanServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SamadhanServiceCategory model
+   */
+  interface SamadhanServiceCategoryFieldRefs {
+    readonly id: FieldRef<"SamadhanServiceCategory", 'String'>
+    readonly name: FieldRef<"SamadhanServiceCategory", 'String'>
+    readonly description: FieldRef<"SamadhanServiceCategory", 'String'>
+    readonly serviceId: FieldRef<"SamadhanServiceCategory", 'String'>
+    readonly isActive: FieldRef<"SamadhanServiceCategory", 'Boolean'>
+    readonly createdAt: FieldRef<"SamadhanServiceCategory", 'DateTime'>
+    readonly updatedAt: FieldRef<"SamadhanServiceCategory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SamadhanServiceCategory findUnique
+   */
+  export type SamadhanServiceCategoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanServiceCategory to fetch.
+     */
+    where: SamadhanServiceCategoryWhereUniqueInput
+  }
+
+  /**
+   * SamadhanServiceCategory findUniqueOrThrow
+   */
+  export type SamadhanServiceCategoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanServiceCategory to fetch.
+     */
+    where: SamadhanServiceCategoryWhereUniqueInput
+  }
+
+  /**
+   * SamadhanServiceCategory findFirst
+   */
+  export type SamadhanServiceCategoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanServiceCategory to fetch.
+     */
+    where?: SamadhanServiceCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanServiceCategories to fetch.
+     */
+    orderBy?: SamadhanServiceCategoryOrderByWithRelationInput | SamadhanServiceCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanServiceCategories.
+     */
+    cursor?: SamadhanServiceCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanServiceCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanServiceCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanServiceCategories.
+     */
+    distinct?: SamadhanServiceCategoryScalarFieldEnum | SamadhanServiceCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanServiceCategory findFirstOrThrow
+   */
+  export type SamadhanServiceCategoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanServiceCategory to fetch.
+     */
+    where?: SamadhanServiceCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanServiceCategories to fetch.
+     */
+    orderBy?: SamadhanServiceCategoryOrderByWithRelationInput | SamadhanServiceCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanServiceCategories.
+     */
+    cursor?: SamadhanServiceCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanServiceCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanServiceCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanServiceCategories.
+     */
+    distinct?: SamadhanServiceCategoryScalarFieldEnum | SamadhanServiceCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanServiceCategory findMany
+   */
+  export type SamadhanServiceCategoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which SamadhanServiceCategories to fetch.
+     */
+    where?: SamadhanServiceCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanServiceCategories to fetch.
+     */
+    orderBy?: SamadhanServiceCategoryOrderByWithRelationInput | SamadhanServiceCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SamadhanServiceCategories.
+     */
+    cursor?: SamadhanServiceCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanServiceCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanServiceCategories.
+     */
+    skip?: number
+    distinct?: SamadhanServiceCategoryScalarFieldEnum | SamadhanServiceCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanServiceCategory create
+   */
+  export type SamadhanServiceCategoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SamadhanServiceCategory.
+     */
+    data: XOR<SamadhanServiceCategoryCreateInput, SamadhanServiceCategoryUncheckedCreateInput>
+  }
+
+  /**
+   * SamadhanServiceCategory createMany
+   */
+  export type SamadhanServiceCategoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SamadhanServiceCategories.
+     */
+    data: SamadhanServiceCategoryCreateManyInput | SamadhanServiceCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanServiceCategory createManyAndReturn
+   */
+  export type SamadhanServiceCategoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many SamadhanServiceCategories.
+     */
+    data: SamadhanServiceCategoryCreateManyInput | SamadhanServiceCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanServiceCategory update
+   */
+  export type SamadhanServiceCategoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SamadhanServiceCategory.
+     */
+    data: XOR<SamadhanServiceCategoryUpdateInput, SamadhanServiceCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which SamadhanServiceCategory to update.
+     */
+    where: SamadhanServiceCategoryWhereUniqueInput
+  }
+
+  /**
+   * SamadhanServiceCategory updateMany
+   */
+  export type SamadhanServiceCategoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SamadhanServiceCategories.
+     */
+    data: XOR<SamadhanServiceCategoryUpdateManyMutationInput, SamadhanServiceCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanServiceCategories to update
+     */
+    where?: SamadhanServiceCategoryWhereInput
+    /**
+     * Limit how many SamadhanServiceCategories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanServiceCategory updateManyAndReturn
+   */
+  export type SamadhanServiceCategoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to update SamadhanServiceCategories.
+     */
+    data: XOR<SamadhanServiceCategoryUpdateManyMutationInput, SamadhanServiceCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanServiceCategories to update
+     */
+    where?: SamadhanServiceCategoryWhereInput
+    /**
+     * Limit how many SamadhanServiceCategories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SamadhanServiceCategory upsert
+   */
+  export type SamadhanServiceCategoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SamadhanServiceCategory to update in case it exists.
+     */
+    where: SamadhanServiceCategoryWhereUniqueInput
+    /**
+     * In case the SamadhanServiceCategory found by the `where` argument doesn't exist, create a new SamadhanServiceCategory with this data.
+     */
+    create: XOR<SamadhanServiceCategoryCreateInput, SamadhanServiceCategoryUncheckedCreateInput>
+    /**
+     * In case the SamadhanServiceCategory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SamadhanServiceCategoryUpdateInput, SamadhanServiceCategoryUncheckedUpdateInput>
+  }
+
+  /**
+   * SamadhanServiceCategory delete
+   */
+  export type SamadhanServiceCategoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
+    /**
+     * Filter which SamadhanServiceCategory to delete.
+     */
+    where: SamadhanServiceCategoryWhereUniqueInput
+  }
+
+  /**
+   * SamadhanServiceCategory deleteMany
+   */
+  export type SamadhanServiceCategoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanServiceCategories to delete
+     */
+    where?: SamadhanServiceCategoryWhereInput
+    /**
+     * Limit how many SamadhanServiceCategories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanServiceCategory without action
+   */
+  export type SamadhanServiceCategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanServiceCategory
+     */
+    select?: SamadhanServiceCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanServiceCategory
+     */
+    omit?: SamadhanServiceCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SamadhanServiceCategoryInclude<ExtArgs> | null
   }
 
 
@@ -42166,6 +43494,1105 @@ export namespace Prisma {
 
 
   /**
+   * Model SamadhanQueryStatusRequest
+   */
+
+  export type AggregateSamadhanQueryStatusRequest = {
+    _count: SamadhanQueryStatusRequestCountAggregateOutputType | null
+    _min: SamadhanQueryStatusRequestMinAggregateOutputType | null
+    _max: SamadhanQueryStatusRequestMaxAggregateOutputType | null
+  }
+
+  export type SamadhanQueryStatusRequestMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    phone: string | null
+    email: string | null
+    queryDescription: string | null
+    submissionDate: Date | null
+    status: string | null
+    matchedTickets: string | null
+    adminNotes: string | null
+    respondedAt: Date | null
+    respondedBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanQueryStatusRequestMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    phone: string | null
+    email: string | null
+    queryDescription: string | null
+    submissionDate: Date | null
+    status: string | null
+    matchedTickets: string | null
+    adminNotes: string | null
+    respondedAt: Date | null
+    respondedBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SamadhanQueryStatusRequestCountAggregateOutputType = {
+    id: number
+    name: number
+    phone: number
+    email: number
+    queryDescription: number
+    submissionDate: number
+    status: number
+    matchedTickets: number
+    adminNotes: number
+    respondedAt: number
+    respondedBy: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SamadhanQueryStatusRequestMinAggregateInputType = {
+    id?: true
+    name?: true
+    phone?: true
+    email?: true
+    queryDescription?: true
+    submissionDate?: true
+    status?: true
+    matchedTickets?: true
+    adminNotes?: true
+    respondedAt?: true
+    respondedBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanQueryStatusRequestMaxAggregateInputType = {
+    id?: true
+    name?: true
+    phone?: true
+    email?: true
+    queryDescription?: true
+    submissionDate?: true
+    status?: true
+    matchedTickets?: true
+    adminNotes?: true
+    respondedAt?: true
+    respondedBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SamadhanQueryStatusRequestCountAggregateInputType = {
+    id?: true
+    name?: true
+    phone?: true
+    email?: true
+    queryDescription?: true
+    submissionDate?: true
+    status?: true
+    matchedTickets?: true
+    adminNotes?: true
+    respondedAt?: true
+    respondedBy?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SamadhanQueryStatusRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanQueryStatusRequest to aggregate.
+     */
+    where?: SamadhanQueryStatusRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanQueryStatusRequests to fetch.
+     */
+    orderBy?: SamadhanQueryStatusRequestOrderByWithRelationInput | SamadhanQueryStatusRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SamadhanQueryStatusRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanQueryStatusRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanQueryStatusRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SamadhanQueryStatusRequests
+    **/
+    _count?: true | SamadhanQueryStatusRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SamadhanQueryStatusRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SamadhanQueryStatusRequestMaxAggregateInputType
+  }
+
+  export type GetSamadhanQueryStatusRequestAggregateType<T extends SamadhanQueryStatusRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateSamadhanQueryStatusRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSamadhanQueryStatusRequest[P]>
+      : GetScalarType<T[P], AggregateSamadhanQueryStatusRequest[P]>
+  }
+
+
+
+
+  export type SamadhanQueryStatusRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SamadhanQueryStatusRequestWhereInput
+    orderBy?: SamadhanQueryStatusRequestOrderByWithAggregationInput | SamadhanQueryStatusRequestOrderByWithAggregationInput[]
+    by: SamadhanQueryStatusRequestScalarFieldEnum[] | SamadhanQueryStatusRequestScalarFieldEnum
+    having?: SamadhanQueryStatusRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SamadhanQueryStatusRequestCountAggregateInputType | true
+    _min?: SamadhanQueryStatusRequestMinAggregateInputType
+    _max?: SamadhanQueryStatusRequestMaxAggregateInputType
+  }
+
+  export type SamadhanQueryStatusRequestGroupByOutputType = {
+    id: string
+    name: string
+    phone: string
+    email: string | null
+    queryDescription: string
+    submissionDate: Date | null
+    status: string
+    matchedTickets: string | null
+    adminNotes: string | null
+    respondedAt: Date | null
+    respondedBy: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: SamadhanQueryStatusRequestCountAggregateOutputType | null
+    _min: SamadhanQueryStatusRequestMinAggregateOutputType | null
+    _max: SamadhanQueryStatusRequestMaxAggregateOutputType | null
+  }
+
+  type GetSamadhanQueryStatusRequestGroupByPayload<T extends SamadhanQueryStatusRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SamadhanQueryStatusRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SamadhanQueryStatusRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SamadhanQueryStatusRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], SamadhanQueryStatusRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SamadhanQueryStatusRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    email?: boolean
+    queryDescription?: boolean
+    submissionDate?: boolean
+    status?: boolean
+    matchedTickets?: boolean
+    adminNotes?: boolean
+    respondedAt?: boolean
+    respondedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["samadhanQueryStatusRequest"]>
+
+  export type SamadhanQueryStatusRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    email?: boolean
+    queryDescription?: boolean
+    submissionDate?: boolean
+    status?: boolean
+    matchedTickets?: boolean
+    adminNotes?: boolean
+    respondedAt?: boolean
+    respondedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["samadhanQueryStatusRequest"]>
+
+  export type SamadhanQueryStatusRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    email?: boolean
+    queryDescription?: boolean
+    submissionDate?: boolean
+    status?: boolean
+    matchedTickets?: boolean
+    adminNotes?: boolean
+    respondedAt?: boolean
+    respondedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["samadhanQueryStatusRequest"]>
+
+  export type SamadhanQueryStatusRequestSelectScalar = {
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    email?: boolean
+    queryDescription?: boolean
+    submissionDate?: boolean
+    status?: boolean
+    matchedTickets?: boolean
+    adminNotes?: boolean
+    respondedAt?: boolean
+    respondedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SamadhanQueryStatusRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "email" | "queryDescription" | "submissionDate" | "status" | "matchedTickets" | "adminNotes" | "respondedAt" | "respondedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["samadhanQueryStatusRequest"]>
+
+  export type $SamadhanQueryStatusRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SamadhanQueryStatusRequest"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      phone: string
+      email: string | null
+      queryDescription: string
+      submissionDate: Date | null
+      status: string
+      matchedTickets: string | null
+      adminNotes: string | null
+      respondedAt: Date | null
+      respondedBy: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["samadhanQueryStatusRequest"]>
+    composites: {}
+  }
+
+  type SamadhanQueryStatusRequestGetPayload<S extends boolean | null | undefined | SamadhanQueryStatusRequestDefaultArgs> = $Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload, S>
+
+  type SamadhanQueryStatusRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SamadhanQueryStatusRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SamadhanQueryStatusRequestCountAggregateInputType | true
+    }
+
+  export interface SamadhanQueryStatusRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SamadhanQueryStatusRequest'], meta: { name: 'SamadhanQueryStatusRequest' } }
+    /**
+     * Find zero or one SamadhanQueryStatusRequest that matches the filter.
+     * @param {SamadhanQueryStatusRequestFindUniqueArgs} args - Arguments to find a SamadhanQueryStatusRequest
+     * @example
+     * // Get one SamadhanQueryStatusRequest
+     * const samadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SamadhanQueryStatusRequestFindUniqueArgs>(args: SelectSubset<T, SamadhanQueryStatusRequestFindUniqueArgs<ExtArgs>>): Prisma__SamadhanQueryStatusRequestClient<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SamadhanQueryStatusRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SamadhanQueryStatusRequestFindUniqueOrThrowArgs} args - Arguments to find a SamadhanQueryStatusRequest
+     * @example
+     * // Get one SamadhanQueryStatusRequest
+     * const samadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SamadhanQueryStatusRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, SamadhanQueryStatusRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SamadhanQueryStatusRequestClient<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanQueryStatusRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanQueryStatusRequestFindFirstArgs} args - Arguments to find a SamadhanQueryStatusRequest
+     * @example
+     * // Get one SamadhanQueryStatusRequest
+     * const samadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SamadhanQueryStatusRequestFindFirstArgs>(args?: SelectSubset<T, SamadhanQueryStatusRequestFindFirstArgs<ExtArgs>>): Prisma__SamadhanQueryStatusRequestClient<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SamadhanQueryStatusRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanQueryStatusRequestFindFirstOrThrowArgs} args - Arguments to find a SamadhanQueryStatusRequest
+     * @example
+     * // Get one SamadhanQueryStatusRequest
+     * const samadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SamadhanQueryStatusRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, SamadhanQueryStatusRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__SamadhanQueryStatusRequestClient<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SamadhanQueryStatusRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanQueryStatusRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SamadhanQueryStatusRequests
+     * const samadhanQueryStatusRequests = await prisma.samadhanQueryStatusRequest.findMany()
+     * 
+     * // Get first 10 SamadhanQueryStatusRequests
+     * const samadhanQueryStatusRequests = await prisma.samadhanQueryStatusRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const samadhanQueryStatusRequestWithIdOnly = await prisma.samadhanQueryStatusRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SamadhanQueryStatusRequestFindManyArgs>(args?: SelectSubset<T, SamadhanQueryStatusRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SamadhanQueryStatusRequest.
+     * @param {SamadhanQueryStatusRequestCreateArgs} args - Arguments to create a SamadhanQueryStatusRequest.
+     * @example
+     * // Create one SamadhanQueryStatusRequest
+     * const SamadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.create({
+     *   data: {
+     *     // ... data to create a SamadhanQueryStatusRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends SamadhanQueryStatusRequestCreateArgs>(args: SelectSubset<T, SamadhanQueryStatusRequestCreateArgs<ExtArgs>>): Prisma__SamadhanQueryStatusRequestClient<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SamadhanQueryStatusRequests.
+     * @param {SamadhanQueryStatusRequestCreateManyArgs} args - Arguments to create many SamadhanQueryStatusRequests.
+     * @example
+     * // Create many SamadhanQueryStatusRequests
+     * const samadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SamadhanQueryStatusRequestCreateManyArgs>(args?: SelectSubset<T, SamadhanQueryStatusRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SamadhanQueryStatusRequests and returns the data saved in the database.
+     * @param {SamadhanQueryStatusRequestCreateManyAndReturnArgs} args - Arguments to create many SamadhanQueryStatusRequests.
+     * @example
+     * // Create many SamadhanQueryStatusRequests
+     * const samadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SamadhanQueryStatusRequests and only return the `id`
+     * const samadhanQueryStatusRequestWithIdOnly = await prisma.samadhanQueryStatusRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SamadhanQueryStatusRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, SamadhanQueryStatusRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SamadhanQueryStatusRequest.
+     * @param {SamadhanQueryStatusRequestDeleteArgs} args - Arguments to delete one SamadhanQueryStatusRequest.
+     * @example
+     * // Delete one SamadhanQueryStatusRequest
+     * const SamadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.delete({
+     *   where: {
+     *     // ... filter to delete one SamadhanQueryStatusRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SamadhanQueryStatusRequestDeleteArgs>(args: SelectSubset<T, SamadhanQueryStatusRequestDeleteArgs<ExtArgs>>): Prisma__SamadhanQueryStatusRequestClient<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SamadhanQueryStatusRequest.
+     * @param {SamadhanQueryStatusRequestUpdateArgs} args - Arguments to update one SamadhanQueryStatusRequest.
+     * @example
+     * // Update one SamadhanQueryStatusRequest
+     * const samadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SamadhanQueryStatusRequestUpdateArgs>(args: SelectSubset<T, SamadhanQueryStatusRequestUpdateArgs<ExtArgs>>): Prisma__SamadhanQueryStatusRequestClient<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SamadhanQueryStatusRequests.
+     * @param {SamadhanQueryStatusRequestDeleteManyArgs} args - Arguments to filter SamadhanQueryStatusRequests to delete.
+     * @example
+     * // Delete a few SamadhanQueryStatusRequests
+     * const { count } = await prisma.samadhanQueryStatusRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SamadhanQueryStatusRequestDeleteManyArgs>(args?: SelectSubset<T, SamadhanQueryStatusRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanQueryStatusRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanQueryStatusRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SamadhanQueryStatusRequests
+     * const samadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SamadhanQueryStatusRequestUpdateManyArgs>(args: SelectSubset<T, SamadhanQueryStatusRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SamadhanQueryStatusRequests and returns the data updated in the database.
+     * @param {SamadhanQueryStatusRequestUpdateManyAndReturnArgs} args - Arguments to update many SamadhanQueryStatusRequests.
+     * @example
+     * // Update many SamadhanQueryStatusRequests
+     * const samadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SamadhanQueryStatusRequests and only return the `id`
+     * const samadhanQueryStatusRequestWithIdOnly = await prisma.samadhanQueryStatusRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SamadhanQueryStatusRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, SamadhanQueryStatusRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SamadhanQueryStatusRequest.
+     * @param {SamadhanQueryStatusRequestUpsertArgs} args - Arguments to update or create a SamadhanQueryStatusRequest.
+     * @example
+     * // Update or create a SamadhanQueryStatusRequest
+     * const samadhanQueryStatusRequest = await prisma.samadhanQueryStatusRequest.upsert({
+     *   create: {
+     *     // ... data to create a SamadhanQueryStatusRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SamadhanQueryStatusRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SamadhanQueryStatusRequestUpsertArgs>(args: SelectSubset<T, SamadhanQueryStatusRequestUpsertArgs<ExtArgs>>): Prisma__SamadhanQueryStatusRequestClient<$Result.GetResult<Prisma.$SamadhanQueryStatusRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SamadhanQueryStatusRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanQueryStatusRequestCountArgs} args - Arguments to filter SamadhanQueryStatusRequests to count.
+     * @example
+     * // Count the number of SamadhanQueryStatusRequests
+     * const count = await prisma.samadhanQueryStatusRequest.count({
+     *   where: {
+     *     // ... the filter for the SamadhanQueryStatusRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends SamadhanQueryStatusRequestCountArgs>(
+      args?: Subset<T, SamadhanQueryStatusRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SamadhanQueryStatusRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SamadhanQueryStatusRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanQueryStatusRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SamadhanQueryStatusRequestAggregateArgs>(args: Subset<T, SamadhanQueryStatusRequestAggregateArgs>): Prisma.PrismaPromise<GetSamadhanQueryStatusRequestAggregateType<T>>
+
+    /**
+     * Group by SamadhanQueryStatusRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SamadhanQueryStatusRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SamadhanQueryStatusRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SamadhanQueryStatusRequestGroupByArgs['orderBy'] }
+        : { orderBy?: SamadhanQueryStatusRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SamadhanQueryStatusRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSamadhanQueryStatusRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SamadhanQueryStatusRequest model
+   */
+  readonly fields: SamadhanQueryStatusRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SamadhanQueryStatusRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SamadhanQueryStatusRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SamadhanQueryStatusRequest model
+   */
+  interface SamadhanQueryStatusRequestFieldRefs {
+    readonly id: FieldRef<"SamadhanQueryStatusRequest", 'String'>
+    readonly name: FieldRef<"SamadhanQueryStatusRequest", 'String'>
+    readonly phone: FieldRef<"SamadhanQueryStatusRequest", 'String'>
+    readonly email: FieldRef<"SamadhanQueryStatusRequest", 'String'>
+    readonly queryDescription: FieldRef<"SamadhanQueryStatusRequest", 'String'>
+    readonly submissionDate: FieldRef<"SamadhanQueryStatusRequest", 'DateTime'>
+    readonly status: FieldRef<"SamadhanQueryStatusRequest", 'String'>
+    readonly matchedTickets: FieldRef<"SamadhanQueryStatusRequest", 'String'>
+    readonly adminNotes: FieldRef<"SamadhanQueryStatusRequest", 'String'>
+    readonly respondedAt: FieldRef<"SamadhanQueryStatusRequest", 'DateTime'>
+    readonly respondedBy: FieldRef<"SamadhanQueryStatusRequest", 'String'>
+    readonly createdAt: FieldRef<"SamadhanQueryStatusRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"SamadhanQueryStatusRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SamadhanQueryStatusRequest findUnique
+   */
+  export type SamadhanQueryStatusRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanQueryStatusRequest to fetch.
+     */
+    where: SamadhanQueryStatusRequestWhereUniqueInput
+  }
+
+  /**
+   * SamadhanQueryStatusRequest findUniqueOrThrow
+   */
+  export type SamadhanQueryStatusRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanQueryStatusRequest to fetch.
+     */
+    where: SamadhanQueryStatusRequestWhereUniqueInput
+  }
+
+  /**
+   * SamadhanQueryStatusRequest findFirst
+   */
+  export type SamadhanQueryStatusRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanQueryStatusRequest to fetch.
+     */
+    where?: SamadhanQueryStatusRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanQueryStatusRequests to fetch.
+     */
+    orderBy?: SamadhanQueryStatusRequestOrderByWithRelationInput | SamadhanQueryStatusRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanQueryStatusRequests.
+     */
+    cursor?: SamadhanQueryStatusRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanQueryStatusRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanQueryStatusRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanQueryStatusRequests.
+     */
+    distinct?: SamadhanQueryStatusRequestScalarFieldEnum | SamadhanQueryStatusRequestScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanQueryStatusRequest findFirstOrThrow
+   */
+  export type SamadhanQueryStatusRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanQueryStatusRequest to fetch.
+     */
+    where?: SamadhanQueryStatusRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanQueryStatusRequests to fetch.
+     */
+    orderBy?: SamadhanQueryStatusRequestOrderByWithRelationInput | SamadhanQueryStatusRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SamadhanQueryStatusRequests.
+     */
+    cursor?: SamadhanQueryStatusRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanQueryStatusRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanQueryStatusRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SamadhanQueryStatusRequests.
+     */
+    distinct?: SamadhanQueryStatusRequestScalarFieldEnum | SamadhanQueryStatusRequestScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanQueryStatusRequest findMany
+   */
+  export type SamadhanQueryStatusRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * Filter, which SamadhanQueryStatusRequests to fetch.
+     */
+    where?: SamadhanQueryStatusRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SamadhanQueryStatusRequests to fetch.
+     */
+    orderBy?: SamadhanQueryStatusRequestOrderByWithRelationInput | SamadhanQueryStatusRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SamadhanQueryStatusRequests.
+     */
+    cursor?: SamadhanQueryStatusRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SamadhanQueryStatusRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SamadhanQueryStatusRequests.
+     */
+    skip?: number
+    distinct?: SamadhanQueryStatusRequestScalarFieldEnum | SamadhanQueryStatusRequestScalarFieldEnum[]
+  }
+
+  /**
+   * SamadhanQueryStatusRequest create
+   */
+  export type SamadhanQueryStatusRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * The data needed to create a SamadhanQueryStatusRequest.
+     */
+    data: XOR<SamadhanQueryStatusRequestCreateInput, SamadhanQueryStatusRequestUncheckedCreateInput>
+  }
+
+  /**
+   * SamadhanQueryStatusRequest createMany
+   */
+  export type SamadhanQueryStatusRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SamadhanQueryStatusRequests.
+     */
+    data: SamadhanQueryStatusRequestCreateManyInput | SamadhanQueryStatusRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanQueryStatusRequest createManyAndReturn
+   */
+  export type SamadhanQueryStatusRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many SamadhanQueryStatusRequests.
+     */
+    data: SamadhanQueryStatusRequestCreateManyInput | SamadhanQueryStatusRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SamadhanQueryStatusRequest update
+   */
+  export type SamadhanQueryStatusRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * The data needed to update a SamadhanQueryStatusRequest.
+     */
+    data: XOR<SamadhanQueryStatusRequestUpdateInput, SamadhanQueryStatusRequestUncheckedUpdateInput>
+    /**
+     * Choose, which SamadhanQueryStatusRequest to update.
+     */
+    where: SamadhanQueryStatusRequestWhereUniqueInput
+  }
+
+  /**
+   * SamadhanQueryStatusRequest updateMany
+   */
+  export type SamadhanQueryStatusRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SamadhanQueryStatusRequests.
+     */
+    data: XOR<SamadhanQueryStatusRequestUpdateManyMutationInput, SamadhanQueryStatusRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanQueryStatusRequests to update
+     */
+    where?: SamadhanQueryStatusRequestWhereInput
+    /**
+     * Limit how many SamadhanQueryStatusRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanQueryStatusRequest updateManyAndReturn
+   */
+  export type SamadhanQueryStatusRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update SamadhanQueryStatusRequests.
+     */
+    data: XOR<SamadhanQueryStatusRequestUpdateManyMutationInput, SamadhanQueryStatusRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which SamadhanQueryStatusRequests to update
+     */
+    where?: SamadhanQueryStatusRequestWhereInput
+    /**
+     * Limit how many SamadhanQueryStatusRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanQueryStatusRequest upsert
+   */
+  export type SamadhanQueryStatusRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * The filter to search for the SamadhanQueryStatusRequest to update in case it exists.
+     */
+    where: SamadhanQueryStatusRequestWhereUniqueInput
+    /**
+     * In case the SamadhanQueryStatusRequest found by the `where` argument doesn't exist, create a new SamadhanQueryStatusRequest with this data.
+     */
+    create: XOR<SamadhanQueryStatusRequestCreateInput, SamadhanQueryStatusRequestUncheckedCreateInput>
+    /**
+     * In case the SamadhanQueryStatusRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SamadhanQueryStatusRequestUpdateInput, SamadhanQueryStatusRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * SamadhanQueryStatusRequest delete
+   */
+  export type SamadhanQueryStatusRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+    /**
+     * Filter which SamadhanQueryStatusRequest to delete.
+     */
+    where: SamadhanQueryStatusRequestWhereUniqueInput
+  }
+
+  /**
+   * SamadhanQueryStatusRequest deleteMany
+   */
+  export type SamadhanQueryStatusRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SamadhanQueryStatusRequests to delete
+     */
+    where?: SamadhanQueryStatusRequestWhereInput
+    /**
+     * Limit how many SamadhanQueryStatusRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SamadhanQueryStatusRequest without action
+   */
+  export type SamadhanQueryStatusRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SamadhanQueryStatusRequest
+     */
+    select?: SamadhanQueryStatusRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SamadhanQueryStatusRequest
+     */
+    omit?: SamadhanQueryStatusRequestOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -42296,6 +44723,19 @@ export namespace Prisma {
   };
 
   export type SamadhanServiceScalarFieldEnum = (typeof SamadhanServiceScalarFieldEnum)[keyof typeof SamadhanServiceScalarFieldEnum]
+
+
+  export const SamadhanServiceCategoryScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    serviceId: 'serviceId',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SamadhanServiceCategoryScalarFieldEnum = (typeof SamadhanServiceCategoryScalarFieldEnum)[keyof typeof SamadhanServiceCategoryScalarFieldEnum]
 
 
   export const DepartmentScalarFieldEnum: {
@@ -42681,6 +45121,25 @@ export namespace Prisma {
   };
 
   export type SamadhanDailySequenceScalarFieldEnum = (typeof SamadhanDailySequenceScalarFieldEnum)[keyof typeof SamadhanDailySequenceScalarFieldEnum]
+
+
+  export const SamadhanQueryStatusRequestScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    phone: 'phone',
+    email: 'email',
+    queryDescription: 'queryDescription',
+    submissionDate: 'submissionDate',
+    status: 'status',
+    matchedTickets: 'matchedTickets',
+    adminNotes: 'adminNotes',
+    respondedAt: 'respondedAt',
+    respondedBy: 'respondedBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SamadhanQueryStatusRequestScalarFieldEnum = (typeof SamadhanQueryStatusRequestScalarFieldEnum)[keyof typeof SamadhanQueryStatusRequestScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -43598,6 +46057,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"SamadhanService"> | Date | string
     updatedAt?: DateTimeFilter<"SamadhanService"> | Date | string
     section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
+    categories?: SamadhanServiceCategoryListRelationFilter
   }
 
   export type SamadhanServiceOrderByWithRelationInput = {
@@ -43609,6 +46069,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     section?: SectionOrderByWithRelationInput
+    categories?: SamadhanServiceCategoryOrderByRelationAggregateInput
   }
 
   export type SamadhanServiceWhereUniqueInput = Prisma.AtLeast<{
@@ -43624,6 +46085,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"SamadhanService"> | Date | string
     updatedAt?: DateTimeFilter<"SamadhanService"> | Date | string
     section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
+    categories?: SamadhanServiceCategoryListRelationFilter
   }, "id" | "name_sectionId">
 
   export type SamadhanServiceOrderByWithAggregationInput = {
@@ -43650,6 +46112,72 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"SamadhanService"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"SamadhanService"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"SamadhanService"> | Date | string
+  }
+
+  export type SamadhanServiceCategoryWhereInput = {
+    AND?: SamadhanServiceCategoryWhereInput | SamadhanServiceCategoryWhereInput[]
+    OR?: SamadhanServiceCategoryWhereInput[]
+    NOT?: SamadhanServiceCategoryWhereInput | SamadhanServiceCategoryWhereInput[]
+    id?: StringFilter<"SamadhanServiceCategory"> | string
+    name?: StringFilter<"SamadhanServiceCategory"> | string
+    description?: StringNullableFilter<"SamadhanServiceCategory"> | string | null
+    serviceId?: StringFilter<"SamadhanServiceCategory"> | string
+    isActive?: BoolFilter<"SamadhanServiceCategory"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanServiceCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanServiceCategory"> | Date | string
+    service?: XOR<SamadhanServiceScalarRelationFilter, SamadhanServiceWhereInput>
+  }
+
+  export type SamadhanServiceCategoryOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    serviceId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    service?: SamadhanServiceOrderByWithRelationInput
+  }
+
+  export type SamadhanServiceCategoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name_serviceId?: SamadhanServiceCategoryNameServiceIdCompoundUniqueInput
+    AND?: SamadhanServiceCategoryWhereInput | SamadhanServiceCategoryWhereInput[]
+    OR?: SamadhanServiceCategoryWhereInput[]
+    NOT?: SamadhanServiceCategoryWhereInput | SamadhanServiceCategoryWhereInput[]
+    name?: StringFilter<"SamadhanServiceCategory"> | string
+    description?: StringNullableFilter<"SamadhanServiceCategory"> | string | null
+    serviceId?: StringFilter<"SamadhanServiceCategory"> | string
+    isActive?: BoolFilter<"SamadhanServiceCategory"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanServiceCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanServiceCategory"> | Date | string
+    service?: XOR<SamadhanServiceScalarRelationFilter, SamadhanServiceWhereInput>
+  }, "id" | "name_serviceId">
+
+  export type SamadhanServiceCategoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    serviceId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SamadhanServiceCategoryCountOrderByAggregateInput
+    _max?: SamadhanServiceCategoryMaxOrderByAggregateInput
+    _min?: SamadhanServiceCategoryMinOrderByAggregateInput
+  }
+
+  export type SamadhanServiceCategoryScalarWhereWithAggregatesInput = {
+    AND?: SamadhanServiceCategoryScalarWhereWithAggregatesInput | SamadhanServiceCategoryScalarWhereWithAggregatesInput[]
+    OR?: SamadhanServiceCategoryScalarWhereWithAggregatesInput[]
+    NOT?: SamadhanServiceCategoryScalarWhereWithAggregatesInput | SamadhanServiceCategoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SamadhanServiceCategory"> | string
+    name?: StringWithAggregatesFilter<"SamadhanServiceCategory"> | string
+    description?: StringNullableWithAggregatesFilter<"SamadhanServiceCategory"> | string | null
+    serviceId?: StringWithAggregatesFilter<"SamadhanServiceCategory"> | string
+    isActive?: BoolWithAggregatesFilter<"SamadhanServiceCategory"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"SamadhanServiceCategory"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SamadhanServiceCategory"> | Date | string
   }
 
   export type DepartmentWhereInput = {
@@ -45711,6 +48239,98 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"SamadhanDailySequence"> | Date | string
   }
 
+  export type SamadhanQueryStatusRequestWhereInput = {
+    AND?: SamadhanQueryStatusRequestWhereInput | SamadhanQueryStatusRequestWhereInput[]
+    OR?: SamadhanQueryStatusRequestWhereInput[]
+    NOT?: SamadhanQueryStatusRequestWhereInput | SamadhanQueryStatusRequestWhereInput[]
+    id?: StringFilter<"SamadhanQueryStatusRequest"> | string
+    name?: StringFilter<"SamadhanQueryStatusRequest"> | string
+    phone?: StringFilter<"SamadhanQueryStatusRequest"> | string
+    email?: StringNullableFilter<"SamadhanQueryStatusRequest"> | string | null
+    queryDescription?: StringFilter<"SamadhanQueryStatusRequest"> | string
+    submissionDate?: DateTimeNullableFilter<"SamadhanQueryStatusRequest"> | Date | string | null
+    status?: StringFilter<"SamadhanQueryStatusRequest"> | string
+    matchedTickets?: StringNullableFilter<"SamadhanQueryStatusRequest"> | string | null
+    adminNotes?: StringNullableFilter<"SamadhanQueryStatusRequest"> | string | null
+    respondedAt?: DateTimeNullableFilter<"SamadhanQueryStatusRequest"> | Date | string | null
+    respondedBy?: StringNullableFilter<"SamadhanQueryStatusRequest"> | string | null
+    createdAt?: DateTimeFilter<"SamadhanQueryStatusRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanQueryStatusRequest"> | Date | string
+  }
+
+  export type SamadhanQueryStatusRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    email?: SortOrderInput | SortOrder
+    queryDescription?: SortOrder
+    submissionDate?: SortOrderInput | SortOrder
+    status?: SortOrder
+    matchedTickets?: SortOrderInput | SortOrder
+    adminNotes?: SortOrderInput | SortOrder
+    respondedAt?: SortOrderInput | SortOrder
+    respondedBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanQueryStatusRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SamadhanQueryStatusRequestWhereInput | SamadhanQueryStatusRequestWhereInput[]
+    OR?: SamadhanQueryStatusRequestWhereInput[]
+    NOT?: SamadhanQueryStatusRequestWhereInput | SamadhanQueryStatusRequestWhereInput[]
+    name?: StringFilter<"SamadhanQueryStatusRequest"> | string
+    phone?: StringFilter<"SamadhanQueryStatusRequest"> | string
+    email?: StringNullableFilter<"SamadhanQueryStatusRequest"> | string | null
+    queryDescription?: StringFilter<"SamadhanQueryStatusRequest"> | string
+    submissionDate?: DateTimeNullableFilter<"SamadhanQueryStatusRequest"> | Date | string | null
+    status?: StringFilter<"SamadhanQueryStatusRequest"> | string
+    matchedTickets?: StringNullableFilter<"SamadhanQueryStatusRequest"> | string | null
+    adminNotes?: StringNullableFilter<"SamadhanQueryStatusRequest"> | string | null
+    respondedAt?: DateTimeNullableFilter<"SamadhanQueryStatusRequest"> | Date | string | null
+    respondedBy?: StringNullableFilter<"SamadhanQueryStatusRequest"> | string | null
+    createdAt?: DateTimeFilter<"SamadhanQueryStatusRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanQueryStatusRequest"> | Date | string
+  }, "id">
+
+  export type SamadhanQueryStatusRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    email?: SortOrderInput | SortOrder
+    queryDescription?: SortOrder
+    submissionDate?: SortOrderInput | SortOrder
+    status?: SortOrder
+    matchedTickets?: SortOrderInput | SortOrder
+    adminNotes?: SortOrderInput | SortOrder
+    respondedAt?: SortOrderInput | SortOrder
+    respondedBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SamadhanQueryStatusRequestCountOrderByAggregateInput
+    _max?: SamadhanQueryStatusRequestMaxOrderByAggregateInput
+    _min?: SamadhanQueryStatusRequestMinOrderByAggregateInput
+  }
+
+  export type SamadhanQueryStatusRequestScalarWhereWithAggregatesInput = {
+    AND?: SamadhanQueryStatusRequestScalarWhereWithAggregatesInput | SamadhanQueryStatusRequestScalarWhereWithAggregatesInput[]
+    OR?: SamadhanQueryStatusRequestScalarWhereWithAggregatesInput[]
+    NOT?: SamadhanQueryStatusRequestScalarWhereWithAggregatesInput | SamadhanQueryStatusRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SamadhanQueryStatusRequest"> | string
+    name?: StringWithAggregatesFilter<"SamadhanQueryStatusRequest"> | string
+    phone?: StringWithAggregatesFilter<"SamadhanQueryStatusRequest"> | string
+    email?: StringNullableWithAggregatesFilter<"SamadhanQueryStatusRequest"> | string | null
+    queryDescription?: StringWithAggregatesFilter<"SamadhanQueryStatusRequest"> | string
+    submissionDate?: DateTimeNullableWithAggregatesFilter<"SamadhanQueryStatusRequest"> | Date | string | null
+    status?: StringWithAggregatesFilter<"SamadhanQueryStatusRequest"> | string
+    matchedTickets?: StringNullableWithAggregatesFilter<"SamadhanQueryStatusRequest"> | string | null
+    adminNotes?: StringNullableWithAggregatesFilter<"SamadhanQueryStatusRequest"> | string | null
+    respondedAt?: DateTimeNullableWithAggregatesFilter<"SamadhanQueryStatusRequest"> | Date | string | null
+    respondedBy?: StringNullableWithAggregatesFilter<"SamadhanQueryStatusRequest"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SamadhanQueryStatusRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SamadhanQueryStatusRequest"> | Date | string
+  }
+
   export type UserSettingsCreateInput = {
     id?: string
     emailNotifications?: boolean
@@ -46448,6 +49068,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     section: SectionCreateNestedOneWithoutSamadhanServicesInput
+    categories?: SamadhanServiceCategoryCreateNestedManyWithoutServiceInput
   }
 
   export type SamadhanServiceUncheckedCreateInput = {
@@ -46458,6 +49079,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    categories?: SamadhanServiceCategoryUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type SamadhanServiceUpdateInput = {
@@ -46468,6 +49090,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     section?: SectionUpdateOneRequiredWithoutSamadhanServicesNestedInput
+    categories?: SamadhanServiceCategoryUpdateManyWithoutServiceNestedInput
   }
 
   export type SamadhanServiceUncheckedUpdateInput = {
@@ -46478,6 +49101,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: SamadhanServiceCategoryUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type SamadhanServiceCreateManyInput = {
@@ -46504,6 +49128,75 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     sectionId?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceCategoryCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    service: SamadhanServiceCreateNestedOneWithoutCategoriesInput
+  }
+
+  export type SamadhanServiceCategoryUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    serviceId: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceCategoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    service?: SamadhanServiceUpdateOneRequiredWithoutCategoriesNestedInput
+  }
+
+  export type SamadhanServiceCategoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceCategoryCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    serviceId: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceCategoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceCategoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceId?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48723,6 +51416,118 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SamadhanQueryStatusRequestCreateInput = {
+    id?: string
+    name: string
+    phone: string
+    email?: string | null
+    queryDescription: string
+    submissionDate?: Date | string | null
+    status?: string
+    matchedTickets?: string | null
+    adminNotes?: string | null
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanQueryStatusRequestUncheckedCreateInput = {
+    id?: string
+    name: string
+    phone: string
+    email?: string | null
+    queryDescription: string
+    submissionDate?: Date | string | null
+    status?: string
+    matchedTickets?: string | null
+    adminNotes?: string | null
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanQueryStatusRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    queryDescription?: StringFieldUpdateOperationsInput | string
+    submissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    matchedTickets?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanQueryStatusRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    queryDescription?: StringFieldUpdateOperationsInput | string
+    submissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    matchedTickets?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanQueryStatusRequestCreateManyInput = {
+    id?: string
+    name: string
+    phone: string
+    email?: string | null
+    queryDescription: string
+    submissionDate?: Date | string | null
+    status?: string
+    matchedTickets?: string | null
+    adminNotes?: string | null
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanQueryStatusRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    queryDescription?: StringFieldUpdateOperationsInput | string
+    submissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    matchedTickets?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanQueryStatusRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    queryDescription?: StringFieldUpdateOperationsInput | string
+    submissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    matchedTickets?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -49424,6 +52229,16 @@ export namespace Prisma {
     isNot?: SectionWhereInput
   }
 
+  export type SamadhanServiceCategoryListRelationFilter = {
+    every?: SamadhanServiceCategoryWhereInput
+    some?: SamadhanServiceCategoryWhereInput
+    none?: SamadhanServiceCategoryWhereInput
+  }
+
+  export type SamadhanServiceCategoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type SamadhanServiceNameSectionIdCompoundUniqueInput = {
     name: string
     sectionId: string
@@ -49454,6 +52269,46 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     sectionId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanServiceScalarRelationFilter = {
+    is?: SamadhanServiceWhereInput
+    isNot?: SamadhanServiceWhereInput
+  }
+
+  export type SamadhanServiceCategoryNameServiceIdCompoundUniqueInput = {
+    name: string
+    serviceId: string
+  }
+
+  export type SamadhanServiceCategoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    serviceId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanServiceCategoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    serviceId?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanServiceCategoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    serviceId?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -50781,6 +53636,54 @@ export namespace Prisma {
 
   export type SamadhanDailySequenceSumOrderByAggregateInput = {
     lastSequence?: SortOrder
+  }
+
+  export type SamadhanQueryStatusRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    queryDescription?: SortOrder
+    submissionDate?: SortOrder
+    status?: SortOrder
+    matchedTickets?: SortOrder
+    adminNotes?: SortOrder
+    respondedAt?: SortOrder
+    respondedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanQueryStatusRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    queryDescription?: SortOrder
+    submissionDate?: SortOrder
+    status?: SortOrder
+    matchedTickets?: SortOrder
+    adminNotes?: SortOrder
+    respondedAt?: SortOrder
+    respondedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SamadhanQueryStatusRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    queryDescription?: SortOrder
+    submissionDate?: SortOrder
+    status?: SortOrder
+    matchedTickets?: SortOrder
+    adminNotes?: SortOrder
+    respondedAt?: SortOrder
+    respondedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserCreateNestedOneWithoutUserSettingsInput = {
@@ -52357,12 +55260,68 @@ export namespace Prisma {
     connect?: SectionWhereUniqueInput
   }
 
+  export type SamadhanServiceCategoryCreateNestedManyWithoutServiceInput = {
+    create?: XOR<SamadhanServiceCategoryCreateWithoutServiceInput, SamadhanServiceCategoryUncheckedCreateWithoutServiceInput> | SamadhanServiceCategoryCreateWithoutServiceInput[] | SamadhanServiceCategoryUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: SamadhanServiceCategoryCreateOrConnectWithoutServiceInput | SamadhanServiceCategoryCreateOrConnectWithoutServiceInput[]
+    createMany?: SamadhanServiceCategoryCreateManyServiceInputEnvelope
+    connect?: SamadhanServiceCategoryWhereUniqueInput | SamadhanServiceCategoryWhereUniqueInput[]
+  }
+
+  export type SamadhanServiceCategoryUncheckedCreateNestedManyWithoutServiceInput = {
+    create?: XOR<SamadhanServiceCategoryCreateWithoutServiceInput, SamadhanServiceCategoryUncheckedCreateWithoutServiceInput> | SamadhanServiceCategoryCreateWithoutServiceInput[] | SamadhanServiceCategoryUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: SamadhanServiceCategoryCreateOrConnectWithoutServiceInput | SamadhanServiceCategoryCreateOrConnectWithoutServiceInput[]
+    createMany?: SamadhanServiceCategoryCreateManyServiceInputEnvelope
+    connect?: SamadhanServiceCategoryWhereUniqueInput | SamadhanServiceCategoryWhereUniqueInput[]
+  }
+
   export type SectionUpdateOneRequiredWithoutSamadhanServicesNestedInput = {
     create?: XOR<SectionCreateWithoutSamadhanServicesInput, SectionUncheckedCreateWithoutSamadhanServicesInput>
     connectOrCreate?: SectionCreateOrConnectWithoutSamadhanServicesInput
     upsert?: SectionUpsertWithoutSamadhanServicesInput
     connect?: SectionWhereUniqueInput
     update?: XOR<XOR<SectionUpdateToOneWithWhereWithoutSamadhanServicesInput, SectionUpdateWithoutSamadhanServicesInput>, SectionUncheckedUpdateWithoutSamadhanServicesInput>
+  }
+
+  export type SamadhanServiceCategoryUpdateManyWithoutServiceNestedInput = {
+    create?: XOR<SamadhanServiceCategoryCreateWithoutServiceInput, SamadhanServiceCategoryUncheckedCreateWithoutServiceInput> | SamadhanServiceCategoryCreateWithoutServiceInput[] | SamadhanServiceCategoryUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: SamadhanServiceCategoryCreateOrConnectWithoutServiceInput | SamadhanServiceCategoryCreateOrConnectWithoutServiceInput[]
+    upsert?: SamadhanServiceCategoryUpsertWithWhereUniqueWithoutServiceInput | SamadhanServiceCategoryUpsertWithWhereUniqueWithoutServiceInput[]
+    createMany?: SamadhanServiceCategoryCreateManyServiceInputEnvelope
+    set?: SamadhanServiceCategoryWhereUniqueInput | SamadhanServiceCategoryWhereUniqueInput[]
+    disconnect?: SamadhanServiceCategoryWhereUniqueInput | SamadhanServiceCategoryWhereUniqueInput[]
+    delete?: SamadhanServiceCategoryWhereUniqueInput | SamadhanServiceCategoryWhereUniqueInput[]
+    connect?: SamadhanServiceCategoryWhereUniqueInput | SamadhanServiceCategoryWhereUniqueInput[]
+    update?: SamadhanServiceCategoryUpdateWithWhereUniqueWithoutServiceInput | SamadhanServiceCategoryUpdateWithWhereUniqueWithoutServiceInput[]
+    updateMany?: SamadhanServiceCategoryUpdateManyWithWhereWithoutServiceInput | SamadhanServiceCategoryUpdateManyWithWhereWithoutServiceInput[]
+    deleteMany?: SamadhanServiceCategoryScalarWhereInput | SamadhanServiceCategoryScalarWhereInput[]
+  }
+
+  export type SamadhanServiceCategoryUncheckedUpdateManyWithoutServiceNestedInput = {
+    create?: XOR<SamadhanServiceCategoryCreateWithoutServiceInput, SamadhanServiceCategoryUncheckedCreateWithoutServiceInput> | SamadhanServiceCategoryCreateWithoutServiceInput[] | SamadhanServiceCategoryUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: SamadhanServiceCategoryCreateOrConnectWithoutServiceInput | SamadhanServiceCategoryCreateOrConnectWithoutServiceInput[]
+    upsert?: SamadhanServiceCategoryUpsertWithWhereUniqueWithoutServiceInput | SamadhanServiceCategoryUpsertWithWhereUniqueWithoutServiceInput[]
+    createMany?: SamadhanServiceCategoryCreateManyServiceInputEnvelope
+    set?: SamadhanServiceCategoryWhereUniqueInput | SamadhanServiceCategoryWhereUniqueInput[]
+    disconnect?: SamadhanServiceCategoryWhereUniqueInput | SamadhanServiceCategoryWhereUniqueInput[]
+    delete?: SamadhanServiceCategoryWhereUniqueInput | SamadhanServiceCategoryWhereUniqueInput[]
+    connect?: SamadhanServiceCategoryWhereUniqueInput | SamadhanServiceCategoryWhereUniqueInput[]
+    update?: SamadhanServiceCategoryUpdateWithWhereUniqueWithoutServiceInput | SamadhanServiceCategoryUpdateWithWhereUniqueWithoutServiceInput[]
+    updateMany?: SamadhanServiceCategoryUpdateManyWithWhereWithoutServiceInput | SamadhanServiceCategoryUpdateManyWithWhereWithoutServiceInput[]
+    deleteMany?: SamadhanServiceCategoryScalarWhereInput | SamadhanServiceCategoryScalarWhereInput[]
+  }
+
+  export type SamadhanServiceCreateNestedOneWithoutCategoriesInput = {
+    create?: XOR<SamadhanServiceCreateWithoutCategoriesInput, SamadhanServiceUncheckedCreateWithoutCategoriesInput>
+    connectOrCreate?: SamadhanServiceCreateOrConnectWithoutCategoriesInput
+    connect?: SamadhanServiceWhereUniqueInput
+  }
+
+  export type SamadhanServiceUpdateOneRequiredWithoutCategoriesNestedInput = {
+    create?: XOR<SamadhanServiceCreateWithoutCategoriesInput, SamadhanServiceUncheckedCreateWithoutCategoriesInput>
+    connectOrCreate?: SamadhanServiceCreateOrConnectWithoutCategoriesInput
+    upsert?: SamadhanServiceUpsertWithoutCategoriesInput
+    connect?: SamadhanServiceWhereUniqueInput
+    update?: XOR<XOR<SamadhanServiceUpdateToOneWithWhereWithoutCategoriesInput, SamadhanServiceUpdateWithoutCategoriesInput>, SamadhanServiceUncheckedUpdateWithoutCategoriesInput>
   }
 
   export type ApplicationCreateNestedManyWithoutDepartmentInput = {
@@ -57477,6 +60436,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    categories?: SamadhanServiceCategoryCreateNestedManyWithoutServiceInput
   }
 
   export type SamadhanServiceUncheckedCreateWithoutSectionInput = {
@@ -57486,6 +60446,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    categories?: SamadhanServiceCategoryUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type SamadhanServiceCreateOrConnectWithoutSectionInput = {
@@ -57602,6 +60563,34 @@ export namespace Prisma {
     create: XOR<SectionCreateWithoutSamadhanServicesInput, SectionUncheckedCreateWithoutSamadhanServicesInput>
   }
 
+  export type SamadhanServiceCategoryCreateWithoutServiceInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceCategoryUncheckedCreateWithoutServiceInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceCategoryCreateOrConnectWithoutServiceInput = {
+    where: SamadhanServiceCategoryWhereUniqueInput
+    create: XOR<SamadhanServiceCategoryCreateWithoutServiceInput, SamadhanServiceCategoryUncheckedCreateWithoutServiceInput>
+  }
+
+  export type SamadhanServiceCategoryCreateManyServiceInputEnvelope = {
+    data: SamadhanServiceCategoryCreateManyServiceInput | SamadhanServiceCategoryCreateManyServiceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SectionUpsertWithoutSamadhanServicesInput = {
     update: XOR<SectionUpdateWithoutSamadhanServicesInput, SectionUncheckedUpdateWithoutSamadhanServicesInput>
     create: XOR<SectionCreateWithoutSamadhanServicesInput, SectionUncheckedCreateWithoutSamadhanServicesInput>
@@ -57633,6 +60622,91 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     officers?: OfficerProfileUncheckedUpdateManyWithoutSectionNestedInput
     samadhanTickets?: SamadhanTicketUncheckedUpdateManyWithoutSectionNestedInput
+  }
+
+  export type SamadhanServiceCategoryUpsertWithWhereUniqueWithoutServiceInput = {
+    where: SamadhanServiceCategoryWhereUniqueInput
+    update: XOR<SamadhanServiceCategoryUpdateWithoutServiceInput, SamadhanServiceCategoryUncheckedUpdateWithoutServiceInput>
+    create: XOR<SamadhanServiceCategoryCreateWithoutServiceInput, SamadhanServiceCategoryUncheckedCreateWithoutServiceInput>
+  }
+
+  export type SamadhanServiceCategoryUpdateWithWhereUniqueWithoutServiceInput = {
+    where: SamadhanServiceCategoryWhereUniqueInput
+    data: XOR<SamadhanServiceCategoryUpdateWithoutServiceInput, SamadhanServiceCategoryUncheckedUpdateWithoutServiceInput>
+  }
+
+  export type SamadhanServiceCategoryUpdateManyWithWhereWithoutServiceInput = {
+    where: SamadhanServiceCategoryScalarWhereInput
+    data: XOR<SamadhanServiceCategoryUpdateManyMutationInput, SamadhanServiceCategoryUncheckedUpdateManyWithoutServiceInput>
+  }
+
+  export type SamadhanServiceCategoryScalarWhereInput = {
+    AND?: SamadhanServiceCategoryScalarWhereInput | SamadhanServiceCategoryScalarWhereInput[]
+    OR?: SamadhanServiceCategoryScalarWhereInput[]
+    NOT?: SamadhanServiceCategoryScalarWhereInput | SamadhanServiceCategoryScalarWhereInput[]
+    id?: StringFilter<"SamadhanServiceCategory"> | string
+    name?: StringFilter<"SamadhanServiceCategory"> | string
+    description?: StringNullableFilter<"SamadhanServiceCategory"> | string | null
+    serviceId?: StringFilter<"SamadhanServiceCategory"> | string
+    isActive?: BoolFilter<"SamadhanServiceCategory"> | boolean
+    createdAt?: DateTimeFilter<"SamadhanServiceCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"SamadhanServiceCategory"> | Date | string
+  }
+
+  export type SamadhanServiceCreateWithoutCategoriesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    section: SectionCreateNestedOneWithoutSamadhanServicesInput
+  }
+
+  export type SamadhanServiceUncheckedCreateWithoutCategoriesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    sectionId: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceCreateOrConnectWithoutCategoriesInput = {
+    where: SamadhanServiceWhereUniqueInput
+    create: XOR<SamadhanServiceCreateWithoutCategoriesInput, SamadhanServiceUncheckedCreateWithoutCategoriesInput>
+  }
+
+  export type SamadhanServiceUpsertWithoutCategoriesInput = {
+    update: XOR<SamadhanServiceUpdateWithoutCategoriesInput, SamadhanServiceUncheckedUpdateWithoutCategoriesInput>
+    create: XOR<SamadhanServiceCreateWithoutCategoriesInput, SamadhanServiceUncheckedCreateWithoutCategoriesInput>
+    where?: SamadhanServiceWhereInput
+  }
+
+  export type SamadhanServiceUpdateToOneWithWhereWithoutCategoriesInput = {
+    where?: SamadhanServiceWhereInput
+    data: XOR<SamadhanServiceUpdateWithoutCategoriesInput, SamadhanServiceUncheckedUpdateWithoutCategoriesInput>
+  }
+
+  export type SamadhanServiceUpdateWithoutCategoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    section?: SectionUpdateOneRequiredWithoutSamadhanServicesNestedInput
+  }
+
+  export type SamadhanServiceUncheckedUpdateWithoutCategoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionId?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ApplicationCreateWithoutDepartmentInput = {
@@ -67847,6 +70921,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: SamadhanServiceCategoryUpdateManyWithoutServiceNestedInput
   }
 
   export type SamadhanServiceUncheckedUpdateWithoutSectionInput = {
@@ -67856,9 +70931,46 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: SamadhanServiceCategoryUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type SamadhanServiceUncheckedUpdateManyWithoutSectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceCategoryCreateManyServiceInput = {
+    id?: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SamadhanServiceCategoryUpdateWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceCategoryUncheckedUpdateWithoutServiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SamadhanServiceCategoryUncheckedUpdateManyWithoutServiceInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null

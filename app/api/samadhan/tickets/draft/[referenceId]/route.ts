@@ -59,13 +59,27 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Parse serviceAvailed from JSON if exists
-    let selectedServices: string[] = [];
+    // Parse serviceAvailed from JSON - supports both old format (array) and new format (object)
+    let selectedServiceId: string = "";
+    let selectedCategories: string[] = [];
+
     if (ticket.serviceAvailed) {
       try {
-        selectedServices = JSON.parse(ticket.serviceAvailed);
+        const parsed = JSON.parse(ticket.serviceAvailed);
+
+        // Check if it's the new format with serviceId and categoryIds
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          selectedServiceId = parsed.serviceId || "";
+          selectedCategories = parsed.categoryIds || [];
+        } else if (Array.isArray(parsed)) {
+          // Old format - array of IDs (could be service IDs or category IDs)
+          // For backwards compatibility, treat as category IDs
+          selectedCategories = parsed;
+        }
       } catch {
-        selectedServices = [];
+        // If parsing fails, leave as empty
+        selectedServiceId = "";
+        selectedCategories = [];
       }
     }
 
@@ -79,7 +93,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         sectionId: ticket.sectionId,
         section: ticket.section,
         subject: ticket.subject || "",
-        selectedServices,
+        selectedServiceId,
+        selectedCategories,
         description: ticket.description || "",
         visitedDC: ticket.visitedDC,
         visitDate: ticket.visitDate

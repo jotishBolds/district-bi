@@ -1,9 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Search, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Search,
+  Loader2,
+  Shield,
+  User,
+  MessageSquare,
+  FileText,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,10 +23,37 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 
+interface SamadhanSession {
+  userId: string;
+  phone: string;
+  name: string;
+  pseudonym: string;
+}
+
 export default function TrackPage() {
   const [referenceId, setReferenceId] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [session, setSession] = useState<SamadhanSession | null>(null);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
   const router = useRouter();
+
+  // Check SAMADHAN session on mount
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch("/api/samadhan/auth?action=session");
+        const data = await response.json();
+        if (data.authenticated && data.session) {
+          setSession(data.session);
+        }
+      } catch (error) {
+        console.error("Session check error:", error);
+      } finally {
+        setIsCheckingSession(false);
+      }
+    };
+    checkSession();
+  }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +65,7 @@ export default function TrackPage() {
 
     setIsSearching(true);
     try {
+      // First check if the ticket exists
       const response = await fetch(
         `/api/samadhan/tickets?referenceId=${encodeURIComponent(
           referenceId.trim()
@@ -38,6 +74,8 @@ export default function TrackPage() {
       const data = await response.json();
 
       if (data.success) {
+        // Ticket found - navigate to detail page
+        // The detail page will handle OTP verification if needed
         router.push(`/samadhan/track/${referenceId.trim()}`);
       } else {
         toast.error("Ticket not found. Please check the reference ID.");
@@ -49,11 +87,20 @@ export default function TrackPage() {
     }
   };
 
+  // Loading state
+  if (isCheckingSession) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto">
+    <div className="min-h-[60vh] py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-lg mx-auto">
         <Link
-          href="/"
+          href="/samadhan"
           className="inline-flex items-center text-sm text-gray-600 hover:text-green-600 mb-8"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -71,6 +118,15 @@ export default function TrackPage() {
             <CardDescription className="text-gray-600">
               Enter your reference ID to check the status of your query
             </CardDescription>
+            {/* Session info if logged in */}
+            {session && (
+              <div className="mt-4 bg-green-50 rounded-xl p-3 border border-green-100">
+                <p className="text-sm text-green-700">
+                  Logged in as{" "}
+                  <span className="font-semibold">{session.name}</span>
+                </p>
+              </div>
+            )}
           </CardHeader>
 
           <CardContent className="px-6 pb-8">
@@ -103,19 +159,66 @@ export default function TrackPage() {
               </div>
             </form>
 
-            <div className="mt-6 pt-6 border-t border-gray-100 text-center">
-              <p className="text-sm text-gray-600 mb-3">
-                Don&apos;t have a reference ID?
-              </p>
-              <Link href="/samadhan/login">
-                <Button
-                  variant="outline"
-                  className="rounded-full border-2 border-green-200 hover:bg-green-50 hover:border-green-400"
-                >
-                  Login to View Your Queries
-                </Button>
-              </Link>
+            {/* How it works */}
+            <div className="mt-6 pt-6 border-t border-gray-100">
+              <h4 className="text-sm font-medium text-gray-900 mb-3 text-center">
+                How Tracking Works
+              </h4>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 text-sm text-gray-600">
+                  <FileText className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>Enter your reference ID to find your ticket</span>
+                </div>
+                <div className="flex items-start gap-3 text-sm text-gray-600">
+                  <Shield className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>
+                    Verify ownership via OTP sent to your registered phone
+                  </span>
+                </div>
+                <div className="flex items-start gap-3 text-sm text-gray-600">
+                  <MessageSquare className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>
+                    View full details, attachments, and respond to requests
+                  </span>
+                </div>
+              </div>
             </div>
+
+            {/* Dashboard link if logged in */}
+            {session && (
+              <div className="mt-6 pt-6 border-t border-gray-100 text-center">
+                <p className="text-sm text-gray-600 mb-3">
+                  View all your queries in one place
+                </p>
+                <Link href="/samadhan/dashboard">
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-2 border-green-200 hover:bg-green-50 hover:border-green-400 gap-2"
+                  >
+                    <User className="w-4 h-4" />
+                    Go to Dashboard
+                  </Button>
+                </Link>
+              </div>
+            )}
+
+            {/* Login prompt if not logged in */}
+            {!session && (
+              <div className="mt-6 pt-6 border-t border-gray-100 text-center">
+                <p className="text-sm text-gray-600 mb-3">
+                  Want to see all your queries and get notifications?
+                </p>
+                <Link href="/samadhan/login">
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-2 border-green-200 hover:bg-green-50 hover:border-green-400 gap-2"
+                  >
+                    <User className="w-4 h-4" />
+                    Login / Register
+                  </Button>
+                </Link>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

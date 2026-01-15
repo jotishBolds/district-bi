@@ -520,6 +520,7 @@ enum ApplicationSource {
 enum SamadhanQueryType {
   FEEDBACK
   GRIEVANCE
+  SUGGESTION
 }
 
 enum SamadhanPriority {
@@ -735,4 +736,23 @@ model SamadhanDailySequence {
   updatedAt    DateTime @updatedAt
 
   @@map("samadhan_daily_sequence")
+}
+
+// Query status requests from guest users who want to track their query
+model SamadhanQueryStatusRequest {
+  id               String    @id @default(uuid())
+  name             String
+  phone            String
+  email            String?
+  queryDescription String    @db.Text
+  submissionDate   DateTime?
+  status           String    @default("PENDING") // PENDING, REVIEWED, RESPONDED
+  matchedTickets   String?   @db.Text // JSON array of matched ticket reference IDs
+  adminNotes       String?   @db.Text
+  respondedAt      DateTime?
+  respondedBy      String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("samadhan_query_status_requests")
 }

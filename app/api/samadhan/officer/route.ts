@@ -304,9 +304,11 @@ export async function GET(request: NextRequest) {
         status: ticket.status,
         section: ticket.section,
         citizenName,
+        subject: ticket.subject, // Issue title/subject
         description:
           ticket.description.substring(0, 150) +
           (ticket.description.length > 150 ? "..." : ""),
+        visitDate: ticket.visitDate, // When citizen visited
         assignedOfficer: ticket.assignedOfficer
           ? {
               id: ticket.assignedOfficer.id,

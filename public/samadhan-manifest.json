@@ -1,0 +1,70 @@
+{
+  "name": "SAMADHAN - Citizen Grievance Portal",
+  "short_name": "SAMADHAN",
+  "description": "Submit and track feedback, grievances, and suggestions for District Administrative Centre, Gangtok.",
+  "start_url": "/samadhan",
+  "display": "standalone",
+  "background_color": "#16a34a",
+  "theme_color": "#16a34a",
+  "orientation": "portrait-primary",
+  "scope": "/samadhan",
+  "lang": "en",
+  "categories": ["government", "utilities", "grievance"],
+  "icons": [
+    {
+      "src": "/pwa/samadhan/samadhan-icon-48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa/samadhan/samadhan-icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa/samadhan/samadhan-icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa/samadhan/samadhan-icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa/samadhan/samadhan-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa/samadhan/samadhan-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Submit Query",
+      "short_name": "Submit",
+      "url": "/samadhan/submit",
+      "icons": [
+        { "src": "/pwa/samadhan/samadhan-icon-96.png", "sizes": "96x96" }
+      ]
+    },
+    {
+      "name": "My Dashboard",
+      "short_name": "Dashboard",
+      "url": "/samadhan/dashboard",
+      "icons": [
+        { "src": "/pwa/samadhan/samadhan-icon-96.png", "sizes": "96x96" }
+      ]
+    }
+  ]
+}

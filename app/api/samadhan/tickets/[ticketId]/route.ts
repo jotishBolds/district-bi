@@ -328,17 +328,52 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         !isAppealed;
     }
 
-    // Resolve service UUIDs to names
-    let resolvedServiceNames: string | null = ticket.serviceAvailed;
+    // Resolve service UUIDs to names - handle both new format and old format
+    let resolvedServiceNames: string | null = null;
+    let resolvedCategoryNames: string | null = null;
+
     if (ticket.serviceAvailed) {
       try {
-        const serviceIds = JSON.parse(ticket.serviceAvailed);
-        if (Array.isArray(serviceIds) && serviceIds.length > 0) {
+        const parsed = JSON.parse(ticket.serviceAvailed);
+
+        // Check if it's the new format with serviceId and categoryIds
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          // New format: { serviceId, categoryIds }
+          if (parsed.serviceId) {
+            const service = await prisma.samadhanService.findUnique({
+              where: { id: parsed.serviceId },
+              select: { name: true },
+            });
+            resolvedServiceNames = service?.name || null;
+          }
+
+          if (
+            parsed.categoryIds &&
+            Array.isArray(parsed.categoryIds) &&
+            parsed.categoryIds.length > 0
+          ) {
+            const categories = await prisma.samadhanServiceCategory.findMany({
+              where: { id: { in: parsed.categoryIds } },
+              select: { name: true },
+            });
+            resolvedCategoryNames = categories.map((c) => c.name).join(", ");
+          }
+        } else if (Array.isArray(parsed) && parsed.length > 0) {
+          // Old format: array of IDs (could be service IDs)
           const services = await prisma.samadhanService.findMany({
-            where: { id: { in: serviceIds } },
+            where: { id: { in: parsed } },
             select: { name: true },
           });
-          resolvedServiceNames = services.map((s) => s.name).join(", ");
+          if (services.length > 0) {
+            resolvedServiceNames = services.map((s) => s.name).join(", ");
+          } else {
+            // Try as category IDs
+            const categories = await prisma.samadhanServiceCategory.findMany({
+              where: { id: { in: parsed } },
+              select: { name: true },
+            });
+            resolvedCategoryNames = categories.map((c) => c.name).join(", ");
+          }
         }
       } catch {
         // If parsing fails, keep the original value
@@ -355,7 +390,11 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         priority: ticket.priority,
         status: ticket.status,
         section: ticket.section,
+        subject: ticket.subject,
         serviceAvailed: resolvedServiceNames,
+        serviceCategories: resolvedCategoryNames,
+        visitDate: ticket.visitDate,
+        visitedDC: ticket.visitedDC,
         description: ticket.description,
         resolutionMessage: ticket.resolutionMessage,
         isAppeal: ticket.isAppeal,

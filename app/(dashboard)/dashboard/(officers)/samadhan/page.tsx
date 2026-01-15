@@ -46,7 +46,9 @@ interface Ticket {
   status: string;
   section: { id: string; name: string };
   citizenName: string;
+  subject: string | null;
   description: string;
+  visitDate: string | null;
   assignedOfficer: {
     id: string;
     name: string;
@@ -199,7 +201,9 @@ export default function OfficerSamadhanDashboard() {
     (ticket) =>
       ticket.referenceId.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ticket.citizenName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ticket.description.toLowerCase().includes(searchQuery.toLowerCase())
+      ticket.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (ticket.subject &&
+        ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const isAdmin =
@@ -667,6 +671,11 @@ export default function OfficerSamadhanDashboard() {
                             <p className="text-sm font-medium text-gray-900 mb-1">
                               {ticket.citizenName}
                             </p>
+                            {ticket.subject && (
+                              <p className="text-sm font-semibold text-gray-800 mb-1">
+                                {ticket.subject}
+                              </p>
+                            )}
                             <p className="text-sm text-gray-600 line-clamp-2">
                               {ticket.description}
                             </p>
@@ -676,6 +685,15 @@ export default function OfficerSamadhanDashboard() {
                               <span>
                                 {format(new Date(ticket.createdAt), "PP")}
                               </span>
+                              {ticket.visitDate && (
+                                <>
+                                  <span>•</span>
+                                  <span>
+                                    Visited:{" "}
+                                    {format(new Date(ticket.visitDate), "PP")}
+                                  </span>
+                                </>
+                              )}
                               {ticket.slaDeadline && (
                                 <>
                                   <span>•</span>

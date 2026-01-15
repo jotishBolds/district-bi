@@ -215,6 +215,16 @@ exports.Prisma.SamadhanServiceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SamadhanServiceCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  serviceId: 'serviceId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.DepartmentScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -528,6 +538,22 @@ exports.Prisma.SamadhanDailySequenceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SamadhanQueryStatusRequestScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  phone: 'phone',
+  email: 'email',
+  queryDescription: 'queryDescription',
+  submissionDate: 'submissionDate',
+  status: 'status',
+  matchedTickets: 'matchedTickets',
+  adminNotes: 'adminNotes',
+  respondedAt: 'respondedAt',
+  respondedBy: 'respondedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -615,7 +641,8 @@ exports.NotificationType = exports.$Enums.NotificationType = {
 
 exports.SamadhanQueryType = exports.$Enums.SamadhanQueryType = {
   FEEDBACK: 'FEEDBACK',
-  GRIEVANCE: 'GRIEVANCE'
+  GRIEVANCE: 'GRIEVANCE',
+  SUGGESTION: 'SUGGESTION'
 };
 
 exports.SamadhanPriority = exports.$Enums.SamadhanPriority = {
@@ -663,6 +690,7 @@ exports.Prisma.ModelName = {
   ServiceCategory: 'ServiceCategory',
   Section: 'Section',
   SamadhanService: 'SamadhanService',
+  SamadhanServiceCategory: 'SamadhanServiceCategory',
   Department: 'Department',
   Application: 'Application',
   ApplicationWorkflow: 'ApplicationWorkflow',
@@ -686,7 +714,8 @@ exports.Prisma.ModelName = {
   SamadhanStatusHistory: 'SamadhanStatusHistory',
   SamadhanInternalNote: 'SamadhanInternalNote',
   SamadhanSLAConfig: 'SamadhanSLAConfig',
-  SamadhanDailySequence: 'SamadhanDailySequence'
+  SamadhanDailySequence: 'SamadhanDailySequence',
+  SamadhanQueryStatusRequest: 'SamadhanQueryStatusRequest'
 };
 
 /**

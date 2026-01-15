@@ -56,6 +56,15 @@ interface Service {
   name: string;
   description: string | null;
   sectionId: string;
+  section?: Section;
+  isActive?: boolean;
+}
+
+interface ServiceCategory {
+  id: string;
+  name: string;
+  description: string | null;
+  serviceId: string;
 }
 
 type QueryType = "FEEDBACK" | "GRIEVANCE";
@@ -74,14 +83,14 @@ const GRIEVANCE_STEPS = [
   },
   { id: "date", title: "Visit Date", description: "When did you visit?" },
   {
-    id: "section",
-    title: "Section",
-    description: "Which section did you visit?",
+    id: "service",
+    title: "Service",
+    description: "Select the related service",
   },
   {
-    id: "services",
-    title: "Services",
-    description: "What services did you avail?",
+    id: "categories",
+    title: "Categories",
+    description: "Select service categories",
   },
   {
     id: "subject",
@@ -124,15 +133,17 @@ const FEEDBACK_STEPS = [
   { id: "review", title: "Review", description: "Review and submit" },
 ];
 
-// Success confirmation modal component
+// Success confirmation modal component - different for guests vs registered users
 function SuccessModal({
   isOpen,
   referenceId,
   onClose,
+  isGuest,
 }: {
   isOpen: boolean;
   referenceId: string;
   onClose: () => void;
+  isGuest: boolean;
 }) {
   const router = useRouter();
 
@@ -158,33 +169,68 @@ function SuccessModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center">
-          <p className="text-sm text-gray-600 mb-2">Your Reference ID</p>
-          <p className="text-xl font-mono font-bold text-blue-700 bg-white rounded-lg px-4 py-2 inline-block">
-            {referenceId}
-          </p>
-          <p className="text-xs text-gray-500 mt-3">
-            Save this ID to track your query status
-          </p>
-        </div>
+        {/* Show Reference ID only for registered users */}
+        {!isGuest ? (
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center">
+            <p className="text-sm text-gray-600 mb-2">Your Reference ID</p>
+            <p className="text-xl font-mono font-bold text-blue-700 bg-white rounded-lg px-4 py-2 inline-block">
+              {referenceId}
+            </p>
+            <p className="text-xs text-gray-500 mt-3">
+              Save this ID to track your query status
+            </p>
+          </div>
+        ) : (
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 text-center">
+            <p className="text-sm text-amber-800 mb-2">Guest Submission</p>
+            <p className="text-sm text-amber-700">
+              Your query has been received. Since you submitted as a guest, you
+              won&apos;t be able to track its status online.
+            </p>
+            <p className="text-xs text-amber-600 mt-3">
+              You may receive updates via SMS if you provided your phone number.
+              For full tracking features, please register next time.
+            </p>
+          </div>
+        )}
 
         <DialogFooter className="flex flex-col gap-2 sm:flex-col">
-          <Button
-            onClick={() => router.push(`/samadhan/track/${referenceId}`)}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
-          >
-            Track Status
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => router.push("/samadhan/dashboard")}
-            className="w-full"
-          >
-            Go to Dashboard
-          </Button>
+          {!isGuest ? (
+            <>
+              <Button
+                onClick={() => router.push(`/samadhan/track/${referenceId}`)}
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
+              >
+                Track Status
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => router.push("/samadhan/dashboard")}
+                className="w-full"
+              >
+                Go to Dashboard
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={() => router.push("/samadhan/login")}
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-600"
+              >
+                Register for Full Access
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => router.push("/samadhan/query-status")}
+                className="w-full"
+              >
+                Request Status Update Later
+              </Button>
+            </>
+          )}
           <Button
             variant="ghost"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/samadhan")}
             className="w-full"
           >
             Back to Home
@@ -230,14 +276,20 @@ function TypeFormContent() {
   // Data
   const [sections, setSections] = useState<Section[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-  const [filteredServices, setFilteredServices] = useState<Service[]>([]);
+  const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>(
+    []
+  );
+  const [filteredCategories, setFilteredCategories] = useState<
+    ServiceCategory[]
+  >([]);
 
   // Form state
   const [visitedDC, setVisitedDC] = useState<boolean | null>(null);
   const [visitDate, setVisitDate] = useState<string>("");
   const [visitDateOption, setVisitDateOption] = useState<string>("");
   const [sectionId, setSectionId] = useState("");
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [selectedServiceId, setSelectedServiceId] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH">("MEDIUM");
@@ -278,7 +330,8 @@ function TypeFormContent() {
         setPriority(draft.priority || "MEDIUM");
         setSectionId(draft.sectionId || "");
         setSubject(draft.subject || "");
-        setSelectedServices(draft.selectedServices || []);
+        setSelectedServiceId(draft.selectedServiceId || "");
+        setSelectedCategories(draft.selectedCategories || []);
         setDescription(draft.description || "");
         setVisitedDC(draft.visitedDC ?? null);
         setVisitDate(draft.visitDate || "");
@@ -334,6 +387,7 @@ function TypeFormContent() {
     checkSession();
     fetchSections();
     fetchServices();
+    fetchServiceCategories();
   }, [searchParams]);
 
   // Load draft when draft parameter is present and services are loaded
@@ -344,22 +398,29 @@ function TypeFormContent() {
     }
   }, [searchParams, samadhanSession, services]);
 
-  // Track if section was manually changed (not from draft loading)
-  const [sectionChangedManually, setSectionChangedManually] = useState(false);
+  // Track if service was manually changed (not from draft loading)
+  const [serviceChangedManually, setServiceChangedManually] = useState(false);
 
+  // Filter categories by selected service
   useEffect(() => {
-    // Filter services by selected section
-    if (sectionId) {
-      setFilteredServices(services.filter((s) => s.sectionId === sectionId));
-      // Reset selection only if section was changed manually (not from draft loading)
-      if (sectionChangedManually) {
-        setSelectedServices([]);
-        setSectionChangedManually(false);
+    if (selectedServiceId) {
+      setFilteredCategories(
+        serviceCategories.filter((c) => c.serviceId === selectedServiceId)
+      );
+      // Reset category selection only if service was changed manually
+      if (serviceChangedManually) {
+        setSelectedCategories([]);
+        setServiceChangedManually(false);
+      }
+      // Also update sectionId based on selected service
+      const selectedService = services.find((s) => s.id === selectedServiceId);
+      if (selectedService) {
+        setSectionId(selectedService.sectionId);
       }
     } else {
-      setFilteredServices([]);
+      setFilteredCategories([]);
     }
-  }, [sectionId, services, sectionChangedManually]);
+  }, [selectedServiceId, serviceCategories, serviceChangedManually, services]);
 
   const fetchSections = async () => {
     try {
@@ -382,6 +443,20 @@ function TypeFormContent() {
       }
     } catch (error) {
       console.error("Failed to fetch services:", error);
+    }
+  };
+
+  const fetchServiceCategories = async () => {
+    try {
+      const response = await fetch(
+        "/api/samadhan/service-categories?includeInactive=false"
+      );
+      const data = await response.json();
+      if (data.success) {
+        setServiceCategories(data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch service categories:", error);
     }
   };
 
@@ -430,9 +505,9 @@ function TypeFormContent() {
       case "date":
         if (!visitedDC) return true; // Skip if didn't visit
         return !!visitDate || !!visitDateOption;
-      case "section":
-        return !!sectionId;
-      case "services":
+      case "service":
+        return !!selectedServiceId;
+      case "categories":
         return true; // Optional
       case "subject":
         return subject.trim().length >= 3;
@@ -457,7 +532,7 @@ function TypeFormContent() {
 
     // Skip date step if didn't visit DC
     if (currentStepData.id === "visit" && !visitedDC) {
-      // For grievance, skip to section; for feedback, skip differently
+      // For grievance, skip to service; for feedback, skip differently
       if (queryType === "GRIEVANCE") {
         const dateStepIndex = steps.findIndex((s) => s.id === "date");
         if (dateStepIndex !== -1) {
@@ -513,9 +588,10 @@ function TypeFormContent() {
         priority: queryType === "GRIEVANCE" ? priority : undefined,
         sectionId: sectionId || sections[0]?.id, // Use first section for feedback if not selected
         subject,
-        serviceAvailed:
-          selectedServices.length > 0
-            ? JSON.stringify(selectedServices)
+        selectedServiceId: selectedServiceId || undefined,
+        selectedCategories:
+          selectedCategories.length > 0
+            ? JSON.stringify(selectedCategories)
             : undefined,
         description,
         visitedDC: visitedDC ?? false,
@@ -646,11 +722,11 @@ function TypeFormContent() {
                   setVisitedDC(true);
                   setVisitDateOption("today");
                   // Skip the date step since we know it's today
-                  const sectionStepIndex = steps.findIndex(
-                    (s) => s.id === "section"
+                  const serviceStepIndex = steps.findIndex(
+                    (s) => s.id === "service"
                   );
-                  if (sectionStepIndex !== -1) {
-                    setTimeout(() => setCurrentStep(sectionStepIndex), 300);
+                  if (serviceStepIndex !== -1) {
+                    setTimeout(() => setCurrentStep(serviceStepIndex), 300);
                   }
                 }}
                 className={`p-6 rounded-2xl border-2 transition-all hover:shadow-lg ${
@@ -677,7 +753,11 @@ function TypeFormContent() {
                 onClick={() => {
                   setVisitedDC(true);
                   setVisitDateOption("");
-                  setTimeout(goToNextStep, 300);
+                  // Go directly to date step since user wants to select a date
+                  const dateStepIndex = steps.findIndex((s) => s.id === "date");
+                  if (dateStepIndex !== -1) {
+                    setTimeout(() => setCurrentStep(dateStepIndex), 300);
+                  }
                 }}
                 className={`p-6 rounded-2xl border-2 transition-all hover:shadow-lg ${
                   visitedDC === true &&
@@ -705,12 +785,12 @@ function TypeFormContent() {
                 onClick={() => {
                   setVisitedDC(false);
                   setVisitDateOption("");
-                  // Skip directly to section
-                  const sectionStepIndex = steps.findIndex(
-                    (s) => s.id === "section"
+                  // Skip directly to service
+                  const serviceStepIndex = steps.findIndex(
+                    (s) => s.id === "service"
                   );
-                  if (sectionStepIndex !== -1) {
-                    setTimeout(() => setCurrentStep(sectionStepIndex), 300);
+                  if (serviceStepIndex !== -1) {
+                    setTimeout(() => setCurrentStep(serviceStepIndex), 300);
                   }
                 }}
                 className={`p-6 rounded-2xl border-2 transition-all hover:shadow-lg ${
@@ -821,96 +901,105 @@ function TypeFormContent() {
           </div>
         );
 
-      case "section":
+      case "service":
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                Which section?
+                Select a Service
               </h2>
               <p className="text-gray-500">
-                Select the section related to your query
+                Choose the service related to your query
               </p>
             </div>
             <div className="max-w-lg mx-auto">
               <div className="grid gap-3 max-h-[400px] overflow-y-auto pr-2">
-                {sections.map((section) => (
-                  <button
-                    key={section.id}
-                    onClick={() => {
-                      if (sectionId !== section.id) {
-                        setSectionChangedManually(true);
-                      }
-                      setSectionId(section.id);
-                    }}
-                    className={`p-4 rounded-xl border-2 text-left transition-all hover:shadow-md ${
-                      sectionId === section.id
-                        ? "border-blue-500 bg-blue-50 shadow-md"
-                        : "border-gray-200 hover:border-blue-300"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-semibold">{section.name}</h3>
-                        {section.description && (
-                          <p className="text-sm text-gray-500 mt-1">
-                            {section.description}
-                          </p>
+                {services
+                  .filter((s) => s.isActive !== false)
+                  .map((service) => (
+                    <button
+                      key={service.id}
+                      onClick={() => {
+                        if (selectedServiceId !== service.id) {
+                          setServiceChangedManually(true);
+                        }
+                        setSelectedServiceId(service.id);
+                      }}
+                      className={`p-4 rounded-xl border-2 text-left transition-all hover:shadow-md ${
+                        selectedServiceId === service.id
+                          ? "border-blue-500 bg-blue-50 shadow-md"
+                          : "border-gray-200 hover:border-blue-300"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-semibold">{service.name}</h3>
+                          {service.description && (
+                            <p className="text-sm text-gray-500 mt-1">
+                              {service.description}
+                            </p>
+                          )}
+                          {service.section && (
+                            <p className="text-xs text-blue-600 mt-1">
+                              Section: {service.section.name}
+                            </p>
+                          )}
+                        </div>
+                        {selectedServiceId === service.id && (
+                          <Check className="h-5 w-5 text-blue-500" />
                         )}
                       </div>
-                      {sectionId === section.id && (
-                        <Check className="h-5 w-5 text-blue-500" />
-                      )}
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  ))}
               </div>
             </div>
           </div>
         );
 
-      case "services":
+      case "categories":
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                What services did you avail?
+                Select Categories
               </h2>
               <p className="text-gray-500">Select all that apply (optional)</p>
             </div>
             <div className="max-w-lg mx-auto">
-              {filteredServices.length > 0 ? (
+              {filteredCategories.length > 0 ? (
                 <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-                  {filteredServices.map((service) => (
+                  {filteredCategories.map((category) => (
                     <label
-                      key={service.id}
+                      key={category.id}
                       className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
-                        selectedServices.includes(service.id)
+                        selectedCategories.includes(category.id)
                           ? "border-blue-500 bg-blue-50"
                           : "border-gray-200 hover:border-blue-300"
                       }`}
                     >
                       <Checkbox
-                        checked={selectedServices.includes(service.id)}
+                        checked={selectedCategories.includes(category.id)}
                         onCheckedChange={(checked) => {
                           if (checked) {
-                            setSelectedServices([
-                              ...selectedServices,
-                              service.id,
+                            setSelectedCategories([
+                              ...selectedCategories,
+                              category.id,
                             ]);
                           } else {
-                            setSelectedServices(
-                              selectedServices.filter((id) => id !== service.id)
+                            setSelectedCategories(
+                              selectedCategories.filter(
+                                (id) => id !== category.id
+                              )
                             );
                           }
                         }}
                         className="mr-3"
                       />
                       <div className="flex-1">
-                        <p className="font-medium">{service.name}</p>
-                        {service.description && (
+                        <p className="font-medium">{category.name}</p>
+                        {category.description && (
                           <p className="text-sm text-gray-500">
-                            {service.description}
+                            {category.description}
                           </p>
                         )}
                       </div>
@@ -920,7 +1009,7 @@ function TypeFormContent() {
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>No services available for this section</p>
+                  <p>No categories available for this service</p>
                   <p className="text-sm mt-1">You can skip this step</p>
                 </div>
               )}
@@ -1216,25 +1305,27 @@ function TypeFormContent() {
                         </div>
                       )}
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-500">Section</span>
+                        <span className="text-gray-500">Service</span>
                         <span>
-                          {sections.find((s) => s.id === sectionId)?.name ||
-                            "N/A"}
+                          {services.find((s) => s.id === selectedServiceId)
+                            ?.name || "N/A"}
                         </span>
                       </div>
-                      {selectedServices.length > 0 && (
+                      {selectedCategories.length > 0 && (
                         <div className="flex justify-between items-start">
-                          <span className="text-gray-500">Services</span>
+                          <span className="text-gray-500">Categories</span>
                           <div className="text-right">
-                            {selectedServices.map((id) => {
-                              const service = services.find((s) => s.id === id);
-                              return service ? (
+                            {selectedCategories.map((id) => {
+                              const category = serviceCategories.find(
+                                (c) => c.id === id
+                              );
+                              return category ? (
                                 <Badge
                                   key={id}
                                   variant="outline"
                                   className="ml-1 mb-1"
                                 >
-                                  {service.name}
+                                  {category.name}
                                 </Badge>
                               ) : null;
                             })}
@@ -1395,7 +1486,7 @@ function TypeFormContent() {
       <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-40">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/samadhan")}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -1471,6 +1562,7 @@ function TypeFormContent() {
         isOpen={showSuccessModal}
         referenceId={submittedReferenceId}
         onClose={() => setShowSuccessModal(false)}
+        isGuest={!samadhanSession}
       />
 
       {/* Confirmation Dialog */}

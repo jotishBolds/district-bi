@@ -22,6 +22,11 @@ export const DEFAULT_SLA_CONFIG: Record<
     MEDIUM: 336, // 14 days
     HIGH: 168, // 7 days
   },
+  SUGGESTION: {
+    LOW: 168, // 7 days
+    MEDIUM: 120, // 5 days
+    HIGH: 72, // 3 days
+  },
 };
 
 /**

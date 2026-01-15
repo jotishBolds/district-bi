@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   Clock,
@@ -161,6 +161,8 @@ export default function TicketDetailPage({
 }) {
   const { referenceId } = use(params);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isPreVerified = searchParams.get("verified") === "true";
   const [ticket, setTicket] = useState<TicketData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmittingResponse, setIsSubmittingResponse] = useState(false);
@@ -190,8 +192,11 @@ export default function TicketDetailPage({
   const [otpSent, setOtpSent] = useState(false);
   const [isGuestTicket, setIsGuestTicket] = useState(false);
   const [ticketOwnerPhone, setTicketOwnerPhone] = useState<string | null>(null);
+  const [isOwnerVerified, setIsOwnerVerified] = useState(false); // Track if ownership is verified
+  const [showOwnershipVerifyModal, setShowOwnershipVerifyModal] =
+    useState(false); // Modal for ownership verification
 
-  // Check SAMADHAN session on mount
+  // Check SAMADHAN session on mount (but don't require login)
   useEffect(() => {
     const checkSession = async () => {
       try {
@@ -200,6 +205,7 @@ export default function TicketDetailPage({
         if (data.authenticated && data.session) {
           setSamadhanSession(data.session);
         }
+        // Don't redirect if not logged in - allow tracking with OTP verification
       } catch (error) {
         console.error("Session check error:", error);
       } finally {
@@ -207,7 +213,7 @@ export default function TicketDetailPage({
       }
     };
     checkSession();
-  }, []);
+  }, [referenceId, router]);
 
   useEffect(() => {
     // Wait for session check to complete before fetching ticket
@@ -229,16 +235,41 @@ export default function TicketDetailPage({
         setIsGuestTicket(!data.data.citizenId);
         setTicketOwnerPhone(data.data.citizenPhone || null);
 
-        // If user is logged in and owns this ticket, generate access token
+        // If user came from home page with OTP already verified
+        if (isPreVerified) {
+          const token = `${
+            data.data.referenceId
+          }:preverified:${Date.now()}:verified`;
+          setAttachmentAccessToken(token);
+          setIsOwnerVerified(true);
+          return;
+        }
+
+        // If user is logged in and owns this ticket, auto-verify and generate access token
         if (samadhanSession && data.data.citizenId === samadhanSession.userId) {
           const token = `${data.data.referenceId}:${
             samadhanSession.phone
           }:${Date.now()}:verified`;
           setAttachmentAccessToken(token);
+          setIsOwnerVerified(true); // Auto-verify ownership
+        } else if (samadhanSession && data.data.citizenId) {
+          // User is logged in but doesn't own this ticket - need OTP verification
+          setShowOwnershipVerifyModal(true);
+          if (data.data.citizenPhone) {
+            // Pre-fill masked phone hint
+            setVerifyPhone("");
+          }
+        } else if (!samadhanSession && data.data.citizenId) {
+          // User is NOT logged in, but this ticket belongs to a registered citizen
+          // Show OTP verification modal immediately
+          setShowOwnershipVerifyModal(true);
+        } else if (!samadhanSession && !data.data.citizenId) {
+          // Guest ticket by non-logged-in user - require phone verification
+          setShowOwnershipVerifyModal(true);
         }
       } else {
         toast.error("Ticket not found");
-        router.push("/");
+        router.push("/samadhan");
       }
     } catch (error) {
       toast.error("Failed to load ticket");
@@ -310,7 +341,11 @@ export default function TicketDetailPage({
         }:${verifyPhone}:${Date.now()}:verified`;
         setAttachmentAccessToken(token);
         setShowVerifyModal(false);
-        toast.success("Verified! You can now access attachments");
+        setShowOwnershipVerifyModal(false); // Close ownership modal too
+        setIsOwnerVerified(true); // Mark ownership as verified
+        toast.success(
+          "Verified! You can now access the ticket details and attachments"
+        );
 
         // Reset verification state
         setVerifyOtp("");
@@ -359,10 +394,20 @@ export default function TicketDetailPage({
     if (!ticket) return;
 
     try {
+      // Build headers - include verification info for OTP-verified users
+      const headers: Record<string, string> = {};
+      if (isPreVerified) {
+        headers["x-preverified"] = "true";
+      }
+      if (attachmentAccessToken) {
+        headers["x-tracking-token"] = attachmentAccessToken;
+      }
+
       const response = await fetch(
         `/api/samadhan/tickets/${ticket.id || ticket.referenceId}/accept`,
         {
           method: "POST",
+          headers,
         }
       );
       const data = await response.json();
@@ -391,6 +436,19 @@ export default function TicketDetailPage({
 
     setIsSubmittingResponse(true);
     try {
+      // Build headers - include verification info for OTP-verified users
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      // If user is pre-verified via OTP or has access token, include it
+      if (isPreVerified) {
+        headers["x-preverified"] = "true";
+      }
+      if (attachmentAccessToken) {
+        headers["x-tracking-token"] = attachmentAccessToken;
+      }
+
       // Use ticket.id if available, otherwise use referenceId (API supports both)
       const response = await fetch(
         `/api/samadhan/tickets/${
@@ -398,7 +456,7 @@ export default function TicketDetailPage({
         }/info-request/${requestId}`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ response: responseText }),
         }
       );
@@ -434,11 +492,22 @@ export default function TicketDetailPage({
     }
 
     try {
+      // Build headers - include verification info for OTP-verified users
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (isPreVerified) {
+        headers["x-preverified"] = "true";
+      }
+      if (attachmentAccessToken) {
+        headers["x-tracking-token"] = attachmentAccessToken;
+      }
+
       const response = await fetch(
         `/api/samadhan/tickets/${ticket.id || referenceId}/appeal`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ reason: appealReason }),
         }
       );
@@ -480,48 +549,156 @@ export default function TicketDetailPage({
     (r) => r.status === "PENDING"
   );
 
+  // Show verification required screen if not the owner and not verified
+  // This applies to both logged-in users who don't own the ticket AND non-logged-in users
+  if (!isOwnerVerified && showOwnershipVerifyModal) {
+    return (
+      <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md mx-auto">
+          <Link
+            href="/samadhan"
+            className="inline-flex items-center text-sm text-gray-600 hover:text-green-600 mb-6"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Home
+          </Link>
+
+          <Card>
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-orange-600" />
+              </div>
+              <CardTitle>Verification Required</CardTitle>
+              <CardDescription>
+                To view this ticket&apos;s details, please verify ownership by
+                entering the OTP sent to the registered phone number.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="text-center mb-4">
+                <p className="text-sm text-gray-600">
+                  Ticket:{" "}
+                  <span className="font-semibold">{ticket.referenceId}</span>
+                </p>
+                {ticketOwnerPhone && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Registered phone: {ticketOwnerPhone}
+                  </p>
+                )}
+              </div>
+
+              {!otpSent ? (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">
+                      Phone Number
+                    </label>
+                    <div className="flex space-x-2">
+                      <span className="inline-flex items-center px-3 py-2 border border-r-0 border-gray-300 bg-gray-50 text-gray-500 rounded-l-md text-sm">
+                        +91
+                      </span>
+                      <Input
+                        type="tel"
+                        value={verifyPhone}
+                        onChange={(e) =>
+                          setVerifyPhone(
+                            e.target.value.replace(/\D/g, "").slice(0, 10)
+                          )
+                        }
+                        placeholder="Enter your phone number"
+                        className="rounded-l-none"
+                        maxLength={10}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Enter the phone number used to submit this ticket
+                    </p>
+                  </div>
+                  <Button
+                    onClick={handleSendVerificationOtp}
+                    disabled={isSendingOtp || verifyPhone.length < 10}
+                    className="w-full bg-green-600 hover:bg-green-700"
+                  >
+                    {isSendingOtp ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Sending OTP...
+                      </>
+                    ) : (
+                      <>
+                        <Phone className="h-4 w-4 mr-2" />
+                        Send OTP
+                      </>
+                    )}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700 text-center block">
+                      Enter OTP
+                    </label>
+                    <div className="flex justify-center">
+                      <InputOTP
+                        maxLength={6}
+                        value={verifyOtp}
+                        onChange={setVerifyOtp}
+                      >
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleVerifyOtp}
+                    disabled={isVerifying || verifyOtp.length !== 6}
+                    className="w-full bg-green-600 hover:bg-green-700"
+                  >
+                    {isVerifying ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Verifying...
+                      </>
+                    ) : (
+                      "Verify OTP"
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setOtpSent(false);
+                      setVerifyOtp("");
+                    }}
+                    className="w-full text-sm"
+                  >
+                    Change Phone Number
+                  </Button>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <Link
-          href="/"
+          href="/samadhan"
           className="inline-flex items-center text-sm text-gray-600 hover:text-green-600 mb-6"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
         </Link>
-
-        {/* User Authentication Banner */}
-        {!samadhanSession && !isCheckingSession && (
-          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 mb-6">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <User className="h-5 w-5 text-amber-600" />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-amber-800">
-                  Login Required for Full Access
-                </p>
-                <p className="text-sm text-amber-700 mt-1">
-                  {isGuestTicket
-                    ? "This ticket was submitted without an account. Attachments are not accessible for such submissions."
-                    : "Login with the phone number used during submission to access attachments and full features."}
-                </p>
-                <Link href="/samadhan/login" className="inline-block mt-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="gap-1 border-amber-300 text-amber-800 hover:bg-amber-100"
-                  >
-                    <LogIn className="h-3 w-3" />
-                    Login / Register
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Main Card */}
         <Card className="mb-6">
@@ -556,44 +733,151 @@ export default function TicketDetailPage({
           </CardHeader>
 
           <CardContent className="space-y-6">
-            {/* Details Grid */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="flex items-start space-x-3">
-                <Building className="h-5 w-5 text-gray-400 mt-0.5" />
-                <div>
-                  <p className="text-sm text-gray-500">Section</p>
-                  <p className="font-medium">{ticket.section.name}</p>
-                </div>
-              </div>
-              {ticket.serviceAvailed && (
-                <div className="flex items-start space-x-3">
-                  <FileText className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-500">Service</p>
-                    <p className="font-medium">{ticket.serviceAvailed}</p>
+            {/* Ticket Summary Card */}
+            <div className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl p-5 border border-gray-100">
+              <h3 className="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-green-600" />
+                Ticket Details
+              </h3>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {/* Query Type */}
+                <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+                  <div
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                      ticket.queryType === "GRIEVANCE"
+                        ? "bg-red-100"
+                        : ticket.queryType === "FEEDBACK"
+                        ? "bg-green-100"
+                        : "bg-amber-100"
+                    }`}
+                  >
+                    <QueryIcon
+                      className={`h-5 w-5 ${
+                        ticket.queryType === "GRIEVANCE"
+                          ? "text-red-600"
+                          : ticket.queryType === "FEEDBACK"
+                          ? "text-green-600"
+                          : "text-amber-600"
+                      }`}
+                    />
                   </div>
-                </div>
-              )}
-              <div className="flex items-start space-x-3">
-                <Calendar className="h-5 w-5 text-gray-400 mt-0.5" />
-                <div>
-                  <p className="text-sm text-gray-500">Submitted On</p>
-                  <p className="font-medium">
-                    {format(new Date(ticket.createdAt), "PPp")}
-                  </p>
-                </div>
-              </div>
-              {ticket.slaDeadline && (
-                <div className="flex items-start space-x-3">
-                  <Clock className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div>
-                    <p className="text-sm text-gray-500">Expected Resolution</p>
-                    <p className="font-medium">
-                      {format(new Date(ticket.slaDeadline), "PPp")}
+                    <p className="text-xs text-gray-500">Query Type</p>
+                    <p className="font-semibold text-gray-900">
+                      {ticket.queryType.charAt(0) +
+                        ticket.queryType.slice(1).toLowerCase()}
                     </p>
                   </div>
                 </div>
-              )}
+
+                {/* Priority */}
+                <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+                  <div
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                      ticket.priority === "HIGH"
+                        ? "bg-red-100"
+                        : ticket.priority === "MEDIUM"
+                        ? "bg-amber-100"
+                        : "bg-blue-100"
+                    }`}
+                  >
+                    <AlertCircle
+                      className={`h-5 w-5 ${
+                        ticket.priority === "HIGH"
+                          ? "text-red-600"
+                          : ticket.priority === "MEDIUM"
+                          ? "text-amber-600"
+                          : "text-blue-600"
+                      }`}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Priority Level</p>
+                    <p className="font-semibold text-gray-900">
+                      {ticket.priority.charAt(0) +
+                        ticket.priority.slice(1).toLowerCase()}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Section */}
+                <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-purple-100">
+                    <Building className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Section/Department</p>
+                    <p className="font-semibold text-gray-900">
+                      {ticket.section.name}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Service */}
+                {ticket.serviceAvailed && (
+                  <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-indigo-100">
+                      <FileText className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Service Selected</p>
+                      <p className="font-semibold text-gray-900">
+                        {ticket.serviceAvailed}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Submitted Date */}
+                <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-100">
+                    <Calendar className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Submitted On</p>
+                    <p className="font-semibold text-gray-900">
+                      {format(new Date(ticket.createdAt), "PPp")}
+                    </p>
+                  </div>
+                </div>
+
+                {/* SLA Deadline */}
+                {ticket.slaDeadline && (
+                  <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-orange-100">
+                      <Clock className="h-5 w-5 text-orange-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">
+                        Expected Resolution
+                      </p>
+                      <p className="font-semibold text-gray-900">
+                        {format(new Date(ticket.slaDeadline), "PPp")}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Assigned Officer */}
+                {ticket.assignedOfficer && (
+                  <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm sm:col-span-2">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-green-100">
+                      <User className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Assigned Officer</p>
+                      <p className="font-semibold text-gray-900">
+                        {ticket.assignedOfficer.name}
+                        {ticket.assignedOfficer.designation && (
+                          <span className="text-gray-500 font-normal text-sm ml-1">
+                            ({ticket.assignedOfficer.designation})
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             <Separator />
