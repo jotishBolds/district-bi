@@ -107,9 +107,9 @@ export default function QueryStatusPage() {
           Back to Home
         </Link>
 
-        <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden">
-          <CardHeader className="text-center pb-2 pt-8 bg-gradient-to-b from-blue-50 to-white">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden p-0">
+          <CardHeader className="text-center pb-2 pt-8 bg-gradient-to-b from-green-50 to-white">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
               <HelpCircle className="h-8 w-8 text-white" />
             </div>
             <CardTitle className="text-2xl font-bold text-gray-900">
@@ -122,8 +122,8 @@ export default function QueryStatusPage() {
 
           <CardContent className="px-6 pb-8">
             {/* Info banner */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
-              <p className="text-xs text-blue-800">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-6">
+              <p className="text-xs text-green-800">
                 <strong>Note:</strong> Our team will review your request and
                 contact you via phone/SMS with your query status. Please provide
                 accurate contact details.

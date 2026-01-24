@@ -247,11 +247,11 @@ export default function CitizenDashboardPage() {
             "ACKNOWLEDGED",
             "IN_PROGRESS",
             "PENDING_INFORMATION",
-          ].includes(t.status)
+          ].includes(t.status),
         );
       case "action":
         return tickets.filter(
-          (t) => t.hasPendingInfoRequest && t.status === "PENDING_INFORMATION"
+          (t) => t.hasPendingInfoRequest && t.status === "PENDING_INFORMATION",
         );
       case "resolved":
         return tickets.filter((t) => ["RESOLVED", "CLOSED"].includes(t.status));
@@ -288,11 +288,11 @@ export default function CitizenDashboardPage() {
     drafts: tickets.filter((t) => t.status === "DRAFT").length,
     active: tickets.filter((t) =>
       ["QUEUED", "UNSEEN", "SEEN", "ACKNOWLEDGED", "IN_PROGRESS"].includes(
-        t.status
-      )
+        t.status,
+      ),
     ).length,
     actionRequired: tickets.filter(
-      (t) => t.hasPendingInfoRequest && t.status === "PENDING_INFORMATION"
+      (t) => t.hasPendingInfoRequest && t.status === "PENDING_INFORMATION",
     ).length,
     resolved: tickets.filter((t) => ["RESOLVED", "CLOSED"].includes(t.status))
       .length,
@@ -300,9 +300,9 @@ export default function CitizenDashboardPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-emerald-50">
         <div className="text-center">
-          <Loader2 className="h-10 w-10 animate-spin text-blue-600 mx-auto mb-4" />
+          <Loader2 className="h-10 w-10 animate-spin text-green-600 mx-auto mb-4" />
           <p className="text-gray-500">Loading your dashboard...</p>
         </div>
       </div>
@@ -310,58 +310,8 @@ export default function CitizenDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      {/* Top Navigation Bar */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo and Title */}
-            <div className="flex items-center gap-3">
-              <Image
-                src="/assets/seal_of_sikkim.png"
-                width={40}
-                height={40}
-                alt="Seal of Sikkim"
-                className="object-contain"
-                quality={95}
-              />
-              <div className="hidden sm:block">
-                <h1 className="text-lg font-bold text-gray-900">SAMADHAN</h1>
-                <p className="text-xs text-gray-500">Citizen Dashboard</p>
-              </div>
-            </div>
-
-            {/* User Info and Actions */}
-            <div className="flex items-center gap-2 sm:gap-4">
-              <Link href="/" className="hidden sm:flex">
-                <Button variant="ghost" size="sm">
-                  <Home className="h-4 w-4 mr-2" />
-                  Home
-                </Button>
-              </Link>
-              <Link href="/samadhan/profile">
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
-                    <User className="h-4 w-4 text-white" />
-                  </div>
-                  <span className="hidden md:inline font-medium">
-                    {user.name || "Citizen"}
-                  </span>
-                </Button>
-              </Link>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleLogout}
-                className="text-gray-500 hover:text-red-600"
-              >
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
+      {/* Navigation is provided by the layout - removed duplicate navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Welcome Section */}
         <motion.div
@@ -392,7 +342,7 @@ export default function CitizenDashboardPage() {
                 Refresh
               </Button>
               <Link href="/samadhan/submit">
-                <Button className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                <Button className="gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
                   <Plus className="h-4 w-4" />
                   New Query
                 </Button>
@@ -662,8 +612,8 @@ export default function CitizenDashboardPage() {
                           needsResponse
                             ? "bg-orange-50/50 hover:bg-orange-50"
                             : isDraft
-                            ? "bg-gray-50/50 hover:bg-gray-100"
-                            : ""
+                              ? "bg-gray-50/50 hover:bg-gray-100"
+                              : ""
                         }`}
                       >
                         <div className="flex items-start gap-4">
@@ -729,13 +679,13 @@ export default function CitizenDashboardPage() {
                                   <Calendar className="h-3.5 w-3.5" />
                                   {format(
                                     new Date(ticket.createdAt),
-                                    "MMM d, yyyy"
+                                    "MMM d, yyyy",
                                   )}
                                 </span>
                                 <span className="text-gray-400">
                                   {formatDistanceToNow(
                                     new Date(ticket.createdAt),
-                                    { addSuffix: true }
+                                    { addSuffix: true },
                                   )}
                                 </span>
                                 {needsResponse && (
@@ -874,7 +824,7 @@ export default function CitizenDashboardPage() {
                           <PaginationNext
                             onClick={() =>
                               setCurrentPage(
-                                Math.min(totalPages, currentPage + 1)
+                                Math.min(totalPages, currentPage + 1),
                               )
                             }
                             className={`cursor-pointer ${

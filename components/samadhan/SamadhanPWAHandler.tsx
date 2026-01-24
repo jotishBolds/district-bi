@@ -13,21 +13,32 @@ export default function SamadhanPWAHandler() {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
     // Check if this is a fresh page load (not a navigation)
     const isFirstVisit = !sessionStorage.getItem("samadhan-visited");
+    // Check if user already dismissed the install prompt this session
+    const isInstallDismissed =
+      sessionStorage.getItem("samadhan-install-dismissed") === "true";
 
     if (isFirstVisit) {
       setShowSplash(true);
       sessionStorage.setItem("samadhan-visited", "true");
     }
 
+    if (isInstallDismissed) {
+      setIsDismissed(true);
+    }
+
     // Handle PWA install prompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setIsInstallable(true);
+      // Only show if not dismissed
+      if (!isInstallDismissed) {
+        setIsInstallable(true);
+      }
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -40,7 +51,7 @@ export default function SamadhanPWAHandler() {
     return () => {
       window.removeEventListener(
         "beforeinstallprompt",
-        handleBeforeInstallPrompt
+        handleBeforeInstallPrompt,
       );
     };
   }, []);
@@ -61,6 +72,12 @@ export default function SamadhanPWAHandler() {
     }
   };
 
+  const handleDismiss = () => {
+    setIsInstallable(false);
+    setIsDismissed(true);
+    sessionStorage.setItem("samadhan-install-dismissed", "true");
+  };
+
   return (
     <>
       {showSplash && (
@@ -70,14 +87,14 @@ export default function SamadhanPWAHandler() {
         />
       )}
 
-      {/* PWA Install Banner - shown after splash */}
-      {!showSplash && isInstallable && (
+      {/* PWA Install Banner - shown after splash and only if not dismissed */}
+      {!showSplash && isInstallable && !isDismissed && (
         <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 z-40 animate-slide-up">
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4">
             <div className="flex items-start gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                 <svg
-                  className="w-6 h-6 text-blue-600"
+                  className="w-6 h-6 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -100,12 +117,12 @@ export default function SamadhanPWAHandler() {
                 <div className="flex gap-2 mt-3">
                   <button
                     onClick={handleInstall}
-                    className="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Install
                   </button>
                   <button
-                    onClick={() => setIsInstallable(false)}
+                    onClick={handleDismiss}
                     className="px-3 py-1.5 text-gray-600 text-xs font-medium hover:text-gray-800 transition-colors"
                   >
                     Not now
@@ -113,7 +130,7 @@ export default function SamadhanPWAHandler() {
                 </div>
               </div>
               <button
-                onClick={() => setIsInstallable(false)}
+                onClick={handleDismiss}
                 className="text-gray-400 hover:text-gray-600"
               >
                 <svg

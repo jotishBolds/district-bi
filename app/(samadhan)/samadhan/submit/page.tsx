@@ -24,12 +24,21 @@ import {
   CheckCircle2,
   Calendar,
   ShieldCheck,
+  User,
+  LogIn,
+  UserCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -259,6 +268,10 @@ function TypeFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Auth choice state - whether to show auth choice or form
+  const [showAuthChoice, setShowAuthChoice] = useState(true);
+  const [proceedAsGuest, setProceedAsGuest] = useState(false);
+
   // Use SAMADHAN session instead of NextAuth
   const [samadhanSession, setSamadhanSession] = useState<{
     userId: string;
@@ -270,14 +283,14 @@ function TypeFormContent() {
   // Current step tracking
   const [currentStep, setCurrentStep] = useState(0);
   const [queryType, setQueryType] = useState<QueryType>(
-    (searchParams.get("type") as QueryType) || "GRIEVANCE"
+    (searchParams.get("type") as QueryType) || "GRIEVANCE",
   );
 
   // Data
   const [sections, setSections] = useState<Section[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>(
-    []
+    [],
   );
   const [filteredCategories, setFilteredCategories] = useState<
     ServiceCategory[]
@@ -318,7 +331,7 @@ function TypeFormContent() {
     setIsLoadingDraft(true);
     try {
       const response = await fetch(
-        `/api/samadhan/tickets/draft/${draftReferenceId}`
+        `/api/samadhan/tickets/draft/${draftReferenceId}`,
       );
       const data = await response.json();
 
@@ -371,6 +384,8 @@ function TypeFormContent() {
         const data = await response.json();
         if (data.authenticated && data.session) {
           setSamadhanSession(data.session);
+          // If user is logged in, skip auth choice
+          setShowAuthChoice(false);
           // Pre-fill contact info from session (only if not loading a draft)
           const draftId = searchParams.get("draft");
           if (!draftId) {
@@ -405,7 +420,7 @@ function TypeFormContent() {
   useEffect(() => {
     if (selectedServiceId) {
       setFilteredCategories(
-        serviceCategories.filter((c) => c.serviceId === selectedServiceId)
+        serviceCategories.filter((c) => c.serviceId === selectedServiceId),
       );
       // Reset category selection only if service was changed manually
       if (serviceChangedManually) {
@@ -449,7 +464,7 @@ function TypeFormContent() {
   const fetchServiceCategories = async () => {
     try {
       const response = await fetch(
-        "/api/samadhan/service-categories?includeInactive=false"
+        "/api/samadhan/service-categories?includeInactive=false",
       );
       const data = await response.json();
       if (data.success) {
@@ -516,7 +531,18 @@ function TypeFormContent() {
       case "attachments":
         return true; // Optional
       case "contact":
-        return true; // Optional but we have defaults
+        // For grievances, contact info is required
+        if (queryType === "GRIEVANCE") {
+          if (!citizenName.trim() || citizenName.trim().length < 2) {
+            toast.error("Please enter your name");
+            return false;
+          }
+          if (!citizenPhone.trim() || citizenPhone.trim().length < 10) {
+            toast.error("Please enter a valid phone number");
+            return false;
+          }
+        }
+        return true;
       case "review":
         return true;
       default:
@@ -627,7 +653,7 @@ function TypeFormContent() {
             {
               method: "POST",
               body: formData,
-            }
+            },
           );
         }
       }
@@ -670,6 +696,7 @@ function TypeFormContent() {
               <button
                 onClick={() => {
                   setQueryType("GRIEVANCE");
+                  setIsAnonymousToOfficer(false); // Anonymous not allowed for grievances
                   goToNextStep();
                 }}
                 className={`p-6 rounded-2xl border-2 transition-all hover:shadow-lg ${
@@ -723,7 +750,7 @@ function TypeFormContent() {
                   setVisitDateOption("today");
                   // Skip the date step since we know it's today
                   const serviceStepIndex = steps.findIndex(
-                    (s) => s.id === "service"
+                    (s) => s.id === "service",
                   );
                   if (serviceStepIndex !== -1) {
                     setTimeout(() => setCurrentStep(serviceStepIndex), 300);
@@ -787,7 +814,7 @@ function TypeFormContent() {
                   setVisitDateOption("");
                   // Skip directly to service
                   const serviceStepIndex = steps.findIndex(
-                    (s) => s.id === "service"
+                    (s) => s.id === "service",
                   );
                   if (serviceStepIndex !== -1) {
                     setTimeout(() => setCurrentStep(serviceStepIndex), 300);
@@ -988,8 +1015,8 @@ function TypeFormContent() {
                           } else {
                             setSelectedCategories(
                               selectedCategories.filter(
-                                (id) => id !== category.id
-                              )
+                                (id) => id !== category.id,
+                              ),
                             );
                           }
                         }}
@@ -1055,8 +1082,8 @@ function TypeFormContent() {
                             ? p === "HIGH"
                               ? "border-red-500 bg-red-50 text-red-700"
                               : p === "MEDIUM"
-                              ? "border-amber-500 bg-amber-50 text-amber-700"
-                              : "border-gray-500 bg-gray-50 text-gray-700"
+                                ? "border-amber-500 bg-amber-50 text-amber-700"
+                                : "border-gray-500 bg-gray-50 text-gray-700"
                             : "border-gray-200 hover:border-gray-300"
                         }`}
                       >
@@ -1179,61 +1206,88 @@ function TypeFormContent() {
                 Contact Information
               </h2>
               <p className="text-gray-500">
-                How should we reach you? (optional)
+                {queryType === "GRIEVANCE"
+                  ? "Please provide your contact details (required)"
+                  : "How should we reach you? (optional)"}
               </p>
             </div>
             <div className="max-w-lg mx-auto space-y-4">
-              {/* Anonymous toggle */}
-              <div
-                className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
-                  isAnonymousToOfficer
-                    ? "bg-green-50 border-green-300"
-                    : "bg-gray-50 border-gray-200"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  {isAnonymousToOfficer ? (
-                    <EyeOff className="h-5 w-5 text-green-600" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-blue-600" />
-                  )}
-                  <div>
-                    <p className="font-medium text-sm">
-                      {isAnonymousToOfficer
-                        ? "Anonymous Submission"
-                        : "Share Contact Details"}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {isAnonymousToOfficer
-                        ? "Officers will see a pseudonym only"
-                        : "Officers can contact you directly"}
-                    </p>
+              {/* Anonymous toggle - Only show for FEEDBACK, not GRIEVANCE */}
+              {queryType === "FEEDBACK" && (
+                <div
+                  className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                    isAnonymousToOfficer
+                      ? "bg-green-50 border-green-300"
+                      : "bg-gray-50 border-gray-200"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {isAnonymousToOfficer ? (
+                      <EyeOff className="h-5 w-5 text-green-600" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-blue-600" />
+                    )}
+                    <div>
+                      <p className="font-medium text-sm">
+                        {isAnonymousToOfficer
+                          ? "Anonymous Submission"
+                          : "Share Contact Details"}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {isAnonymousToOfficer
+                          ? "Officers will see a pseudonym only"
+                          : "Officers can contact you directly"}
+                      </p>
+                    </div>
                   </div>
+                  <Switch
+                    checked={isAnonymousToOfficer}
+                    onCheckedChange={setIsAnonymousToOfficer}
+                  />
                 </div>
-                <Switch
-                  checked={isAnonymousToOfficer}
-                  onCheckedChange={setIsAnonymousToOfficer}
-                />
-              </div>
+              )}
+
+              {/* Required info notice for grievances */}
+              {queryType === "GRIEVANCE" && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                  <p className="text-xs text-amber-800">
+                    <strong>Note:</strong> Contact information is required for
+                    grievances so that officers can follow up on your complaint
+                    and provide resolution updates.
+                  </p>
+                </div>
+              )}
 
               {/* Contact fields */}
               <div className="space-y-4 pt-4">
                 <div>
-                  <Label>Your Name</Label>
+                  <Label>
+                    Your Name{" "}
+                    {queryType === "GRIEVANCE" && (
+                      <span className="text-red-500">*</span>
+                    )}
+                  </Label>
                   <Input
                     value={citizenName}
                     onChange={(e) => setCitizenName(e.target.value)}
                     placeholder="Enter your full name"
                     className="mt-1"
+                    required={queryType === "GRIEVANCE"}
                   />
                 </div>
                 <div>
-                  <Label>Phone Number</Label>
+                  <Label>
+                    Phone Number{" "}
+                    {queryType === "GRIEVANCE" && (
+                      <span className="text-red-500">*</span>
+                    )}
+                  </Label>
                   <Input
                     value={citizenPhone}
                     onChange={(e) => setCitizenPhone(e.target.value)}
                     placeholder="Enter your phone number"
                     className="mt-1"
+                    required={queryType === "GRIEVANCE"}
                   />
                 </div>
                 <div>
@@ -1248,7 +1302,8 @@ function TypeFormContent() {
                 </div>
               </div>
 
-              {isAnonymousToOfficer &&
+              {queryType === "FEEDBACK" &&
+                isAnonymousToOfficer &&
                 (citizenName || citizenPhone || citizenEmail) && (
                   <p className="text-xs text-green-600 flex items-center gap-1">
                     <EyeOff className="h-3 w-3" />
@@ -1297,10 +1352,10 @@ function TypeFormContent() {
                             {visitDateOption === "today"
                               ? "Today"
                               : visitDateOption === "yesterday"
-                              ? "Yesterday"
-                              : visitDate
-                              ? format(new Date(visitDate), "MMM d, yyyy")
-                              : "Not specified"}
+                                ? "Yesterday"
+                                : visitDate
+                                  ? format(new Date(visitDate), "MMM d, yyyy")
+                                  : "Not specified"}
                           </span>
                         </div>
                       )}
@@ -1317,7 +1372,7 @@ function TypeFormContent() {
                           <div className="text-right">
                             {selectedCategories.map((id) => {
                               const category = serviceCategories.find(
-                                (c) => c.id === id
+                                (c) => c.id === id,
                               );
                               return category ? (
                                 <Badge
@@ -1339,8 +1394,8 @@ function TypeFormContent() {
                             priority === "HIGH"
                               ? "destructive"
                               : priority === "MEDIUM"
-                              ? "default"
-                              : "secondary"
+                                ? "default"
+                                : "secondary"
                           }
                         >
                           {priority}
@@ -1424,7 +1479,7 @@ function TypeFormContent() {
                 <Button
                   onClick={() => setShowConfirmDialog(true)}
                   disabled={isSubmitting || isSavingDraft}
-                  className="w-full py-6 text-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                  className="w-full py-6 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                 >
                   <Send className="h-5 w-5 mr-2" />
                   Submit {queryType === "GRIEVANCE" ? "Grievance" : "Feedback"}
@@ -1463,99 +1518,241 @@ function TypeFormContent() {
   // Show loading state while loading draft
   if (isLoadingDraft) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600 mb-4" />
+      <div className="min-h-[60vh] flex flex-col items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-green-600 mb-4" />
         <p className="text-gray-600">Loading your draft...</p>
       </div>
     );
   }
 
+  // Show loading while checking session
+  if (isCheckingSession) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-green-600 mb-4" />
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    );
+  }
+
+  // Auth choice screen - show first for non-logged-in users
+  if (showAuthChoice && !samadhanSession) {
+    return (
+      <div className="min-h-[60vh] py-16 px-4">
+        <div className="max-w-lg mx-auto">
+          {/* Back Link */}
+          <Link
+            href="/samadhan"
+            className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 mb-8 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Link>
+
+          <Card className="border-green-100 shadow-lg">
+            <CardHeader className="text-center pb-2">
+              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-4">
+                <User className="h-8 w-8 text-green-600" />
+              </div>
+              <CardTitle className="text-2xl text-gray-900">
+                Submit a Query
+              </CardTitle>
+              <CardDescription className="text-base">
+                How would you like to proceed?
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-4">
+              {/* Login Option */}
+              <button
+                onClick={() =>
+                  router.push("/samadhan/login?redirect=/samadhan/submit")
+                }
+                className="w-full p-5 rounded-xl border-2 border-green-200 hover:border-green-400 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 transition-all group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                    <LogIn className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div className="text-left flex-1">
+                    <h3 className="font-semibold text-gray-900">
+                      Login / Register
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Track your queries & get updates
+                    </p>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-green-400 group-hover:text-green-600 transition-colors" />
+                </div>
+              </button>
+
+              {/* Divider */}
+              <div className="relative py-2">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-gray-200" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-gray-500">or</span>
+                </div>
+              </div>
+
+              {/* Guest Option */}
+              <button
+                onClick={() => {
+                  setProceedAsGuest(true);
+                  setShowAuthChoice(false);
+                }}
+                className="w-full p-5 rounded-xl border-2 border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 transition-all group"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
+                    <UserCircle className="h-6 w-6 text-gray-500" />
+                  </div>
+                  <div className="text-left flex-1">
+                    <h3 className="font-semibold text-gray-900">
+                      Continue as Guest
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Submit without an account
+                    </p>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
+                </div>
+              </button>
+
+              {/* Benefits of logging in */}
+              <div className="bg-green-50 border border-green-100 rounded-lg p-4 mt-4">
+                <p className="text-xs text-green-800 font-medium mb-2">
+                  Benefits of logging in:
+                </p>
+                <ul className="text-xs text-green-700 space-y-1">
+                  <li className="flex items-center gap-2">
+                    <Check className="h-3 w-3" /> Track your query status online
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-3 w-3" /> Save drafts and continue later
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-3 w-3" /> View your query history
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-3 w-3" /> Receive SMS & email updates
+                  </li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      {/* Progress bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-gray-200 z-50">
-        <motion.div
-          className="h-full bg-gradient-to-r from-blue-500 to-indigo-500"
-          initial={{ width: 0 }}
-          animate={{ width: `${progressPercentage}%` }}
-          transition={{ duration: 0.3 }}
-        />
-      </div>
+    <div className="min-h-[60vh] py-8 px-4">
+      <div className="max-w-3xl mx-auto">
+        {/* Back Link */}
+        <Link
+          href="/samadhan"
+          className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 mb-6 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Home
+        </Link>
 
-      {/* Header */}
-      <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-40">
-        <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
-          <button
-            onClick={() => router.push("/samadhan")}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            <span className="hidden sm:inline">Exit</span>
-          </button>
-
-          <div className="flex items-center gap-3">
-            <Image
-              src="/assets/seal_of_sikkim.png"
-              width={32}
-              height={32}
-              alt="Seal"
-              className="object-contain"
+        <Card className="border-green-100 shadow-lg overflow-hidden p-0 gap-0">
+          {/* Progress bar inside card */}
+          <div className="h-1.5 bg-gray-100">
+            <motion.div
+              className="h-full bg-gradient-to-r from-green-500 to-emerald-500"
+              initial={{ width: 0 }}
+              animate={{ width: `${progressPercentage}%` }}
+              transition={{ duration: 0.3 }}
             />
-            <div className="flex flex-col items-center">
-              <span className="font-semibold text-gray-900">SAMADHAN</span>
-              {existingDraftId && (
-                <Badge
-                  variant="outline"
-                  className="text-xs bg-amber-50 text-amber-700 border-amber-300"
-                >
-                  Editing Draft
+          </div>
+
+          <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg text-gray-900">
+                  {queryType === "GRIEVANCE"
+                    ? "Submit Grievance"
+                    : "Submit Feedback"}
+                </CardTitle>
+                <CardDescription>
+                  Step {currentStep + 1} of {steps.length}:{" "}
+                  {currentStepData.title}
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                {existingDraftId && (
+                  <Badge
+                    variant="outline"
+                    className="bg-amber-50 text-amber-700 border-amber-300"
+                  >
+                    Editing Draft
+                  </Badge>
+                )}
+                <Badge variant="outline" className="bg-white">
+                  {currentStep + 1}/{steps.length}
                 </Badge>
-              )}
+              </div>
             </div>
-          </div>
+          </CardHeader>
 
-          <div className="text-sm text-gray-500">
-            {currentStep + 1} / {steps.length}
-          </div>
+          <CardContent className="p-6 sm:p-8">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentStep}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {renderStepContent()}
+              </motion.div>
+            </AnimatePresence>
+          </CardContent>
+
+          {/* Footer navigation inside card */}
+          {currentStepData.id !== "type" && currentStepData.id !== "review" && (
+            <div className="border-t border-gray-100 bg-gray-50 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <Button
+                  variant="ghost"
+                  onClick={goToPrevStep}
+                  disabled={currentStep === 0}
+                  className="gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back
+                </Button>
+
+                <Button
+                  onClick={goToNextStep}
+                  className="gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                >
+                  {currentStep === steps.length - 2 ? "Review" : "Continue"}
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </Card>
+
+        {/* Session status badge below card */}
+        <div className="mt-4 text-center">
+          {samadhanSession ? (
+            <span className="inline-flex items-center gap-1.5 text-sm text-green-600 bg-green-50 px-3 py-1.5 rounded-full">
+              <ShieldCheck className="h-4 w-4" />
+              Logged in as {samadhanSession.name}
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 text-sm text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full">
+              <UserCircle className="h-4 w-4" />
+              Submitting as Guest
+            </span>
+          )}
         </div>
       </div>
-
-      {/* Main content */}
-      <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {renderStepContent()}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Footer navigation */}
-      {currentStepData.id !== "type" && currentStepData.id !== "review" && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
-          <div className="max-w-3xl mx-auto flex items-center justify-between">
-            <Button
-              variant="ghost"
-              onClick={goToPrevStep}
-              disabled={currentStep === 0}
-              className="gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </Button>
-
-            <Button onClick={goToNextStep} className="gap-2">
-              {currentStep === steps.length - 2 ? "Review" : "Continue"}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
 
       {/* Success Modal */}
       <SuccessModal
@@ -1569,7 +1766,7 @@ function TypeFormContent() {
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="text-center">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mb-4">
+            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mb-4">
               <ShieldCheck className="h-10 w-10 text-white" />
             </div>
             <DialogTitle className="text-2xl text-center">
@@ -1607,7 +1804,7 @@ function TypeFormContent() {
                 handleSubmit(false);
               }}
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600"
             >
               {isSubmitting ? (
                 <>

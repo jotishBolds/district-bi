@@ -55,7 +55,7 @@ export default function CitizenProfilePage() {
     const checkSessionAndFetch = async () => {
       try {
         const sessionResponse = await fetch(
-          "/api/samadhan/auth?action=session"
+          "/api/samadhan/auth?action=session",
         );
         const sessionData = await sessionResponse.json();
 
@@ -127,7 +127,7 @@ export default function CitizenProfilePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
       </div>
     );
   }
@@ -139,7 +139,7 @@ export default function CitizenProfilePage() {
         <div className="mb-8">
           <Link
             href="/samadhan/dashboard"
-            className="inline-flex items-center text-sm text-gray-600 hover:text-blue-600 mb-4"
+            className="inline-flex items-center text-sm text-gray-600 hover:text-green-600 mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Dashboard
@@ -149,9 +149,9 @@ export default function CitizenProfilePage() {
         </div>
 
         {/* Privacy Notice */}
-        <Alert className="mb-6 border-blue-200 bg-blue-50">
-          <Shield className="h-4 w-4 text-blue-600" />
-          <AlertDescription className="text-blue-800">
+        <Alert className="mb-6 border-green-200 bg-green-50">
+          <Shield className="h-4 w-4 text-green-600" />
+          <AlertDescription className="text-green-800">
             <strong>Your privacy is protected.</strong> Officers see only your
             pseudonym when handling your queries. Your real identity is kept
             confidential and only visible to authorized administrators.
@@ -171,12 +171,12 @@ export default function CitizenProfilePage() {
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Pseudonym Display */}
-            <div className="p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
-              <Label className="text-sm font-medium text-purple-700">
+            <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+              <Label className="text-sm font-medium text-green-700">
                 Your Anonymous Identity
               </Label>
               <div className="flex items-center gap-2 mt-1">
-                <p className="text-lg font-semibold text-purple-900">
+                <p className="text-lg font-semibold text-green-900">
                   {showPseudonym ? profile.pseudonym : "••••••••••••"}
                 </p>
                 <Button
@@ -186,13 +186,13 @@ export default function CitizenProfilePage() {
                   className="h-8 w-8 p-0"
                 >
                   {showPseudonym ? (
-                    <EyeOff className="h-4 w-4 text-purple-600" />
+                    <EyeOff className="h-4 w-4 text-green-600" />
                   ) : (
-                    <Eye className="h-4 w-4 text-purple-600" />
+                    <Eye className="h-4 w-4 text-green-600" />
                   )}
                 </Button>
               </div>
-              <p className="text-xs text-purple-600 mt-1">
+              <p className="text-xs text-green-600 mt-1">
                 This is how officers see your identity
               </p>
             </div>

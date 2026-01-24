@@ -68,8 +68,8 @@ export default function TrackPage() {
       // First check if the ticket exists
       const response = await fetch(
         `/api/samadhan/tickets?referenceId=${encodeURIComponent(
-          referenceId.trim()
-        )}`
+          referenceId.trim(),
+        )}`,
       );
       const data = await response.json();
 
@@ -107,7 +107,7 @@ export default function TrackPage() {
           Back to Home
         </Link>
 
-        <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden">
+        <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden p-0">
           <CardHeader className="text-center pb-2 pt-8 bg-gradient-to-b from-green-50 to-white">
             <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
               <Search className="h-8 w-8 text-white" />
