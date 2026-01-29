@@ -42,24 +42,44 @@ export default function SamadhanSplashScreen({
       </div>
 
       <div className="relative z-10 flex flex-col items-center">
-        {/* Government Emblem */}
-        <div className="mb-6 relative">
-          <div className="w-20 h-20 md:w-28 md:h-28 relative">
-            <Image
-              src="/assets/emblem.png"
-              alt="Government Emblem"
-              width={112}
-              height={112}
-              className="w-full h-full object-contain"
-              priority
-            />
+        {/* Government Emblem and Sikkim Seal */}
+        <div className="flex items-center justify-center gap-4 md:gap-6 mb-6">
+          {/* Government Emblem */}
+          <div className="relative">
+            <div className="w-16 h-16 md:w-24 md:h-24 relative">
+              <Image
+                src="/assets/emblem.png"
+                alt="Government Emblem"
+                width={96}
+                height={96}
+                className="w-full h-full object-contain"
+                priority
+              />
+            </div>
           </div>
-          {/* Pulsing effect */}
-          <div className="absolute inset-0 w-20 h-20 md:w-28 md:h-28 rounded-full bg-blue-400 opacity-15 animate-ping" />
+
+          {/* Seal of Sikkim */}
+          <div className="relative">
+            <div className="w-16 h-16 md:w-24 md:h-24 relative">
+              <Image
+                src="/assets/seal_of_sikkim.png"
+                alt="Seal of Sikkim"
+                width={96}
+                height={96}
+                className="w-full h-full object-contain"
+                priority
+              />
+            </div>
+            {/* Pulsing effect */}
+            <div className="absolute inset-0 w-16 h-16 md:w-24 md:h-24 rounded-full bg-blue-400 opacity-15 animate-ping" />
+          </div>
         </div>
 
         {/* App Name */}
-        <div className="text-center mb-6 px-4 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+        <div
+          className="text-center mb-6 px-4 animate-fade-in-up"
+          style={{ animationDelay: "0.3s" }}
+        >
           <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent">
             SAMADHAN
           </h1>
@@ -116,9 +136,7 @@ export default function SamadhanSplashScreen({
 
       {/* Footer branding */}
       <div className="absolute bottom-6 text-center">
-        <p className="text-xs text-gray-400">
-          Government of Sikkim
-        </p>
+        <p className="text-xs text-gray-400">Government of Sikkim</p>
       </div>
 
       {/* Tricolor accent at bottom */}

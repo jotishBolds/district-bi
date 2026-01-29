@@ -8,7 +8,6 @@ import {
   Shield,
   AlertCircle,
   LogIn,
-  UserPlus,
   User,
   FileText,
   Clock,
@@ -16,13 +15,11 @@ import {
   ArrowRight,
   Loader2,
   Search,
-  Phone,
   Send,
   ScanLine,
   Lightbulb,
   ChevronRight,
   Eye,
-  Lock,
   Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,18 +32,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
 import { toast } from "sonner";
 
 interface SamadhanSession {
@@ -60,20 +45,10 @@ export default function SamadhanHomePage() {
   const router = useRouter();
   const [session, setSession] = useState<SamadhanSession | null>(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
-  const [showGuestModal, setShowGuestModal] = useState(false);
 
   // Tracking states
   const [trackingId, setTrackingId] = useState("");
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  const [ticketOwnerPhone, setTicketOwnerPhone] = useState("");
-  const [maskedPhone, setMaskedPhone] = useState("");
-  const [otp, setOtp] = useState("");
-  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
-  const [isFetchingTicket, setIsFetchingTicket] = useState(false);
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
   const [ticketNotFound, setTicketNotFound] = useState(false);
-  const [isGuestTicket, setIsGuestTicket] = useState(false);
 
   // Check SAMADHAN session on mount
   useEffect(() => {
@@ -93,147 +68,15 @@ export default function SamadhanHomePage() {
     checkSession();
   }, []);
 
-  // Helper to mask phone number
-  const maskPhoneNumber = (phone: string): string => {
-    if (!phone || phone.length < 4) return phone;
-    return `${phone.slice(0, 2)}${"*".repeat(phone.length - 4)}${phone.slice(
-      -2,
-    )}`;
-  };
-
-  // Handle tracking - fetch ticket to check if it exists and get owner info
-  const handleTrack = async () => {
+  // Handle tracking - redirect directly to track page
+  const handleTrack = () => {
     if (!trackingId.trim()) {
       toast.error("Please enter a tracking ID");
       return;
     }
 
-    setIsFetchingTicket(true);
-    setTicketNotFound(false);
-    setIsGuestTicket(false);
-
-    try {
-      // First, check if ticket exists and get basic info
-      const response = await fetch(
-        `/api/samadhan/tickets?referenceId=${encodeURIComponent(
-          trackingId.trim(),
-        )}`,
-      );
-      const data = await response.json();
-
-      if (!data.success) {
-        setTicketNotFound(true);
-        toast.error("Ticket not found", {
-          description: "Please check the reference ID and try again.",
-        });
-        return;
-      }
-
-      // Check if this is a guest ticket (no citizenId means guest submission)
-      // Guest tickets can now be tracked directly with their reference ID
-      if (!data.data.citizenId) {
-        // Allow guest to track directly - redirect to track page
-        router.push(`/samadhan/track/${trackingId.trim()}`);
-        return;
-      }
-
-      // Ticket exists and has a registered citizen - proceed with OTP flow
-      // Get the owner phone for OTP verification
-      const ownerResponse = await fetch(
-        `/api/samadhan/tickets/${trackingId.trim()}/owner-phone`,
-      );
-      const ownerData = await ownerResponse.json();
-
-      if (!ownerResponse.ok) {
-        toast.error(ownerData.message || "Failed to fetch ticket owner info");
-        return;
-      }
-
-      // Set the owner phone (masked for display) and show OTP modal
-      setTicketOwnerPhone(ownerData.phone);
-      setMaskedPhone(maskPhoneNumber(ownerData.phone));
-      setShowOtpModal(true);
-
-      // Auto-send OTP
-      await sendOtpToOwner(ownerData.phone);
-    } catch (error) {
-      toast.error("Failed to fetch ticket information");
-    } finally {
-      setIsFetchingTicket(false);
-    }
-  };
-
-  // Send OTP to ticket owner's phone
-  const sendOtpToOwner = async (phone: string) => {
-    setIsSendingOtp(true);
-    try {
-      const response = await fetch("/api/samadhan/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          phone: phone.replace(/\D/g, ""),
-          action: "send-otp",
-        }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setOtpSent(true);
-        toast.success("OTP sent to registered phone");
-      } else {
-        toast.error(data.message || "Failed to send OTP");
-      }
-    } catch (error) {
-      toast.error("Failed to send OTP");
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
-
-  // Verify OTP and redirect to ticket
-  const handleVerifyOtp = async () => {
-    if (!otp || otp.length !== 6) {
-      toast.error("Please enter a valid 6-digit OTP");
-      return;
-    }
-
-    setIsVerifyingOtp(true);
-    try {
-      const response = await fetch("/api/samadhan/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          phone: ticketOwnerPhone.replace(/\D/g, ""),
-          otp,
-          action: "verify-otp",
-          verifyOnly: true,
-          referenceId: trackingId,
-        }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        toast.success("Verified! Redirecting to ticket...");
-        setShowOtpModal(false);
-        // Navigate to ticket with verified status
-        router.push(`/samadhan/track/${trackingId}?verified=true`);
-      } else {
-        toast.error(data.message || "Invalid OTP");
-      }
-    } catch (error) {
-      toast.error("Verification failed");
-    } finally {
-      setIsVerifyingOtp(false);
-    }
-  };
-
-  // Reset modal states
-  const resetOtpModal = () => {
-    setShowOtpModal(false);
-    setOtpSent(false);
-    setOtp("");
-    setTicketOwnerPhone("");
-    setMaskedPhone("");
+    // Redirect directly to the track page
+    router.push(`/samadhan/track/${trackingId.trim()}`);
   };
 
   // Handle enter key for tracking input
@@ -270,8 +113,8 @@ export default function SamadhanHomePage() {
 
               <p className="text-lg text-green-100 max-w-lg">
                 Enter your reference ID to instantly check the status of your
-                submitted query. Secure OTP verification ensures only you can
-                access your ticket details.
+                submitted query. Track progress and get real-time updates on
+                your grievance resolution.
               </p>
 
               {/* Features list */}
@@ -284,9 +127,9 @@ export default function SamadhanHomePage() {
                 </div>
                 <div className="flex items-center gap-2 text-green-100">
                   <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                    <Lock className="w-4 h-4" />
+                    <Search className="w-4 h-4" />
                   </div>
-                  <span className="text-sm">OTP Secured</span>
+                  <span className="text-sm">Instant Tracking</span>
                 </div>
                 <div className="flex items-center gap-2 text-green-100">
                   <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
@@ -339,13 +182,12 @@ export default function SamadhanHomePage() {
                           onChange={(e) => {
                             setTrackingId(e.target.value.toUpperCase());
                             setTicketNotFound(false);
-                            setIsGuestTicket(false);
                           }}
                           onKeyPress={handleKeyPress}
                           className={`h-14 ${
                             trackingId ? "pl-12" : "pl-4"
                           } pr-14 text-center font-mono text-base border-2 rounded-full transition-all ${
-                            ticketNotFound || isGuestTicket
+                            ticketNotFound
                               ? "border-red-300 bg-red-50 focus:border-red-500"
                               : trackingId
                                 ? "border-green-300 bg-green-50 focus:border-green-500"
@@ -356,16 +198,14 @@ export default function SamadhanHomePage() {
                           <button
                             type="button"
                             onClick={handleTrack}
-                            disabled={isFetchingTicket || !trackingId.trim()}
+                            disabled={!trackingId.trim()}
                             className={`w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg ${
-                              ticketNotFound || isGuestTicket
+                              ticketNotFound
                                 ? "bg-red-500"
                                 : "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                             }`}
                           >
-                            {isFetchingTicket ? (
-                              <Loader2 className="w-5 h-5 text-white animate-spin" />
-                            ) : ticketNotFound || isGuestTicket ? (
+                            {ticketNotFound ? (
                               <AlertCircle className="w-5 h-5 text-white" />
                             ) : trackingId ? (
                               <ArrowRight className="w-5 h-5 text-white" />
@@ -384,8 +224,6 @@ export default function SamadhanHomePage() {
                         Ticket not found. Please check the reference ID.
                       </p>
                     )}
-
-                    {/* Guest tickets can now be tracked directly */}
 
                     {/* Help text */}
                     {!ticketNotFound && (
@@ -475,15 +313,16 @@ export default function SamadhanHomePage() {
                     Login / Register
                   </Button>
                 </Link>
-                <Button
-                  size="lg"
-                  onClick={() => setShowGuestModal(true)}
-                  variant="outline"
-                  className="w-full sm:w-auto h-14 px-8 rounded-full border-2 border-green-300 hover:bg-green-50 hover:border-green-400 gap-2 text-base"
-                >
-                  <Send className="h-5 w-5" />
-                  Submit Query
-                </Button>
+                <Link href="/samadhan/submit">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full sm:w-auto h-14 px-8 rounded-full border-2 border-green-300 hover:bg-green-50 hover:border-green-400 gap-2 text-base"
+                  >
+                    <Send className="h-5 w-5" />
+                    Submit Query
+                  </Button>
+                </Link>
               </>
             )}
           </div>
@@ -730,162 +569,6 @@ export default function SamadhanHomePage() {
           </div>
         </div>
       </section>
-
-      {/* Guest Choice Modal */}
-      <Dialog open={showGuestModal} onOpenChange={setShowGuestModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
-              <MessageSquare className="h-7 w-7 text-white" />
-            </div>
-            <DialogTitle className="text-center text-xl">
-              Submit New Query
-            </DialogTitle>
-            <DialogDescription className="text-center">
-              Choose how you want to submit your query
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-3 py-4">
-            {/* Login/Register Option */}
-            <Link href="/samadhan/login" className="block">
-              <Button
-                variant="outline"
-                className="w-full h-auto py-4 px-4 rounded-xl border-2 border-green-200 hover:bg-green-50 hover:border-green-400 justify-start gap-4"
-              >
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <UserPlus className="h-5 w-5 text-green-600" />
-                </div>
-                <div className="text-left flex-1">
-                  <p className="font-semibold text-green-800 text-sm">
-                    Login / Register
-                  </p>
-                  <p className="text-xs text-gray-500 font-normal">
-                    Track status, access attachments & get notifications
-                  </p>
-                </div>
-                <ArrowRight className="w-4 h-4 text-green-600" />
-              </Button>
-            </Link>
-
-            {/* Guest Option */}
-            <Link href="/samadhan/submit" className="block">
-              <Button
-                variant="outline"
-                className="w-full h-auto py-4 px-4 rounded-xl border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 justify-start gap-4"
-              >
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <User className="h-5 w-5 text-gray-600" />
-                </div>
-                <div className="text-left flex-1">
-                  <p className="font-semibold text-gray-800 text-sm">
-                    Continue as Guest
-                  </p>
-                  <p className="text-xs text-gray-500 font-normal">
-                    Quick submit - use Query Status to check later
-                  </p>
-                </div>
-                <ArrowRight className="w-4 h-4 text-gray-400" />
-              </Button>
-            </Link>
-
-            {/* Info note */}
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-4">
-              <p className="text-xs text-amber-800">
-                <strong>Note:</strong> Guest users cannot directly track their
-                queries. Register for full tracking capabilities.
-              </p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* OTP Verification Modal */}
-      <Dialog open={showOtpModal} onOpenChange={resetOtpModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
-              <Shield className="h-7 w-7 text-white" />
-            </div>
-            <DialogTitle className="text-center text-xl">
-              Verify Ownership
-            </DialogTitle>
-            <DialogDescription className="text-center">
-              Verify your phone number to access ticket: <br />
-              <span className="font-mono font-semibold text-green-700">
-                {trackingId}
-              </span>
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 py-4">
-            {isSendingOtp ? (
-              <div className="flex flex-col items-center justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin text-green-600 mb-3" />
-                <p className="text-gray-600">
-                  Sending OTP to registered phone...
-                </p>
-              </div>
-            ) : otpSent ? (
-              <>
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-                  <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
-                    <Phone className="w-5 h-5" />
-                    <span className="font-medium">OTP Sent</span>
-                  </div>
-                  <p className="text-sm text-green-600">
-                    Sent to: +91 {maskedPhone}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-center block">Enter 6-digit OTP</Label>
-                  <div className="flex justify-center">
-                    <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
-                    </InputOTP>
-                  </div>
-                </div>
-
-                <Button
-                  onClick={handleVerifyOtp}
-                  disabled={isVerifyingOtp || otp.length !== 6}
-                  className="w-full bg-green-600 hover:bg-green-700"
-                >
-                  {isVerifyingOtp ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Verifying...
-                    </>
-                  ) : (
-                    "Verify & View Ticket"
-                  )}
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  onClick={() => sendOtpToOwner(ticketOwnerPhone)}
-                  disabled={isSendingOtp}
-                  className="w-full text-sm"
-                >
-                  Resend OTP
-                </Button>
-              </>
-            ) : (
-              <div className="text-center py-4">
-                <p className="text-gray-500">Preparing verification...</p>
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
