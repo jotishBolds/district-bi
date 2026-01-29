@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (!samadhanSession?.userId) {
       return NextResponse.json(
         { success: false, message: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -49,13 +49,23 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
             name: true,
           },
         },
+        attachments: {
+          select: {
+            id: true,
+            fileName: true,
+            originalName: true,
+            fileType: true,
+            fileSize: true,
+            createdAt: true,
+          },
+        },
       },
     });
 
     if (!ticket) {
       return NextResponse.json(
         { success: false, message: "Draft not found or access denied" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -104,13 +114,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         citizenEmail: ticket.citizenEmail || "",
         citizenPhone: ticket.citizenPhone || "",
         isAnonymousToOfficer: ticket.isAnonymousToOfficer || false,
+        attachments: ticket.attachments || [],
       },
     });
   } catch (error) {
     console.error("Failed to fetch draft:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch draft" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -126,7 +137,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     if (!samadhanSession?.userId) {
       return NextResponse.json(
         { success: false, message: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -143,7 +154,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     if (!ticket) {
       return NextResponse.json(
         { success: false, message: "Draft not found or access denied" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -164,7 +175,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     console.error("Failed to delete draft:", error);
     return NextResponse.json(
       { success: false, message: "Failed to delete draft" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

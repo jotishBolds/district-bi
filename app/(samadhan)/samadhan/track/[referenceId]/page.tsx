@@ -174,6 +174,12 @@ export default function TicketDetailPage({
   const [isAppealModalOpen, setIsAppealModalOpen] = useState(false);
   const [appealReason, setAppealReason] = useState("");
 
+  // Attachment upload state
+  const [newAttachments, setNewAttachments] = useState<File[]>([]);
+  const [isUploadingAttachment, setIsUploadingAttachment] = useState(false);
+  const [showAddAttachmentSection, setShowAddAttachmentSection] =
+    useState(false);
+
   // Session and attachment access state
   const [samadhanSession, setSamadhanSession] = useState<{
     userId: string;
@@ -225,7 +231,7 @@ export default function TicketDetailPage({
   const fetchTicket = async () => {
     try {
       const response = await fetch(
-        `/api/samadhan/tickets?referenceId=${referenceId}`
+        `/api/samadhan/tickets?referenceId=${referenceId}`,
       );
       const data = await response.json();
 
@@ -235,38 +241,11 @@ export default function TicketDetailPage({
         setIsGuestTicket(!data.data.citizenId);
         setTicketOwnerPhone(data.data.citizenPhone || null);
 
-        // If user came from home page with OTP already verified
-        if (isPreVerified) {
-          const token = `${
-            data.data.referenceId
-          }:preverified:${Date.now()}:verified`;
-          setAttachmentAccessToken(token);
-          setIsOwnerVerified(true);
-          return;
-        }
-
-        // If user is logged in and owns this ticket, auto-verify and generate access token
-        if (samadhanSession && data.data.citizenId === samadhanSession.userId) {
-          const token = `${data.data.referenceId}:${
-            samadhanSession.phone
-          }:${Date.now()}:verified`;
-          setAttachmentAccessToken(token);
-          setIsOwnerVerified(true); // Auto-verify ownership
-        } else if (samadhanSession && data.data.citizenId) {
-          // User is logged in but doesn't own this ticket - need OTP verification
-          setShowOwnershipVerifyModal(true);
-          if (data.data.citizenPhone) {
-            // Pre-fill masked phone hint
-            setVerifyPhone("");
-          }
-        } else if (!samadhanSession && data.data.citizenId) {
-          // User is NOT logged in, but this ticket belongs to a registered citizen
-          // Show OTP verification modal immediately
-          setShowOwnershipVerifyModal(true);
-        } else if (!samadhanSession && !data.data.citizenId) {
-          // Guest ticket by non-logged-in user - require phone verification
-          setShowOwnershipVerifyModal(true);
-        }
+        // Always grant access to view ticket details and attachments
+        // Generate access token for all users viewing via tracking link
+        const token = `${data.data.referenceId}:public:${Date.now()}:verified`;
+        setAttachmentAccessToken(token);
+        setIsOwnerVerified(true); // Auto-verify - anyone with tracking ID can view
       } else {
         toast.error("Ticket not found");
         router.push("/samadhan");
@@ -344,7 +323,7 @@ export default function TicketDetailPage({
         setShowOwnershipVerifyModal(false); // Close ownership modal too
         setIsOwnerVerified(true); // Mark ownership as verified
         toast.success(
-          "Verified! You can now access the ticket details and attachments"
+          "Verified! You can now access the ticket details and attachments",
         );
 
         // Reset verification state
@@ -363,14 +342,14 @@ export default function TicketDetailPage({
   // Handle attachment click
   const handleAttachmentClick = async (
     attachment: TicketData["attachments"][0],
-    action: "view" | "download"
+    action: "view" | "download",
   ) => {
     // If user has access token, open directly
     if (attachmentAccessToken || samadhanSession) {
       const baseUrl = `/api/samadhan/tickets/${ticket?.id}/attachments/${attachment.id}`;
       const url = attachmentAccessToken
         ? `${baseUrl}?trackingToken=${encodeURIComponent(
-            attachmentAccessToken
+            attachmentAccessToken,
           )}${action === "download" ? "&action=download" : ""}`
         : `${baseUrl}${action === "download" ? "?action=download" : ""}`;
       window.open(url, "_blank");
@@ -381,13 +360,96 @@ export default function TicketDetailPage({
     if (isGuestTicket) {
       toast.error(
         "You submitted this as a guest. Attachments are only available to registered users. Please register to access full features.",
-        { duration: 5000 }
+        { duration: 5000 },
       );
       return;
     }
 
     // Registered ticket but not logged in - prompt for verification
     setShowVerifyModal(true);
+  };
+
+  // Handle attachment file selection
+  const handleAttachmentFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const newFiles = Array.from(e.target.files || []);
+    const validFiles = newFiles.filter((file) => {
+      const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "video/mp4",
+        "video/quicktime",
+      ];
+      const maxSize = file.type.startsWith("video/")
+        ? 50 * 1024 * 1024
+        : 10 * 1024 * 1024;
+
+      if (!allowedTypes.includes(file.type)) {
+        toast.error(`${file.name}: File type not supported`);
+        return false;
+      }
+      if (file.size > maxSize) {
+        toast.error(`${file.name}: File too large`);
+        return false;
+      }
+      return true;
+    });
+
+    setNewAttachments((prev) => [...prev, ...validFiles]);
+  };
+
+  // Remove selected attachment
+  const removeNewAttachment = (index: number) => {
+    setNewAttachments((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Upload new attachments
+  const handleUploadAttachments = async () => {
+    if (!ticket || newAttachments.length === 0) return;
+
+    setIsUploadingAttachment(true);
+    try {
+      for (const file of newAttachments) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        // Include tracking token for guest uploads
+        if (attachmentAccessToken) {
+          formData.append("trackingToken", attachmentAccessToken);
+        }
+
+        const response = await fetch(
+          `/api/samadhan/tickets/${ticket.id}/attachments`,
+          {
+            method: "POST",
+            body: formData,
+          },
+        );
+
+        const data = await response.json();
+        if (!data.success) {
+          throw new Error(data.message || `Failed to upload ${file.name}`);
+        }
+      }
+
+      toast.success(
+        `${newAttachments.length} attachment(s) uploaded successfully`,
+      );
+      setNewAttachments([]);
+      setShowAddAttachmentSection(false);
+      // Refresh ticket to show new attachments
+      fetchTicket();
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error("Upload failed");
+      toast.error(err.message);
+    } finally {
+      setIsUploadingAttachment(false);
+    }
   };
 
   const handleAcceptResolution = async () => {
@@ -408,7 +470,7 @@ export default function TicketDetailPage({
         {
           method: "POST",
           headers,
-        }
+        },
       );
       const data = await response.json();
 
@@ -458,7 +520,7 @@ export default function TicketDetailPage({
           method: "POST",
           headers,
           body: JSON.stringify({ response: responseText }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -481,7 +543,7 @@ export default function TicketDetailPage({
   const handleFileAppeal = async () => {
     if (appealReason.length < 20) {
       toast.error(
-        "Please provide a detailed reason for appeal (at least 20 characters)"
+        "Please provide a detailed reason for appeal (at least 20 characters)",
       );
       return;
     }
@@ -509,7 +571,7 @@ export default function TicketDetailPage({
           method: "POST",
           headers,
           body: JSON.stringify({ reason: appealReason }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -546,7 +608,7 @@ export default function TicketDetailPage({
   const queryConfig = queryTypeConfig[ticket.queryType];
   const QueryIcon = queryConfig.icon;
   const pendingInfoRequest = ticket.infoRequests.find(
-    (r) => r.status === "PENDING"
+    (r) => r.status === "PENDING",
   );
 
   // Show verification required screen if not the owner and not verified
@@ -602,7 +664,7 @@ export default function TicketDetailPage({
                         value={verifyPhone}
                         onChange={(e) =>
                           setVerifyPhone(
-                            e.target.value.replace(/\D/g, "").slice(0, 10)
+                            e.target.value.replace(/\D/g, "").slice(0, 10),
                           )
                         }
                         placeholder="Enter your phone number"
@@ -747,8 +809,8 @@ export default function TicketDetailPage({
                       ticket.queryType === "GRIEVANCE"
                         ? "bg-red-100"
                         : ticket.queryType === "FEEDBACK"
-                        ? "bg-green-100"
-                        : "bg-amber-100"
+                          ? "bg-green-100"
+                          : "bg-amber-100"
                     }`}
                   >
                     <QueryIcon
@@ -756,8 +818,8 @@ export default function TicketDetailPage({
                         ticket.queryType === "GRIEVANCE"
                           ? "text-red-600"
                           : ticket.queryType === "FEEDBACK"
-                          ? "text-green-600"
-                          : "text-amber-600"
+                            ? "text-green-600"
+                            : "text-amber-600"
                       }`}
                     />
                   </div>
@@ -777,8 +839,8 @@ export default function TicketDetailPage({
                       ticket.priority === "HIGH"
                         ? "bg-red-100"
                         : ticket.priority === "MEDIUM"
-                        ? "bg-amber-100"
-                        : "bg-blue-100"
+                          ? "bg-amber-100"
+                          : "bg-blue-100"
                     }`}
                   >
                     <AlertCircle
@@ -786,8 +848,8 @@ export default function TicketDetailPage({
                         ticket.priority === "HIGH"
                           ? "text-red-600"
                           : ticket.priority === "MEDIUM"
-                          ? "text-amber-600"
-                          : "text-blue-600"
+                            ? "text-amber-600"
+                            : "text-blue-600"
                       }`}
                     />
                   </div>
@@ -893,161 +955,187 @@ export default function TicketDetailPage({
             </div>
 
             {/* Attachments */}
-            {ticket.attachments.length > 0 && (
-              <>
-                <Separator />
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-medium text-gray-700">
-                      Attachments
-                    </h3>
-                    {/* Show access status */}
-                    {!attachmentAccessToken && !samadhanSession && (
-                      <div className="flex items-center gap-2">
-                        {isGuestTicket ? (
-                          <span className="text-xs text-orange-600 flex items-center gap-1">
-                            <Lock className="h-3 w-3" />
-                            Guest - Login to access
-                          </span>
-                        ) : (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setShowVerifyModal(true)}
-                            className="text-xs h-7 gap-1"
-                          >
-                            <Shield className="h-3 w-3" />
-                            Verify to Access
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                    {(attachmentAccessToken || samadhanSession) && (
-                      <span className="text-xs text-green-600 flex items-center gap-1">
-                        <CheckCircle className="h-3 w-3" />
-                        Access Granted
-                      </span>
-                    )}
-                  </div>
+            <Separator />
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-medium text-gray-700">
+                  Attachments
+                </h3>
+                {ticket.attachments.length > 0 && (
+                  <span className="text-xs text-green-600 flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3" />
+                    {ticket.attachments.length} file(s) attached
+                  </span>
+                )}
+              </div>
 
-                  {/* Guest ticket warning */}
-                  {isGuestTicket && !samadhanSession && (
-                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-3">
-                      <div className="flex gap-2">
-                        <AlertCircle className="h-4 w-4 text-orange-600 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-sm text-orange-800 font-medium">
-                            Guest Submission
-                          </p>
-                          <p className="text-xs text-orange-700 mt-1">
-                            You submitted this query as a guest. Attachments are
-                            only accessible to registered users.
-                          </p>
-                          <Link
-                            href="/samadhan/login"
-                            className="inline-block mt-2"
+              {/* Existing attachments */}
+              {ticket.attachments.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+                  {ticket.attachments.map((attachment) => {
+                    const isImage = attachment.fileType?.startsWith("image/");
+                    const isPdf = attachment.fileType === "application/pdf";
+
+                    return (
+                      <div
+                        key={attachment.id}
+                        className="flex items-center space-x-2 p-3 rounded-lg transition-colors bg-gray-50 hover:bg-gray-100"
+                      >
+                        <FileText className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p
+                            className="text-sm font-medium truncate"
+                            title={attachment.originalName}
                           >
+                            {attachment.originalName}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {attachment.fileType
+                              ?.split("/")[1]
+                              ?.toUpperCase() || "File"}
+                            {attachment.fileSize &&
+                              ` • ${(attachment.fileSize / 1024).toFixed(
+                                1,
+                              )} KB`}
+                          </p>
+                        </div>
+                        <div className="flex gap-1 flex-shrink-0">
+                          {(isImage || isPdf) && (
                             <Button
+                              variant="ghost"
                               size="sm"
-                              variant="outline"
-                              className="h-7 text-xs gap-1 border-orange-300 text-orange-700 hover:bg-orange-100"
+                              onClick={() =>
+                                handleAttachmentClick(attachment, "view")
+                              }
+                              title="View"
                             >
-                              <LogIn className="h-3 w-3" />
-                              Register / Login for Full Access
+                              <FileText className="h-4 w-4" />
                             </Button>
-                          </Link>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              handleAttachmentClick(attachment, "download")
+                            }
+                            title="Download"
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* No attachments message */}
+              {ticket.attachments.length === 0 && (
+                <p className="text-sm text-gray-500 italic">
+                  No attachments were added
+                </p>
+              )}
+
+              {/* Add Attachment Section - Hidden for tracking view */}
+              {false && showAddAttachmentSection && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-3">
+                  <h4 className="text-sm font-medium text-blue-800 mb-3 flex items-center gap-2">
+                    <Upload className="h-4 w-4" />
+                    Add Supporting Documents
+                  </h4>
+
+                  {/* File input */}
+                  <div className="mb-3">
+                    <label className="block">
+                      <input
+                        type="file"
+                        multiple
+                        onChange={handleAttachmentFileChange}
+                        className="hidden"
+                        accept="image/*,application/pdf,.doc,.docx,video/mp4,video/quicktime"
+                      />
+                      <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 text-center cursor-pointer hover:border-blue-400 transition-colors bg-white">
+                        <Upload className="h-8 w-8 text-blue-400 mx-auto mb-2" />
+                        <p className="text-sm text-blue-700">
+                          Click to select files or drag and drop
+                        </p>
+                        <p className="text-xs text-blue-500 mt-1">
+                          Images, PDF, Word docs, Videos (max 10MB, videos 50MB)
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+
+                  {/* Selected files preview */}
+                  {newAttachments.length > 0 && (
+                    <div className="space-y-2 mb-3">
+                      <p className="text-xs text-blue-700 font-medium">
+                        Selected files:
+                      </p>
+                      {newAttachments.map((file, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between bg-white rounded-lg p-2 border border-blue-100"
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <FileText className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                            <span className="text-sm truncate">
+                              {file.name}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                              ({(file.size / 1024).toFixed(1)} KB)
+                            </span>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeNewAttachment(index)}
+                            className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                          >
+                            <XCircle className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
                     </div>
                   )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {ticket.attachments.map((attachment) => {
-                      const isImage = attachment.fileType?.startsWith("image/");
-                      const isPdf = attachment.fileType === "application/pdf";
-                      const hasAccess =
-                        !!attachmentAccessToken || !!samadhanSession;
-
-                      return (
-                        <div
-                          key={attachment.id}
-                          className={`flex items-center space-x-2 p-3 rounded-lg transition-colors ${
-                            hasAccess
-                              ? "bg-gray-50 hover:bg-gray-100"
-                              : "bg-gray-50/50 opacity-75"
-                          }`}
-                        >
-                          <FileText className="h-5 w-5 text-gray-400 flex-shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <p
-                              className="text-sm font-medium truncate"
-                              title={attachment.originalName}
-                            >
-                              {attachment.originalName}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {attachment.fileType
-                                ?.split("/")[1]
-                                ?.toUpperCase() || "File"}
-                              {attachment.fileSize &&
-                                ` • ${(attachment.fileSize / 1024).toFixed(
-                                  1
-                                )} KB`}
-                            </p>
-                          </div>
-                          <div className="flex gap-1 flex-shrink-0">
-                            {hasAccess ? (
-                              <>
-                                {(isImage || isPdf) && (
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() =>
-                                      handleAttachmentClick(attachment, "view")
-                                    }
-                                    title="View"
-                                  >
-                                    <FileText className="h-4 w-4" />
-                                  </Button>
-                                )}
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() =>
-                                    handleAttachmentClick(
-                                      attachment,
-                                      "download"
-                                    )
-                                  }
-                                  title="Download"
-                                >
-                                  <Download className="h-4 w-4" />
-                                </Button>
-                              </>
-                            ) : (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() =>
-                                  handleAttachmentClick(attachment, "view")
-                                }
-                                title={
-                                  isGuestTicket
-                                    ? "Login required"
-                                    : "Verify to access"
-                                }
-                              >
-                                <Lock className="h-4 w-4 text-gray-400" />
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
+                  {/* Action buttons */}
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleUploadAttachments}
+                      disabled={
+                        newAttachments.length === 0 || isUploadingAttachment
+                      }
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      {isUploadingAttachment ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-4 w-4 mr-2" />
+                          Upload{" "}
+                          {newAttachments.length > 0
+                            ? `(${newAttachments.length})`
+                            : ""}
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setShowAddAttachmentSection(false);
+                        setNewAttachments([]);
+                      }}
+                    >
+                      Cancel
+                    </Button>
                   </div>
                 </div>
-              </>
-            )}
+              )}
+            </div>
 
             {/* Resolution Message */}
             {ticket.resolutionMessage && (
@@ -1233,7 +1321,7 @@ export default function TicketDetailPage({
                             </div>
                           </div>
                         );
-                      }
+                      },
                     )}
                   </>
                 )}
@@ -1317,7 +1405,7 @@ export default function TicketDetailPage({
                         value={verifyPhone}
                         onChange={(e) =>
                           setVerifyPhone(
-                            e.target.value.replace(/\D/g, "").slice(0, 10)
+                            e.target.value.replace(/\D/g, "").slice(0, 10),
                           )
                         }
                         className="pl-10"

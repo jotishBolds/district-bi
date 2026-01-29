@@ -113,6 +113,8 @@ export default function CitizenProfilePage() {
 
       if (data.success) {
         toast.success("Profile updated successfully");
+        // Reload the page to refresh navbar with new session data
+        window.location.reload();
       } else {
         toast.error(data.message || "Failed to update profile");
       }

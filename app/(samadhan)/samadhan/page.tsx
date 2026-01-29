@@ -97,7 +97,7 @@ export default function SamadhanHomePage() {
   const maskPhoneNumber = (phone: string): string => {
     if (!phone || phone.length < 4) return phone;
     return `${phone.slice(0, 2)}${"*".repeat(phone.length - 4)}${phone.slice(
-      -2
+      -2,
     )}`;
   };
 
@@ -116,8 +116,8 @@ export default function SamadhanHomePage() {
       // First, check if ticket exists and get basic info
       const response = await fetch(
         `/api/samadhan/tickets?referenceId=${encodeURIComponent(
-          trackingId.trim()
-        )}`
+          trackingId.trim(),
+        )}`,
       );
       const data = await response.json();
 
@@ -130,24 +130,17 @@ export default function SamadhanHomePage() {
       }
 
       // Check if this is a guest ticket (no citizenId means guest submission)
+      // Guest tickets can now be tracked directly with their reference ID
       if (!data.data.citizenId) {
-        setIsGuestTicket(true);
-        toast.info("Guest ticket detected", {
-          description:
-            "Guest submissions cannot be tracked. Use Query Status to request information about your submission.",
-          action: {
-            label: "Query Status",
-            onClick: () => router.push("/samadhan/query-status"),
-          },
-          duration: 6000,
-        });
+        // Allow guest to track directly - redirect to track page
+        router.push(`/samadhan/track/${trackingId.trim()}`);
         return;
       }
 
       // Ticket exists and has a registered citizen - proceed with OTP flow
       // Get the owner phone for OTP verification
       const ownerResponse = await fetch(
-        `/api/samadhan/tickets/${trackingId.trim()}/owner-phone`
+        `/api/samadhan/tickets/${trackingId.trim()}/owner-phone`,
       );
       const ownerData = await ownerResponse.json();
 
@@ -355,8 +348,8 @@ export default function SamadhanHomePage() {
                             ticketNotFound || isGuestTicket
                               ? "border-red-300 bg-red-50 focus:border-red-500"
                               : trackingId
-                              ? "border-green-300 bg-green-50 focus:border-green-500"
-                              : "border-gray-200 focus:border-green-500"
+                                ? "border-green-300 bg-green-50 focus:border-green-500"
+                                : "border-gray-200 focus:border-green-500"
                           }`}
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2">
@@ -392,30 +385,10 @@ export default function SamadhanHomePage() {
                       </p>
                     )}
 
-                    {isGuestTicket && (
-                      <div className="text-center bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-                        <p className="text-sm text-amber-800 font-medium">
-                          Guest Submission Detected
-                        </p>
-                        <p className="text-xs text-amber-700 mt-1">
-                          Guest tickets cannot be tracked. Use Query Status to
-                          inquire about your submission.
-                        </p>
-                        <Link href="/samadhan/query-status">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="mt-2 border-amber-300 text-amber-700 hover:bg-amber-100"
-                          >
-                            Go to Query Status
-                            <ChevronRight className="w-4 h-4 ml-1" />
-                          </Button>
-                        </Link>
-                      </div>
-                    )}
+                    {/* Guest tickets can now be tracked directly */}
 
                     {/* Help text */}
-                    {!ticketNotFound && !isGuestTicket && (
+                    {!ticketNotFound && (
                       <p className="text-xs text-gray-500 text-center">
                         Reference ID was provided when you submitted your query
                       </p>

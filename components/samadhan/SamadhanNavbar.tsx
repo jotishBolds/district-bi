@@ -183,17 +183,6 @@ export default function SamadhanNavbar() {
                 Track Ticket
               </Button>
             </Link>
-
-            <Link href="/samadhan/query-status">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-gray-700 hover:text-green-700 hover:bg-green-50 font-medium rounded-full px-4"
-              >
-                <HelpCircle className="w-4 h-4 mr-2" />
-                Query Status
-              </Button>
-            </Link>
           </div>
 
           {/* Right: Government Seal + User Section */}
@@ -325,15 +314,6 @@ export default function SamadhanNavbar() {
             >
               <FileSearch className="w-5 h-5" />
               <span className="font-medium">Track Ticket</span>
-            </Link>
-
-            <Link
-              href="/samadhan/query-status"
-              onClick={toggleMobileMenu}
-              className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-xl transition-colors"
-            >
-              <HelpCircle className="w-5 h-5" />
-              <span className="font-medium">Query Status</span>
             </Link>
 
             {session ? (

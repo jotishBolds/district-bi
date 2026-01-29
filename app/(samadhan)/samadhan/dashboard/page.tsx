@@ -491,14 +491,12 @@ export default function CitizenDashboardPage() {
                     >
                       All ({stats.total})
                     </TabsTrigger>
-                    {stats.drafts > 0 && (
-                      <TabsTrigger
-                        value="drafts"
-                        className="data-[state=active]:bg-white px-4 py-2 text-gray-600"
-                      >
-                        Drafts ({stats.drafts})
-                      </TabsTrigger>
-                    )}
+                    <TabsTrigger
+                      value="drafts"
+                      className="data-[state=active]:bg-white px-4 py-2 text-gray-600"
+                    >
+                      Drafts ({stats.drafts})
+                    </TabsTrigger>
                     <TabsTrigger
                       value="active"
                       className="data-[state=active]:bg-white px-4 py-2"

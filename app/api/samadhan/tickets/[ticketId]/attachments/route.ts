@@ -63,9 +63,14 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     if (!ticket) {
       return NextResponse.json(
         { success: false, message: "Ticket not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
+
+    const formData = await request.formData();
+    const file = formData.get("file") as File;
+    const infoRequestId = formData.get("infoRequestId") as string | null;
+    const trackingToken = formData.get("trackingToken") as string | null;
 
     // For authenticated users, verify ownership or officer access
     const isOfficer =
@@ -74,21 +79,49 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       citizenSession?.userId === ticket.citizenId ||
       officerSession?.user?.id === ticket.citizenId;
 
-    if (!isOfficer && !isCitizen) {
-      return NextResponse.json(
-        { success: false, message: "Not authorized to upload attachments" },
-        { status: 403 }
-      );
+    // Allow uploads with valid tracking token (for guest users viewing via track page)
+    // Token format: referenceId:public:timestamp:verified
+    let isValidTrackingToken = false;
+    if (trackingToken && !isOfficer && !isCitizen) {
+      const tokenParts = trackingToken.split(":");
+      if (
+        tokenParts.length >= 4 &&
+        tokenParts[0] === ticket.referenceId &&
+        tokenParts[3] === "verified"
+      ) {
+        isValidTrackingToken = true;
+      }
     }
 
-    const formData = await request.formData();
-    const file = formData.get("file") as File;
-    const infoRequestId = formData.get("infoRequestId") as string | null;
+    // Allow uploads for tickets that are very recently created (within 5 minutes)
+    // This handles the case when attachments are uploaded right after ticket creation
+    // before any session can be established (for guests or during initial submission)
+    const ticketAge = Date.now() - new Date(ticket.createdAt).getTime();
+    const isRecentTicket = ticketAge < 5 * 60 * 1000; // 5 minutes
+
+    // Also allow if this is a draft or queued ticket being updated by owner
+    const isInitialSubmission =
+      isRecentTicket &&
+      (ticket.status === "DRAFT" ||
+        ticket.status === "QUEUED" ||
+        ticket.status === "UNSEEN");
+
+    if (
+      !isOfficer &&
+      !isCitizen &&
+      !isValidTrackingToken &&
+      !isInitialSubmission
+    ) {
+      return NextResponse.json(
+        { success: false, message: "Not authorized to upload attachments" },
+        { status: 403 },
+      );
+    }
 
     if (!file) {
       return NextResponse.json(
         { success: false, message: "No file provided" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -101,7 +134,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
           success: false,
           message: `File size exceeds maximum limit of ${maxSizeMB}MB for this file type`,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -110,7 +143,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     if (!validation.valid) {
       return NextResponse.json(
         { success: false, message: validation.error },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -119,16 +152,46 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const fileName = `${uuidv4()}.${fileExtension}`;
     const filePath = `samadhan/${ticket.id}/${fileName}`;
 
+    // Verify AWS configuration
+    if (!process.env.AWS_BUCKET_NAME) {
+      console.error("AWS_BUCKET_NAME is not configured");
+      return NextResponse.json(
+        { success: false, message: "Storage not configured" },
+        { status: 500 },
+      );
+    }
+
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+      console.error("AWS credentials are not configured");
+      return NextResponse.json(
+        { success: false, message: "Storage credentials not configured" },
+        { status: 500 },
+      );
+    }
+
     // Upload to S3
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await s3Client.send(
-      new PutObjectCommand({
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: filePath,
-        Body: buffer,
-        ContentType: file.type,
-      })
+    console.log(
+      `Uploading file to S3: ${filePath}, size: ${file.size}, type: ${file.type}`,
     );
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    try {
+      await s3Client.send(
+        new PutObjectCommand({
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: filePath,
+          Body: buffer,
+          ContentType: file.type,
+        }),
+      );
+      console.log(`File uploaded to S3 successfully: ${filePath}`);
+    } catch (s3Error) {
+      console.error("S3 upload error:", s3Error);
+      return NextResponse.json(
+        { success: false, message: "Failed to upload file to storage" },
+        { status: 500 },
+      );
+    }
 
     // Determine uploader type
     const uploadedByType =
@@ -172,7 +235,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     console.error("Attachment upload error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to upload file" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -188,7 +251,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (!ticket) {
       return NextResponse.json(
         { success: false, message: "Ticket not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -221,7 +284,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     console.error("Attachments fetch error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch attachments" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

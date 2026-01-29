@@ -51,7 +51,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (!attachment) {
       return NextResponse.json(
         { success: false, message: "Attachment not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const isOfficer =
       officerSession?.user?.role && officerSession.user.role !== "FRONT_DESK";
     const isAdmin = ["ADMIN", "SUPER_ADMIN", "DC", "ADC"].includes(
-      officerSession?.user?.role || ""
+      officerSession?.user?.role || "",
     );
     const isAssignedOfficer =
       officerSession?.user?.id === attachment.ticket.assignedOfficerId;
@@ -115,9 +115,23 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
               attachment.ticket.citizenPhone.slice(-2)
             : null,
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
+
+    // Sanitize filename to ASCII-only for Content-Disposition header
+    // Replace non-ASCII characters and problematic chars with underscores
+    const sanitizedFilename = attachment.originalName
+      .replace(/[^\x20-\x7E]/g, "_") // Replace non-ASCII printable chars
+      .replace(/["/\\?*<>|:]/g, "_") // Replace problematic filesystem chars
+      .replace(/_+/g, "_") // Collapse multiple underscores
+      .trim();
+
+    // Use RFC 5987 encoding for filenames with special characters
+    const encodedFilename = encodeURIComponent(attachment.originalName).replace(
+      /'/g,
+      "%27",
+    );
 
     // Generate pre-signed URL for S3
     const command = new GetObjectCommand({
@@ -125,8 +139,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       Key: attachment.filePath,
       ResponseContentDisposition:
         action === "download"
-          ? `attachment; filename="${attachment.originalName}"`
-          : `inline; filename="${attachment.originalName}"`,
+          ? `attachment; filename="${sanitizedFilename}"; filename*=UTF-8''${encodedFilename}`
+          : `inline; filename="${sanitizedFilename}"; filename*=UTF-8''${encodedFilename}`,
       ResponseContentType: attachment.fileType,
     });
 
@@ -153,7 +167,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     console.error("Attachment view error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to retrieve attachment" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -3,7 +3,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { generateCitizenPseudonym } from "@/lib/samadhan";
-import { getSamadhanSession } from "@/lib/samadhan-auth";
+import {
+  getSamadhanSession,
+  createSamadhanSession,
+  setSamadhanSessionCookie,
+} from "@/lib/samadhan-auth";
 
 // GET - Fetch citizen profile
 export async function GET() {
@@ -14,7 +18,7 @@ export async function GET() {
     if (!samadhanSession?.userId) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -28,7 +32,7 @@ export async function GET() {
     if (!user) {
       return NextResponse.json(
         { success: false, message: "User not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -58,7 +62,7 @@ export async function GET() {
     console.error("Profile fetch error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch profile" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -72,7 +76,7 @@ export async function PUT(request: NextRequest) {
     if (!samadhanSession?.userId) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -83,7 +87,7 @@ export async function PUT(request: NextRequest) {
     if (fullName && typeof fullName !== "string") {
       return NextResponse.json(
         { success: false, message: "Invalid full name" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -115,15 +119,35 @@ export async function PUT(request: NextRequest) {
       });
     }
 
+    // Get updated profile data to refresh session
+    const updatedProfile = await prisma.citizenProfile.findUnique({
+      where: { userId: samadhanSession.userId },
+    });
+
+    // Create new session token with updated name
+    const newSessionToken = await createSamadhanSession({
+      id: samadhanSession.userId,
+      phone: samadhanSession.phone,
+      name: updatedProfile?.fullName || samadhanSession.name,
+      pseudonym: updatedProfile?.samadhanPseudonym || samadhanSession.pseudonym,
+    });
+
+    // Set new session cookie
+    await setSamadhanSessionCookie(newSessionToken);
+
     return NextResponse.json({
       success: true,
       message: "Profile updated successfully",
+      data: {
+        name: updatedProfile?.fullName || "",
+        pseudonym: updatedProfile?.samadhanPseudonym || "Anonymous Citizen",
+      },
     });
   } catch (error) {
     console.error("Profile update error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to update profile" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

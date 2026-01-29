@@ -47,8 +47,9 @@ export async function POST(request: NextRequest) {
     let citizenName = validatedData.citizenName || null;
     let citizenEmail = validatedData.citizenEmail || null;
     let citizenPhone = validatedData.citizenPhone || null;
-    const isAnonymous = !isAuthenticated;
+    let isAnonymous = !isAuthenticated;
     let citizenPseudonym: string | null = null;
+    let isExistingUser = false;
 
     if (isAuthenticated && samadhanSession) {
       citizenId = samadhanSession.userId;
@@ -80,14 +81,44 @@ export async function POST(request: NextRequest) {
         citizenPseudonym = citizenProfile?.samadhanPseudonym || null;
       }
     } else {
-      // Not authenticated - store the provided contact info
-      // The form data is already set above from validatedData
+      // Not authenticated - check if phone number belongs to an existing registered user
       citizenName = validatedData.citizenName || null;
       citizenPhone = validatedData.citizenPhone || null;
       citizenEmail = validatedData.citizenEmail || null;
 
+      // If phone number is provided, check if user already exists
+      if (citizenPhone) {
+        const cleanPhone = citizenPhone.replace(/[\s\-\(\)]/g, "");
+        const existingUser = await prisma.user.findFirst({
+          where: {
+            phone: cleanPhone,
+            role: "CITIZEN",
+          },
+          include: {
+            citizenProfile: true,
+          },
+        });
+
+        if (existingUser) {
+          // Link ticket to existing user
+          citizenId = existingUser.id;
+          isAnonymous = false;
+          isExistingUser = true;
+          citizenPseudonym =
+            existingUser.citizenProfile?.samadhanPseudonym || null;
+
+          // Use existing profile data if not provided in form
+          citizenName =
+            validatedData.citizenName ||
+            existingUser.citizenProfile?.fullName ||
+            null;
+          citizenEmail =
+            validatedData.citizenEmail || existingUser.email || null;
+        }
+      }
+
       // Generate pseudonym for anonymous submissions (whether toggle is on or not)
-      if (validatedData.isAnonymousToOfficer) {
+      if (validatedData.isAnonymousToOfficer && !citizenPseudonym) {
         citizenPseudonym = generateCitizenPseudonym();
       }
     }
@@ -105,7 +136,7 @@ export async function POST(request: NextRequest) {
     if (!section) {
       return NextResponse.json(
         { success: false, message: "Invalid section selected" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -137,7 +168,7 @@ export async function POST(request: NextRequest) {
       if (!existingTicket) {
         return NextResponse.json(
           { success: false, message: "Draft ticket not found" },
-          { status: 404 }
+          { status: 404 },
         );
       }
 
@@ -152,7 +183,7 @@ export async function POST(request: NextRequest) {
         ? null
         : await calculateSLADeadline(
             validatedData.queryType,
-            priority as "LOW" | "MEDIUM" | "HIGH"
+            priority as "LOW" | "MEDIUM" | "HIGH",
           );
 
       // Update existing draft
@@ -213,7 +244,7 @@ export async function POST(request: NextRequest) {
             isDraft: updatedTicket.isDraft,
           },
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -231,7 +262,7 @@ export async function POST(request: NextRequest) {
       ? null
       : await calculateSLADeadline(
           validatedData.queryType,
-          priority as "LOW" | "MEDIUM" | "HIGH"
+          priority as "LOW" | "MEDIUM" | "HIGH",
         );
 
     // Create the ticket - goes to queue (QUEUED status) not direct assignment
@@ -297,9 +328,11 @@ export async function POST(request: NextRequest) {
           sectionName: ticket.section.name,
           slaDeadline: ticket.slaDeadline,
           isDraft: ticket.isDraft,
+          isExistingUser, // Let frontend know if linked to existing user
+          citizenId: ticket.citizenId, // Include citizenId for debugging
         },
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("SAMADHAN ticket submission error:", error);
@@ -311,7 +344,7 @@ export async function POST(request: NextRequest) {
           message: "Validation error",
           errors: error.errors,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -320,7 +353,7 @@ export async function POST(request: NextRequest) {
         success: false,
         message: "Failed to submit query. Please try again later.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -414,7 +447,7 @@ export async function GET(request: NextRequest) {
       if (!ticket) {
         return NextResponse.json(
           { success: false, message: "Ticket not found" },
-          { status: 404 }
+          { status: 404 },
         );
       }
 
@@ -556,7 +589,7 @@ export async function GET(request: NextRequest) {
     if (!samadhanSession?.userId) {
       return NextResponse.json(
         { success: false, message: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -594,7 +627,7 @@ export async function GET(request: NextRequest) {
     console.error("SAMADHAN ticket fetch error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch tickets" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

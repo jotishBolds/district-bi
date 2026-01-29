@@ -178,64 +178,42 @@ function SuccessModal({
           </DialogDescription>
         </DialogHeader>
 
-        {/* Show Reference ID only for registered users */}
-        {!isGuest ? (
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center">
-            <p className="text-sm text-gray-600 mb-2">Your Reference ID</p>
-            <p className="text-xl font-mono font-bold text-blue-700 bg-white rounded-lg px-4 py-2 inline-block">
-              {referenceId}
-            </p>
-            <p className="text-xs text-gray-500 mt-3">
-              Save this ID to track your query status
-            </p>
-          </div>
-        ) : (
-          <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 text-center">
-            <p className="text-sm text-amber-800 mb-2">Guest Submission</p>
-            <p className="text-sm text-amber-700">
-              Your query has been received. Since you submitted as a guest, you
-              won&apos;t be able to track its status online.
-            </p>
-            <p className="text-xs text-amber-600 mt-3">
-              You may receive updates via SMS if you provided your phone number.
-              For full tracking features, please register next time.
+        {/* Show Reference ID for ALL users (both registered and guest) */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center">
+          <p className="text-sm text-gray-600 mb-2">Your Reference ID</p>
+          <p className="text-xl font-mono font-bold text-blue-700 bg-white rounded-lg px-4 py-2 inline-block">
+            {referenceId}
+          </p>
+          <p className="text-xs text-gray-500 mt-3">
+            Save this ID to track your query status
+          </p>
+        </div>
+
+        {isGuest && (
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 text-center">
+            <p className="text-sm text-amber-800 mb-1">Guest Submission</p>
+            <p className="text-xs text-amber-700">
+              You can track your ticket anytime using the reference ID above.
+              Register for full dashboard access and SMS updates.
             </p>
           </div>
         )}
 
         <DialogFooter className="flex flex-col gap-2 sm:flex-col">
-          {!isGuest ? (
-            <>
-              <Button
-                onClick={() => router.push(`/samadhan/track/${referenceId}`)}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
-              >
-                Track Status
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => router.push("/samadhan/dashboard")}
-                className="w-full"
-              >
-                Go to Dashboard
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                onClick={() => router.push("/samadhan/login")}
-                className="w-full bg-gradient-to-r from-green-600 to-emerald-600"
-              >
-                Register for Full Access
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => router.push("/samadhan/query-status")}
-                className="w-full"
-              >
-                Request Status Update Later
-              </Button>
-            </>
+          <Button
+            onClick={() => router.push(`/samadhan/track/${referenceId}`)}
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
+          >
+            Track Status
+          </Button>
+          {!isGuest && (
+            <Button
+              variant="outline"
+              onClick={() => router.push("/samadhan/dashboard")}
+              className="w-full"
+            >
+              Go to Dashboard
+            </Button>
           )}
           <Button
             variant="ghost"
@@ -312,11 +290,31 @@ function TypeFormContent() {
   const [isAnonymousToOfficer, setIsAnonymousToOfficer] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
 
+  // Existing attachments from draft
+  const [existingAttachments, setExistingAttachments] = useState<
+    Array<{
+      id: string;
+      fileName: string;
+      originalName: string;
+      fileType: string;
+      fileSize?: number;
+    }>
+  >([]);
+
+  // Phone registration check state
+  const [phoneCheckResult, setPhoneCheckResult] = useState<{
+    isRegistered: boolean;
+    name: string | null;
+    ticketCount: number;
+  } | null>(null);
+  const [isCheckingPhone, setIsCheckingPhone] = useState(false);
+
   // UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showGuestConfirmModal, setShowGuestConfirmModal] = useState(false);
   const [showDraftSuccessModal, setShowDraftSuccessModal] = useState(false);
   const [submittedReferenceId, setSubmittedReferenceId] = useState("");
   const [existingDraftId, setExistingDraftId] = useState<string | null>(null);
@@ -354,13 +352,30 @@ function TypeFormContent() {
         setIsAnonymousToOfficer(draft.isAnonymousToOfficer || false);
         setExistingDraftId(draft.id);
 
+        // Load existing attachments from draft
+        if (draft.attachments && draft.attachments.length > 0) {
+          setExistingAttachments(draft.attachments);
+        }
+
         // Set visit date option if date exists
         if (draft.visitDate) {
           const today = new Date().toISOString().split("T")[0];
-          if (draft.visitDate === today) {
+          const draftDatePart = draft.visitDate.split("T")[0]; // Extract date part from ISO string
+
+          if (draftDatePart === today) {
             setVisitDateOption("today");
           } else {
-            setVisitDateOption("specific");
+            // Check if it was yesterday
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+            if (draftDatePart === yesterdayStr) {
+              setVisitDateOption("yesterday");
+            } else {
+              setVisitDateOption("specific");
+              setVisitDate(draftDatePart); // Set the actual date for specific option
+            }
           }
         }
 
@@ -475,6 +490,42 @@ function TypeFormContent() {
     }
   };
 
+  // Check if phone number is already registered (debounced)
+  const checkPhoneRegistration = async (phone: string) => {
+    if (!phone || phone.length < 10) {
+      setPhoneCheckResult(null);
+      return;
+    }
+
+    setIsCheckingPhone(true);
+    try {
+      const response = await fetch(`/api/samadhan/check-phone?phone=${phone}`);
+      const data = await response.json();
+      if (data.success) {
+        setPhoneCheckResult(data.data);
+      }
+    } catch (error) {
+      console.error("Failed to check phone:", error);
+    } finally {
+      setIsCheckingPhone(false);
+    }
+  };
+
+  // Debounce phone check - only check after user stops typing
+  useEffect(() => {
+    if (samadhanSession) return; // Don't check if logged in
+
+    const timer = setTimeout(() => {
+      if (citizenPhone.length >= 10) {
+        checkPhoneRegistration(citizenPhone);
+      } else {
+        setPhoneCheckResult(null);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [citizenPhone, samadhanSession]);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = Array.from(e.target.files || []);
     const validFiles = newFiles.filter((file) => {
@@ -531,16 +582,22 @@ function TypeFormContent() {
       case "attachments":
         return true; // Optional
       case "contact":
-        // For grievances, contact info is required
-        if (queryType === "GRIEVANCE") {
-          if (!citizenName.trim() || citizenName.trim().length < 2) {
-            toast.error("Please enter your name");
-            return false;
-          }
-          if (!citizenPhone.trim() || citizenPhone.trim().length < 10) {
-            toast.error("Please enter a valid phone number");
-            return false;
-          }
+        // Name is mandatory for all submissions
+        if (!citizenName.trim() || citizenName.trim().length < 2) {
+          toast.error("Please enter your name");
+          return false;
+        }
+        // Phone and email are optional - validation only if provided
+        if (citizenPhone.trim() && citizenPhone.trim().length < 10) {
+          toast.error("Please enter a valid phone number (at least 10 digits)");
+          return false;
+        }
+        if (
+          citizenEmail.trim() &&
+          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(citizenEmail.trim())
+        ) {
+          toast.error("Please enter a valid email address");
+          return false;
         }
         return true;
       case "review":
@@ -642,19 +699,47 @@ function TypeFormContent() {
         throw new Error(data.message || "Failed to submit");
       }
 
-      // Upload attachments if any and not draft
-      if (files.length > 0 && !asDraft) {
-        for (const file of files) {
-          const formData = new FormData();
-          formData.append("file", file);
+      // Upload attachments if any (for both drafts and submissions)
+      if (files.length > 0) {
+        let uploadedCount = 0;
+        let failedCount = 0;
 
-          await fetch(
-            `/api/samadhan/tickets/${data.data.ticketId}/attachments`,
-            {
-              method: "POST",
-              body: formData,
-            },
+        for (const file of files) {
+          try {
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const uploadResponse = await fetch(
+              `/api/samadhan/tickets/${data.data.ticketId}/attachments`,
+              {
+                method: "POST",
+                body: formData,
+              },
+            );
+
+            const uploadData = await uploadResponse.json();
+            if (uploadData.success) {
+              uploadedCount++;
+            } else {
+              failedCount++;
+              console.error(
+                `Failed to upload ${file.name}:`,
+                uploadData.message,
+              );
+            }
+          } catch (uploadError) {
+            failedCount++;
+            console.error(`Error uploading ${file.name}:`, uploadError);
+          }
+        }
+
+        // Show upload status
+        if (failedCount > 0) {
+          toast.warning(
+            `${uploadedCount} file(s) uploaded, ${failedCount} failed`,
           );
+        } else if (uploadedCount > 0) {
+          toast.success(`${uploadedCount} attachment(s) uploaded successfully`);
         }
       }
 
@@ -1136,10 +1221,54 @@ function TypeFormContent() {
               </p>
             </div>
             <div className="max-w-lg mx-auto">
+              {/* Show existing attachments from draft */}
+              {existingAttachments.length > 0 && (
+                <div className="mb-6">
+                  <p className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    Previously uploaded files ({existingAttachments.length})
+                  </p>
+                  <div className="space-y-2">
+                    {existingAttachments.map((attachment) => (
+                      <div
+                        key={attachment.id}
+                        className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                            <FileText className="h-5 w-5 text-green-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium truncate max-w-[200px]">
+                              {attachment.originalName}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {attachment.fileSize
+                                ? `${(attachment.fileSize / 1024).toFixed(1)} KB`
+                                : attachment.fileType
+                                    ?.split("/")[1]
+                                    ?.toUpperCase() || "File"}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className="text-green-600 border-green-300"
+                        >
+                          Saved
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:border-blue-400 transition-colors">
                 <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600 mb-2">
-                  Drag and drop files here, or click to select
+                  {existingAttachments.length > 0
+                    ? "Add more files, or continue with existing"
+                    : "Drag and drop files here, or click to select"}
                 </p>
                 <input
                   type="file"
@@ -1206,9 +1335,8 @@ function TypeFormContent() {
                 Contact Information
               </h2>
               <p className="text-gray-500">
-                {queryType === "GRIEVANCE"
-                  ? "Please provide your contact details (required)"
-                  : "How should we reach you? (optional)"}
+                Your name is required. Phone and email are optional but
+                recommended.
               </p>
             </div>
             <div className="max-w-lg mx-auto space-y-4">
@@ -1247,48 +1375,120 @@ function TypeFormContent() {
                 </div>
               )}
 
-              {/* Required info notice for grievances */}
-              {queryType === "GRIEVANCE" && (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                  <p className="text-xs text-amber-800">
-                    <strong>Note:</strong> Contact information is required for
-                    grievances so that officers can follow up on your complaint
-                    and provide resolution updates.
+              {/* Benefits of providing phone number */}
+              {!samadhanSession && !phoneCheckResult?.isRegistered && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <p className="text-sm font-medium text-green-800 mb-2 flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4" />
+                    Benefits of adding phone number:
+                  </p>
+                  <ul className="text-xs text-green-700 space-y-1 ml-6 list-disc">
+                    <li>Get registered automatically for tracking</li>
+                    <li>Receive SMS updates on your query status</li>
+                    <li>Access your personal dashboard</li>
+                    <li>View and manage all your submissions</li>
+                  </ul>
+                </div>
+              )}
+
+              {/* Already registered user message */}
+              {!samadhanSession && phoneCheckResult?.isRegistered && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm font-medium text-blue-800 mb-2 flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    Welcome back
+                    {phoneCheckResult.name ? `, ${phoneCheckResult.name}` : ""}!
+                  </p>
+                  <p className="text-xs text-blue-700 mb-2">
+                    This phone number is already registered. Your submission
+                    will be linked to your account.
+                  </p>
+                  {phoneCheckResult.ticketCount > 0 && (
+                    <p className="text-xs text-blue-600 mb-2">
+                      You have {phoneCheckResult.ticketCount} previous
+                      submission(s).
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <Link href="/samadhan/login">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-xs h-7 gap-1 border-blue-300 text-blue-700 hover:bg-blue-100"
+                      >
+                        <LogIn className="h-3 w-3" />
+                        Login to Dashboard
+                      </Button>
+                    </Link>
+                    <Link href="/samadhan/track">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-xs h-7 gap-1 border-blue-300 text-blue-700 hover:bg-blue-100"
+                      >
+                        <FileText className="h-3 w-3" />
+                        Track Previous
+                      </Button>
+                    </Link>
+                  </div>
+                  <p className="text-xs text-blue-600 mt-2 italic">
+                    You can continue to submit - it will be linked to your
+                    account.
                   </p>
                 </div>
               )}
 
               {/* Contact fields */}
-              <div className="space-y-4 pt-4">
+              <div className="space-y-4 pt-2">
                 <div>
                   <Label>
-                    Your Name{" "}
-                    {queryType === "GRIEVANCE" && (
-                      <span className="text-red-500">*</span>
-                    )}
+                    Your Name <span className="text-red-500">*</span>
                   </Label>
                   <Input
                     value={citizenName}
                     onChange={(e) => setCitizenName(e.target.value)}
                     placeholder="Enter your full name"
                     className="mt-1"
-                    required={queryType === "GRIEVANCE"}
+                    required
                   />
                 </div>
                 <div>
-                  <Label>
-                    Phone Number{" "}
-                    {queryType === "GRIEVANCE" && (
-                      <span className="text-red-500">*</span>
+                  <Label className="flex items-center gap-2">
+                    Phone Number
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-green-50 text-green-700 border-green-200"
+                    >
+                      Recommended
+                    </Badge>
+                    {isCheckingPhone && (
+                      <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
                     )}
                   </Label>
                   <Input
                     value={citizenPhone}
                     onChange={(e) => setCitizenPhone(e.target.value)}
-                    placeholder="Enter your phone number"
+                    placeholder="Enter your phone number for registration & updates"
                     className="mt-1"
-                    required={queryType === "GRIEVANCE"}
                   />
+                  {!samadhanSession &&
+                    citizenPhone.length >= 10 &&
+                    phoneCheckResult && (
+                      <p
+                        className={`text-xs mt-1 ${phoneCheckResult.isRegistered ? "text-blue-600" : "text-green-600"}`}
+                      >
+                        {phoneCheckResult.isRegistered
+                          ? "✓ Number recognized - submission will be linked to your account"
+                          : "✓ New number - you'll be registered automatically"}
+                      </p>
+                    )}
+                  {!samadhanSession &&
+                    citizenPhone.length > 0 &&
+                    citizenPhone.length < 10 && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Enter at least 10 digits
+                      </p>
+                    )}
                 </div>
                 <div>
                   <Label>Email Address</Label>
@@ -1296,7 +1496,7 @@ function TypeFormContent() {
                     type="email"
                     value={citizenEmail}
                     onChange={(e) => setCitizenEmail(e.target.value)}
-                    placeholder="Enter your email"
+                    placeholder="Enter your email (optional)"
                     className="mt-1"
                   />
                 </div>
@@ -1414,10 +1614,71 @@ function TypeFormContent() {
                     <p className="text-sm line-clamp-3">{description}</p>
                   </div>
 
-                  {files.length > 0 && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-500">Attachments</span>
-                      <Badge variant="outline">{files.length} file(s)</Badge>
+                  {(files.length > 0 || existingAttachments.length > 0) && (
+                    <div className="border-t pt-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-gray-500">Attachments</span>
+                        <Badge
+                          variant="outline"
+                          className="bg-blue-50 text-blue-700 border-blue-200"
+                        >
+                          {files.length + existingAttachments.length} file(s)
+                        </Badge>
+                      </div>
+                      <div className="space-y-2">
+                        {/* Show existing attachments from draft */}
+                        {existingAttachments.map((attachment) => (
+                          <div
+                            key={attachment.id}
+                            className="flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded-lg"
+                          >
+                            <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center flex-shrink-0">
+                              <FileText className="h-4 w-4 text-green-600" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">
+                                {attachment.originalName}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {attachment.fileSize
+                                  ? `${(attachment.fileSize / 1024).toFixed(1)} KB`
+                                  : "Saved"}
+                              </p>
+                            </div>
+                            <Badge
+                              variant="outline"
+                              className="text-green-600 border-green-300 text-xs"
+                            >
+                              Saved
+                            </Badge>
+                          </div>
+                        ))}
+                        {/* Show new files to upload */}
+                        {files.map((file, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg"
+                          >
+                            <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center flex-shrink-0">
+                              <FileText className="h-4 w-4 text-blue-600" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">
+                                {file.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {(file.size / 1024 / 1024).toFixed(2)} MB
+                              </p>
+                            </div>
+                            <Badge
+                              variant="outline"
+                              className="text-blue-600 border-blue-300 text-xs"
+                            >
+                              New
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
 
@@ -1446,49 +1707,97 @@ function TypeFormContent() {
                         <ShieldCheck className="h-4 w-4" />
                         Registered ({samadhanSession.name})
                       </span>
+                    ) : citizenPhone.trim() &&
+                      phoneCheckResult?.isRegistered ? (
+                      <span className="flex items-center gap-1 text-blue-600">
+                        <User className="h-4 w-4" />
+                        Linked to account
+                      </span>
+                    ) : citizenPhone.trim() ? (
+                      <span className="flex items-center gap-1 text-green-600">
+                        <ShieldCheck className="h-4 w-4" />
+                        Will be registered
+                      </span>
                     ) : (
                       <span className="flex items-center gap-1 text-orange-600">
                         <AlertCircle className="h-4 w-4" />
-                        Guest User
+                        Guest (no phone)
                       </span>
                     )}
                   </div>
 
-                  {/* Guest user warning */}
-                  {!samadhanSession && (
+                  {/* Guest user warning - only if no phone provided */}
+                  {!samadhanSession && !citizenPhone.trim() && (
                     <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mt-2">
                       <p className="text-xs text-orange-700">
-                        <strong>Note:</strong> You&apos;re submitting as a
-                        guest. To access attachments and full tracking features
-                        later, consider{" "}
-                        <Link
-                          href="/samadhan/login"
-                          className="underline font-medium"
-                        >
-                          registering/logging in
-                        </Link>{" "}
-                        first.
+                        <strong>Note:</strong> You&apos;re submitting as a guest
+                        without a phone number. You&apos;ll still get a tracking
+                        ID but won&apos;t have dashboard access or SMS updates.
+                        Add a phone number above to get registered.
                       </p>
                     </div>
                   )}
+
+                  {/* Registration notice if phone provided - different for existing vs new users */}
+                  {!samadhanSession &&
+                    citizenPhone.trim() &&
+                    phoneCheckResult?.isRegistered && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-2">
+                        <p className="text-xs text-blue-700">
+                          <strong>Welcome back!</strong> This phone number is
+                          already registered. Your submission will be
+                          automatically linked to your account. You can log in
+                          anytime to view all your submissions in your
+                          dashboard.
+                        </p>
+                      </div>
+                    )}
+
+                  {!samadhanSession &&
+                    citizenPhone.trim() &&
+                    !phoneCheckResult?.isRegistered && (
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-2">
+                        <p className="text-xs text-green-700">
+                          <strong>Great!</strong> Since you provided a phone
+                          number, you&apos;ll be automatically registered. You
+                          can log in later to access your dashboard and track
+                          all your submissions.
+                        </p>
+                      </div>
+                    )}
                 </CardContent>
               </Card>
 
               {/* Action buttons */}
               <div className="flex flex-col gap-3 pt-4">
                 <Button
-                  onClick={() => setShowConfirmDialog(true)}
+                  onClick={() => {
+                    // If no phone number and not logged in, show guest confirmation
+                    if (!samadhanSession && !citizenPhone.trim()) {
+                      setShowGuestConfirmModal(true);
+                    } else {
+                      setShowConfirmDialog(true);
+                    }
+                  }}
                   disabled={isSubmitting || isSavingDraft}
                   className="w-full py-6 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                 >
                   <Send className="h-5 w-5 mr-2" />
                   Submit {queryType === "GRIEVANCE" ? "Grievance" : "Feedback"}
                 </Button>
-                {/* Only show Save as Draft for logged-in users */}
-                {samadhanSession && (
+                {/* Show Save as Draft for logged-in users OR guests with phone number */}
+                {(samadhanSession || citizenPhone.trim().length >= 10) && (
                   <Button
                     variant="outline"
-                    onClick={() => handleSubmit(true)}
+                    onClick={() => {
+                      if (!samadhanSession && !citizenPhone.trim()) {
+                        toast.error(
+                          "Please add a phone number to save as draft",
+                        );
+                        return;
+                      }
+                      handleSubmit(true);
+                    }}
                     disabled={isSubmitting || isSavingDraft}
                     className="w-full"
                   >
@@ -1504,6 +1813,13 @@ function TypeFormContent() {
                       </>
                     )}
                   </Button>
+                )}
+                {/* Prompt to add phone for draft saving */}
+                {!samadhanSession && citizenPhone.trim().length < 10 && (
+                  <p className="text-xs text-center text-gray-500">
+                    Add a phone number (10+ digits) to enable &quot;Save as
+                    Draft&quot;
+                  </p>
                 )}
               </div>
             </div>
@@ -1535,116 +1851,8 @@ function TypeFormContent() {
     );
   }
 
-  // Auth choice screen - show first for non-logged-in users
-  if (showAuthChoice && !samadhanSession) {
-    return (
-      <div className="min-h-[60vh] py-16 px-4">
-        <div className="max-w-lg mx-auto">
-          {/* Back Link */}
-          <Link
-            href="/samadhan"
-            className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 mb-8 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-
-          <Card className="border-green-100 shadow-lg">
-            <CardHeader className="text-center pb-2">
-              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-4">
-                <User className="h-8 w-8 text-green-600" />
-              </div>
-              <CardTitle className="text-2xl text-gray-900">
-                Submit a Query
-              </CardTitle>
-              <CardDescription className="text-base">
-                How would you like to proceed?
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4 pt-4">
-              {/* Login Option */}
-              <button
-                onClick={() =>
-                  router.push("/samadhan/login?redirect=/samadhan/submit")
-                }
-                className="w-full p-5 rounded-xl border-2 border-green-200 hover:border-green-400 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 transition-all group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                    <LogIn className="h-6 w-6 text-green-600" />
-                  </div>
-                  <div className="text-left flex-1">
-                    <h3 className="font-semibold text-gray-900">
-                      Login / Register
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Track your queries & get updates
-                    </p>
-                  </div>
-                  <ArrowRight className="h-5 w-5 text-green-400 group-hover:text-green-600 transition-colors" />
-                </div>
-              </button>
-
-              {/* Divider */}
-              <div className="relative py-2">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-gray-200" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-gray-500">or</span>
-                </div>
-              </div>
-
-              {/* Guest Option */}
-              <button
-                onClick={() => {
-                  setProceedAsGuest(true);
-                  setShowAuthChoice(false);
-                }}
-                className="w-full p-5 rounded-xl border-2 border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 transition-all group"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                    <UserCircle className="h-6 w-6 text-gray-500" />
-                  </div>
-                  <div className="text-left flex-1">
-                    <h3 className="font-semibold text-gray-900">
-                      Continue as Guest
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Submit without an account
-                    </p>
-                  </div>
-                  <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
-                </div>
-              </button>
-
-              {/* Benefits of logging in */}
-              <div className="bg-green-50 border border-green-100 rounded-lg p-4 mt-4">
-                <p className="text-xs text-green-800 font-medium mb-2">
-                  Benefits of logging in:
-                </p>
-                <ul className="text-xs text-green-700 space-y-1">
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3 w-3" /> Track your query status online
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3 w-3" /> Save drafts and continue later
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3 w-3" /> View your query history
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3 w-3" /> Receive SMS & email updates
-                  </li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
+  // Directly show the form - no auth choice screen anymore
+  // Users can submit as guests and provide phone to get registered
 
   return (
     <div className="min-h-[60vh] py-8 px-4">
@@ -1737,21 +1945,6 @@ function TypeFormContent() {
             </div>
           )}
         </Card>
-
-        {/* Session status badge below card */}
-        <div className="mt-4 text-center">
-          {samadhanSession ? (
-            <span className="inline-flex items-center gap-1.5 text-sm text-green-600 bg-green-50 px-3 py-1.5 rounded-full">
-              <ShieldCheck className="h-4 w-4" />
-              Logged in as {samadhanSession.name}
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 text-sm text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full">
-              <UserCircle className="h-4 w-4" />
-              Submitting as Guest
-            </span>
-          )}
-        </div>
       </div>
 
       {/* Success Modal */}
@@ -1880,6 +2073,94 @@ function TypeFormContent() {
               className="w-full"
             >
               Continue Editing
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Guest Confirmation Modal - shown when submitting without phone */}
+      <Dialog
+        open={showGuestConfirmModal}
+        onOpenChange={setShowGuestConfirmModal}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="text-center">
+            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mb-4">
+              <UserCircle className="h-10 w-10 text-white" />
+            </div>
+            <DialogTitle className="text-2xl text-center">
+              Submit as Guest?
+            </DialogTitle>
+            <DialogDescription asChild>
+              <div className="text-center space-y-3 pt-2">
+                <span className="block text-base">
+                  You haven&apos;t provided a phone number.
+                </span>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <p className="text-sm font-medium text-amber-800 mb-2">
+              As a guest, you will:
+            </p>
+            <ul className="text-xs text-amber-700 space-y-1.5">
+              <li className="flex items-start gap-2">
+                <Check className="h-3.5 w-3.5 text-green-600 mt-0.5 flex-shrink-0" />
+                Still receive a tracking ID for your submission
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="h-3.5 w-3.5 text-green-600 mt-0.5 flex-shrink-0" />
+                Be able to track your ticket status anytime
+              </li>
+              <li className="flex items-start gap-2">
+                <X className="h-3.5 w-3.5 text-red-500 mt-0.5 flex-shrink-0" />
+                NOT have access to a personal dashboard
+              </li>
+              <li className="flex items-start gap-2">
+                <X className="h-3.5 w-3.5 text-red-500 mt-0.5 flex-shrink-0" />
+                NOT receive SMS status updates
+              </li>
+              <li className="flex items-start gap-2">
+                <X className="h-3.5 w-3.5 text-red-500 mt-0.5 flex-shrink-0" />
+                NOT be able to view submission history
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+            <p className="text-xs text-green-700">
+              <strong>Tip:</strong> Go back and add your phone number to get
+              registered automatically and unlock all features!
+            </p>
+          </div>
+
+          <DialogFooter className="flex flex-col gap-2 sm:flex-col pt-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowGuestConfirmModal(false);
+                // Go back to contact step to add phone
+                const contactStepIndex = steps.findIndex(
+                  (s) => s.id === "contact",
+                );
+                if (contactStepIndex !== -1) {
+                  setCurrentStep(contactStepIndex);
+                }
+              }}
+              className="w-full border-green-300 text-green-700 hover:bg-green-50"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Go Back & Add Phone
+            </Button>
+            <Button
+              onClick={() => {
+                setShowGuestConfirmModal(false);
+                setShowConfirmDialog(true);
+              }}
+              className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
+            >
+              Continue as Guest
             </Button>
           </DialogFooter>
         </DialogContent>

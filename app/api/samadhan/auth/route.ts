@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
       if (!smsResult.success) {
         console.warn(
           `[SAMADHAN OTP] SMS send failed for ${cleanPhone}:`,
-          smsResult
+          smsResult,
         );
       } else {
         console.log(`[SAMADHAN OTP] SMS sent successfully to ${cleanPhone}`);
@@ -155,13 +155,13 @@ export async function POST(request: NextRequest) {
           message: "Invalid phone number",
           errors: error.errors,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
       { success: false, message: "Failed to send OTP" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -188,7 +188,7 @@ async function verifyOTP(request: NextRequest, body?: Record<string, unknown>) {
     if (!otpRecord) {
       return NextResponse.json(
         { success: false, message: "Invalid or expired OTP" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -218,7 +218,7 @@ async function verifyOTP(request: NextRequest, body?: Record<string, unknown>) {
               success: false,
               message: "Phone number doesn't match the ticket owner",
             },
-            { status: 403 }
+            { status: 403 },
           );
         }
       }
@@ -270,6 +270,25 @@ async function verifyOTP(request: NextRequest, body?: Record<string, unknown>) {
       });
     }
 
+    // Link any guest tickets with this phone number to this user
+    // This ensures previously submitted tickets appear in their dashboard
+    const linkedTickets = await prisma.samadhanTicket.updateMany({
+      where: {
+        citizenPhone: cleanPhone,
+        citizenId: null, // Only update tickets that don't have a citizenId
+      },
+      data: {
+        citizenId: user.id,
+        isAnonymous: false,
+      },
+    });
+
+    if (linkedTickets.count > 0) {
+      console.log(
+        `[SAMADHAN] Linked ${linkedTickets.count} guest ticket(s) to user ${user.id} (${cleanPhone})`,
+      );
+    }
+
     // Update last login
     await prisma.user.update({
       where: { id: user.id },
@@ -298,6 +317,7 @@ async function verifyOTP(request: NextRequest, body?: Record<string, unknown>) {
         isNewUser:
           !user.citizenProfile?.fullName ||
           user.citizenProfile.fullName.startsWith("Citizen "),
+        linkedTickets: linkedTickets.count, // Tell user how many tickets were linked
       },
     });
   } catch (error) {
@@ -306,13 +326,13 @@ async function verifyOTP(request: NextRequest, body?: Record<string, unknown>) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, message: "Validation error", errors: error.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
       { success: false, message: "Failed to verify OTP" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -328,7 +348,7 @@ async function handleLogout() {
     console.error("Logout error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to logout" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

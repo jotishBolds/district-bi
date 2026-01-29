@@ -99,15 +99,6 @@ export default function SamadhanFooter() {
               </li>
               <li>
                 <Link
-                  href="/samadhan/query-status"
-                  className="flex items-center gap-3 text-gray-400 hover:text-green-400 transition-colors group"
-                >
-                  <HelpCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>Query Status</span>
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/samadhan/login"
                   className="flex items-center gap-3 text-gray-400 hover:text-green-400 transition-colors group"
                 >
@@ -223,10 +214,10 @@ export default function SamadhanFooter() {
                 For technical support or assistance with the portal.
               </p>
               <Link
-                href="/samadhan/query-status"
+                href="/samadhan/submit?type=FEEDBACK"
                 className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 text-sm font-medium transition-colors"
               >
-                Contact Support
+                Submit Feedback
                 <ExternalLink className="w-3 h-3" />
               </Link>
             </div>

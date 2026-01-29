@@ -538,22 +538,6 @@ exports.Prisma.SamadhanDailySequenceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.SamadhanQueryStatusRequestScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  phone: 'phone',
-  email: 'email',
-  queryDescription: 'queryDescription',
-  submissionDate: 'submissionDate',
-  status: 'status',
-  matchedTickets: 'matchedTickets',
-  adminNotes: 'adminNotes',
-  respondedAt: 'respondedAt',
-  respondedBy: 'respondedBy',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -714,8 +698,7 @@ exports.Prisma.ModelName = {
   SamadhanStatusHistory: 'SamadhanStatusHistory',
   SamadhanInternalNote: 'SamadhanInternalNote',
   SamadhanSLAConfig: 'SamadhanSLAConfig',
-  SamadhanDailySequence: 'SamadhanDailySequence',
-  SamadhanQueryStatusRequest: 'SamadhanQueryStatusRequest'
+  SamadhanDailySequence: 'SamadhanDailySequence'
 };
 
 /**
