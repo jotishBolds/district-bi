@@ -239,15 +239,17 @@ export default function CitizenDashboardPage() {
       case "drafts":
         return tickets.filter((t) => t.status === "DRAFT");
       case "active":
-        return tickets.filter((t) =>
-          [
-            "QUEUED",
-            "UNSEEN",
-            "SEEN",
-            "ACKNOWLEDGED",
-            "IN_PROGRESS",
-            "PENDING_INFORMATION",
-          ].includes(t.status),
+        return tickets.filter(
+          (t) =>
+            t.queryType !== "FEEDBACK" &&
+            [
+              "QUEUED",
+              "UNSEEN",
+              "SEEN",
+              "ACKNOWLEDGED",
+              "IN_PROGRESS",
+              "PENDING_INFORMATION",
+            ].includes(t.status),
         );
       case "action":
         return tickets.filter(
@@ -286,10 +288,12 @@ export default function CitizenDashboardPage() {
   const stats = {
     total: tickets.filter((t) => t.status !== "DRAFT").length,
     drafts: tickets.filter((t) => t.status === "DRAFT").length,
-    active: tickets.filter((t) =>
-      ["QUEUED", "UNSEEN", "SEEN", "ACKNOWLEDGED", "IN_PROGRESS"].includes(
-        t.status,
-      ),
+    active: tickets.filter(
+      (t) =>
+        t.queryType !== "FEEDBACK" &&
+        ["QUEUED", "UNSEEN", "SEEN", "ACKNOWLEDGED", "IN_PROGRESS"].includes(
+          t.status,
+        ),
     ).length,
     actionRequired: tickets.filter(
       (t) => t.hasPendingInfoRequest && t.status === "PENDING_INFORMATION",
@@ -540,7 +544,6 @@ export default function CitizenDashboardPage() {
                         <SelectItem value="all">All Types</SelectItem>
                         <SelectItem value="FEEDBACK">Feedback</SelectItem>
                         <SelectItem value="GRIEVANCE">Grievance</SelectItem>
-                        <SelectItem value="SUGGESTION">Suggestion</SelectItem>
                       </SelectContent>
                     </Select>
                     <Select
@@ -594,12 +597,21 @@ export default function CitizenDashboardPage() {
                     const queryConfig =
                       queryTypeConfig[ticket.queryType] ||
                       queryTypeConfig.FEEDBACK;
-                    const status =
-                      statusConfig[ticket.status] || statusConfig.UNSEEN;
+                    const isFeedback = ticket.queryType === "FEEDBACK";
+                    // Feedback always shows "Submitted" status
+                    const status = isFeedback
+                      ? {
+                          color: "text-emerald-600",
+                          bgColor: "bg-emerald-100",
+                          label: "Submitted",
+                          icon: CheckCircle,
+                        }
+                      : statusConfig[ticket.status] || statusConfig.UNSEEN;
                     const priority = priorityConfig[ticket.priority];
                     const QueryIcon = queryConfig.icon;
                     const StatusIcon = status.icon;
                     const needsResponse =
+                      !isFeedback &&
                       ticket.hasPendingInfoRequest &&
                       ticket.status === "PENDING_INFORMATION";
                     const isDraft = ticket.status === "DRAFT";
@@ -669,10 +681,13 @@ export default function CitizenDashboardPage() {
 
                             <div className="flex items-center justify-between gap-4 text-xs text-gray-500 flex-wrap">
                               <div className="flex items-center gap-4 flex-wrap">
-                                <span className="flex items-center gap-1">
-                                  <LayoutDashboard className="h-3.5 w-3.5" />
-                                  {ticket.section.name}
-                                </span>
+                                {/* Hide section for feedback */}
+                                {!isFeedback && (
+                                  <span className="flex items-center gap-1">
+                                    <LayoutDashboard className="h-3.5 w-3.5" />
+                                    {ticket.section.name}
+                                  </span>
+                                )}
                                 <span className="flex items-center gap-1">
                                   <Calendar className="h-3.5 w-3.5" />
                                   {format(
@@ -703,8 +718,8 @@ export default function CitizenDashboardPage() {
                             </div>
                           </div>
 
-                          {/* Arrow - hide for drafts */}
-                          {!isDraft && (
+                          {/* Arrow - hide for drafts and feedback */}
+                          {!isDraft && !isFeedback && (
                             <ChevronRight className="h-5 w-5 text-gray-400 flex-shrink-0 hidden sm:block" />
                           )}
                         </div>
@@ -724,6 +739,8 @@ export default function CitizenDashboardPage() {
                           >
                             {ticketContent}
                           </Link>
+                        ) : isFeedback ? (
+                          <div className="cursor-default">{ticketContent}</div>
                         ) : (
                           <Link href={`/samadhan/track/${ticket.referenceId}`}>
                             {ticketContent}

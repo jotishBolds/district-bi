@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import {
   MessageSquare,
   AlertCircle,
-  Lightbulb,
   Clock,
   CheckCircle,
   AlertTriangle,
@@ -41,7 +40,7 @@ import { toast } from "sonner";
 interface Ticket {
   id: string;
   referenceId: string;
-  queryType: "FEEDBACK" | "GRIEVANCE" | "SUGGESTION";
+  queryType: "FEEDBACK" | "GRIEVANCE";
   priority: "LOW" | "MEDIUM" | "HIGH";
   status: string;
   section: { id: string; name: string };
@@ -111,7 +110,6 @@ const statusConfig: Record<string, { color: string; label: string }> = {
 const queryTypeConfig = {
   FEEDBACK: { icon: MessageSquare, color: "green", label: "Feedback" },
   GRIEVANCE: { icon: AlertCircle, color: "red", label: "Grievance" },
-  SUGGESTION: { icon: Lightbulb, color: "amber", label: "Suggestion" },
 };
 
 const priorityConfig = {
@@ -137,6 +135,7 @@ export default function OfficerSamadhanDashboard() {
     | "sla-breached"
     | "awaiting-escalation"
     | "appealed"
+    | "feedback"
   >("my");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterType, setFilterType] = useState<string>("all");
@@ -203,7 +202,7 @@ export default function OfficerSamadhanDashboard() {
       ticket.citizenName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ticket.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (ticket.subject &&
-        ticket.subject.toLowerCase().includes(searchQuery.toLowerCase()))
+        ticket.subject.toLowerCase().includes(searchQuery.toLowerCase())),
   );
 
   const isAdmin =
@@ -222,7 +221,7 @@ export default function OfficerSamadhanDashboard() {
           <p className="text-gray-600">
             {isDCOrAdmin
               ? "Overview of all citizen queries across sections"
-              : "Manage citizen feedback, grievances, and suggestions"}
+              : "Manage citizen feedback and grievances"}
           </p>
         </div>
         <Button onClick={fetchTickets} variant="outline" size="sm">
@@ -441,6 +440,7 @@ export default function OfficerSamadhanDashboard() {
               | "sla-breached"
               | "awaiting-escalation"
               | "appealed"
+              | "feedback",
           )
         }
       >
@@ -448,6 +448,11 @@ export default function OfficerSamadhanDashboard() {
           <TabsTrigger value="my">My Tickets</TabsTrigger>
           <TabsTrigger value="section">Section Tickets</TabsTrigger>
           {isDCOrAdmin && <TabsTrigger value="all">All Tickets</TabsTrigger>}
+          {isHigherAuthority && (
+            <TabsTrigger value="feedback" className="text-emerald-600">
+              Feedback
+            </TabsTrigger>
+          )}
           {isHigherAuthority && (
             <TabsTrigger value="escalated" className="text-purple-600">
               Escalated{" "}
@@ -543,9 +548,10 @@ export default function OfficerSamadhanDashboard() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="FEEDBACK">Feedback</SelectItem>
+                {isHigherAuthority && (
+                  <SelectItem value="FEEDBACK">Feedback</SelectItem>
+                )}
                 <SelectItem value="GRIEVANCE">Grievance</SelectItem>
-                <SelectItem value="SUGGESTION">Suggestion</SelectItem>
               </SelectContent>
             </Select>
             <Select value={filterPriority} onValueChange={setFilterPriority}>
@@ -620,29 +626,35 @@ export default function OfficerSamadhanDashboard() {
                               <p className="font-mono text-sm font-medium">
                                 {ticket.referenceId}
                               </p>
-                              <Badge
-                                variant="outline"
-                                className={`text-${priority.color}-600 text-xs`}
-                              >
-                                {priority.label}
-                              </Badge>
-                              {ticket.isSlaBreached && (
+                              {ticket.queryType !== "FEEDBACK" && (
                                 <Badge
-                                  variant="destructive"
-                                  className="text-xs animate-pulse"
+                                  variant="outline"
+                                  className={`text-${priority.color}-600 text-xs`}
                                 >
-                                  ⚠️ SLA BREACHED
+                                  {priority.label}
                                 </Badge>
                               )}
-                              {ticket.isOverdue && !ticket.isSlaBreached && (
-                                <Badge
-                                  variant="destructive"
-                                  className="text-xs"
-                                >
-                                  Overdue
-                                </Badge>
-                              )}
-                              {ticket.slaStatus === "YELLOW" &&
+                              {ticket.queryType !== "FEEDBACK" &&
+                                ticket.isSlaBreached && (
+                                  <Badge
+                                    variant="destructive"
+                                    className="text-xs animate-pulse"
+                                  >
+                                    ⚠️ SLA BREACHED
+                                  </Badge>
+                                )}
+                              {ticket.queryType !== "FEEDBACK" &&
+                                ticket.isOverdue &&
+                                !ticket.isSlaBreached && (
+                                  <Badge
+                                    variant="destructive"
+                                    className="text-xs"
+                                  >
+                                    Overdue
+                                  </Badge>
+                                )}
+                              {ticket.queryType !== "FEEDBACK" &&
+                                ticket.slaStatus === "YELLOW" &&
                                 !ticket.isOverdue && (
                                   <Badge
                                     variant="outline"
@@ -651,22 +663,24 @@ export default function OfficerSamadhanDashboard() {
                                     SLA Warning
                                   </Badge>
                                 )}
-                              {ticket.escalatedTo && (
-                                <Badge
-                                  variant="outline"
-                                  className="text-purple-600 border-purple-300 text-xs"
-                                >
-                                  Escalated
-                                </Badge>
-                              )}
-                              {ticket.pendingInfoRequests > 0 && (
-                                <Badge
-                                  variant="outline"
-                                  className="text-blue-600 border-blue-300 text-xs"
-                                >
-                                  Info Requested
-                                </Badge>
-                              )}
+                              {ticket.queryType !== "FEEDBACK" &&
+                                ticket.escalatedTo && (
+                                  <Badge
+                                    variant="outline"
+                                    className="text-purple-600 border-purple-300 text-xs"
+                                  >
+                                    Escalated
+                                  </Badge>
+                                )}
+                              {ticket.queryType !== "FEEDBACK" &&
+                                ticket.pendingInfoRequests > 0 && (
+                                  <Badge
+                                    variant="outline"
+                                    className="text-blue-600 border-blue-300 text-xs"
+                                  >
+                                    Info Requested
+                                  </Badge>
+                                )}
                             </div>
                             <p className="text-sm font-medium text-gray-900 mb-1">
                               {ticket.citizenName}
@@ -680,8 +694,12 @@ export default function OfficerSamadhanDashboard() {
                               {ticket.description}
                             </p>
                             <div className="flex items-center gap-4 mt-2 text-xs text-gray-500 flex-wrap">
-                              <span>{ticket.section.name}</span>
-                              <span>•</span>
+                              {ticket.queryType !== "FEEDBACK" && (
+                                <>
+                                  <span>{ticket.section.name}</span>
+                                  <span>•</span>
+                                </>
+                              )}
                               <span>
                                 {format(new Date(ticket.createdAt), "PP")}
                               </span>
@@ -694,57 +712,70 @@ export default function OfficerSamadhanDashboard() {
                                   </span>
                                 </>
                               )}
-                              {ticket.slaDeadline && (
-                                <>
-                                  <span>•</span>
-                                  <span
-                                    className={
-                                      ticket.isOverdue
-                                        ? "text-red-600 font-medium"
-                                        : ""
-                                    }
-                                  >
-                                    Due:{" "}
-                                    {format(
-                                      new Date(ticket.slaDeadline),
-                                      "PP p"
-                                    )}
-                                  </span>
-                                </>
-                              )}
-                              {isDCOrAdmin && ticket.assignedOfficer && (
-                                <>
-                                  <span>•</span>
-                                  <span className="text-blue-600">
-                                    Assigned: {ticket.assignedOfficer.name}
-                                  </span>
-                                </>
-                              )}
-                              {isDCOrAdmin && ticket.escalatedTo && (
-                                <>
-                                  <span>•</span>
-                                  <span className="text-purple-600">
-                                    Escalated to: {ticket.escalatedTo.name}
-                                  </span>
-                                </>
-                              )}
-                              {isHigherAuthority && ticket.isSlaBreached && (
-                                <>
-                                  <span>•</span>
-                                  <span className="text-red-600 font-medium">
-                                    🔴 Click to intervene
-                                  </span>
-                                </>
-                              )}
+                              {ticket.queryType !== "FEEDBACK" &&
+                                ticket.slaDeadline && (
+                                  <>
+                                    <span>•</span>
+                                    <span
+                                      className={
+                                        ticket.isOverdue
+                                          ? "text-red-600 font-medium"
+                                          : ""
+                                      }
+                                    >
+                                      Due:{" "}
+                                      {format(
+                                        new Date(ticket.slaDeadline),
+                                        "PP p",
+                                      )}
+                                    </span>
+                                  </>
+                                )}
+                              {ticket.queryType !== "FEEDBACK" &&
+                                isDCOrAdmin &&
+                                ticket.assignedOfficer && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="text-blue-600">
+                                      Assigned: {ticket.assignedOfficer.name}
+                                    </span>
+                                  </>
+                                )}
+                              {ticket.queryType !== "FEEDBACK" &&
+                                isDCOrAdmin &&
+                                ticket.escalatedTo && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="text-purple-600">
+                                      Escalated to: {ticket.escalatedTo.name}
+                                    </span>
+                                  </>
+                                )}
+                              {ticket.queryType !== "FEEDBACK" &&
+                                isHigherAuthority &&
+                                ticket.isSlaBreached && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="text-red-600 font-medium">
+                                      🔴 Click to intervene
+                                    </span>
+                                  </>
+                                )}
                             </div>
                           </div>
                         </div>
                         <div className="flex items-center gap-3 flex-shrink-0">
                           <Badge
                             variant="outline"
-                            className={`text-${status.color}-600 border-${status.color}-300`}
+                            className={
+                              ticket.queryType === "FEEDBACK"
+                                ? "text-green-600 border-green-300"
+                                : `text-${status.color}-600 border-${status.color}-300`
+                            }
                           >
-                            {status.label}
+                            {ticket.queryType === "FEEDBACK"
+                              ? "Submitted"
+                              : status.label}
                           </Badge>
                           <ChevronRight className="h-5 w-5 text-gray-400" />
                         </div>

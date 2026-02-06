@@ -21,6 +21,7 @@ const QUEUE_MANAGER_ROLES = [
 const assignTicketSchema = z.object({
   ticketId: z.string().min(1, "Ticket ID is required"),
   assignToOfficerId: z.string().optional(), // If not provided, auto-assign to section head
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(), // Priority set by higher authority during assignment
 });
 
 // GET - Get queued tickets
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, message: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
     if (!hasQueueAccess) {
       return NextResponse.json(
         { success: false, message: "Not authorized to view queue" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -55,10 +56,16 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = {
       status: "QUEUED",
       isDraft: false,
+      // Only grievances can be assigned/queued - feedback is view-only for higher authorities
+      queryType: "GRIEVANCE",
     };
 
     if (queryType) {
-      where.queryType = queryType;
+      // Only allow filtering to GRIEVANCE since we already filter by GRIEVANCE
+      if (queryType === "GRIEVANCE") {
+        where.queryType = queryType;
+      }
+      // Ignore FEEDBACK filter since feedback shouldn't be in queue
     }
 
     if (sectionId) {
@@ -126,16 +133,16 @@ export async function GET(request: NextRequest) {
           },
         });
         return { sectionId: secId, officers };
-      })
+      }),
     );
 
     const officersBySectionMap = new Map(
-      sectionOfficers.map((s) => [s.sectionId, s.officers])
+      sectionOfficers.map((s) => [s.sectionId, s.officers]),
     );
 
     // Resolve service UUIDs to names for all tickets
     const resolveServiceNames = async (
-      serviceAvailed: string | null
+      serviceAvailed: string | null,
     ): Promise<string | null> => {
       if (!serviceAvailed) return null;
       try {
@@ -180,7 +187,7 @@ export async function GET(request: NextRequest) {
           designation: o.designation,
           role: o.user.role,
         })),
-      }))
+      })),
     );
 
     return NextResponse.json({
@@ -199,7 +206,7 @@ export async function GET(request: NextRequest) {
     console.error("Failed to fetch queue:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch queue" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -212,7 +219,7 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, message: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -221,7 +228,7 @@ export async function POST(request: NextRequest) {
     if (!hasQueueAccess) {
       return NextResponse.json(
         { success: false, message: "Not authorized to assign tickets" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -239,14 +246,14 @@ export async function POST(request: NextRequest) {
     if (!ticket) {
       return NextResponse.json(
         { success: false, message: "Ticket not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     if (ticket.status !== "QUEUED") {
       return NextResponse.json(
         { success: false, message: "Ticket is not in queue" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -265,7 +272,7 @@ export async function POST(request: NextRequest) {
           success: false,
           message: "No available officer found in this section",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -285,7 +292,7 @@ export async function POST(request: NextRequest) {
     if (!officer || !officer.user.isActive) {
       return NextResponse.json(
         { success: false, message: "Selected officer is not available" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -297,6 +304,7 @@ export async function POST(request: NextRequest) {
         assignedOfficerId: assignToOfficerId,
         assignedById: session.user.id,
         assignedAt: new Date(),
+        ...(validatedData.priority && { priority: validatedData.priority }),
       },
       include: {
         section: {
@@ -345,13 +353,13 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, message: "Validation error", errors: error.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
       { success: false, message: "Failed to assign ticket" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

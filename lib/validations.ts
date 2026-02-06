@@ -54,7 +54,7 @@ export const passwordSchema = z
   .regex(/[0-9]/, "Password must contain at least one number")
   .regex(
     /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
-    "Password must contain at least one special character"
+    "Password must contain at least one special character",
   );
 
 /**
@@ -194,7 +194,7 @@ export const assignOfficerSchema = z.object({
 // ============================================
 
 export const createTicketSchema = z.object({
-  queryType: z.enum(["FEEDBACK", "GRIEVANCE", "SUGGESTION"]),
+  queryType: z.enum(["FEEDBACK", "GRIEVANCE"]),
   sectionId: uuidSchema,
   description: longTextSchema.refine((v) => v.length >= 20, {
     message: "Description must be at least 20 characters",

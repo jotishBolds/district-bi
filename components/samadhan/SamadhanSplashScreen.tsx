@@ -45,18 +45,6 @@ export default function SamadhanSplashScreen({
         {/* Government Emblem and Sikkim Seal */}
         <div className="flex items-center justify-center gap-4 md:gap-6 mb-6">
           {/* Government Emblem */}
-          <div className="relative">
-            <div className="w-16 h-16 md:w-24 md:h-24 relative">
-              <Image
-                src="/assets/emblem.png"
-                alt="Government Emblem"
-                width={96}
-                height={96}
-                className="w-full h-full object-contain"
-                priority
-              />
-            </div>
-          </div>
 
           {/* Seal of Sikkim */}
           <div className="relative">

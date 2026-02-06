@@ -8,7 +8,7 @@ import Script from "next/script";
 export const metadata: Metadata = {
   title: "SAMADHAN - Citizen Grievance Portal | DAC Gangtok",
   description:
-    "Submit and track feedback, grievances, and suggestions for District Administrative Centre, Gangtok services.",
+    "Submit and track feedback and grievances for District Administrative Centre, Gangtok services.",
   keywords: [
     "samadhan",
     "grievance",
@@ -21,8 +21,7 @@ export const metadata: Metadata = {
   manifest: "/api/manifest",
   openGraph: {
     title: "SAMADHAN - Citizen Grievance Portal",
-    description:
-      "Submit and track feedback, grievances, and suggestions for DAC Gangtok",
+    description: "Submit and track feedback and grievances for DAC Gangtok",
     type: "website",
     locale: "en_IN",
     siteName: "SAMADHAN",

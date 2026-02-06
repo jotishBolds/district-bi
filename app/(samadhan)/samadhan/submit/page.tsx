@@ -27,6 +27,7 @@ import {
   User,
   LogIn,
   UserCircle,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,6 +54,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { OTPVerificationModal } from "@/components/samadhan/OTPVerificationModal";
 
 interface Section {
   id: string;
@@ -78,7 +80,8 @@ interface ServiceCategory {
 
 type QueryType = "FEEDBACK" | "GRIEVANCE";
 
-// Steps for Grievance form
+// Steps for Grievance form - Priority removed (set by DC/Admin when assigning)
+// Subject and Description combined into one step
 const GRIEVANCE_STEPS = [
   {
     id: "type",
@@ -102,14 +105,9 @@ const GRIEVANCE_STEPS = [
     description: "Select service categories",
   },
   {
-    id: "subject",
-    title: "Subject",
-    description: "Brief title for your query",
-  },
-  {
-    id: "description",
+    id: "details",
     title: "Details",
-    description: "Describe your experience",
+    description: "Tell us about your grievance",
   },
   {
     id: "attachments",
@@ -120,7 +118,8 @@ const GRIEVANCE_STEPS = [
   { id: "review", title: "Review", description: "Review and submit" },
 ];
 
-// Steps for Feedback form
+// Steps for Feedback form - Single page form, no typeform style
+// No tracking ID for feedback
 const FEEDBACK_STEPS = [
   {
     id: "type",
@@ -128,68 +127,86 @@ const FEEDBACK_STEPS = [
     description: "What would you like to submit?",
   },
   {
-    id: "subject",
-    title: "Subject",
-    description: "Brief title for your feedback",
+    id: "feedback-form",
+    title: "Share Feedback",
+    description: "All fields in one place",
   },
-  { id: "description", title: "Details", description: "Share your feedback" },
-  {
-    id: "attachments",
-    title: "Attachments",
-    description: "Add any documents (optional)",
-  },
-  { id: "contact", title: "Contact", description: "Your contact information" },
-  { id: "review", title: "Review", description: "Review and submit" },
 ];
 
-// Success confirmation modal component - different for guests vs registered users
+// Success confirmation modal component - different for feedback vs grievances
 function SuccessModal({
   isOpen,
   referenceId,
   onClose,
   isGuest,
+  queryType,
 }: {
   isOpen: boolean;
   referenceId: string;
   onClose: () => void;
   isGuest: boolean;
+  queryType: "FEEDBACK" | "GRIEVANCE";
 }) {
   const router = useRouter();
+  const isFeedback = queryType === "FEEDBACK";
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mb-4">
+          <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
+            isFeedback 
+              ? "bg-gradient-to-br from-green-400 to-emerald-500"
+              : "bg-gradient-to-br from-blue-400 to-indigo-500"
+          }`}>
             <CheckCircle2 className="h-10 w-10 text-white" />
           </div>
           <DialogTitle className="text-2xl text-center">
-            🎉 Successfully Submitted!
+            {isFeedback ? "🙏 Thank You for Your Feedback!" : "🎉 Successfully Submitted!"}
           </DialogTitle>
           <DialogDescription asChild>
             <div className="text-center space-y-2">
               <span className="block">
-                Your query has been submitted and is now in the review queue.
+                {isFeedback 
+                  ? "Your feedback has been received and will be reviewed by our team."
+                  : "Your grievance has been submitted and is now in the review queue."
+                }
               </span>
               <span className="block text-sm text-gray-500">
-                A senior officer will review and assign your ticket shortly.
+                {isFeedback
+                  ? "We appreciate you taking the time to share your experience."
+                  : "A senior officer will review and assign your ticket shortly."
+                }
               </span>
             </div>
           </DialogDescription>
         </DialogHeader>
 
-        {/* Show Reference ID for ALL users (both registered and guest) */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center">
-          <p className="text-sm text-gray-600 mb-2">Your Reference ID</p>
-          <p className="text-xl font-mono font-bold text-blue-700 bg-white rounded-lg px-4 py-2 inline-block">
-            {referenceId}
-          </p>
-          <p className="text-xs text-gray-500 mt-3">
-            Save this ID to track your query status
-          </p>
-        </div>
+        {/* Show Reference ID only for GRIEVANCE, not for FEEDBACK */}
+        {!isFeedback && (
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center">
+            <p className="text-sm text-gray-600 mb-2">Your Reference ID</p>
+            <p className="text-xl font-mono font-bold text-blue-700 bg-white rounded-lg px-4 py-2 inline-block">
+              {referenceId}
+            </p>
+            <p className="text-xs text-gray-500 mt-3">
+              Save this ID to track your grievance status
+            </p>
+          </div>
+        )}
 
-        {isGuest && (
+        {/* Feedback info message */}
+        {isFeedback && (
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 text-center">
+            <p className="text-sm text-green-800 mb-1">Feedback Received</p>
+            <p className="text-xs text-green-700">
+              Feedback is for sharing experiences and cannot be tracked like grievances.
+              Higher authorities (DC, Admin) will review your feedback.
+            </p>
+          </div>
+        )}
+
+        {!isFeedback && isGuest && (
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 text-center">
             <p className="text-sm text-amber-800 mb-1">Guest Submission</p>
             <p className="text-xs text-amber-700">
@@ -200,17 +217,19 @@ function SuccessModal({
         )}
 
         <DialogFooter className="flex flex-col gap-2 sm:flex-col">
-          <Button
-            onClick={() => router.push(`/samadhan/track/${referenceId}`)}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
-          >
-            Track Status
-          </Button>
+          {!isFeedback && (
+            <Button
+              onClick={() => router.push(`/samadhan/track/${referenceId}`)}
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
+            >
+              Track Status
+            </Button>
+          )}
           {!isGuest && (
             <Button
-              variant="outline"
+              variant={isFeedback ? "default" : "outline"}
               onClick={() => router.push("/samadhan/dashboard")}
-              className="w-full"
+              className={`w-full ${isFeedback ? "bg-gradient-to-r from-green-600 to-emerald-600" : ""}`}
             >
               Go to Dashboard
             </Button>
@@ -308,6 +327,13 @@ function TypeFormContent() {
     ticketCount: number;
   } | null>(null);
   const [isCheckingPhone, setIsCheckingPhone] = useState(false);
+
+  // OTP verification state
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+  const [pendingSubmission, setPendingSubmission] = useState<
+    "submit" | "draft" | null
+  >(null);
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -575,16 +601,49 @@ function TypeFormContent() {
         return !!selectedServiceId;
       case "categories":
         return true; // Optional
-      case "subject":
-        return subject.trim().length >= 3;
-      case "description":
-        return description.trim().length >= 10;
+      case "details":
+        // Combined subject + description step for grievance
+        if (subject.trim().length < 3) {
+          toast.error("Please enter a subject (at least 3 characters)");
+          return false;
+        }
+        if (description.trim().length < 10) {
+          toast.error("Please provide more details (at least 10 characters)");
+          return false;
+        }
+        return true;
+      case "feedback-form":
+        // All-in-one feedback form validation
+        if (subject.trim().length < 3) {
+          toast.error("Please enter a subject (at least 3 characters)");
+          return false;
+        }
+        if (description.trim().length < 10) {
+          toast.error("Please provide more details (at least 10 characters)");
+          return false;
+        }
+        // Name is optional in anonymous mode
+        if (!isAnonymousToOfficer && citizenName.trim() && citizenName.trim().length < 2) {
+          toast.error("Please enter a valid name (at least 2 characters)");
+          return false;
+        }
+        // Phone validation only if provided
+        if (citizenPhone.trim() && citizenPhone.trim().length < 10) {
+          toast.error("Please enter a valid phone number (at least 10 digits)");
+          return false;
+        }
+        // Email validation only if provided
+        if (citizenEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(citizenEmail.trim())) {
+          toast.error("Please enter a valid email address");
+          return false;
+        }
+        return true;
       case "attachments":
         return true; // Optional
       case "contact":
-        // Name is mandatory for all submissions
-        if (!citizenName.trim() || citizenName.trim().length < 2) {
-          toast.error("Please enter your name");
+        // Name is optional - only validate if provided
+        if (citizenName.trim() && citizenName.trim().length < 2) {
+          toast.error("Please enter a valid name (at least 2 characters)");
           return false;
         }
         // Phone and email are optional - validation only if provided
@@ -645,6 +704,64 @@ function TypeFormContent() {
         return;
       }
       setCurrentStep(currentStep - 1);
+    }
+  };
+
+  // Check if OTP verification is required before submission
+  const requiresOtpVerification = (): boolean => {
+    // Case 1: User is logged in - no OTP needed
+    if (samadhanSession) {
+      return false;
+    }
+
+    // Case 2: No phone number provided (guest) - no OTP needed
+    if (!citizenPhone.trim() || citizenPhone.trim().length < 10) {
+      return false;
+    }
+
+    // Case 3: Phone is already verified in this session - no OTP needed
+    if (isPhoneVerified) {
+      return false;
+    }
+
+    // Case 4: Phone number provided (new or existing) - OTP required
+    return true;
+  };
+
+  // Handle OTP verification success
+  const handleOtpVerified = (phone: string, token?: string) => {
+    setIsPhoneVerified(true);
+    setShowOtpModal(false);
+
+    // If there was a pending submission, proceed with it
+    if (pendingSubmission === "submit") {
+      setPendingSubmission(null);
+      setShowConfirmDialog(true);
+    } else if (pendingSubmission === "draft") {
+      setPendingSubmission(null);
+      handleSubmit(true);
+    }
+  };
+
+  // Initiate submission with OTP check
+  const initiateSubmission = (asDraft: boolean = false) => {
+    // Check if OTP verification is needed
+    if (requiresOtpVerification()) {
+      setPendingSubmission(asDraft ? "draft" : "submit");
+      setShowOtpModal(true);
+      return;
+    }
+
+    // No OTP needed, proceed with submission flow
+    if (asDraft) {
+      handleSubmit(true);
+    } else {
+      // If no phone number and not logged in, show guest confirmation
+      if (!samadhanSession && !citizenPhone.trim()) {
+        setShowGuestConfirmModal(true);
+      } else {
+        setShowConfirmDialog(true);
+      }
     }
   };
 
@@ -1129,82 +1246,227 @@ function TypeFormContent() {
           </div>
         );
 
-      case "subject":
+      case "details":
+        // Combined subject + description step for grievances (no priority - set by DC/Admin)
         return (
           <div className="space-y-6">
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                What&apos;s this about?
+                Tell us about your grievance
               </h2>
               <p className="text-gray-500">
-                Give a brief title for your {queryType.toLowerCase()}
+                Provide a subject and detailed description
               </p>
             </div>
-            <div className="max-w-lg mx-auto">
-              <Input
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder="e.g., Delay in document processing"
-                className="text-lg py-6 text-center"
-                autoFocus
-              />
-              <p className="text-sm text-gray-500 text-center mt-2">
-                {subject.length}/100 characters
-              </p>
-
-              {queryType === "GRIEVANCE" && (
-                <div className="mt-6">
-                  <Label className="text-center block mb-3">
-                    Priority Level
-                  </Label>
-                  <div className="flex gap-3 justify-center">
-                    {(["LOW", "MEDIUM", "HIGH"] as const).map((p) => (
-                      <button
-                        key={p}
-                        onClick={() => setPriority(p)}
-                        className={`px-4 py-2 rounded-lg border-2 transition-all ${
-                          priority === p
-                            ? p === "HIGH"
-                              ? "border-red-500 bg-red-50 text-red-700"
-                              : p === "MEDIUM"
-                                ? "border-amber-500 bg-amber-50 text-amber-700"
-                                : "border-gray-500 bg-gray-50 text-gray-700"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        {p.charAt(0) + p.slice(1).toLowerCase()}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+            <div className="max-w-lg mx-auto space-y-6">
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                  What&apos;s this about? <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder="e.g., Delay in document processing"
+                  className="text-base"
+                  autoFocus
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  {subject.length}/100 characters
+                </p>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Tell us more <span className="text-red-500">*</span>
+                </Label>
+                <Textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Describe your grievance in detail. Include any relevant information that will help us understand and address your concern..."
+                  rows={6}
+                  className="resize-none text-base"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  {description.length} characters (minimum 10)
+                </p>
+              </div>
             </div>
           </div>
         );
 
-      case "description":
+      case "feedback-form":
+        // All-in-one feedback form - no typeform style, all fields at once
         return (
           <div className="space-y-6">
-            <div className="text-center mb-8">
+            <div className="text-center mb-4">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                Tell us more
+                Share Your Feedback
               </h2>
               <p className="text-gray-500">
-                Describe your {queryType.toLowerCase()} in detail
+                All fields in one place. Contact info is optional.
               </p>
             </div>
-            <div className="max-w-lg mx-auto">
-              <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder={`Describe your ${queryType.toLowerCase()} in detail. Include any relevant information that will help us understand and address your concern...`}
-                rows={8}
-                className="resize-none text-base"
-                autoFocus
-              />
-              <p className="text-sm text-gray-500 text-center mt-2">
-                {description.length} characters (minimum 10)
-              </p>
+            <div className="max-w-lg mx-auto space-y-5">
+              {/* Anonymous toggle */}
+              <div
+                className={`flex items-center justify-between p-3 rounded-xl border-2 transition-all ${
+                  isAnonymousToOfficer
+                    ? "bg-green-50 border-green-300"
+                    : "bg-gray-50 border-gray-200"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  {isAnonymousToOfficer ? (
+                    <EyeOff className="h-5 w-5 text-green-600" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-blue-600" />
+                  )}
+                  <div>
+                    <p className="font-medium text-sm">
+                      {isAnonymousToOfficer ? "Anonymous Mode" : "Share Details"}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {isAnonymousToOfficer
+                        ? "Officers will see a pseudonym only"
+                        : "Officers can contact you"}
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  checked={isAnonymousToOfficer}
+                  onCheckedChange={setIsAnonymousToOfficer}
+                />
+              </div>
+
+              {/* Subject */}
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
+                  What&apos;s this about? <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder="Brief title for your feedback"
+                  className="text-base"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
+                  Tell us more <span className="text-red-500">*</span>
+                </Label>
+                <Textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Share your feedback in detail..."
+                  rows={4}
+                  className="resize-none text-base"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  {description.length} characters (minimum 10)
+                </p>
+              </div>
+
+              {/* Attachments */}
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
+                  Attachments <span className="text-gray-400">(Optional)</span>
+                </Label>
+                <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-blue-300 transition-colors">
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleFileChange}
+                    className="hidden"
+                    id="feedback-file-upload"
+                    accept="image/*,.pdf,.doc,.docx"
+                  />
+                  <label htmlFor="feedback-file-upload" className="cursor-pointer">
+                    <Paperclip className="h-6 w-6 text-gray-400 mx-auto mb-2" />
+                    <p className="text-sm text-gray-500">Click to add files</p>
+                  </label>
+                </div>
+                {files.length > 0 && (
+                  <div className="mt-2 space-y-1">
+                    {files.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                        <span className="text-sm truncate max-w-[200px]">{file.name}</span>
+                        <Button type="button" variant="ghost" size="sm" onClick={() => removeFile(index)}>
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Contact Info - Optional */}
+              {!isAnonymousToOfficer && (
+                <div className="border-t pt-4 space-y-3">
+                  <p className="text-sm font-medium text-gray-700">
+                    Contact Information <span className="text-gray-400">(Optional)</span>
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-xs text-gray-500">Name</Label>
+                      <Input
+                        value={citizenName}
+                        onChange={(e) => setCitizenName(e.target.value)}
+                        placeholder="Your name"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs text-gray-500">Phone</Label>
+                      <Input
+                        value={citizenPhone}
+                        onChange={(e) => setCitizenPhone(e.target.value)}
+                        placeholder="Phone number"
+                        className="mt-1"
+                        disabled={!!samadhanSession}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-gray-500">Email</Label>
+                    <Input
+                      type="email"
+                      value={citizenEmail}
+                      onChange={(e) => setCitizenEmail(e.target.value)}
+                      placeholder="Email address"
+                      className="mt-1"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Submit button for feedback */}
+              <div className="pt-4">
+                <Button
+                  onClick={() => {
+                    if (validateCurrentStep()) {
+                      initiateSubmission(false);
+                    }
+                  }}
+                  disabled={isSubmitting}
+                  className="w-full py-5 text-base bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-2" />
+                      Submit Feedback
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-center text-gray-500 mt-2">
+                  Feedback is for sharing experiences only and cannot be tracked like grievances.
+                </p>
+              </div>
             </div>
           </div>
         );
@@ -1335,48 +1597,45 @@ function TypeFormContent() {
                 Contact Information
               </h2>
               <p className="text-gray-500">
-                Your name is required. Phone and email are optional but
-                recommended.
+                All fields are optional. Toggle anonymous mode to hide your identity from officers.
               </p>
             </div>
             <div className="max-w-lg mx-auto space-y-4">
-              {/* Anonymous toggle - Only show for FEEDBACK, not GRIEVANCE */}
-              {queryType === "FEEDBACK" && (
-                <div
-                  className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
-                    isAnonymousToOfficer
-                      ? "bg-green-50 border-green-300"
-                      : "bg-gray-50 border-gray-200"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {isAnonymousToOfficer ? (
-                      <EyeOff className="h-5 w-5 text-green-600" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-blue-600" />
-                    )}
-                    <div>
-                      <p className="font-medium text-sm">
-                        {isAnonymousToOfficer
-                          ? "Anonymous Submission"
-                          : "Share Contact Details"}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {isAnonymousToOfficer
-                          ? "Officers will see a pseudonym only"
-                          : "Officers can contact you directly"}
-                      </p>
-                    </div>
+              {/* Anonymous toggle - Available for all query types */}
+              <div
+                className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                  isAnonymousToOfficer
+                    ? "bg-green-50 border-green-300"
+                    : "bg-gray-50 border-gray-200"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  {isAnonymousToOfficer ? (
+                    <EyeOff className="h-5 w-5 text-green-600" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-blue-600" />
+                  )}
+                  <div>
+                    <p className="font-medium text-sm">
+                      {isAnonymousToOfficer
+                        ? "Anonymous Mode"
+                        : "Share Contact Details"}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {isAnonymousToOfficer
+                        ? "Officers will see a pseudonym only. DC/Admin can still view your details."
+                        : "Officers can contact you directly"}
+                    </p>
                   </div>
-                  <Switch
-                    checked={isAnonymousToOfficer}
-                    onCheckedChange={setIsAnonymousToOfficer}
-                  />
                 </div>
-              )}
+                <Switch
+                  checked={isAnonymousToOfficer}
+                  onCheckedChange={setIsAnonymousToOfficer}
+                />
+              </div>
 
-              {/* Benefits of providing phone number */}
-              {!samadhanSession && !phoneCheckResult?.isRegistered && (
+              {/* Benefits of providing phone number - only show if not anonymous */}
+              {!samadhanSession && !phoneCheckResult?.isRegistered && !isAnonymousToOfficer && (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                   <p className="text-sm font-medium text-green-800 mb-2 flex items-center gap-2">
                     <ShieldCheck className="h-4 w-4" />
@@ -1442,25 +1701,32 @@ function TypeFormContent() {
               <div className="space-y-4 pt-2">
                 <div>
                   <Label>
-                    Your Name <span className="text-red-500">*</span>
+                    Your Name {!isAnonymousToOfficer && <span className="text-gray-400">(Optional)</span>}
                   </Label>
                   <Input
                     value={citizenName}
                     onChange={(e) => setCitizenName(e.target.value)}
-                    placeholder="Enter your full name"
+                    placeholder={isAnonymousToOfficer ? "Anonymous submission" : "Enter your full name (optional)"}
                     className="mt-1"
-                    required
+                    disabled={isAnonymousToOfficer}
                   />
+                  {isAnonymousToOfficer && (
+                    <p className="text-xs text-green-600 mt-1">
+                      A random pseudonym will be assigned for anonymous submission
+                    </p>
+                  )}
                 </div>
                 <div>
                   <Label className="flex items-center gap-2">
                     Phone Number
-                    <Badge
-                      variant="outline"
-                      className="text-xs bg-green-50 text-green-700 border-green-200"
-                    >
-                      Recommended
-                    </Badge>
+                    {!isAnonymousToOfficer && (
+                      <Badge
+                        variant="outline"
+                        className="text-xs bg-green-50 text-green-700 border-green-200"
+                      >
+                        Recommended
+                      </Badge>
+                    )}
                     {isCheckingPhone && (
                       <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
                     )}
@@ -1468,9 +1734,24 @@ function TypeFormContent() {
                   <Input
                     value={citizenPhone}
                     onChange={(e) => setCitizenPhone(e.target.value)}
-                    placeholder="Enter your phone number for registration & updates"
+                    placeholder={
+                      isAnonymousToOfficer
+                        ? "Optional - for tracking purposes only"
+                        : samadhanSession
+                          ? "Phone number from your account"
+                          : "Enter your phone number for registration & updates"
+                    }
                     className="mt-1"
+                    disabled={!!samadhanSession && !isAnonymousToOfficer}
+                    readOnly={!!samadhanSession && !isAnonymousToOfficer}
                   />
+                  {samadhanSession && !isAnonymousToOfficer && (
+                    <p className="text-xs text-blue-600 mt-1 flex items-center gap-1">
+                      <ShieldCheck className="h-3 w-3" />
+                      Phone number from your logged-in account (cannot be
+                      changed here)
+                    </p>
+                  )}
                   {!samadhanSession &&
                     citizenPhone.length >= 10 &&
                     phoneCheckResult && (
@@ -1491,7 +1772,7 @@ function TypeFormContent() {
                     )}
                 </div>
                 <div>
-                  <Label>Email Address</Label>
+                  <Label>Email Address <span className="text-gray-400">(Optional)</span></Label>
                   <Input
                     type="email"
                     value={citizenEmail}
@@ -1502,12 +1783,11 @@ function TypeFormContent() {
                 </div>
               </div>
 
-              {queryType === "FEEDBACK" &&
-                isAnonymousToOfficer &&
+              {isAnonymousToOfficer &&
                 (citizenName || citizenPhone || citizenEmail) && (
                   <p className="text-xs text-green-600 flex items-center gap-1">
                     <EyeOff className="h-3 w-3" />
-                    Your info is stored privately and NOT shown to officers
+                    Your info is stored privately and NOT shown to officers (DC/Admin can view)
                   </p>
                 )}
             </div>
@@ -1587,20 +1867,6 @@ function TypeFormContent() {
                           </div>
                         </div>
                       )}
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-500">Priority</span>
-                        <Badge
-                          variant={
-                            priority === "HIGH"
-                              ? "destructive"
-                              : priority === "MEDIUM"
-                                ? "default"
-                                : "secondary"
-                          }
-                        >
-                          {priority}
-                        </Badge>
-                      </div>
                     </>
                   )}
 
@@ -1768,17 +2034,129 @@ function TypeFormContent() {
                 </CardContent>
               </Card>
 
+              {/* Quick edit section */}
+              <Card className="border-orange-200 bg-orange-50/30">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <AlertCircle className="h-4 w-4 text-orange-600" />
+                    <p className="text-sm font-medium text-orange-800">
+                      Need to make changes?
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const descriptionStepIndex = steps.findIndex(
+                          (step) => step.id === "description",
+                        );
+                        if (descriptionStepIndex !== -1) {
+                          setCurrentStep(descriptionStepIndex);
+                        }
+                      }}
+                      className="text-xs h-8"
+                    >
+                      Edit Details
+                    </Button>
+                    {queryType === "GRIEVANCE" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const serviceStepIndex = steps.findIndex(
+                            (step) => step.id === "service",
+                          );
+                          if (serviceStepIndex !== -1) {
+                            setCurrentStep(serviceStepIndex);
+                          }
+                        }}
+                        className="text-xs h-8"
+                      >
+                        Edit Service
+                      </Button>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const attachmentsStepIndex = steps.findIndex(
+                          (step) => step.id === "attachments",
+                        );
+                        if (attachmentsStepIndex !== -1) {
+                          setCurrentStep(attachmentsStepIndex);
+                        }
+                      }}
+                      className="text-xs h-8"
+                    >
+                      Edit Files
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const contactStepIndex = steps.findIndex(
+                          (step) => step.id === "contact",
+                        );
+                        if (contactStepIndex !== -1) {
+                          setCurrentStep(contactStepIndex);
+                        }
+                      }}
+                      className="text-xs h-8"
+                    >
+                      Edit Contact
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* OTP Verification Info - Show when phone is provided and not verified */}
+              {!samadhanSession &&
+                citizenPhone.trim().length >= 10 &&
+                !isPhoneVerified && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Phone className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-blue-800">
+                          Phone Verification Required
+                        </p>
+                        <p className="text-xs text-blue-700 mt-1">
+                          To protect your submission, we&apos;ll send an OTP to
+                          verify your phone number before proceeding.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              {/* Phone Verified Badge */}
+              {!samadhanSession &&
+                citizenPhone.trim().length >= 10 &&
+                isPhoneVerified && (
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <ShieldCheck className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-green-800">
+                          Phone Verified ✓
+                        </p>
+                        <p className="text-xs text-green-700 mt-1">
+                          Your phone number has been verified for this session.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
               {/* Action buttons */}
               <div className="flex flex-col gap-3 pt-4">
                 <Button
-                  onClick={() => {
-                    // If no phone number and not logged in, show guest confirmation
-                    if (!samadhanSession && !citizenPhone.trim()) {
-                      setShowGuestConfirmModal(true);
-                    } else {
-                      setShowConfirmDialog(true);
-                    }
-                  }}
+                  onClick={() => initiateSubmission(false)}
                   disabled={isSubmitting || isSavingDraft}
                   className="w-full py-6 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                 >
@@ -1789,15 +2167,7 @@ function TypeFormContent() {
                 {(samadhanSession || citizenPhone.trim().length >= 10) && (
                   <Button
                     variant="outline"
-                    onClick={() => {
-                      if (!samadhanSession && !citizenPhone.trim()) {
-                        toast.error(
-                          "Please add a phone number to save as draft",
-                        );
-                        return;
-                      }
-                      handleSubmit(true);
-                    }}
+                    onClick={() => initiateSubmission(true)}
                     disabled={isSubmitting || isSavingDraft}
                     className="w-full"
                   >
@@ -1921,26 +2291,35 @@ function TypeFormContent() {
           </CardContent>
 
           {/* Footer navigation inside card */}
-          {currentStepData.id !== "type" && currentStepData.id !== "review" && (
+          {currentStepData.id !== "type" && (
             <div className="border-t border-gray-100 bg-gray-50 px-6 py-4">
               <div className="flex items-center justify-between">
-                <Button
-                  variant="ghost"
-                  onClick={goToPrevStep}
-                  disabled={currentStep === 0}
-                  className="gap-2"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Back
-                </Button>
+                {currentStep > 0 ? (
+                  <Button
+                    variant="outline"
+                    onClick={goToPrevStep}
+                    className="gap-2 hover:bg-gray-100 border-gray-300"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back
+                  </Button>
+                ) : (
+                  <div></div>
+                )}
 
-                <Button
-                  onClick={goToNextStep}
-                  className="gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-                >
-                  {currentStep === steps.length - 2 ? "Review" : "Continue"}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+                {currentStepData.id === "review" ? (
+                  <div className="text-sm text-gray-500">
+                    Review your submission above
+                  </div>
+                ) : (
+                  <Button
+                    onClick={goToNextStep}
+                    className="gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                  >
+                    {currentStep === steps.length - 2 ? "Review" : "Continue"}
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             </div>
           )}
@@ -1951,8 +2330,14 @@ function TypeFormContent() {
       <SuccessModal
         isOpen={showSuccessModal}
         referenceId={submittedReferenceId}
-        onClose={() => setShowSuccessModal(false)}
+        onClose={() => {
+          setShowSuccessModal(false);
+          // Reset verification state to prevent persistence across operations
+          setIsPhoneVerified(false);
+          setPendingSubmission(null);
+        }}
         isGuest={!samadhanSession}
+        queryType={queryType}
       />
 
       {/* Confirmation Dialog */}
@@ -2026,7 +2411,14 @@ function TypeFormContent() {
       {/* Draft Success Modal */}
       <Dialog
         open={showDraftSuccessModal}
-        onOpenChange={setShowDraftSuccessModal}
+        onOpenChange={(open) => {
+          setShowDraftSuccessModal(open);
+          if (!open) {
+            // Reset verification state to prevent persistence
+            setIsPhoneVerified(false);
+            setPendingSubmission(null);
+          }
+        }}
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="text-center">
@@ -2069,6 +2461,9 @@ function TypeFormContent() {
               variant="outline"
               onClick={() => {
                 setShowDraftSuccessModal(false);
+                // Reset verification state to prevent persistence
+                setIsPhoneVerified(false);
+                setPendingSubmission(null);
               }}
               className="w-full"
             >
@@ -2165,6 +2560,25 @@ function TypeFormContent() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* OTP Verification Modal */}
+      <OTPVerificationModal
+        isOpen={showOtpModal}
+        onClose={() => {
+          setShowOtpModal(false);
+          setPendingSubmission(null);
+        }}
+        onVerified={handleOtpVerified}
+        phone={citizenPhone}
+        title="Verify Your Phone Number"
+        description={
+          phoneCheckResult?.isRegistered
+            ? "This phone number is already registered. Please verify to link your submission to your account."
+            : "Please verify your phone number to complete registration and submit your query."
+        }
+        showPhoneInput={false}
+        verifyOnly={true}
+      />
     </div>
   );
 }

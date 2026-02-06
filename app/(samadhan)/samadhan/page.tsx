@@ -17,10 +17,10 @@ import {
   Search,
   Send,
   ScanLine,
-  Lightbulb,
   ChevronRight,
   Eye,
   Bell,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,12 +33,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
+import { OTPVerificationModal } from "@/components/samadhan/OTPVerificationModal";
 
 interface SamadhanSession {
   userId: string;
   phone: string;
   name: string;
   pseudonym: string;
+}
+
+interface TicketCheckResult {
+  exists: boolean;
+  isGuestTicket: boolean;
+  citizenPhone: string | null;
+  isRegisteredPhone: boolean;
+  queryType: "FEEDBACK" | "GRIEVANCE" | null;
 }
 
 export default function SamadhanHomePage() {
@@ -49,6 +58,14 @@ export default function SamadhanHomePage() {
   // Tracking states
   const [trackingId, setTrackingId] = useState("");
   const [ticketNotFound, setTicketNotFound] = useState(false);
+  const [isCheckingTicket, setIsCheckingTicket] = useState(false);
+
+  // OTP Verification states
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [pendingTicketPhone, setPendingTicketPhone] = useState<string | null>(
+    null,
+  );
+  const [pendingTrackingId, setPendingTrackingId] = useState<string>("");
 
   // Check SAMADHAN session on mount
   useEffect(() => {
@@ -68,15 +85,101 @@ export default function SamadhanHomePage() {
     checkSession();
   }, []);
 
-  // Handle tracking - redirect directly to track page
-  const handleTrack = () => {
+  // Check if ticket requires OTP verification
+  const checkTicketForOtp = async (
+    refId: string,
+  ): Promise<TicketCheckResult | null> => {
+    try {
+      const response = await fetch(
+        `/api/samadhan/tickets/check?referenceId=${encodeURIComponent(refId)}`,
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        return data.data;
+      }
+      return null;
+    } catch (error) {
+      console.error("Ticket check error:", error);
+      return null;
+    }
+  };
+
+  // Handle tracking - check if OTP is needed
+  const handleTrack = async () => {
     if (!trackingId.trim()) {
       toast.error("Please enter a tracking ID");
       return;
     }
 
-    // Redirect directly to the track page
-    router.push(`/samadhan/track/${trackingId.trim()}`);
+    const trimmedId = trackingId.trim();
+    setIsCheckingTicket(true);
+    setTicketNotFound(false);
+
+    try {
+      // First check if the ticket exists and get its info
+      const ticketInfo = await checkTicketForOtp(trimmedId);
+
+      if (!ticketInfo || !ticketInfo.exists) {
+        setTicketNotFound(true);
+        toast.error("Ticket not found. Please check the reference ID.");
+        return;
+      }
+
+      // Feedback submissions cannot be tracked - only viewable in dashboard
+      if (ticketInfo.queryType === "FEEDBACK") {
+        toast.error(
+          "Feedback submissions cannot be tracked. You can view them in your dashboard.",
+        );
+        return;
+      }
+
+      // Case 1: User is logged in - check if they own the ticket
+      if (session) {
+        // If logged in user's phone matches ticket phone, allow direct access
+        if (ticketInfo.citizenPhone === session.phone) {
+          router.push(`/samadhan/track/${trimmedId}?verified=true`);
+          return;
+        }
+        // If ticket is a guest ticket (no registered phone), allow viewing
+        if (ticketInfo.isGuestTicket && !ticketInfo.isRegisteredPhone) {
+          router.push(`/samadhan/track/${trimmedId}`);
+          return;
+        }
+        // Otherwise, require OTP verification for registered phone tickets
+        if (ticketInfo.citizenPhone && ticketInfo.isRegisteredPhone) {
+          setPendingTicketPhone(ticketInfo.citizenPhone);
+          setPendingTrackingId(trimmedId);
+          setShowOtpModal(true);
+          return;
+        }
+        // Default: allow access for other cases
+        router.push(`/samadhan/track/${trimmedId}`);
+        return;
+      }
+
+      // Case 2: User is NOT logged in
+      // If ticket has a registered phone number, require OTP
+      if (ticketInfo.citizenPhone && ticketInfo.isRegisteredPhone) {
+        setPendingTicketPhone(ticketInfo.citizenPhone);
+        setPendingTrackingId(trimmedId);
+        setShowOtpModal(true);
+        return;
+      }
+
+      // Case 3: Guest ticket or no phone - allow direct access
+      router.push(`/samadhan/track/${trimmedId}`);
+    } catch (error) {
+      toast.error("Failed to check ticket. Please try again.");
+    } finally {
+      setIsCheckingTicket(false);
+    }
+  };
+
+  // Handle OTP verification success
+  const handleOtpVerified = (phone: string, token?: string) => {
+    // Navigate to tracking page with verification token
+    router.push(`/samadhan/track/${pendingTrackingId}?verified=true`);
   };
 
   // Handle enter key for tracking input
@@ -198,14 +301,16 @@ export default function SamadhanHomePage() {
                           <button
                             type="button"
                             onClick={handleTrack}
-                            disabled={!trackingId.trim()}
+                            disabled={!trackingId.trim() || isCheckingTicket}
                             className={`w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg ${
                               ticketNotFound
                                 ? "bg-red-500"
                                 : "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                             }`}
                           >
-                            {ticketNotFound ? (
+                            {isCheckingTicket ? (
+                              <Loader2 className="w-5 h-5 text-white animate-spin" />
+                            ) : ticketNotFound ? (
                               <AlertCircle className="w-5 h-5 text-white" />
                             ) : trackingId ? (
                               <ArrowRight className="w-5 h-5 text-white" />
@@ -270,9 +375,9 @@ export default function SamadhanHomePage() {
               Citizen Grievance & Feedback Portal
             </p>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              Submit your grievances, feedback, and suggestions to the District
-              Administrative Centre, Gangtok. We ensure timely resolution and
-              transparent communication.
+              Submit your grievances and feedback to the District Administrative
+              Centre, Gangtok. We ensure timely resolution and transparent
+              communication.
             </p>
           </div>
 
@@ -365,15 +470,15 @@ export default function SamadhanHomePage() {
             <Card className="border-0 shadow-lg bg-gradient-to-br from-amber-50 to-orange-50 hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden group">
               <CardHeader className="text-center pb-2 pt-8">
                 <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md group-hover:scale-110 transition-transform">
-                  <Lightbulb className="h-7 w-7 text-white" />
+                  <Clock className="h-7 w-7 text-white" />
                 </div>
                 <CardTitle className="text-lg text-gray-900">
-                  Share Suggestions
+                  Track Status
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-center pb-8">
                 <CardDescription className="text-gray-600">
-                  Propose ideas to enhance public services and administration
+                  Monitor the progress of your submitted queries in real-time
                 </CardDescription>
               </CardContent>
             </Card>
@@ -417,8 +522,8 @@ export default function SamadhanHomePage() {
                       Submit Your Query
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Fill out our simple form with your grievance, feedback, or
-                      suggestion. Attach supporting documents if needed.
+                      Fill out our simple form with your grievance or feedback.
+                      Attach supporting documents if needed.
                     </p>
                     <div className="mt-5 flex flex-wrap justify-center gap-2">
                       <span className="inline-flex items-center px-3 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full">
@@ -426,9 +531,6 @@ export default function SamadhanHomePage() {
                       </span>
                       <span className="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">
                         <CheckCircle className="h-3 w-3 mr-1" /> Feedback
-                      </span>
-                      <span className="inline-flex items-center px-3 py-1 bg-amber-50 text-amber-700 text-xs font-medium rounded-full">
-                        <CheckCircle className="h-3 w-3 mr-1" /> Suggestion
                       </span>
                     </div>
                   </div>
@@ -569,6 +671,23 @@ export default function SamadhanHomePage() {
           </div>
         </div>
       </section>
+
+      {/* OTP Verification Modal */}
+      <OTPVerificationModal
+        isOpen={showOtpModal}
+        onClose={() => {
+          setShowOtpModal(false);
+          setPendingTicketPhone(null);
+          setPendingTrackingId("");
+        }}
+        onVerified={handleOtpVerified}
+        phone={pendingTicketPhone || ""}
+        title="Verify Your Identity"
+        description="This ticket is linked to a registered phone number. Please verify to view details."
+        showPhoneInput={false}
+        referenceId={pendingTrackingId}
+        verifyOnly={true}
+      />
     </div>
   );
 }

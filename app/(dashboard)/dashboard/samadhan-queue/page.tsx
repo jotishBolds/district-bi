@@ -126,10 +126,11 @@ export default function SamadhanQueuePage() {
 
   // Assignment dialog
   const [selectedTicket, setSelectedTicket] = useState<QueuedTicket | null>(
-    null
+    null,
   );
   const [showAssignDialog, setShowAssignDialog] = useState(false);
   const [selectedOfficer, setSelectedOfficer] = useState("");
+  const [selectedPriority, setSelectedPriority] = useState("");
   const [isAssigning, setIsAssigning] = useState(false);
 
   // View ticket dialog
@@ -169,7 +170,7 @@ export default function SamadhanQueuePage() {
     if (selectedTicket && officers.length > 0) {
       // Filter officers by the ticket's section
       const sectionOfficers = officers.filter(
-        (o) => o.section?.sectionId === selectedTicket.section.id
+        (o) => o.section?.sectionId === selectedTicket.section.id,
       );
       setFilteredOfficers(sectionOfficers);
     }
@@ -195,13 +196,13 @@ export default function SamadhanQueuePage() {
         setStats({
           total: ticketList.length,
           grievances: ticketList.filter(
-            (t: QueuedTicket) => t.queryType === "GRIEVANCE"
+            (t: QueuedTicket) => t.queryType === "GRIEVANCE",
           ).length,
           feedback: ticketList.filter(
-            (t: QueuedTicket) => t.queryType === "FEEDBACK"
+            (t: QueuedTicket) => t.queryType === "FEEDBACK",
           ).length,
           highPriority: ticketList.filter(
-            (t: QueuedTicket) => t.priority === "HIGH"
+            (t: QueuedTicket) => t.priority === "HIGH",
           ).length,
         });
       } else {
@@ -252,6 +253,11 @@ export default function SamadhanQueuePage() {
       return;
     }
 
+    if (!selectedPriority) {
+      toast.error("Please select a priority level");
+      return;
+    }
+
     setIsAssigning(true);
     try {
       const response = await fetch("/api/samadhan/queue", {
@@ -260,6 +266,7 @@ export default function SamadhanQueuePage() {
         body: JSON.stringify({
           ticketId: selectedTicket.id,
           assignToOfficerId: selectedOfficer,
+          priority: selectedPriority,
         }),
       });
 
@@ -270,6 +277,7 @@ export default function SamadhanQueuePage() {
         setShowAssignDialog(false);
         setSelectedTicket(null);
         setSelectedOfficer("");
+        setSelectedPriority("");
         fetchQueuedTickets();
       } else {
         toast.error(data.message || "Failed to assign ticket");
@@ -285,6 +293,7 @@ export default function SamadhanQueuePage() {
   const openAssignDialog = (ticket: QueuedTicket) => {
     setSelectedTicket(ticket);
     setSelectedOfficer("");
+    setSelectedPriority(ticket.priority || "");
     setShowAssignDialog(true);
   };
 
@@ -359,7 +368,7 @@ export default function SamadhanQueuePage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -381,19 +390,6 @@ export default function SamadhanQueuePage() {
                 </p>
               </div>
               <AlertCircle className="h-8 w-8 text-red-500 opacity-50" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Feedback</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {stats.feedback}
-                </p>
-              </div>
-              <MessageSquare className="h-8 w-8 text-green-500 opacity-50" />
             </div>
           </CardContent>
         </Card>
@@ -448,7 +444,6 @@ export default function SamadhanQueuePage() {
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="GRIEVANCE">Grievance</SelectItem>
-                <SelectItem value="FEEDBACK">Feedback</SelectItem>
               </SelectContent>
             </Select>
             <Select value={filterPriority} onValueChange={setFilterPriority}>
@@ -513,7 +508,16 @@ export default function SamadhanQueuePage() {
                         </code>
                       </TableCell>
                       <TableCell>{getTypeBadge(ticket.queryType)}</TableCell>
-                      <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
+                      <TableCell>
+                        {/* For feedback, show "Submitted" instead of priority */}
+                        {ticket.queryType === "FEEDBACK" ? (
+                          <Badge className="bg-green-100 text-green-700 border-green-200">
+                            Submitted
+                          </Badge>
+                        ) : (
+                          getPriorityBadge(ticket.priority)
+                        )}
+                      </TableCell>
                       <TableCell className="max-w-[200px] truncate">
                         {ticket.subject || ticket.description.slice(0, 50)}
                       </TableCell>
@@ -540,13 +544,16 @@ export default function SamadhanQueuePage() {
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button
-                            size="sm"
-                            onClick={() => openAssignDialog(ticket)}
-                          >
-                            <UserPlus className="h-4 w-4 mr-1" />
-                            Assign
-                          </Button>
+                          {/* Only show Assign button for GRIEVANCE, not for FEEDBACK */}
+                          {ticket.queryType === "GRIEVANCE" && (
+                            <Button
+                              size="sm"
+                              onClick={() => openAssignDialog(ticket)}
+                            >
+                              <UserPlus className="h-4 w-4 mr-1" />
+                              Assign
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -623,6 +630,38 @@ export default function SamadhanQueuePage() {
                   </p>
                 )}
               </div>
+
+              <div>
+                <Label>Priority Level</Label>
+                <Select
+                  value={selectedPriority}
+                  onValueChange={setSelectedPriority}
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Set priority level..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="HIGH">
+                      <span className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-red-500" />
+                        High Priority
+                      </span>
+                    </SelectItem>
+                    <SelectItem value="MEDIUM">
+                      <span className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-500" />
+                        Medium Priority
+                      </span>
+                    </SelectItem>
+                    <SelectItem value="LOW">
+                      <span className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-gray-400" />
+                        Low Priority
+                      </span>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           )}
 
@@ -635,7 +674,7 @@ export default function SamadhanQueuePage() {
             </Button>
             <Button
               onClick={handleAssign}
-              disabled={!selectedOfficer || isAssigning}
+              disabled={!selectedOfficer || !selectedPriority || isAssigning}
             >
               {isAssigning ? (
                 <>
@@ -671,9 +710,27 @@ export default function SamadhanQueuePage() {
                 </code>
                 <div className="flex gap-2">
                   {getTypeBadge(viewTicket.queryType)}
-                  {getPriorityBadge(viewTicket.priority)}
+                  {/* For feedback, show "Submitted" instead of priority */}
+                  {viewTicket.queryType === "FEEDBACK" ? (
+                    <Badge className="bg-green-100 text-green-700 border-green-200">
+                      Submitted
+                    </Badge>
+                  ) : (
+                    getPriorityBadge(viewTicket.priority)
+                  )}
                 </div>
               </div>
+
+              {/* Feedback notice */}
+              {viewTicket.queryType === "FEEDBACK" && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <p className="text-sm text-green-800">
+                    <strong>Feedback (View Only):</strong> Feedback submissions
+                    are for review only and cannot be assigned to officers. Only
+                    higher authorities (DC, Admin) can view feedback.
+                  </p>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
@@ -761,15 +818,17 @@ export default function SamadhanQueuePage() {
             <Button variant="outline" onClick={() => setShowViewDialog(false)}>
               Close
             </Button>
-            <Button
-              onClick={() => {
-                setShowViewDialog(false);
-                if (viewTicket) openAssignDialog(viewTicket);
-              }}
-            >
-              <UserPlus className="h-4 w-4 mr-2" />
-              Assign
-            </Button>
+            {viewTicket?.queryType === "GRIEVANCE" && (
+              <Button
+                onClick={() => {
+                  setShowViewDialog(false);
+                  if (viewTicket) openAssignDialog(viewTicket);
+                }}
+              >
+                <UserPlus className="h-4 w-4 mr-2" />
+                Assign
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

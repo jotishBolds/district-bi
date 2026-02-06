@@ -1,7 +1,7 @@
 {
   "name": "SAMADHAN - Citizen Grievance Portal",
   "short_name": "SAMADHAN",
-  "description": "Submit and track feedback, grievances, and suggestions for District Administrative Centre, Gangtok.",
+  "description": "Submit and track feedback and grievances for District Administrative Centre, Gangtok.",
   "start_url": "/samadhan",
   "display": "standalone",
   "background_color": "#16a34a",

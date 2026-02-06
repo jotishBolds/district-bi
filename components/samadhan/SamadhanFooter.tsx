@@ -39,9 +39,8 @@ export default function SamadhanFooter() {
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              A citizen-centric initiative to submit and track grievances,
-              feedback, and suggestions for District Administrative Centre,
-              Gangtok services.
+              A citizen-centric initiative to submit and track grievances and
+              feedback for District Administrative Centre, Gangtok services.
             </p>
 
             {/* Government Seal */}

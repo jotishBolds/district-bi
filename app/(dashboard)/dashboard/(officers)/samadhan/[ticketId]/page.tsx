@@ -64,7 +64,7 @@ import { SLACountdown } from "@/components/samadhan/SLACountdown";
 interface TicketDetail {
   id: string;
   referenceId: string;
-  queryType: "FEEDBACK" | "GRIEVANCE" | "SUGGESTION";
+  queryType: "FEEDBACK" | "GRIEVANCE";
   priority: "LOW" | "MEDIUM" | "HIGH";
   status: string;
   section: { id: string; name: string };
@@ -204,7 +204,6 @@ const statusConfig: Record<
 const queryTypeConfig = {
   FEEDBACK: { icon: MessageSquare, color: "green", label: "Feedback" },
   GRIEVANCE: { icon: AlertCircle, color: "red", label: "Grievance" },
-  SUGGESTION: { icon: Lightbulb, color: "amber", label: "Suggestion" },
 };
 
 export default function OfficerTicketDetailPage({
@@ -310,7 +309,7 @@ export default function OfficerTicketDetailPage({
             description: infoRequestDescription,
             deadlineDays: infoRequestDeadline,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -403,13 +402,18 @@ export default function OfficerTicketDetailPage({
               </Badge>
               <Badge
                 variant="outline"
-                className={`text-${status.color}-600 border-${status.color}-300`}
+                className={
+                  ticket.queryType === "FEEDBACK"
+                    ? "text-green-600 border-green-300"
+                    : `text-${status.color}-600 border-${status.color}-300`
+                }
               >
-                {status.label}
+                {ticket.queryType === "FEEDBACK" ? "Submitted" : status.label}
               </Badge>
-              {ticket.sla.status === "RED" && (
-                <Badge variant="destructive">SLA Breached</Badge>
-              )}
+              {ticket.sla.status === "RED" &&
+                ticket.queryType !== "FEEDBACK" && (
+                  <Badge variant="destructive">SLA Breached</Badge>
+                )}
             </div>
             <p className="text-sm text-gray-500">
               Submitted {format(new Date(ticket.timestamps.createdAt), "PPp")}
@@ -419,131 +423,142 @@ export default function OfficerTicketDetailPage({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          {ticket.permissions.canEdit && ticket.status !== "UNSEEN" && (
-            <>
-              <Dialog
-                open={isInfoRequestDialogOpen}
-                onOpenChange={setIsInfoRequestDialogOpen}
-              >
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <FileText className="h-4 w-4 mr-2" />
-                    Request Info
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Request Additional Information</DialogTitle>
-                    <DialogDescription>
-                      Ask the citizen to provide additional information or
-                      documents.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div>
-                      <Label>What information do you need?</Label>
-                      <Textarea
-                        value={infoRequestDescription}
-                        onChange={(e) =>
-                          setInfoRequestDescription(e.target.value)
-                        }
-                        placeholder="Please describe what information or documents you need from the citizen..."
-                        rows={4}
-                      />
+          {ticket.queryType !== "FEEDBACK" &&
+            ticket.permissions.canEdit &&
+            ticket.status !== "UNSEEN" && (
+              <>
+                <Dialog
+                  open={isInfoRequestDialogOpen}
+                  onOpenChange={setIsInfoRequestDialogOpen}
+                >
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <FileText className="h-4 w-4 mr-2" />
+                      Request Info
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Request Additional Information</DialogTitle>
+                      <DialogDescription>
+                        Ask the citizen to provide additional information or
+                        documents.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div>
+                        <Label>What information do you need?</Label>
+                        <Textarea
+                          value={infoRequestDescription}
+                          onChange={(e) =>
+                            setInfoRequestDescription(e.target.value)
+                          }
+                          placeholder="Please describe what information or documents you need from the citizen..."
+                          rows={4}
+                        />
+                      </div>
+                      <div>
+                        <Label>Response Deadline (days)</Label>
+                        <Select
+                          value={infoRequestDeadline.toString()}
+                          onValueChange={(v) =>
+                            setInfoRequestDeadline(parseInt(v))
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="3">3 days</SelectItem>
+                            <SelectItem value="5">5 days</SelectItem>
+                            <SelectItem value="7">7 days</SelectItem>
+                            <SelectItem value="14">14 days</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
-                    <div>
-                      <Label>Response Deadline (days)</Label>
-                      <Select
-                        value={infoRequestDeadline.toString()}
-                        onValueChange={(v) =>
-                          setInfoRequestDeadline(parseInt(v))
-                        }
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsInfoRequestDialogOpen(false)}
                       >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="3">3 days</SelectItem>
-                          <SelectItem value="5">5 days</SelectItem>
-                          <SelectItem value="7">7 days</SelectItem>
-                          <SelectItem value="14">14 days</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsInfoRequestDialogOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button onClick={createInfoRequest} disabled={isSubmitting}>
-                      {isSubmitting ? (
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      ) : null}
-                      Send Request
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={createInfoRequest}
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : null}
+                        Send Request
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
 
-              <Dialog
-                open={isResolveDialogOpen}
-                onOpenChange={setIsResolveDialogOpen}
-              >
-                <DialogTrigger asChild>
-                  <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Resolve
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-xl">
-                  <DialogHeader>
-                    <DialogTitle>Resolve Ticket</DialogTitle>
-                    <DialogDescription>
-                      Provide a detailed resolution message to the citizen
-                      (minimum 100 characters).
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="py-4">
-                    <Textarea
-                      value={resolutionMessage}
-                      onChange={(e) => setResolutionMessage(e.target.value)}
-                      placeholder="Explain what action was taken and the resolution..."
-                      rows={6}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      {resolutionMessage.length}/100 minimum characters
-                    </p>
-                  </div>
-                  <DialogFooter>
+                <Dialog
+                  open={isResolveDialogOpen}
+                  onOpenChange={setIsResolveDialogOpen}
+                >
+                  <DialogTrigger asChild>
                     <Button
-                      variant="outline"
-                      onClick={() => setIsResolveDialogOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={() => updateStatus("RESOLVED")}
-                      disabled={isSubmitting || resolutionMessage.length < 100}
+                      size="sm"
                       className="bg-green-600 hover:bg-green-700"
                     >
-                      {isSubmitting ? (
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      ) : null}
-                      Resolve Ticket
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Resolve
                     </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </>
-          )}
+                  </DialogTrigger>
+                  <DialogContent className="max-w-xl">
+                    <DialogHeader>
+                      <DialogTitle>Resolve Ticket</DialogTitle>
+                      <DialogDescription>
+                        Provide a detailed resolution message to the citizen
+                        (minimum 100 characters).
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <Textarea
+                        value={resolutionMessage}
+                        onChange={(e) => setResolutionMessage(e.target.value)}
+                        placeholder="Explain what action was taken and the resolution..."
+                        rows={6}
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        {resolutionMessage.length}/100 minimum characters
+                      </p>
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsResolveDialogOpen(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => updateStatus("RESOLVED")}
+                        disabled={
+                          isSubmitting || resolutionMessage.length < 100
+                        }
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        {isSubmitting ? (
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        ) : null}
+                        Resolve Ticket
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </>
+            )}
         </div>
       </div>
 
       {/* Higher Authority Intervention Notice */}
-      {ticket.permissions.isHigherAuthority &&
+      {ticket.queryType !== "FEEDBACK" &&
+        ticket.permissions.isHigherAuthority &&
         ticket.permissions.canIntervene && (
           <Card className="border-purple-200 bg-purple-50/50">
             <CardContent className="py-4">
@@ -591,13 +606,15 @@ export default function OfficerTicketDetailPage({
               )}
 
               <div className="grid md:grid-cols-2 gap-4">
-                <div className="flex items-start space-x-3">
-                  <Building className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-500">Section</p>
-                    <p className="font-medium">{ticket.section.name}</p>
+                {ticket.queryType !== "FEEDBACK" && (
+                  <div className="flex items-start space-x-3">
+                    <Building className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-gray-500">Section</p>
+                      <p className="font-medium">{ticket.section.name}</p>
+                    </div>
                   </div>
-                </div>
+                )}
                 {ticket.serviceAvailed && (
                   <div className="flex items-start space-x-3">
                     <FileText className="h-5 w-5 text-gray-400 mt-0.5" />
@@ -616,13 +633,15 @@ export default function OfficerTicketDetailPage({
                     </div>
                   </div>
                 )}
-                <div className="flex items-start space-x-3">
-                  <AlertCircle className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-500">Priority</p>
-                    <Badge variant="outline">{ticket.priority}</Badge>
+                {ticket.queryType !== "FEEDBACK" && (
+                  <div className="flex items-start space-x-3">
+                    <AlertCircle className="h-5 w-5 text-gray-400 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-gray-500">Priority</p>
+                      <Badge variant="outline">{ticket.priority}</Badge>
+                    </div>
                   </div>
-                </div>
+                )}
                 {ticket.visitDate && (
                   <div className="flex items-start space-x-3">
                     <Calendar className="h-5 w-5 text-gray-400 mt-0.5" />
@@ -639,7 +658,7 @@ export default function OfficerTicketDetailPage({
                     </div>
                   </div>
                 )}
-                {ticket.sla.deadline && (
+                {ticket.queryType !== "FEEDBACK" && ticket.sla.deadline && (
                   <div className="flex items-start space-x-3">
                     <Clock className="h-5 w-5 text-gray-400 mt-0.5" />
                     <div>
@@ -663,26 +682,27 @@ export default function OfficerTicketDetailPage({
               </div>
 
               {/* UNSEEN Status Notice */}
-              {ticket.status === "UNSEEN" && (
-                <>
-                  <Separator />
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <div className="flex items-center space-x-2">
-                      <Clock className="h-5 w-5 text-blue-600" />
-                      <div>
-                        <p className="font-medium text-blue-800">
-                          New Ticket - Awaiting Review
-                        </p>
-                        <p className="text-sm text-blue-600">
-                          SLA tracking will start when you view the ticket
-                          details. Status will automatically change to
-                          &quot;Seen&quot;.
-                        </p>
+              {ticket.queryType !== "FEEDBACK" &&
+                ticket.status === "UNSEEN" && (
+                  <>
+                    <Separator />
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-center space-x-2">
+                        <Clock className="h-5 w-5 text-blue-600" />
+                        <div>
+                          <p className="font-medium text-blue-800">
+                            New Ticket - Awaiting Review
+                          </p>
+                          <p className="text-sm text-blue-600">
+                            SLA tracking will start when you view the ticket
+                            details. Status will automatically change to
+                            &quot;Seen&quot;.
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
 
               {/* Appeal Information */}
               {ticket.isAppeal && ticket.originalTicketId && (
@@ -851,8 +871,8 @@ export default function OfficerTicketDetailPage({
                       request.status === "PENDING"
                         ? "bg-orange-50 border-orange-200"
                         : request.status === "RESPONDED"
-                        ? "bg-green-50 border-green-200"
-                        : "bg-gray-50 border-gray-200"
+                          ? "bg-green-50 border-green-200"
+                          : "bg-gray-50 border-gray-200"
                     }`}
                   >
                     <div className="flex items-start justify-between mb-2">
@@ -862,8 +882,8 @@ export default function OfficerTicketDetailPage({
                           request.status === "PENDING"
                             ? "text-orange-600 border-orange-300"
                             : request.status === "RESPONDED"
-                            ? "text-green-600 border-green-300"
-                            : "text-gray-600"
+                              ? "text-green-600 border-green-300"
+                              : "text-gray-600"
                         }
                       >
                         {request.status}
@@ -1036,156 +1056,163 @@ export default function OfficerTicketDetailPage({
           </Card>
 
           {/* Quick Status Update */}
-          {ticket.permissions.canEdit && ticket.status !== "UNSEEN" && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Update Status</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {/* Show appropriate status options based on current status */}
-                {ticket.status === "UNSEEN" && (
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start"
-                    onClick={() => updateStatus("SEEN")}
-                  >
-                    <Eye className="h-4 w-4 mr-2" />
-                    Mark as Seen
-                  </Button>
-                )}
-                {["ACKNOWLEDGED", "IN_PROGRESS"].map((s) => {
-                  const statusConf = statusConfig[s];
-                  return (
+          {ticket.queryType !== "FEEDBACK" &&
+            ticket.permissions.canEdit &&
+            ticket.status !== "UNSEEN" && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Update Status</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {/* Show appropriate status options based on current status */}
+                  {ticket.status === "UNSEEN" && (
                     <Button
-                      key={s}
                       variant="outline"
                       className="w-full justify-start"
-                      onClick={() => updateStatus(s)}
-                      disabled={ticket.status === s}
+                      onClick={() => updateStatus("SEEN")}
                     >
-                      <statusConf.icon className="h-4 w-4 mr-2" />
-                      Mark as {statusConf.label}
+                      <Eye className="h-4 w-4 mr-2" />
+                      Mark as Seen
                     </Button>
-                  );
-                })}
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Status History */}
-          <Card>
-            <CardHeader
-              className="cursor-pointer"
-              onClick={() => setShowHistory(!showHistory)}
-            >
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Status History</CardTitle>
-                {showHistory ? (
-                  <ChevronUp className="h-5 w-5" />
-                ) : (
-                  <ChevronDown className="h-5 w-5" />
-                )}
-              </div>
-              {ticket.isAppeal && ticket.originalTicket && (
-                <CardDescription className="text-xs">
-                  Appeal for {ticket.originalTicket.referenceId} - Complete
-                  history shown below
-                </CardDescription>
-              )}
-            </CardHeader>
-            {showHistory && (
-              <CardContent>
-                <div className="space-y-4">
-                  {ticket.statusHistory.map((history, index) => {
-                    const historyStatus =
-                      statusConfig[history.toStatus] || statusConfig.UNSEEN;
-                    const HistoryIcon = historyStatus.icon;
-
+                  )}
+                  {["ACKNOWLEDGED", "IN_PROGRESS"].map((s) => {
+                    const statusConf = statusConfig[s];
                     return (
-                      <div
-                        key={history.id}
-                        className="flex items-start space-x-3"
+                      <Button
+                        key={s}
+                        variant="outline"
+                        className="w-full justify-start"
+                        onClick={() => updateStatus(s)}
+                        disabled={ticket.status === s}
                       >
-                        <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100 flex-shrink-0`}
-                        >
-                          <HistoryIcon
-                            className={`h-4 w-4 text-${historyStatus.color}-600`}
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium">
-                            {historyStatus.label}
-                          </p>
-                          {history.changeReason && (
-                            <p className="text-xs text-gray-600 whitespace-pre-line">
-                              {history.changeReason}
-                            </p>
-                          )}
-                          <p className="text-xs text-gray-400">
-                            {history.changedByName} •{" "}
-                            {format(new Date(history.createdAt), "PP")}
-                          </p>
-                        </div>
-                      </div>
+                        <statusConf.icon className="h-4 w-4 mr-2" />
+                        Mark as {statusConf.label}
+                      </Button>
                     );
                   })}
-
-                  {/* Original ticket's status history for appeal tickets */}
-                  {ticket.isAppeal &&
-                    ticket.originalTicket &&
-                    ticket.originalTicket.statusHistory && (
-                      <>
-                        <div className="border-t border-dashed border-gray-300 my-4 pt-4">
-                          <p className="text-sm font-medium text-gray-500 mb-4 flex items-center">
-                            <FileText className="h-4 w-4 mr-2" />
-                            Original Ticket History (
-                            {ticket.originalTicket.referenceId})
-                          </p>
-                        </div>
-                        {ticket.originalTicket.statusHistory.map(
-                          (history, index) => {
-                            const historyStatus =
-                              statusConfig[history.toStatus] ||
-                              statusConfig.UNSEEN;
-                            const HistoryIcon = historyStatus.icon;
-
-                            return (
-                              <div
-                                key={`original-${history.id}`}
-                                className="flex items-start space-x-3 opacity-80"
-                              >
-                                <div
-                                  className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100 flex-shrink-0`}
-                                >
-                                  <HistoryIcon
-                                    className={`h-4 w-4 text-${historyStatus.color}-600`}
-                                  />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium">
-                                    {historyStatus.label}
-                                  </p>
-                                  {history.changeReason && (
-                                    <p className="text-xs text-gray-600 whitespace-pre-line">
-                                      {history.changeReason}
-                                    </p>
-                                  )}
-                                  <p className="text-xs text-gray-400">
-                                    {history.changedByName} •{" "}
-                                    {format(new Date(history.createdAt), "PP")}
-                                  </p>
-                                </div>
-                              </div>
-                            );
-                          }
-                        )}
-                      </>
-                    )}
-                </div>
-              </CardContent>
+                </CardContent>
+              </Card>
             )}
-          </Card>
+
+          {/* Status History */}
+          {ticket.queryType !== "FEEDBACK" && (
+            <Card>
+              <CardHeader
+                className="cursor-pointer"
+                onClick={() => setShowHistory(!showHistory)}
+              >
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg">Status History</CardTitle>
+                  {showHistory ? (
+                    <ChevronUp className="h-5 w-5" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5" />
+                  )}
+                </div>
+                {ticket.isAppeal && ticket.originalTicket && (
+                  <CardDescription className="text-xs">
+                    Appeal for {ticket.originalTicket.referenceId} - Complete
+                    history shown below
+                  </CardDescription>
+                )}
+              </CardHeader>
+              {showHistory && (
+                <CardContent>
+                  <div className="space-y-4">
+                    {ticket.statusHistory.map((history, index) => {
+                      const historyStatus =
+                        statusConfig[history.toStatus] || statusConfig.UNSEEN;
+                      const HistoryIcon = historyStatus.icon;
+
+                      return (
+                        <div
+                          key={history.id}
+                          className="flex items-start space-x-3"
+                        >
+                          <div
+                            className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100 flex-shrink-0`}
+                          >
+                            <HistoryIcon
+                              className={`h-4 w-4 text-${historyStatus.color}-600`}
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium">
+                              {historyStatus.label}
+                            </p>
+                            {history.changeReason && (
+                              <p className="text-xs text-gray-600 whitespace-pre-line">
+                                {history.changeReason}
+                              </p>
+                            )}
+                            <p className="text-xs text-gray-400">
+                              {history.changedByName} •{" "}
+                              {format(new Date(history.createdAt), "PP")}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* Original ticket's status history for appeal tickets */}
+                    {ticket.isAppeal &&
+                      ticket.originalTicket &&
+                      ticket.originalTicket.statusHistory && (
+                        <>
+                          <div className="border-t border-dashed border-gray-300 my-4 pt-4">
+                            <p className="text-sm font-medium text-gray-500 mb-4 flex items-center">
+                              <FileText className="h-4 w-4 mr-2" />
+                              Original Ticket History (
+                              {ticket.originalTicket.referenceId})
+                            </p>
+                          </div>
+                          {ticket.originalTicket.statusHistory.map(
+                            (history, index) => {
+                              const historyStatus =
+                                statusConfig[history.toStatus] ||
+                                statusConfig.UNSEEN;
+                              const HistoryIcon = historyStatus.icon;
+
+                              return (
+                                <div
+                                  key={`original-${history.id}`}
+                                  className="flex items-start space-x-3 opacity-80"
+                                >
+                                  <div
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100 flex-shrink-0`}
+                                  >
+                                    <HistoryIcon
+                                      className={`h-4 w-4 text-${historyStatus.color}-600`}
+                                    />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium">
+                                      {historyStatus.label}
+                                    </p>
+                                    {history.changeReason && (
+                                      <p className="text-xs text-gray-600 whitespace-pre-line">
+                                        {history.changeReason}
+                                      </p>
+                                    )}
+                                    <p className="text-xs text-gray-400">
+                                      {history.changedByName} •{" "}
+                                      {format(
+                                        new Date(history.createdAt),
+                                        "PP",
+                                      )}
+                                    </p>
+                                  </div>
+                                </div>
+                              );
+                            },
+                          )}
+                        </>
+                      )}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          )}
         </div>
       </div>
     </div>

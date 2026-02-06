@@ -233,41 +233,117 @@ async function verifyOTP(request: NextRequest, body?: Record<string, unknown>) {
       });
     }
 
-    // Check if user exists with CITIZEN role (SAMADHAN-specific users)
-    let user = await prisma.user.findFirst({
+    // Check if user exists with any role first
+    const existingUser = await prisma.user.findUnique({
       where: {
         phone: cleanPhone,
-        role: "CITIZEN", // Only match SAMADHAN citizen accounts
       },
       include: {
         citizenProfile: true,
       },
     });
 
-    // Create user if doesn't exist as SAMADHAN CITIZEN
-    if (!user) {
-      // Generate a unique pseudonym for the citizen
-      const pseudonym = generateCitizenPseudonym();
+    let user = existingUser;
 
-      user = await prisma.user.create({
-        data: {
-          email: `citizen_${cleanPhone}_${Date.now()}@samadhan.local`,
-          phone: cleanPhone,
-          role: "CITIZEN", // SAMADHAN Citizen role - separate from main app users
-          isActive: true,
-          citizenProfile: {
-            create: {
-              fullName: `Citizen ${cleanPhone.slice(-4)}`, // Default name with last 4 digits
-              phone: cleanPhone,
-              address: "",
-              samadhanPseudonym: pseudonym, // Random pseudonym for anonymity
+    // If user exists but with different role, check if they have CITIZEN access
+    if (existingUser && existingUser.role !== "CITIZEN") {
+      // If user exists with different role (e.g., OFFICER, ADMIN), they cannot use SAMADHAN
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "This phone number is registered for official use and cannot be used for citizen services. Please use a different phone number.",
+        },
+        { status: 403 },
+      );
+    }
+
+    // Create user if doesn't exist
+    if (!existingUser) {
+      try {
+        // Generate a unique pseudonym for the citizen
+        const pseudonym = generateCitizenPseudonym();
+
+        user = await prisma.user.create({
+          data: {
+            email: `citizen_${cleanPhone}_${Date.now()}@samadhan.local`,
+            phone: cleanPhone,
+            role: "CITIZEN", // SAMADHAN Citizen role - separate from main app users
+            isActive: true,
+            citizenProfile: {
+              create: {
+                fullName: `Citizen ${cleanPhone.slice(-4)}`, // Default name with last 4 digits
+                phone: cleanPhone,
+                address: "",
+                samadhanPseudonym: pseudonym, // Random pseudonym for anonymity
+              },
             },
           },
+          include: {
+            citizenProfile: true,
+          },
+        });
+      } catch (createError: unknown) {
+        console.error("Error creating user:", createError);
+
+        // If it's a unique constraint error, try to find the existing user again
+        if (
+          createError &&
+          typeof createError === "object" &&
+          "code" in createError &&
+          createError.code === "P2002"
+        ) {
+          const retryUser = await prisma.user.findUnique({
+            where: {
+              phone: cleanPhone,
+            },
+            include: {
+              citizenProfile: true,
+            },
+          });
+
+          if (retryUser) {
+            if (retryUser.role !== "CITIZEN") {
+              return NextResponse.json(
+                {
+                  success: false,
+                  message:
+                    "This phone number is registered for official use and cannot be used for citizen services. Please use a different phone number.",
+                },
+                { status: 403 },
+              );
+            }
+            user = retryUser;
+          } else {
+            return NextResponse.json(
+              {
+                success: false,
+                message: "Unable to create account. Please try again.",
+              },
+              { status: 500 },
+            );
+          }
+        } else {
+          return NextResponse.json(
+            {
+              success: false,
+              message: "Unable to create account. Please try again.",
+            },
+            { status: 500 },
+          );
+        }
+      }
+    }
+
+    // Ensure user is not null before proceeding
+    if (!user) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Failed to create or find user account. Please try again.",
         },
-        include: {
-          citizenProfile: true,
-        },
-      });
+        { status: 500 },
+      );
     }
 
     // Link any guest tickets with this phone number to this user

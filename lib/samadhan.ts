@@ -7,9 +7,9 @@ import {
   SamadhanSubmissionChannel,
 } from "../app/generated/prisma";
 
-// Default SLA configurations in hours
+// Default SLA configurations in hours (SUGGESTION kept for backward compatibility with DB enum)
 export const DEFAULT_SLA_CONFIG: Record<
-  SamadhanQueryType,
+  string,
   Record<SamadhanPriority, number>
 > = {
   FEEDBACK: {
@@ -21,11 +21,6 @@ export const DEFAULT_SLA_CONFIG: Record<
     LOW: 504, // 21 days
     MEDIUM: 336, // 14 days
     HIGH: 168, // 7 days
-  },
-  SUGGESTION: {
-    LOW: 168, // 7 days
-    MEDIUM: 120, // 5 days
-    HIGH: 72, // 3 days
   },
 };
 
@@ -121,7 +116,7 @@ export function generateCitizenPseudonym(): string {
  */
 export async function calculateSLADeadline(
   queryType: SamadhanQueryType,
-  priority: SamadhanPriority
+  priority: SamadhanPriority,
 ): Promise<Date> {
   // Try to get custom SLA config from database
   const customConfig = await prisma.samadhanSLAConfig.findUnique({
@@ -141,7 +136,7 @@ export async function calculateSLADeadline(
  * Find officer with lowest workload in a section
  */
 export async function findAvailableOfficer(
-  sectionId: string
+  sectionId: string,
 ): Promise<string | null> {
   // Get all officers in the section
   const officers = await prisma.officerProfile.findMany({
@@ -188,7 +183,7 @@ export async function findAvailableOfficer(
  */
 export function getSLAStatus(
   slaDeadline: Date | null,
-  status: SamadhanTicketStatus
+  status: SamadhanTicketStatus,
 ): "GREEN" | "YELLOW" | "RED" | "N/A" {
   // SLA is N/A for closed/resolved tickets
   if (
@@ -236,7 +231,7 @@ export function maskEmail(email: string): string {
  */
 export function canOfficerEditTicket(
   status: SamadhanTicketStatus,
-  isEscalated: boolean
+  isEscalated: boolean,
 ): boolean {
   if (isEscalated) return false;
   const editableStatuses: SamadhanTicketStatus[] = [
@@ -255,7 +250,7 @@ export function canOfficerEditTicket(
 export function validateAttachment(
   fileName: string,
   fileSize: number,
-  mimeType: string
+  mimeType: string,
 ): { valid: boolean; error?: string } {
   const allowedTypes = {
     "image/jpeg": 5 * 1024 * 1024, // 5MB
@@ -292,29 +287,34 @@ export function validateAttachment(
  */
 export async function getTicketStatistics(
   officerId?: string,
-  sectionId?: string
+  sectionId?: string,
 ) {
   const where: Record<string, string> = {};
   if (officerId) where.assignedOfficerId = officerId;
   if (sectionId) where.sectionId = sectionId;
 
+  // Only count grievance tickets in officer statistics
+  const grievanceWhere = { ...where, queryType: "GRIEVANCE" as const };
+
   const [total, unseen, inProgress, resolved, overdue] = await Promise.all([
-    prisma.samadhanTicket.count({ where }),
-    prisma.samadhanTicket.count({ where: { ...where, status: "UNSEEN" } }),
+    prisma.samadhanTicket.count({ where: grievanceWhere }),
+    prisma.samadhanTicket.count({
+      where: { ...grievanceWhere, status: "UNSEEN" },
+    }),
     prisma.samadhanTicket.count({
       where: {
-        ...where,
+        ...grievanceWhere,
         status: {
           in: ["SEEN", "ACKNOWLEDGED", "IN_PROGRESS", "PENDING_INFORMATION"],
         },
       },
     }),
     prisma.samadhanTicket.count({
-      where: { ...where, status: { in: ["RESOLVED", "CLOSED"] } },
+      where: { ...grievanceWhere, status: { in: ["RESOLVED", "CLOSED"] } },
     }),
     prisma.samadhanTicket.count({
       where: {
-        ...where,
+        ...grievanceWhere,
         status: { notIn: ["CLOSED", "RESOLVED", "CLOSED_NO_RESPONSE"] },
         slaDeadline: { lt: new Date() },
       },

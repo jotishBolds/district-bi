@@ -70,7 +70,15 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     if (!originalTicket) {
       return NextResponse.json(
         { success: false, message: "Ticket not found" },
-        { status: 404 }
+        { status: 404 },
+      );
+    }
+
+    // Feedback tickets cannot be appealed
+    if (originalTicket.queryType === "FEEDBACK") {
+      return NextResponse.json(
+        { success: false, message: "Feedback submissions cannot be appealed" },
+        { status: 400 },
       );
     }
 
@@ -81,7 +89,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
           success: false,
           message: "Can only appeal closed or resolved tickets",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -97,7 +105,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
             success: false,
             message: "Appeal window has expired (7 days from closure)",
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
@@ -116,7 +124,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
           success: false,
           message: "An appeal has already been filed for this ticket",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -299,13 +307,13 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, message: "Validation error", errors: error.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
       { success: false, message: "Failed to file appeal" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

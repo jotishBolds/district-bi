@@ -9,7 +9,6 @@ import {
   FileText,
   MessageSquare,
   AlertCircle,
-  Lightbulb,
   CheckCircle,
   XCircle,
   Upload,
@@ -54,7 +53,7 @@ import { format } from "date-fns";
 interface TicketData {
   id: string;
   referenceId: string;
-  queryType: "FEEDBACK" | "GRIEVANCE" | "SUGGESTION";
+  queryType: "FEEDBACK" | "GRIEVANCE";
   priority: "LOW" | "MEDIUM" | "HIGH";
   status: string;
   section: { id: string; name: string };
@@ -151,7 +150,6 @@ const statusConfig: Record<
 const queryTypeConfig = {
   FEEDBACK: { icon: MessageSquare, color: "green" },
   GRIEVANCE: { icon: AlertCircle, color: "red" },
-  SUGGESTION: { icon: Lightbulb, color: "amber" },
 };
 
 export default function TicketDetailPage({
@@ -236,6 +234,15 @@ export default function TicketDetailPage({
       const data = await response.json();
 
       if (data.success) {
+        // Block feedback tickets from being tracked
+        if (data.data.queryType === "FEEDBACK") {
+          toast.error(
+            "Feedback submissions cannot be tracked. You can view them in your dashboard.",
+          );
+          router.push("/samadhan");
+          return;
+        }
+
         setTicket(data.data);
         // Check if this is a guest ticket (no citizenId)
         setIsGuestTicket(!data.data.citizenId);
@@ -762,6 +769,26 @@ export default function TicketDetailPage({
           Back to Home
         </Link>
 
+        {/* Feedback notice */}
+        {ticket.queryType === "FEEDBACK" && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <MessageSquare className="h-5 w-5 text-green-600 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-green-800">
+                  Feedback Submitted
+                </p>
+                <p className="text-xs text-green-700 mt-1">
+                  Thank you for sharing your feedback. Feedback submissions are
+                  reviewed by higher authorities (DC, Admin) and do not have
+                  progress tracking like grievances. Your feedback helps us
+                  improve our services.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Main Card */}
         <Card className="mb-6">
           <CardHeader>
@@ -784,13 +811,24 @@ export default function TicketDetailPage({
                   </CardDescription>
                 </div>
               </div>
-              <Badge
-                variant="outline"
-                className={`text-${status.color}-600 border-${status.color}-300`}
-              >
-                <StatusIcon className="h-3 w-3 mr-1" />
-                {status.label}
-              </Badge>
+              {/* Status badge - For feedback, always show "Submitted", for grievance show actual status */}
+              {ticket.queryType === "FEEDBACK" ? (
+                <Badge
+                  variant="outline"
+                  className="text-green-600 border-green-300"
+                >
+                  <CheckCircle className="h-3 w-3 mr-1" />
+                  Submitted
+                </Badge>
+              ) : (
+                <Badge
+                  variant="outline"
+                  className={`text-${status.color}-600 border-${status.color}-300`}
+                >
+                  <StatusIcon className="h-3 w-3 mr-1" />
+                  {status.label}
+                </Badge>
+              )}
             </div>
           </CardHeader>
 
@@ -832,48 +870,54 @@ export default function TicketDetailPage({
                   </div>
                 </div>
 
-                {/* Priority */}
-                <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
-                  <div
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      ticket.priority === "HIGH"
-                        ? "bg-red-100"
-                        : ticket.priority === "MEDIUM"
-                          ? "bg-amber-100"
-                          : "bg-blue-100"
-                    }`}
-                  >
-                    <AlertCircle
-                      className={`h-5 w-5 ${
+                {/* Priority - Only show for GRIEVANCE, not for FEEDBACK */}
+                {ticket.queryType === "GRIEVANCE" && (
+                  <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+                    <div
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                         ticket.priority === "HIGH"
-                          ? "text-red-600"
+                          ? "bg-red-100"
                           : ticket.priority === "MEDIUM"
-                            ? "text-amber-600"
-                            : "text-blue-600"
+                            ? "bg-amber-100"
+                            : "bg-blue-100"
                       }`}
-                    />
+                    >
+                      <AlertCircle
+                        className={`h-5 w-5 ${
+                          ticket.priority === "HIGH"
+                            ? "text-red-600"
+                            : ticket.priority === "MEDIUM"
+                              ? "text-amber-600"
+                              : "text-blue-600"
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Priority Level</p>
+                      <p className="font-semibold text-gray-900">
+                        {ticket.priority.charAt(0) +
+                          ticket.priority.slice(1).toLowerCase()}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Priority Level</p>
-                    <p className="font-semibold text-gray-900">
-                      {ticket.priority.charAt(0) +
-                        ticket.priority.slice(1).toLowerCase()}
-                    </p>
-                  </div>
-                </div>
+                )}
 
                 {/* Section */}
-                <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-purple-100">
-                    <Building className="h-5 w-5 text-purple-600" />
+                {ticket.queryType === "GRIEVANCE" && (
+                  <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-purple-100">
+                      <Building className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">
+                        Section/Department
+                      </p>
+                      <p className="font-semibold text-gray-900">
+                        {ticket.section.name}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Section/Department</p>
-                    <p className="font-semibold text-gray-900">
-                      {ticket.section.name}
-                    </p>
-                  </div>
-                </div>
+                )}
 
                 {/* Service */}
                 {ticket.serviceAvailed && (
@@ -904,7 +948,7 @@ export default function TicketDetailPage({
                 </div>
 
                 {/* SLA Deadline */}
-                {ticket.slaDeadline && (
+                {ticket.queryType !== "FEEDBACK" && ticket.slaDeadline && (
                   <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
                     <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-orange-100">
                       <Clock className="h-5 w-5 text-orange-600" />
@@ -1137,8 +1181,8 @@ export default function TicketDetailPage({
               )}
             </div>
 
-            {/* Resolution Message */}
-            {ticket.resolutionMessage && (
+            {/* Resolution Message - Only for GRIEVANCE */}
+            {ticket.queryType === "GRIEVANCE" && ticket.resolutionMessage && (
               <>
                 <Separator />
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
@@ -1171,8 +1215,8 @@ export default function TicketDetailPage({
               </>
             )}
 
-            {/* Information Request Response */}
-            {pendingInfoRequest && (
+            {/* Information Request Response - Only for GRIEVANCE */}
+            {ticket.queryType === "GRIEVANCE" && pendingInfoRequest && (
               <>
                 <Separator />
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
@@ -1233,104 +1277,111 @@ export default function TicketDetailPage({
           </CardContent>
         </Card>
 
-        {/* Status Timeline */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Status History</CardTitle>
-            {ticket.isAppeal && ticket.originalTicket && (
-              <CardDescription>
-                This is an appeal ticket for {ticket.originalTicket.referenceId}
-                . Complete history shown below.
-              </CardDescription>
-            )}
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {/* Current ticket's status history */}
-              {ticket.statusHistory.map((history, index) => {
-                const historyStatus =
-                  statusConfig[history.toStatus] || statusConfig.UNSEEN;
-                const HistoryIcon = historyStatus.icon;
+        {/* Status Timeline - Only for GRIEVANCE */}
+        {ticket.queryType === "GRIEVANCE" && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Status History</CardTitle>
+              {ticket.isAppeal && ticket.originalTicket && (
+                <CardDescription>
+                  This is an appeal ticket for{" "}
+                  {ticket.originalTicket.referenceId}. Complete history shown
+                  below.
+                </CardDescription>
+              )}
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Current ticket's status history */}
+                {ticket.statusHistory.map((history, index) => {
+                  const historyStatus =
+                    statusConfig[history.toStatus] || statusConfig.UNSEEN;
+                  const HistoryIcon = historyStatus.icon;
 
-                return (
-                  <div key={history.id} className="flex items-start space-x-3">
+                  return (
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100`}
+                      key={history.id}
+                      className="flex items-start space-x-3"
                     >
-                      <HistoryIcon
-                        className={`h-4 w-4 text-${historyStatus.color}-600`}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium">{historyStatus.label}</p>
-                      {history.changeReason && (
-                        <p className="text-sm text-gray-600 whitespace-pre-line">
-                          {history.changeReason}
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100`}
+                      >
+                        <HistoryIcon
+                          className={`h-4 w-4 text-${historyStatus.color}-600`}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">{historyStatus.label}</p>
+                        {history.changeReason && (
+                          <p className="text-sm text-gray-600 whitespace-pre-line">
+                            {history.changeReason}
+                          </p>
+                        )}
+                        <p className="text-xs text-gray-400">
+                          {format(new Date(history.createdAt), "PPp")}
                         </p>
-                      )}
-                      <p className="text-xs text-gray-400">
-                        {format(new Date(history.createdAt), "PPp")}
-                      </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
 
-              {/* Original ticket's status history for appeal tickets */}
-              {ticket.isAppeal &&
-                ticket.originalTicket &&
-                ticket.originalTicket.statusHistory && (
-                  <>
-                    <div className="border-t border-dashed border-gray-300 my-4 pt-4">
-                      <p className="text-sm font-medium text-gray-500 mb-4 flex items-center">
-                        <FileText className="h-4 w-4 mr-2" />
-                        Original Ticket History (
-                        {ticket.originalTicket.referenceId})
-                      </p>
-                    </div>
-                    {ticket.originalTicket.statusHistory.map(
-                      (history, index) => {
-                        const historyStatus =
-                          statusConfig[history.toStatus] || statusConfig.UNSEEN;
-                        const HistoryIcon = historyStatus.icon;
+                {/* Original ticket's status history for appeal tickets */}
+                {ticket.isAppeal &&
+                  ticket.originalTicket &&
+                  ticket.originalTicket.statusHistory && (
+                    <>
+                      <div className="border-t border-dashed border-gray-300 my-4 pt-4">
+                        <p className="text-sm font-medium text-gray-500 mb-4 flex items-center">
+                          <FileText className="h-4 w-4 mr-2" />
+                          Original Ticket History (
+                          {ticket.originalTicket.referenceId})
+                        </p>
+                      </div>
+                      {ticket.originalTicket.statusHistory.map(
+                        (history, index) => {
+                          const historyStatus =
+                            statusConfig[history.toStatus] ||
+                            statusConfig.UNSEEN;
+                          const HistoryIcon = historyStatus.icon;
 
-                        return (
-                          <div
-                            key={`original-${history.id}`}
-                            className="flex items-start space-x-3 opacity-80"
-                          >
+                          return (
                             <div
-                              className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100`}
+                              key={`original-${history.id}`}
+                              className="flex items-start space-x-3 opacity-80"
                             >
-                              <HistoryIcon
-                                className={`h-4 w-4 text-${historyStatus.color}-600`}
-                              />
-                            </div>
-                            <div className="flex-1">
-                              <p className="font-medium">
-                                {historyStatus.label}
-                              </p>
-                              {history.changeReason && (
-                                <p className="text-sm text-gray-600 whitespace-pre-line">
-                                  {history.changeReason}
+                              <div
+                                className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100`}
+                              >
+                                <HistoryIcon
+                                  className={`h-4 w-4 text-${historyStatus.color}-600`}
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-medium">
+                                  {historyStatus.label}
                                 </p>
-                              )}
-                              <p className="text-xs text-gray-400">
-                                {format(new Date(history.createdAt), "PPp")}
-                              </p>
+                                {history.changeReason && (
+                                  <p className="text-sm text-gray-600 whitespace-pre-line">
+                                    {history.changeReason}
+                                  </p>
+                                )}
+                                <p className="text-xs text-gray-400">
+                                  {format(new Date(history.createdAt), "PPp")}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      },
-                    )}
-                  </>
-                )}
-            </div>
-          </CardContent>
-        </Card>
+                          );
+                        },
+                      )}
+                    </>
+                  )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-        {/* Appeal Modal */}
-        {isAppealModalOpen && (
+        {/* Appeal Modal - Only for GRIEVANCE */}
+        {ticket.queryType === "GRIEVANCE" && isAppealModalOpen && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <Card className="w-full max-w-md">
               <CardHeader>

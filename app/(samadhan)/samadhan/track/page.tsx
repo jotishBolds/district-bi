@@ -11,6 +11,8 @@ import {
   User,
   MessageSquare,
   FileText,
+  Phone,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +24,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
+import { OTPVerificationModal } from "@/components/samadhan/OTPVerificationModal";
 
 interface SamadhanSession {
   userId: string;
@@ -30,12 +33,28 @@ interface SamadhanSession {
   pseudonym: string;
 }
 
+interface TicketCheckResult {
+  exists: boolean;
+  isGuestTicket: boolean;
+  citizenPhone: string | null;
+  isRegisteredPhone: boolean;
+  queryType: "FEEDBACK" | "GRIEVANCE" | null;
+}
+
 export default function TrackPage() {
   const [referenceId, setReferenceId] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [ticketNotFound, setTicketNotFound] = useState(false);
   const [session, setSession] = useState<SamadhanSession | null>(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const router = useRouter();
+
+  // OTP Verification states
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [pendingTicketPhone, setPendingTicketPhone] = useState<string | null>(
+    null,
+  );
+  const [pendingTrackingId, setPendingTrackingId] = useState<string>("");
 
   // Check SAMADHAN session on mount
   useEffect(() => {
@@ -55,6 +74,26 @@ export default function TrackPage() {
     checkSession();
   }, []);
 
+  // Check if ticket requires OTP verification
+  const checkTicketForOtp = async (
+    refId: string,
+  ): Promise<TicketCheckResult | null> => {
+    try {
+      const response = await fetch(
+        `/api/samadhan/tickets/check?referenceId=${encodeURIComponent(refId)}`,
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        return data.data;
+      }
+      return null;
+    } catch (error) {
+      console.error("Ticket check error:", error);
+      return null;
+    }
+  };
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -63,28 +102,74 @@ export default function TrackPage() {
       return;
     }
 
+    const trimmedId = referenceId.trim();
     setIsSearching(true);
-    try {
-      // First check if the ticket exists
-      const response = await fetch(
-        `/api/samadhan/tickets?referenceId=${encodeURIComponent(
-          referenceId.trim(),
-        )}`,
-      );
-      const data = await response.json();
+    setTicketNotFound(false);
 
-      if (data.success) {
-        // Ticket found - navigate to detail page
-        // The detail page will handle OTP verification if needed
-        router.push(`/samadhan/track/${referenceId.trim()}`);
-      } else {
+    try {
+      // First check if the ticket exists and get its info
+      const ticketInfo = await checkTicketForOtp(trimmedId);
+
+      if (!ticketInfo || !ticketInfo.exists) {
+        setTicketNotFound(true);
         toast.error("Ticket not found. Please check the reference ID.");
+        return;
       }
+
+      // Feedback submissions cannot be tracked - only viewable in dashboard
+      if (ticketInfo.queryType === "FEEDBACK") {
+        toast.error(
+          "Feedback submissions cannot be tracked. You can view them in your dashboard.",
+        );
+        return;
+      }
+
+      // Case 1: User is logged in - check if they own the ticket
+      if (session) {
+        // If logged in user's phone matches ticket phone, allow direct access
+        if (ticketInfo.citizenPhone === session.phone) {
+          router.push(`/samadhan/track/${trimmedId}?verified=true`);
+          return;
+        }
+        // If ticket is a guest ticket (no registered phone), allow viewing
+        if (ticketInfo.isGuestTicket && !ticketInfo.isRegisteredPhone) {
+          router.push(`/samadhan/track/${trimmedId}`);
+          return;
+        }
+        // Otherwise, require OTP verification for registered phone tickets
+        if (ticketInfo.citizenPhone && ticketInfo.isRegisteredPhone) {
+          setPendingTicketPhone(ticketInfo.citizenPhone);
+          setPendingTrackingId(trimmedId);
+          setShowOtpModal(true);
+          return;
+        }
+        // Default: allow access for other cases
+        router.push(`/samadhan/track/${trimmedId}`);
+        return;
+      }
+
+      // Case 2: User is NOT logged in
+      // If ticket has a registered phone number, require OTP
+      if (ticketInfo.citizenPhone && ticketInfo.isRegisteredPhone) {
+        setPendingTicketPhone(ticketInfo.citizenPhone);
+        setPendingTrackingId(trimmedId);
+        setShowOtpModal(true);
+        return;
+      }
+
+      // Case 3: Guest ticket or no phone - allow direct access
+      router.push(`/samadhan/track/${trimmedId}`);
     } catch (error) {
       toast.error("Failed to search. Please try again.");
     } finally {
       setIsSearching(false);
     }
+  };
+
+  // Handle OTP verification success
+  const handleOtpVerified = (phone: string, token?: string) => {
+    // Navigate to tracking page with verification token
+    router.push(`/samadhan/track/${pendingTrackingId}?verified=true`);
   };
 
   // Loading state
@@ -136,26 +221,46 @@ export default function TrackPage() {
                   <Input
                     placeholder="SAMADHAN-2025-XX-XX-XXXXX"
                     value={referenceId}
-                    onChange={(e) => setReferenceId(e.target.value)}
-                    className="h-14 pl-6 pr-14 text-center font-mono text-base border-2 rounded-full border-green-200 focus:border-green-500 focus:ring-green-500 bg-white shadow-sm"
+                    onChange={(e) => {
+                      setReferenceId(e.target.value.toUpperCase());
+                      setTicketNotFound(false);
+                    }}
+                    className={`h-14 pl-6 pr-14 text-center font-mono text-base border-2 rounded-full shadow-sm transition-all ${
+                      ticketNotFound
+                        ? "border-red-300 bg-red-50 focus:border-red-500"
+                        : "border-green-200 focus:border-green-500 bg-white"
+                    }`}
                   />
                   <div className="absolute right-2 top-1/2 -translate-y-1/2">
                     <button
                       type="submit"
                       disabled={isSearching || !referenceId.trim()}
-                      className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                        ticketNotFound
+                          ? "bg-red-500"
+                          : "bg-gradient-to-r from-green-500 to-emerald-600"
+                      }`}
                     >
                       {isSearching ? (
                         <Loader2 className="w-5 h-5 text-white animate-spin" />
+                      ) : ticketNotFound ? (
+                        <AlertCircle className="w-5 h-5 text-white" />
                       ) : (
                         <Search className="w-5 h-5 text-white" />
                       )}
                     </button>
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-2 text-center">
-                  Reference ID was provided when you submitted your query
-                </p>
+                {ticketNotFound ? (
+                  <p className="text-xs text-red-600 mt-2 text-center bg-red-50 rounded-lg px-3 py-2">
+                    <AlertCircle className="w-3 h-3 inline mr-1" />
+                    Ticket not found. Please check the reference ID.
+                  </p>
+                ) : (
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    Reference ID was provided when you submitted your query
+                  </p>
+                )}
               </div>
             </form>
 
@@ -222,6 +327,23 @@ export default function TrackPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* OTP Verification Modal */}
+      <OTPVerificationModal
+        isOpen={showOtpModal}
+        onClose={() => {
+          setShowOtpModal(false);
+          setPendingTicketPhone(null);
+          setPendingTrackingId("");
+        }}
+        onVerified={handleOtpVerified}
+        phone={pendingTicketPhone || ""}
+        title="Verify Your Identity"
+        description="This ticket is linked to a registered phone number. Please verify to view details."
+        showPhoneInput={false}
+        referenceId={pendingTrackingId}
+        verifyOnly={true}
+      />
     </div>
   );
 }

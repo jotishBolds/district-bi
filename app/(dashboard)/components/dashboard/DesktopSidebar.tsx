@@ -43,7 +43,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [isGeneralFrontdesk, setIsGeneralFrontdesk] = useState<boolean | null>(
-    null
+    null,
   );
 
   // Fetch frontdesk assignments to determine if user is general frontdesk
@@ -60,7 +60,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
           // Determine if this is a general frontdesk user
           const hasSpecificAssignments = data.assignments.some(
             (assignment: { officerId: string | null }) =>
-              assignment.officerId !== null
+              assignment.officerId !== null,
           );
           setIsGeneralFrontdesk(!hasSpecificAssignments);
         } else {
@@ -112,31 +112,31 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
           },
         ]
       : isGeneralFrontdesk === false
-      ? [
-          {
-            name: "Manage applications",
-            href: "/dashboard/frontdesk-dashboard",
-            icon: ClipboardList,
-          },
-          {
-            name: "Queue Management",
-            href: "/dashboard/queue",
-            icon: ListChecks,
-          },
-          {
-            name: "Track Applications",
-            href: "/dashboard/tracking",
-            icon: Search,
-          },
-        ]
-      : [
-          // Loading state - show basic links
-          {
-            name: "Validate Applications",
-            href: "/dashboard/validate-applications",
-            icon: ClipboardList,
-          },
-        ]),
+        ? [
+            {
+              name: "Manage applications",
+              href: "/dashboard/frontdesk-dashboard",
+              icon: ClipboardList,
+            },
+            {
+              name: "Queue Management",
+              href: "/dashboard/queue",
+              icon: ListChecks,
+            },
+            {
+              name: "Track Applications",
+              href: "/dashboard/tracking",
+              icon: Search,
+            },
+          ]
+        : [
+            // Loading state - show basic links
+            {
+              name: "Validate Applications",
+              href: "/dashboard/validate-applications",
+              icon: ClipboardList,
+            },
+          ]),
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
@@ -168,11 +168,6 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       name: "SAMADHAN Categories",
       href: "/admin/samadhan-service-categories",
       icon: Layers,
-    },
-    {
-      name: "SAMADHAN Query Requests",
-      href: "/admin/samadhan-queries",
-      icon: HelpCircle,
     },
     {
       name: "Frontdesk Management",
@@ -366,7 +361,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
             <span
               className={cn(
                 "text-xs px-2 py-0.5 rounded-full",
-                getRoleBadge().color
+                getRoleBadge().color,
               )}
             >
               {getRoleBadge().text}
@@ -384,7 +379,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
               "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
               pathname === "/"
                 ? "bg-accent text-accent-foreground"
-                : "text-foreground hover:bg-accent/50 hover:text-accent-foreground"
+                : "text-foreground hover:bg-accent/50 hover:text-accent-foreground",
             )}
           >
             <Home className="h-4 w-4 flex-shrink-0" />
@@ -405,7 +400,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
                     pathname === link.href
                       ? "bg-accent text-accent-foreground"
-                      : "text-foreground hover:bg-accent/50 hover:text-accent-foreground"
+                      : "text-foreground hover:bg-accent/50 hover:text-accent-foreground",
                   )}
                 >
                   <link.icon className="h-4 w-4 flex-shrink-0" />
@@ -430,7 +425,7 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
                   pathname === "/dashboard/profile"
                     ? "bg-accent text-accent-foreground"
-                    : "text-foreground hover:bg-accent/50 hover:text-accent-foreground"
+                    : "text-foreground hover:bg-accent/50 hover:text-accent-foreground",
                 )}
               >
                 <Users className="h-4 w-4" />

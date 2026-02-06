@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, message: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     if (!userRole || userRole === "FRONT_DESK" || userRole === "CITIZEN") {
       return NextResponse.json(
         { success: false, message: "Not authorized" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -206,6 +206,24 @@ export async function GET(request: NextRequest) {
         ];
       }
       // Higher authorities see all appealed tickets
+    } else if (view === "feedback") {
+      // Feedback view - only for higher authorities
+      if (!isHigherAuthority) {
+        return NextResponse.json(
+          { success: false, message: "Not authorized to view feedback" },
+          { status: 403 },
+        );
+      }
+      where.queryType = "FEEDBACK";
+      // Remove the QUEUED status filter for feedback since feedback doesn't go through queue
+      delete where.status;
+      where.isDraft = false;
+    }
+
+    // For non-higher authorities viewing non-feedback views, exclude feedback tickets
+    // (Feedback is view-only for higher authorities only)
+    if (!isHigherAuthority && view !== "feedback") {
+      where.queryType = "GRIEVANCE";
     }
 
     // Additional filters
@@ -213,8 +231,14 @@ export async function GET(request: NextRequest) {
       where.status = status;
     }
 
+    // queryType filter - but respect the feedback restriction above
     if (queryType && queryType !== "all") {
-      where.queryType = queryType;
+      // Only allow filtering by GRIEVANCE for non-higher authorities
+      if (!isHigherAuthority && queryType === "FEEDBACK") {
+        // Ignore feedback filter for non-higher authorities
+      } else {
+        where.queryType = queryType;
+      }
     }
 
     if (priority && priority !== "all") {
@@ -273,7 +297,7 @@ export async function GET(request: NextRequest) {
     // Get statistics
     const statistics = await getTicketStatistics(
       view === "my" ? session.user.id : undefined,
-      isDCOrAdmin ? undefined : officerSectionId || undefined
+      isDCOrAdmin ? undefined : officerSectionId || undefined,
     );
 
     // Format tickets
@@ -444,7 +468,7 @@ export async function GET(request: NextRequest) {
     console.error("Officer dashboard error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch dashboard data" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
