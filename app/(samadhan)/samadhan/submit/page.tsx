@@ -28,6 +28,9 @@ import {
   LogIn,
   UserCircle,
   Phone,
+  Copy,
+  Download,
+  Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -149,34 +152,85 @@ function SuccessModal({
 }) {
   const router = useRouter();
   const isFeedback = queryType === "FEEDBACK";
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(referenceId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = referenceId;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleDownload = () => {
+    const content = [
+      "═══════════════════════════════════════════",
+      "     SAMADHAN - Grievance Tracking ID      ",
+      "═══════════════════════════════════════════",
+      "",
+      `  Reference ID:  ${referenceId}`,
+      "",
+      `  Submitted on:  ${new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}`,
+      "",
+      "  Track your grievance at:",
+      `  ${typeof window !== "undefined" ? window.location.origin : ""}/samadhan/track/${referenceId}`,
+      "",
+      "═══════════════════════════════════════════",
+      "  Keep this ID safe. You will need it to",
+      "  check your grievance status anytime.",
+      "═══════════════════════════════════════════",
+    ].join("\n");
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${referenceId}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center">
-          <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
-            isFeedback 
-              ? "bg-gradient-to-br from-green-400 to-emerald-500"
-              : "bg-gradient-to-br from-blue-400 to-indigo-500"
-          }`}>
+          <div
+            className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
+              isFeedback
+                ? "bg-gradient-to-br from-green-400 to-emerald-500"
+                : "bg-gradient-to-br from-blue-400 to-indigo-500"
+            }`}
+          >
             <CheckCircle2 className="h-10 w-10 text-white" />
           </div>
           <DialogTitle className="text-2xl text-center">
-            {isFeedback ? "🙏 Thank You for Your Feedback!" : "🎉 Successfully Submitted!"}
+            {isFeedback
+              ? "🙏 Thank You for Your Feedback!"
+              : "🎉 Successfully Submitted!"}
           </DialogTitle>
           <DialogDescription asChild>
             <div className="text-center space-y-2">
               <span className="block">
-                {isFeedback 
+                {isFeedback
                   ? "Your feedback has been received and will be reviewed by our team."
-                  : "Your grievance has been submitted and is now in the review queue."
-                }
+                  : "Your grievance has been submitted and is now in the review queue."}
               </span>
               <span className="block text-sm text-gray-500">
                 {isFeedback
                   ? "We appreciate you taking the time to share your experience."
-                  : "A senior officer will review and assign your ticket shortly."
-                }
+                  : "A senior officer will review and assign your ticket shortly."}
               </span>
             </div>
           </DialogDescription>
@@ -184,13 +238,37 @@ function SuccessModal({
 
         {/* Show Reference ID only for GRIEVANCE, not for FEEDBACK */}
         {!isFeedback && (
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center space-y-3">
             <p className="text-sm text-gray-600 mb-2">Your Reference ID</p>
             <p className="text-xl font-mono font-bold text-blue-700 bg-white rounded-lg px-4 py-2 inline-block">
               {referenceId}
             </p>
-            <p className="text-xs text-gray-500 mt-3">
-              Save this ID to track your grievance status
+            <div className="flex items-center justify-center gap-2 mt-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCopy}
+                className={`text-xs gap-1.5 transition-all ${copied ? "bg-green-50 border-green-300 text-green-700" : "border-blue-300 text-blue-700 hover:bg-blue-50"}`}
+              >
+                {copied ? (
+                  <Check className="h-3.5 w-3.5" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+                {copied ? "Copied!" : "Copy ID"}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownload}
+                className="text-xs gap-1.5 border-blue-300 text-blue-700 hover:bg-blue-50"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Download
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500">
+              Save this ID to track your grievance status anytime
             </p>
           </div>
         )}
@@ -200,8 +278,9 @@ function SuccessModal({
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 text-center">
             <p className="text-sm text-green-800 mb-1">Feedback Received</p>
             <p className="text-xs text-green-700">
-              Feedback is for sharing experiences and cannot be tracked like grievances.
-              Higher authorities (DC, Admin) will review your feedback.
+              Feedback is for sharing experiences and cannot be tracked like
+              grievances. Higher authorities (DC, Admin) will review your
+              feedback.
             </p>
           </div>
         )}
@@ -302,7 +381,6 @@ function TypeFormContent() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH">("MEDIUM");
   const [citizenName, setCitizenName] = useState("");
   const [citizenEmail, setCitizenEmail] = useState("");
   const [citizenPhone, setCitizenPhone] = useState("");
@@ -364,7 +442,6 @@ function TypeFormContent() {
 
         // Set all form fields from draft data
         setQueryType(draft.queryType || "GRIEVANCE");
-        setPriority(draft.priority || "MEDIUM");
         setSectionId(draft.sectionId || "");
         setSubject(draft.subject || "");
         setSelectedServiceId(draft.selectedServiceId || "");
@@ -623,7 +700,11 @@ function TypeFormContent() {
           return false;
         }
         // Name is optional in anonymous mode
-        if (!isAnonymousToOfficer && citizenName.trim() && citizenName.trim().length < 2) {
+        if (
+          !isAnonymousToOfficer &&
+          citizenName.trim() &&
+          citizenName.trim().length < 2
+        ) {
           toast.error("Please enter a valid name (at least 2 characters)");
           return false;
         }
@@ -633,7 +714,10 @@ function TypeFormContent() {
           return false;
         }
         // Email validation only if provided
-        if (citizenEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(citizenEmail.trim())) {
+        if (
+          citizenEmail.trim() &&
+          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(citizenEmail.trim())
+        ) {
           toast.error("Please enter a valid email address");
           return false;
         }
@@ -785,7 +869,6 @@ function TypeFormContent() {
 
       const submissionData = {
         queryType,
-        priority: queryType === "GRIEVANCE" ? priority : undefined,
         sectionId: sectionId || sections[0]?.id, // Use first section for feedback if not selected
         subject,
         selectedServiceId: selectedServiceId || undefined,
@@ -1259,9 +1342,44 @@ function TypeFormContent() {
               </p>
             </div>
             <div className="max-w-lg mx-auto space-y-6">
+              {/* Guide note for filling the grievance */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-blue-900 mb-1.5">
+                      How to write an effective grievance
+                    </p>
+                    <ul className="text-xs text-blue-800 space-y-1 list-disc ml-4">
+                      <li>
+                        <strong>Subject:</strong> Write a short, clear title —
+                        e.g., &quot;Delay in birth certificate issuance&quot;
+                      </li>
+                      <li>
+                        <strong>Description:</strong> Explain what happened,
+                        when it happened, and which office/department was
+                        involved
+                      </li>
+                      <li>
+                        Mention any reference numbers, application IDs, or names
+                        of officials if you have them
+                      </li>
+                      <li>
+                        Describe what outcome or resolution you are expecting
+                      </li>
+                      <li>
+                        Keep it factual and respectful — it helps officers
+                        address your concern faster
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                  What&apos;s this about? <span className="text-red-500">*</span>
+                  What&apos;s this about?{" "}
+                  <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   value={subject}
@@ -1322,7 +1440,9 @@ function TypeFormContent() {
                   )}
                   <div>
                     <p className="font-medium text-sm">
-                      {isAnonymousToOfficer ? "Anonymous Mode" : "Share Details"}
+                      {isAnonymousToOfficer
+                        ? "Anonymous Mode"
+                        : "Share Details"}
                     </p>
                     <p className="text-xs text-gray-500">
                       {isAnonymousToOfficer
@@ -1337,10 +1457,22 @@ function TypeFormContent() {
                 />
               </div>
 
+              {/* Anonymous mode note for feedback */}
+              {isAnonymousToOfficer && (
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-3.5">
+                  <p className="text-xs text-amber-800 leading-relaxed">
+                    <strong>Submitting anonymously:</strong> A pseudonym will
+                    replace your identity. You won&apos;t receive updates via
+                    SMS/email. Only DC/Admin can view your real details.
+                  </p>
+                </div>
+              )}
+
               {/* Subject */}
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
-                  What&apos;s this about? <span className="text-red-500">*</span>
+                  What&apos;s this about?{" "}
+                  <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   value={subject}
@@ -1381,7 +1513,10 @@ function TypeFormContent() {
                     id="feedback-file-upload"
                     accept="image/*,.pdf,.doc,.docx"
                   />
-                  <label htmlFor="feedback-file-upload" className="cursor-pointer">
+                  <label
+                    htmlFor="feedback-file-upload"
+                    className="cursor-pointer"
+                  >
                     <Paperclip className="h-6 w-6 text-gray-400 mx-auto mb-2" />
                     <p className="text-sm text-gray-500">Click to add files</p>
                   </label>
@@ -1389,9 +1524,19 @@ function TypeFormContent() {
                 {files.length > 0 && (
                   <div className="mt-2 space-y-1">
                     {files.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                        <span className="text-sm truncate max-w-[200px]">{file.name}</span>
-                        <Button type="button" variant="ghost" size="sm" onClick={() => removeFile(index)}>
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
+                      >
+                        <span className="text-sm truncate max-w-[200px]">
+                          {file.name}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeFile(index)}
+                        >
                           <X className="h-3 w-3" />
                         </Button>
                       </div>
@@ -1404,7 +1549,8 @@ function TypeFormContent() {
               {!isAnonymousToOfficer && (
                 <div className="border-t pt-4 space-y-3">
                   <p className="text-sm font-medium text-gray-700">
-                    Contact Information <span className="text-gray-400">(Optional)</span>
+                    Contact Information{" "}
+                    <span className="text-gray-400">(Optional)</span>
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -1464,7 +1610,8 @@ function TypeFormContent() {
                   )}
                 </Button>
                 <p className="text-xs text-center text-gray-500 mt-2">
-                  Feedback is for sharing experiences only and cannot be tracked like grievances.
+                  Feedback is for sharing experiences only and cannot be tracked
+                  like grievances.
                 </p>
               </div>
             </div>
@@ -1597,7 +1744,8 @@ function TypeFormContent() {
                 Contact Information
               </h2>
               <p className="text-gray-500">
-                All fields are optional. Toggle anonymous mode to hide your identity from officers.
+                All fields are optional. Toggle anonymous mode to hide your
+                identity from officers.
               </p>
             </div>
             <div className="max-w-lg mx-auto space-y-4">
@@ -1634,21 +1782,71 @@ function TypeFormContent() {
                 />
               </div>
 
-              {/* Benefits of providing phone number - only show if not anonymous */}
-              {!samadhanSession && !phoneCheckResult?.isRegistered && !isAnonymousToOfficer && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <p className="text-sm font-medium text-green-800 mb-2 flex items-center gap-2">
-                    <ShieldCheck className="h-4 w-4" />
-                    Benefits of adding phone number:
+              {/* Anonymous mode active - show info banner */}
+              {isAnonymousToOfficer && (
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-amber-100 rounded-full p-2 mt-0.5">
+                      <EyeOff className="h-4 w-4 text-amber-700" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-amber-900 text-sm">
+                        You&apos;re submitting anonymously
+                      </p>
+                      <p className="text-xs text-amber-800 mt-1 leading-relaxed">
+                        Your identity will be hidden from officers handling your
+                        grievance. A random pseudonym will be assigned to
+                        protect your privacy.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-white/60 rounded-lg p-3 space-y-1.5">
+                    <p className="text-xs font-medium text-amber-900">
+                      Please note as a guest/anonymous user:
+                    </p>
+                    <ul className="text-xs text-amber-800 space-y-1 ml-4 list-disc">
+                      <li>
+                        You won&apos;t receive SMS or email updates on your
+                        ticket
+                      </li>
+                      <li>
+                        You can still track your grievance using the Reference
+                        ID
+                      </li>
+                      <li>
+                        Only the District Collector and Admin can see your real
+                        identity
+                      </li>
+                      <li>
+                        Officers will only see a pseudonym like &quot;Brave
+                        Tiger 7824&quot;
+                      </li>
+                    </ul>
+                  </div>
+                  <p className="text-xs text-amber-700 italic">
+                    💡 Tip: You can always provide your phone number later by
+                    logging in to access full dashboard features.
                   </p>
-                  <ul className="text-xs text-green-700 space-y-1 ml-6 list-disc">
-                    <li>Get registered automatically for tracking</li>
-                    <li>Receive SMS updates on your query status</li>
-                    <li>Access your personal dashboard</li>
-                    <li>View and manage all your submissions</li>
-                  </ul>
                 </div>
               )}
+
+              {/* Benefits of providing phone number - only show if not anonymous */}
+              {!samadhanSession &&
+                !phoneCheckResult?.isRegistered &&
+                !isAnonymousToOfficer && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <p className="text-sm font-medium text-green-800 mb-2 flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4" />
+                      Benefits of adding phone number:
+                    </p>
+                    <ul className="text-xs text-green-700 space-y-1 ml-6 list-disc">
+                      <li>Get registered automatically for tracking</li>
+                      <li>Receive SMS updates on your query status</li>
+                      <li>Access your personal dashboard</li>
+                      <li>View and manage all your submissions</li>
+                    </ul>
+                  </div>
+                )}
 
               {/* Already registered user message */}
               {!samadhanSession && phoneCheckResult?.isRegistered && (
@@ -1697,99 +1895,87 @@ function TypeFormContent() {
                 </div>
               )}
 
-              {/* Contact fields */}
-              <div className="space-y-4 pt-2">
-                <div>
-                  <Label>
-                    Your Name {!isAnonymousToOfficer && <span className="text-gray-400">(Optional)</span>}
-                  </Label>
-                  <Input
-                    value={citizenName}
-                    onChange={(e) => setCitizenName(e.target.value)}
-                    placeholder={isAnonymousToOfficer ? "Anonymous submission" : "Enter your full name (optional)"}
-                    className="mt-1"
-                    disabled={isAnonymousToOfficer}
-                  />
-                  {isAnonymousToOfficer && (
-                    <p className="text-xs text-green-600 mt-1">
-                      A random pseudonym will be assigned for anonymous submission
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <Label className="flex items-center gap-2">
-                    Phone Number
-                    {!isAnonymousToOfficer && (
+              {/* Contact fields - hidden when anonymous */}
+              {!isAnonymousToOfficer && (
+                <div className="space-y-4 pt-2">
+                  <div>
+                    <Label>
+                      Your Name{" "}
+                      <span className="text-gray-400">(Optional)</span>
+                    </Label>
+                    <Input
+                      value={citizenName}
+                      onChange={(e) => setCitizenName(e.target.value)}
+                      placeholder="Enter your full name (optional)"
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label className="flex items-center gap-2">
+                      Phone Number
                       <Badge
                         variant="outline"
                         className="text-xs bg-green-50 text-green-700 border-green-200"
                       >
                         Recommended
                       </Badge>
-                    )}
-                    {isCheckingPhone && (
-                      <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
-                    )}
-                  </Label>
-                  <Input
-                    value={citizenPhone}
-                    onChange={(e) => setCitizenPhone(e.target.value)}
-                    placeholder={
-                      isAnonymousToOfficer
-                        ? "Optional - for tracking purposes only"
-                        : samadhanSession
+                      {isCheckingPhone && (
+                        <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
+                      )}
+                    </Label>
+                    <Input
+                      value={citizenPhone}
+                      onChange={(e) => setCitizenPhone(e.target.value)}
+                      placeholder={
+                        samadhanSession
                           ? "Phone number from your account"
                           : "Enter your phone number for registration & updates"
-                    }
-                    className="mt-1"
-                    disabled={!!samadhanSession && !isAnonymousToOfficer}
-                    readOnly={!!samadhanSession && !isAnonymousToOfficer}
-                  />
-                  {samadhanSession && !isAnonymousToOfficer && (
-                    <p className="text-xs text-blue-600 mt-1 flex items-center gap-1">
-                      <ShieldCheck className="h-3 w-3" />
-                      Phone number from your logged-in account (cannot be
-                      changed here)
-                    </p>
-                  )}
-                  {!samadhanSession &&
-                    citizenPhone.length >= 10 &&
-                    phoneCheckResult && (
-                      <p
-                        className={`text-xs mt-1 ${phoneCheckResult.isRegistered ? "text-blue-600" : "text-green-600"}`}
-                      >
-                        {phoneCheckResult.isRegistered
-                          ? "✓ Number recognized - submission will be linked to your account"
-                          : "✓ New number - you'll be registered automatically"}
+                      }
+                      className="mt-1"
+                      disabled={!!samadhanSession}
+                      readOnly={!!samadhanSession}
+                    />
+                    {samadhanSession && (
+                      <p className="text-xs text-blue-600 mt-1 flex items-center gap-1">
+                        <ShieldCheck className="h-3 w-3" />
+                        Phone number from your logged-in account (cannot be
+                        changed here)
                       </p>
                     )}
-                  {!samadhanSession &&
-                    citizenPhone.length > 0 &&
-                    citizenPhone.length < 10 && (
-                      <p className="text-xs text-gray-500 mt-1">
-                        Enter at least 10 digits
-                      </p>
-                    )}
+                    {!samadhanSession &&
+                      citizenPhone.length >= 10 &&
+                      phoneCheckResult && (
+                        <p
+                          className={`text-xs mt-1 ${phoneCheckResult.isRegistered ? "text-blue-600" : "text-green-600"}`}
+                        >
+                          {phoneCheckResult.isRegistered
+                            ? "✓ Number recognized - submission will be linked to your account"
+                            : "✓ New number - you'll be registered automatically"}
+                        </p>
+                      )}
+                    {!samadhanSession &&
+                      citizenPhone.length > 0 &&
+                      citizenPhone.length < 10 && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          Enter at least 10 digits
+                        </p>
+                      )}
+                  </div>
+                  <div>
+                    <Label>
+                      Email Address{" "}
+                      <span className="text-gray-400">(Optional)</span>
+                    </Label>
+                    <Input
+                      type="email"
+                      value={citizenEmail}
+                      onChange={(e) => setCitizenEmail(e.target.value)}
+                      placeholder="Enter your email (optional)"
+                      className="mt-1"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <Label>Email Address <span className="text-gray-400">(Optional)</span></Label>
-                  <Input
-                    type="email"
-                    value={citizenEmail}
-                    onChange={(e) => setCitizenEmail(e.target.value)}
-                    placeholder="Enter your email (optional)"
-                    className="mt-1"
-                  />
-                </div>
-              </div>
-
-              {isAnonymousToOfficer &&
-                (citizenName || citizenPhone || citizenEmail) && (
-                  <p className="text-xs text-green-600 flex items-center gap-1">
-                    <EyeOff className="h-3 w-3" />
-                    Your info is stored privately and NOT shown to officers (DC/Admin can view)
-                  </p>
-                )}
+              )}
             </div>
           </div>
         );

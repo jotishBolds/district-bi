@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import {
   generateSamadhanReferenceId,
-  calculateSLADeadline,
   findAvailableOfficer,
 } from "@/lib/samadhan";
 
@@ -186,7 +185,6 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       data: {
         referenceId,
         queryType: "GRIEVANCE",
-        priority: "HIGH",
         status: "UNSEEN", // Appeal ticket starts as UNSEEN for DC
         citizenId: originalTicket.citizenId,
         citizenName: originalTicket.citizenName,

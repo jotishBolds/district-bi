@@ -41,7 +41,6 @@ interface Ticket {
   id: string;
   referenceId: string;
   queryType: "FEEDBACK" | "GRIEVANCE";
-  priority: "LOW" | "MEDIUM" | "HIGH";
   status: string;
   section: { id: string; name: string };
   citizenName: string;
@@ -112,12 +111,6 @@ const queryTypeConfig = {
   GRIEVANCE: { icon: AlertCircle, color: "red", label: "Grievance" },
 };
 
-const priorityConfig = {
-  LOW: { color: "gray", label: "Low" },
-  MEDIUM: { color: "yellow", label: "Medium" },
-  HIGH: { color: "red", label: "High" },
-};
-
 export default function OfficerSamadhanDashboard() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -139,7 +132,6 @@ export default function OfficerSamadhanDashboard() {
   >("my");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterType, setFilterType] = useState<string>("all");
-  const [filterPriority, setFilterPriority] = useState<string>("all");
   const [filterSection, setFilterSection] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -150,14 +142,7 @@ export default function OfficerSamadhanDashboard() {
 
   useEffect(() => {
     fetchTickets();
-  }, [
-    currentView,
-    filterStatus,
-    filterType,
-    filterPriority,
-    filterSection,
-    page,
-  ]);
+  }, [currentView, filterStatus, filterType, filterSection, page]);
 
   const fetchTickets = async () => {
     setIsLoading(true);
@@ -170,7 +155,6 @@ export default function OfficerSamadhanDashboard() {
 
       if (filterStatus !== "all") params.append("status", filterStatus);
       if (filterType !== "all") params.append("queryType", filterType);
-      if (filterPriority !== "all") params.append("priority", filterPriority);
       if (filterSection !== "all") params.append("sectionId", filterSection);
 
       const response = await fetch(`/api/samadhan/officer?${params}`);
@@ -554,17 +538,6 @@ export default function OfficerSamadhanDashboard() {
                 <SelectItem value="GRIEVANCE">Grievance</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={filterPriority} onValueChange={setFilterPriority}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Priority</SelectItem>
-                <SelectItem value="HIGH">High</SelectItem>
-                <SelectItem value="MEDIUM">Medium</SelectItem>
-                <SelectItem value="LOW">Low</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
           {/* Tickets Table */}
@@ -592,7 +565,6 @@ export default function OfficerSamadhanDashboard() {
                 const queryConfig = queryTypeConfig[ticket.queryType];
                 const status =
                   statusConfig[ticket.status] || statusConfig.UNSEEN;
-                const priority = priorityConfig[ticket.priority];
                 const QueryIcon = queryConfig.icon;
 
                 return (
@@ -626,14 +598,6 @@ export default function OfficerSamadhanDashboard() {
                               <p className="font-mono text-sm font-medium">
                                 {ticket.referenceId}
                               </p>
-                              {ticket.queryType !== "FEEDBACK" && (
-                                <Badge
-                                  variant="outline"
-                                  className={`text-${priority.color}-600 text-xs`}
-                                >
-                                  {priority.label}
-                                </Badge>
-                              )}
                               {ticket.queryType !== "FEEDBACK" &&
                                 ticket.isSlaBreached && (
                                   <Badge

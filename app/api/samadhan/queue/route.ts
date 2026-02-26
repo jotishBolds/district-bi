@@ -21,7 +21,6 @@ const QUEUE_MANAGER_ROLES = [
 const assignTicketSchema = z.object({
   ticketId: z.string().min(1, "Ticket ID is required"),
   assignToOfficerId: z.string().optional(), // If not provided, auto-assign to section head
-  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(), // Priority set by higher authority during assignment
 });
 
 // GET - Get queued tickets
@@ -48,7 +47,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const queryType = searchParams.get("queryType");
     const sectionId = searchParams.get("sectionId");
-    const priority = searchParams.get("priority");
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "20");
 
@@ -70,10 +68,6 @@ export async function GET(request: NextRequest) {
 
     if (sectionId) {
       where.sectionId = sectionId;
-    }
-
-    if (priority) {
-      where.priority = priority;
     }
 
     // Get queued tickets
@@ -104,7 +98,6 @@ export async function GET(request: NextRequest) {
           },
         },
         orderBy: [
-          { priority: "desc" }, // HIGH first
           { queuedAt: "asc" }, // Oldest first
         ],
         skip: (page - 1) * limit,
@@ -166,7 +159,6 @@ export async function GET(request: NextRequest) {
         id: ticket.id,
         referenceId: ticket.referenceId,
         queryType: ticket.queryType,
-        priority: ticket.priority,
         subject: ticket.subject,
         description: ticket.description.substring(0, 200),
         section: ticket.section,
@@ -304,7 +296,6 @@ export async function POST(request: NextRequest) {
         assignedOfficerId: assignToOfficerId,
         assignedById: session.user.id,
         assignedAt: new Date(),
-        ...(validatedData.priority && { priority: validatedData.priority }),
       },
       include: {
         section: {

@@ -143,7 +143,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (!session || !session.user) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -152,7 +152,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (!ticket) {
       return NextResponse.json(
         { success: false, message: "Ticket not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -242,11 +242,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // Only trigger auto-seen for UNSEEN status (not for APPEALED or APPEAL_FILED)
     if (ticket.status === "UNSEEN" && canTriggerAutoSeen && session?.user?.id) {
       try {
-        // Calculate SLA deadline when ticket is first viewed
+        // Calculate SLA deadline when ticket is first viewed - fixed 7 days
         const { calculateSLADeadline } = await import("@/lib/samadhan");
-        const slaDeadline =
-          ticket.slaDeadline ||
-          (await calculateSLADeadline(ticket.queryType, ticket.priority));
+        const slaDeadline = ticket.slaDeadline || calculateSLADeadline();
 
         // Update ticket to SEEN status with SLA
         await prisma.samadhanTicket.update({
@@ -285,7 +283,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     // Check for higher authority access
     const isHigherAuthority = HIGHER_AUTHORITY_ROLES.includes(
-      session?.user?.role || ""
+      session?.user?.role || "",
     );
     const isSlaBreached = !!ticket.slaBreachedAt;
     const isOverdue =
@@ -387,7 +385,6 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         id: ticket.id,
         referenceId: ticket.referenceId,
         queryType: ticket.queryType,
-        priority: ticket.priority,
         status: ticket.status,
         section: ticket.section,
         subject: ticket.subject,
@@ -509,7 +506,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     console.error("SAMADHAN ticket detail error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch ticket details" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -523,7 +520,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, message: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -546,7 +543,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (!ticket) {
       return NextResponse.json(
         { success: false, message: "Ticket not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -554,7 +551,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     const isAdmin =
       session.user.role === "ADMIN" || session.user.role === "SUPER_ADMIN";
     const isHigherAuthority = HIGHER_AUTHORITY_ROLES.includes(
-      session.user.role || ""
+      session.user.role || "",
     );
     const isAssignedOfficer = session.user.id === ticket.assignedOfficerId;
     const isEscalatedOfficer = session.user.id === ticket.escalatedToId;
@@ -578,7 +575,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (!canModify) {
       return NextResponse.json(
         { success: false, message: "Not authorized to update this ticket" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -589,7 +586,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
           success: false,
           message: "Ticket has been escalated. Original officer cannot modify.",
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -601,7 +598,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
           message:
             "Appealed tickets can only be modified by higher authorities (DC/ADC/SDM/Admin)",
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -615,7 +612,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
           success: false,
           message: "Resolution message is required (minimum 100 characters)",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -674,13 +671,13 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, message: "Validation error", errors: error.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
       { success: false, message: "Failed to update ticket" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

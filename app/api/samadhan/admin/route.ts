@@ -4,12 +4,11 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getTicketStatistics, DEFAULT_SLA_CONFIG } from "@/lib/samadhan";
+import { getTicketStatistics, DEFAULT_SLA_HOURS } from "@/lib/samadhan";
 
-// SLA Config schema
+// SLA Config schema - simplified (no priority, just queryType + hours)
 const slaConfigSchema = z.object({
   queryType: z.enum(["FEEDBACK", "GRIEVANCE"]),
-  priority: z.enum(["LOW", "MEDIUM", "HIGH"]),
   slaHours: z.number().min(1).max(2160), // Max 90 days
 });
 
@@ -21,7 +20,7 @@ export async function GET(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, message: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -30,7 +29,7 @@ export async function GET(request: NextRequest) {
     if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Admin access required" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -89,9 +88,6 @@ export async function GET(request: NextRequest) {
         ? ((totalResolved - breachedResolved) / totalResolved) * 100
         : 100;
 
-    // Get current SLA configurations
-    const slaConfigs = await prisma.samadhanSLAConfig.findMany();
-
     // Average resolution time
     const avgResolutionTime = (await prisma.$queryRaw`
       SELECT AVG(EXTRACT(EPOCH FROM (resolved_at - created_at)) / 3600) as avg_hours
@@ -123,25 +119,25 @@ export async function GET(request: NextRequest) {
           averageResolutionHours:
             avgResolutionTime[0]?.avg_hours?.toFixed(2) || "N/A",
         },
-        slaConfigurations:
-          slaConfigs.length > 0
-            ? slaConfigs
-            : Object.entries(DEFAULT_SLA_CONFIG).flatMap(
-                ([queryType, priorities]) =>
-                  Object.entries(priorities).map(([priority, hours]) => ({
-                    queryType,
-                    priority,
-                    slaHours: hours,
-                    isDefault: true,
-                  }))
-              ),
+        slaConfigurations: [
+          {
+            queryType: "FEEDBACK",
+            slaHours: DEFAULT_SLA_HOURS,
+            isDefault: true,
+          },
+          {
+            queryType: "GRIEVANCE",
+            slaHours: DEFAULT_SLA_HOURS,
+            isDefault: true,
+          },
+        ],
       },
     });
   } catch (error) {
     console.error("Admin dashboard error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch admin data" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -154,7 +150,7 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, message: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -163,19 +159,19 @@ export async function POST(request: NextRequest) {
     if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Admin access required" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
     const body = await request.json();
     const validatedData = slaConfigSchema.parse(body);
 
-    // Upsert SLA configuration
+    // Upsert SLA configuration - use MEDIUM as default priority key for DB compatibility
     const config = await prisma.samadhanSLAConfig.upsert({
       where: {
         queryType_priority: {
           queryType: validatedData.queryType,
-          priority: validatedData.priority,
+          priority: "MEDIUM",
         },
       },
       update: {
@@ -183,7 +179,7 @@ export async function POST(request: NextRequest) {
       },
       create: {
         queryType: validatedData.queryType,
-        priority: validatedData.priority,
+        priority: "MEDIUM",
         slaHours: validatedData.slaHours,
       },
     });
@@ -199,13 +195,13 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, message: "Validation error", errors: error.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
       { success: false, message: "Failed to update SLA configuration" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

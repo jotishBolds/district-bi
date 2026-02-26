@@ -1,28 +1,9 @@
 // SAMADHAN Module - Core Utilities and Helper Functions
 import prisma from "./prisma";
-import {
-  SamadhanQueryType,
-  SamadhanPriority,
-  SamadhanTicketStatus,
-  SamadhanSubmissionChannel,
-} from "../app/generated/prisma";
+import { SamadhanTicketStatus } from "../app/generated/prisma";
 
-// Default SLA configurations in hours (SUGGESTION kept for backward compatibility with DB enum)
-export const DEFAULT_SLA_CONFIG: Record<
-  string,
-  Record<SamadhanPriority, number>
-> = {
-  FEEDBACK: {
-    LOW: 72, // 3 days
-    MEDIUM: 72, // 3 days
-    HIGH: 72, // 3 days
-  },
-  GRIEVANCE: {
-    LOW: 504, // 21 days
-    MEDIUM: 336, // 14 days
-    HIGH: 168, // 7 days
-  },
-};
+// Fixed SLA configuration - 7 days for all ticket types
+export const DEFAULT_SLA_HOURS = 168; // 7 days (fixed for all)
 
 /**
  * Generate unique reference ID for SAMADHAN ticket
@@ -112,23 +93,11 @@ export function generateCitizenPseudonym(): string {
 }
 
 /**
- * Calculate SLA deadline based on query type and priority
+ * Calculate SLA deadline - fixed 7 days for all tickets
  */
-export async function calculateSLADeadline(
-  queryType: SamadhanQueryType,
-  priority: SamadhanPriority,
-): Promise<Date> {
-  // Try to get custom SLA config from database
-  const customConfig = await prisma.samadhanSLAConfig.findUnique({
-    where: {
-      queryType_priority: { queryType, priority },
-    },
-  });
-
-  const slaHours =
-    customConfig?.slaHours ?? DEFAULT_SLA_CONFIG[queryType][priority];
+export function calculateSLADeadline(): Date {
   const deadline = new Date();
-  deadline.setHours(deadline.getHours() + slaHours);
+  deadline.setHours(deadline.getHours() + DEFAULT_SLA_HOURS);
   return deadline;
 }
 

@@ -1,4 +1,4 @@
-@import "tw-animate-css";
+@import "../node_modules/tw-animate-css/dist/tw-animate.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -80,8 +80,9 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-inter), var(--font-roboto), var(--font-open-sans),
-      system-ui, sans-serif;
+    font-family:
+      var(--font-inter), var(--font-roboto), var(--font-open-sans), system-ui,
+      sans-serif;
   }
 }
 
