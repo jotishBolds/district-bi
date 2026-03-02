@@ -61,7 +61,6 @@ import { format, formatDistanceToNow } from "date-fns";
 interface Ticket {
   referenceId: string;
   queryType: "FEEDBACK" | "GRIEVANCE";
-  priority: "LOW" | "MEDIUM" | "HIGH";
   status: string;
   section: { id: string; name: string };
   description: string;
@@ -159,12 +158,6 @@ const queryTypeConfig = {
     bgColor: "bg-red-100",
     label: "Grievance",
   },
-};
-
-const priorityConfig = {
-  LOW: { color: "text-slate-600", bgColor: "bg-slate-100", label: "Low" },
-  MEDIUM: { color: "text-blue-600", bgColor: "bg-blue-100", label: "Medium" },
-  HIGH: { color: "text-red-600", bgColor: "bg-red-100", label: "High" },
 };
 
 export default function CitizenDashboardPage() {
@@ -607,7 +600,6 @@ export default function CitizenDashboardPage() {
                           icon: CheckCircle,
                         }
                       : statusConfig[ticket.status] || statusConfig.UNSEEN;
-                    const priority = priorityConfig[ticket.priority];
                     const QueryIcon = queryConfig.icon;
                     const StatusIcon = status.icon;
                     const needsResponse =
@@ -649,14 +641,6 @@ export default function CitizenDashboardPage() {
                                 >
                                   {queryConfig.label}
                                 </Badge>
-                                {ticket.queryType === "GRIEVANCE" && (
-                                  <Badge
-                                    variant="outline"
-                                    className={`${priority.bgColor} ${priority.color} border-0 text-xs`}
-                                  >
-                                    {priority.label}
-                                  </Badge>
-                                )}
                                 {needsResponse && (
                                   <Badge className="bg-orange-500 text-white text-xs animate-pulse">
                                     Action Required

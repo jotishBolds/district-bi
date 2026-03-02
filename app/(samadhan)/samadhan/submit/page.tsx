@@ -152,6 +152,55 @@ function SuccessModal({
 }) {
   const router = useRouter();
   const isFeedback = queryType === "FEEDBACK";
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(referenceId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = referenceId;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleDownload = () => {
+    const content = [
+      "═══════════════════════════════════════════",
+      "     SAMADHAN - Grievance Tracking ID      ",
+      "═══════════════════════════════════════════",
+      "",
+      `  Reference ID:  ${referenceId}`,
+      "",
+      `  Submitted on:  ${new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}`,
+      "",
+      "  Track your grievance at:",
+      `  ${typeof window !== "undefined" ? window.location.origin : ""}/samadhan/track/${referenceId}`,
+      "",
+      "═══════════════════════════════════════════",
+      "  Keep this ID safe. You will need it to",
+      "  check your grievance status anytime.",
+      "═══════════════════════════════════════════",
+    ].join("\n");
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${referenceId}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -189,7 +238,7 @@ function SuccessModal({
 
         {/* Show Reference ID only for GRIEVANCE, not for FEEDBACK */}
         {!isFeedback && (
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center space-y-3">
             <p className="text-sm text-gray-600 mb-2">Your Reference ID</p>
             <p className="text-xl font-mono font-bold text-blue-700 bg-white rounded-lg px-4 py-2 inline-block">
               {referenceId}
@@ -198,37 +247,28 @@ function SuccessModal({
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs gap-1 border-blue-300 text-blue-700 hover:bg-blue-100"
-                onClick={() => {
-                  navigator.clipboard.writeText(referenceId);
-                  toast.success("Reference ID copied to clipboard!");
-                }}
+                onClick={handleCopy}
+                className={`text-xs gap-1.5 transition-all ${copied ? "bg-green-50 border-green-300 text-green-700" : "border-blue-300 text-blue-700 hover:bg-blue-50"}`}
               >
-                <Copy className="h-3 w-3" />
-                Copy ID
+                {copied ? (
+                  <Check className="h-3.5 w-3.5" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+                {copied ? "Copied!" : "Copy ID"}
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs gap-1 border-blue-300 text-blue-700 hover:bg-blue-100"
-                onClick={() => {
-                  const text = `SAMADHAN Grievance Tracking\n\nReference ID: ${referenceId}\nSubmitted: ${new Date().toLocaleDateString("en-IN", { dateStyle: "full" })}\n\nTrack your grievance at: ${window.location.origin}/samadhan/track/${referenceId}\n\nKeep this reference ID safe for future tracking.`;
-                  const blob = new Blob([text], { type: "text/plain" });
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = `SAMADHAN-${referenceId}.txt`;
-                  a.click();
-                  URL.revokeObjectURL(url);
-                  toast.success("Tracking reference downloaded!");
-                }}
+                onClick={handleDownload}
+                className="text-xs gap-1.5 border-blue-300 text-blue-700 hover:bg-blue-50"
               >
-                <Download className="h-3 w-3" />
+                <Download className="h-3.5 w-3.5" />
                 Download
               </Button>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
-              Save this ID to track your grievance status
+            <p className="text-xs text-gray-500">
+              Save this ID to track your grievance status anytime
             </p>
           </div>
         )}
@@ -332,7 +372,6 @@ function TypeFormContent() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH">("MEDIUM");
   const [citizenName, setCitizenName] = useState("");
   const [citizenEmail, setCitizenEmail] = useState("");
   const [citizenPhone, setCitizenPhone] = useState("");
@@ -394,7 +433,6 @@ function TypeFormContent() {
 
         // Set all form fields from draft data
         setQueryType(draft.queryType || "GRIEVANCE");
-        setPriority(draft.priority || "MEDIUM");
         setSectionId(draft.sectionId || "");
         setSubject(draft.subject || "");
         setSelectedServiceId(draft.selectedServiceId || "");
@@ -822,7 +860,6 @@ function TypeFormContent() {
 
       const submissionData = {
         queryType,
-        priority: queryType === "GRIEVANCE" ? priority : undefined,
         sectionId: sectionId || sections[0]?.id, // Use first section for feedback if not selected
         subject,
         selectedServiceId: selectedServiceId || undefined,
@@ -1323,6 +1360,40 @@ function TypeFormContent() {
             </div>
 
             <div className="max-w-lg mx-auto space-y-6">
+              {/* Guide note for filling the grievance */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <div className="flex items-start gap-3">
+                  <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-blue-900 mb-1.5">
+                      How to write an effective grievance
+                    </p>
+                    <ul className="text-xs text-blue-800 space-y-1 list-disc ml-4">
+                      <li>
+                        <strong>Subject:</strong> Write a short, clear title —
+                        e.g., &quot;Delay in birth certificate issuance&quot;
+                      </li>
+                      <li>
+                        <strong>Description:</strong> Explain what happened,
+                        when it happened, and which office/department was
+                        involved
+                      </li>
+                      <li>
+                        Mention any reference numbers, application IDs, or names
+                        of officials if you have them
+                      </li>
+                      <li>
+                        Describe what outcome or resolution you are expecting
+                      </li>
+                      <li>
+                        Keep it factual and respectful — it helps officers
+                        address your concern faster
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-2 block">
                   What&apos;s this about?{" "}
@@ -1403,6 +1474,17 @@ function TypeFormContent() {
                   onCheckedChange={setIsAnonymousToOfficer}
                 />
               </div>
+
+              {/* Anonymous mode note for feedback */}
+              {isAnonymousToOfficer && (
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-3.5">
+                  <p className="text-xs text-amber-800 leading-relaxed">
+                    <strong>Submitting anonymously:</strong> A pseudonym will
+                    replace your identity. You won&apos;t receive updates via
+                    SMS/email. Only DC/Admin can view your real details.
+                  </p>
+                </div>
+              )}
 
               {/* Subject */}
               <div>
@@ -1718,31 +1800,50 @@ function TypeFormContent() {
                 />
               </div>
 
-              {/* Note when anonymous mode is ON - show missed benefits */}
+              {/* Anonymous mode active - show info banner */}
               {isAnonymousToOfficer && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                  <p className="text-sm font-medium text-amber-800 mb-2 flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4" />
-                    You are submitting anonymously
-                  </p>
-                  <p className="text-xs text-amber-700 mb-2">
-                    While your identity will be hidden from officers, you will
-                    miss out on:
-                  </p>
-                  <ul className="text-xs text-amber-700 space-y-1 ml-6 list-disc">
-                    <li>SMS updates when your grievance status changes</li>
-                    <li>Personal dashboard to track all your submissions</li>
-                    <li>Direct communication with the assigned officer</li>
-                    <li>
-                      Faster resolution — officers may need to contact you for
-                      details
-                    </li>
-                    <li>Auto-registration for future submissions</li>
-                  </ul>
-                  <p className="text-xs text-amber-600 mt-2 italic">
-                    Tip: Even senior citizens and elderly users can simply
-                    provide their phone number to get SMS updates in
-                    Hindi/English.
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="bg-amber-100 rounded-full p-2 mt-0.5">
+                      <EyeOff className="h-4 w-4 text-amber-700" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-amber-900 text-sm">
+                        You&apos;re submitting anonymously
+                      </p>
+                      <p className="text-xs text-amber-800 mt-1 leading-relaxed">
+                        Your identity will be hidden from officers handling your
+                        grievance. A random pseudonym will be assigned to
+                        protect your privacy.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-white/60 rounded-lg p-3 space-y-1.5">
+                    <p className="text-xs font-medium text-amber-900">
+                      Please note as a guest/anonymous user:
+                    </p>
+                    <ul className="text-xs text-amber-800 space-y-1 ml-4 list-disc">
+                      <li>
+                        You won&apos;t receive SMS or email updates on your
+                        ticket
+                      </li>
+                      <li>
+                        You can still track your grievance using the Reference
+                        ID
+                      </li>
+                      <li>
+                        Only the District Collector and Admin can see your real
+                        identity
+                      </li>
+                      <li>
+                        Officers will only see a pseudonym like &quot;Brave
+                        Tiger 7824&quot;
+                      </li>
+                    </ul>
+                  </div>
+                  <p className="text-xs text-amber-700 italic">
+                    💡 Tip: You can always provide your phone number later by
+                    logging in to access full dashboard features.
                   </p>
                 </div>
               )}
@@ -1812,7 +1913,7 @@ function TypeFormContent() {
                 </div>
               )}
 
-              {/* Contact fields - hidden when anonymous mode is ON */}
+              {/* Contact fields - hidden when anonymous */}
               {!isAnonymousToOfficer && (
                 <div className="space-y-4 pt-2">
                   <div>
@@ -1894,12 +1995,6 @@ function TypeFormContent() {
                 </div>
               )}
 
-              {isAnonymousToOfficer && (
-                <p className="text-xs text-green-600 flex items-center gap-1">
-                  <EyeOff className="h-3 w-3" />A random pseudonym will be
-                  assigned. Your identity is hidden from officers.
-                </p>
-              )}
             </div>
           </div>
         );

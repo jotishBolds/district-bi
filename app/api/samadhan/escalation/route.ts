@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     if (!isAdmin && !isSystemCall) {
       return NextResponse.json(
         { success: false, message: "Not authorized" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -44,20 +44,35 @@ export async function POST(request: NextRequest) {
     if (!dcUserId) {
       return NextResponse.json(
         { success: false, message: "No DC user found for escalation" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     // Find overdue tickets that haven't been escalated yet
     const now = new Date();
+    const slaHoursAgo = new Date(now.getTime() - 168 * 60 * 60 * 1000); // 7 days ago
+
     const overdueTickets = await prisma.samadhanTicket.findMany({
       where: {
-        status: {
-          in: ["UNSEEN", "SEEN", "ACKNOWLEDGED", "IN_PROGRESS", "PENDING_INFORMATION"],
-        },
-        slaDeadline: {
-          lt: now,
-        },
+        OR: [
+          // Tickets with SLA deadline that has passed (officer saw it, SLA started)
+          {
+            status: {
+              in: [
+                "SEEN",
+                "ACKNOWLEDGED",
+                "IN_PROGRESS",
+                "PENDING_INFORMATION",
+              ],
+            },
+            slaDeadline: { lt: now },
+          },
+          // UNSEEN tickets that have been in queue for over 7 days (never viewed by officer)
+          {
+            status: "UNSEEN",
+            queuedAt: { lt: slaHoursAgo },
+          },
+        ],
         slaBreachedAt: null, // Not already breached
         escalatedToId: null, // Not already escalated
       },
@@ -120,19 +135,28 @@ export async function POST(request: NextRequest) {
           // TODO: Send notification to DC and original officer
           // await sendEscalationNotification(ticket, dcUserId);
 
-          return { ticketId: ticket.id, referenceId: ticket.referenceId, success: true };
+          return {
+            ticketId: ticket.id,
+            referenceId: ticket.referenceId,
+            success: true,
+          };
         } catch (error) {
           console.error(`Failed to escalate ticket ${ticket.id}:`, error);
-          return { ticketId: ticket.id, referenceId: ticket.referenceId, success: false, error };
+          return {
+            ticketId: ticket.id,
+            referenceId: ticket.referenceId,
+            success: false,
+            error,
+          };
         }
-      })
+      }),
     );
 
     const successCount = escalationResults.filter((r) => r.success).length;
     const failedCount = escalationResults.filter((r) => !r.success).length;
 
     console.log(
-      `[SLA Escalation] Processed ${overdueTickets.length} tickets. Success: ${successCount}, Failed: ${failedCount}`
+      `[SLA Escalation] Processed ${overdueTickets.length} tickets. Success: ${successCount}, Failed: ${failedCount}`,
     );
 
     return NextResponse.json({
@@ -146,7 +170,7 @@ export async function POST(request: NextRequest) {
     console.error("SLA escalation error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to run SLA escalation" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -164,7 +188,7 @@ export async function GET() {
     if (!isAdmin) {
       return NextResponse.json(
         { success: false, message: "Not authorized" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -187,7 +211,15 @@ export async function GET() {
       // Pending escalation (overdue but not escalated)
       prisma.samadhanTicket.count({
         where: {
-          status: { in: ["UNSEEN", "SEEN", "ACKNOWLEDGED", "IN_PROGRESS", "PENDING_INFORMATION"] },
+          status: {
+            in: [
+              "UNSEEN",
+              "SEEN",
+              "ACKNOWLEDGED",
+              "IN_PROGRESS",
+              "PENDING_INFORMATION",
+            ],
+          },
           slaDeadline: { lt: now },
           escalatedToId: null,
         },
@@ -211,7 +243,15 @@ export async function GET() {
     // Get tickets pending escalation
     const pendingTickets = await prisma.samadhanTicket.findMany({
       where: {
-        status: { in: ["UNSEEN", "SEEN", "ACKNOWLEDGED", "IN_PROGRESS", "PENDING_INFORMATION"] },
+        status: {
+          in: [
+            "UNSEEN",
+            "SEEN",
+            "ACKNOWLEDGED",
+            "IN_PROGRESS",
+            "PENDING_INFORMATION",
+          ],
+        },
         slaDeadline: { lt: now },
         escalatedToId: null,
       },
@@ -241,10 +281,14 @@ export async function GET() {
           referenceId: t.referenceId,
           status: t.status,
           section: t.section.name,
-          assignedOfficer: t.assignedOfficer?.officerProfile?.fullName || "Unassigned",
+          assignedOfficer:
+            t.assignedOfficer?.officerProfile?.fullName || "Unassigned",
           slaDeadline: t.slaDeadline,
           overdueBy: t.slaDeadline
-            ? Math.floor((now.getTime() - new Date(t.slaDeadline).getTime()) / (1000 * 60 * 60))
+            ? Math.floor(
+                (now.getTime() - new Date(t.slaDeadline).getTime()) /
+                  (1000 * 60 * 60),
+              )
             : 0, // hours overdue
         })),
       },
@@ -253,7 +297,7 @@ export async function GET() {
     console.error("Escalation stats error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch escalation statistics" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

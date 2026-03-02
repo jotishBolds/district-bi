@@ -46,7 +46,6 @@ import {
   Clock,
   User,
   Building2,
-  ArrowUpRight,
   Inbox,
   UserPlus,
   Eye,
@@ -61,7 +60,6 @@ interface QueuedTicket {
   id: string; // Changed from ticketId to match API response
   referenceId: string;
   queryType: "FEEDBACK" | "GRIEVANCE";
-  priority: "LOW" | "MEDIUM" | "HIGH";
   status: string;
   subject: string | null;
   description: string;
@@ -122,7 +120,6 @@ export default function SamadhanQueuePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterSection, setFilterSection] = useState("");
   const [filterType, setFilterType] = useState("");
-  const [filterPriority, setFilterPriority] = useState("");
 
   // Assignment dialog
   const [selectedTicket, setSelectedTicket] = useState<QueuedTicket | null>(
@@ -130,7 +127,6 @@ export default function SamadhanQueuePage() {
   );
   const [showAssignDialog, setShowAssignDialog] = useState(false);
   const [selectedOfficer, setSelectedOfficer] = useState("");
-  const [selectedPriority, setSelectedPriority] = useState("");
   const [isAssigning, setIsAssigning] = useState(false);
 
   // View ticket dialog
@@ -142,7 +138,6 @@ export default function SamadhanQueuePage() {
     total: 0,
     grievances: 0,
     feedback: 0,
-    highPriority: 0,
   });
 
   useEffect(() => {
@@ -182,7 +177,6 @@ export default function SamadhanQueuePage() {
       const params = new URLSearchParams();
       if (filterSection) params.append("sectionId", filterSection);
       if (filterType) params.append("queryType", filterType);
-      if (filterPriority) params.append("priority", filterPriority);
       if (searchQuery) params.append("search", searchQuery);
 
       const response = await fetch(`/api/samadhan/queue?${params.toString()}`);
@@ -200,9 +194,6 @@ export default function SamadhanQueuePage() {
           ).length,
           feedback: ticketList.filter(
             (t: QueuedTicket) => t.queryType === "FEEDBACK",
-          ).length,
-          highPriority: ticketList.filter(
-            (t: QueuedTicket) => t.priority === "HIGH",
           ).length,
         });
       } else {
@@ -253,11 +244,6 @@ export default function SamadhanQueuePage() {
       return;
     }
 
-    if (!selectedPriority) {
-      toast.error("Please select a priority level");
-      return;
-    }
-
     setIsAssigning(true);
     try {
       const response = await fetch("/api/samadhan/queue", {
@@ -266,7 +252,6 @@ export default function SamadhanQueuePage() {
         body: JSON.stringify({
           ticketId: selectedTicket.id,
           assignToOfficerId: selectedOfficer,
-          priority: selectedPriority,
         }),
       });
 
@@ -277,7 +262,6 @@ export default function SamadhanQueuePage() {
         setShowAssignDialog(false);
         setSelectedTicket(null);
         setSelectedOfficer("");
-        setSelectedPriority("");
         fetchQueuedTickets();
       } else {
         toast.error(data.message || "Failed to assign ticket");
@@ -293,26 +277,12 @@ export default function SamadhanQueuePage() {
   const openAssignDialog = (ticket: QueuedTicket) => {
     setSelectedTicket(ticket);
     setSelectedOfficer("");
-    setSelectedPriority(ticket.priority || "");
     setShowAssignDialog(true);
   };
 
   const openViewDialog = (ticket: QueuedTicket) => {
     setViewTicket(ticket);
     setShowViewDialog(true);
-  };
-
-  const getPriorityBadge = (priority: string) => {
-    switch (priority) {
-      case "HIGH":
-        return <Badge variant="destructive">High</Badge>;
-      case "MEDIUM":
-        return <Badge className="bg-amber-500">Medium</Badge>;
-      case "LOW":
-        return <Badge variant="secondary">Low</Badge>;
-      default:
-        return <Badge variant="outline">{priority}</Badge>;
-    }
   };
 
   const getTypeBadge = (type: string) => {
@@ -368,7 +338,7 @@ export default function SamadhanQueuePage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -393,25 +363,12 @@ export default function SamadhanQueuePage() {
             </div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">High Priority</p>
-                <p className="text-2xl font-bold text-amber-600">
-                  {stats.highPriority}
-                </p>
-              </div>
-              <ArrowUpRight className="h-8 w-8 text-amber-500 opacity-50" />
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Filters */}
       <Card>
         <CardContent className="p-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="lg:col-span-2">
               <Label className="sr-only">Search</Label>
               <div className="relative">
@@ -444,17 +401,6 @@ export default function SamadhanQueuePage() {
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="GRIEVANCE">Grievance</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filterPriority} onValueChange={setFilterPriority}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Priorities" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Priorities</SelectItem>
-                <SelectItem value="HIGH">High</SelectItem>
-                <SelectItem value="MEDIUM">Medium</SelectItem>
-                <SelectItem value="LOW">Low</SelectItem>
               </SelectContent>
             </Select>
             <Button
@@ -492,7 +438,6 @@ export default function SamadhanQueuePage() {
                   <TableRow>
                     <TableHead>Reference ID</TableHead>
                     <TableHead>Type</TableHead>
-                    <TableHead>Priority</TableHead>
                     <TableHead>Subject</TableHead>
                     <TableHead>Section</TableHead>
                     <TableHead>Submitted</TableHead>
@@ -508,16 +453,6 @@ export default function SamadhanQueuePage() {
                         </code>
                       </TableCell>
                       <TableCell>{getTypeBadge(ticket.queryType)}</TableCell>
-                      <TableCell>
-                        {/* For feedback, show "Submitted" instead of priority */}
-                        {ticket.queryType === "FEEDBACK" ? (
-                          <Badge className="bg-green-100 text-green-700 border-green-200">
-                            Submitted
-                          </Badge>
-                        ) : (
-                          getPriorityBadge(ticket.priority)
-                        )}
-                      </TableCell>
                       <TableCell className="max-w-[200px] truncate">
                         {ticket.subject || ticket.description.slice(0, 50)}
                       </TableCell>
@@ -630,38 +565,6 @@ export default function SamadhanQueuePage() {
                   </p>
                 )}
               </div>
-
-              <div>
-                <Label>Priority Level</Label>
-                <Select
-                  value={selectedPriority}
-                  onValueChange={setSelectedPriority}
-                >
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Set priority level..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="HIGH">
-                      <span className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-red-500" />
-                        High Priority
-                      </span>
-                    </SelectItem>
-                    <SelectItem value="MEDIUM">
-                      <span className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-amber-500" />
-                        Medium Priority
-                      </span>
-                    </SelectItem>
-                    <SelectItem value="LOW">
-                      <span className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-gray-400" />
-                        Low Priority
-                      </span>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
             </div>
           )}
 
@@ -674,7 +577,7 @@ export default function SamadhanQueuePage() {
             </Button>
             <Button
               onClick={handleAssign}
-              disabled={!selectedOfficer || !selectedPriority || isAssigning}
+              disabled={!selectedOfficer || isAssigning}
             >
               {isAssigning ? (
                 <>
@@ -710,14 +613,6 @@ export default function SamadhanQueuePage() {
                 </code>
                 <div className="flex gap-2">
                   {getTypeBadge(viewTicket.queryType)}
-                  {/* For feedback, show "Submitted" instead of priority */}
-                  {viewTicket.queryType === "FEEDBACK" ? (
-                    <Badge className="bg-green-100 text-green-700 border-green-200">
-                      Submitted
-                    </Badge>
-                  ) : (
-                    getPriorityBadge(viewTicket.priority)
-                  )}
                 </div>
               </div>
 

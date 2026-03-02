@@ -32,7 +32,6 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         id: true,
         referenceId: true,
         queryType: true,
-        priority: true,
         sectionId: true,
         subject: true,
         serviceAvailed: true, // JSON array of service IDs
@@ -99,7 +98,6 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         id: ticket.id,
         referenceId: ticket.referenceId,
         queryType: ticket.queryType,
-        priority: ticket.priority || "MEDIUM",
         sectionId: ticket.sectionId,
         section: ticket.section,
         subject: ticket.subject || "",

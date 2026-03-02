@@ -52,7 +52,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
     const queryType = searchParams.get("queryType");
-    const priority = searchParams.get("priority");
     const sectionId = searchParams.get("sectionId");
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "20");
@@ -241,10 +240,6 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    if (priority && priority !== "all") {
-      where.priority = priority;
-    }
-
     // Get total count
     const total = await prisma.samadhanTicket.count({ where });
 
@@ -287,7 +282,6 @@ export async function GET(request: NextRequest) {
       },
       orderBy: [
         { slaDeadline: "asc" }, // Most urgent first
-        { priority: "desc" },
         { createdAt: "desc" },
       ],
       skip: (page - 1) * limit,
@@ -324,7 +318,6 @@ export async function GET(request: NextRequest) {
         id: ticket.id,
         referenceId: ticket.referenceId,
         queryType: ticket.queryType,
-        priority: ticket.priority,
         status: ticket.status,
         section: ticket.section,
         citizenName,

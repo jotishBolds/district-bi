@@ -165,10 +165,27 @@ model SamadhanService {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  section Section @relation("SectionServices", fields: [sectionId], references: [id], onDelete: Cascade)
+  section    Section                   @relation("SectionServices", fields: [sectionId], references: [id], onDelete: Cascade)
+  categories SamadhanServiceCategory[] @relation("ServiceCategories")
 
   @@unique([name, sectionId])
   @@map("samadhan_services")
+}
+
+// SAMADHAN Service Categories - Categories under each service (Section -> Service -> Service Category)
+model SamadhanServiceCategory {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  serviceId   String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  service SamadhanService @relation("ServiceCategories", fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([name, serviceId])
+  @@map("samadhan_service_categories")
 }
 
 model Department {
@@ -736,23 +753,4 @@ model SamadhanDailySequence {
   updatedAt    DateTime @updatedAt
 
   @@map("samadhan_daily_sequence")
-}
-
-// Query status requests from guest users who want to track their query
-model SamadhanQueryStatusRequest {
-  id               String    @id @default(uuid())
-  name             String
-  phone            String
-  email            String?
-  queryDescription String    @db.Text
-  submissionDate   DateTime?
-  status           String    @default("PENDING") // PENDING, REVIEWED, RESPONDED
-  matchedTickets   String?   @db.Text // JSON array of matched ticket reference IDs
-  adminNotes       String?   @db.Text
-  respondedAt      DateTime?
-  respondedBy      String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-
-  @@map("samadhan_query_status_requests")
 }

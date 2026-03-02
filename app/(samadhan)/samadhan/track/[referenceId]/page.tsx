@@ -54,7 +54,6 @@ interface TicketData {
   id: string;
   referenceId: string;
   queryType: "FEEDBACK" | "GRIEVANCE";
-  priority: "LOW" | "MEDIUM" | "HIGH";
   status: string;
   section: { id: string; name: string };
   serviceAvailed: string | null;

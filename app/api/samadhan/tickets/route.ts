@@ -5,14 +5,12 @@ import prisma from "@/lib/prisma";
 import {
   generateSamadhanReferenceId,
   generateCitizenPseudonym,
-  calculateSLADeadline,
 } from "@/lib/samadhan";
 import { getSamadhanSession } from "@/lib/samadhan-auth";
 
 // Validation schema for ticket submission
 const ticketSchema = z.object({
   queryType: z.enum(["FEEDBACK", "GRIEVANCE"]),
-  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
   sectionId: z.string().min(1, "Section is required"),
   subject: z.string().optional(),
   serviceAvailed: z.string().optional(), // JSON array of service IDs (legacy)
@@ -172,26 +170,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Set priority - default to MEDIUM for feedback, respect user choice for grievances
-      const priority =
-        validatedData.queryType === "GRIEVANCE"
-          ? validatedData.priority || "MEDIUM"
-          : "MEDIUM";
-
-      // Calculate SLA deadline only if submitting (not saving draft)
-      const slaDeadline = validatedData.isDraft
-        ? null
-        : await calculateSLADeadline(
-            validatedData.queryType,
-            priority as "LOW" | "MEDIUM" | "HIGH",
-          );
+      // SLA deadline is NOT set at creation - it starts when an officer first views the ticket (UNSEEN→SEEN)
 
       // Update existing draft
       const updatedTicket = await prisma.samadhanTicket.update({
         where: { id: validatedData.ticketId },
         data: {
           queryType: validatedData.queryType,
-          priority: priority as "LOW" | "MEDIUM" | "HIGH",
           status: validatedData.isDraft ? "DRAFT" : "QUEUED",
           citizenName,
           citizenEmail,
@@ -206,7 +191,6 @@ export async function POST(request: NextRequest) {
           visitDate: validatedData.visitDate
             ? new Date(validatedData.visitDate)
             : null,
-          slaDeadline,
           isDraft: validatedData.isDraft || false,
           lastSavedAt: new Date(),
           queuedAt: validatedData.isDraft ? null : new Date(),
@@ -251,26 +235,13 @@ export async function POST(request: NextRequest) {
     // Generate unique reference ID
     const referenceId = await generateSamadhanReferenceId();
 
-    // Set priority - default to MEDIUM for feedback, respect user choice for grievances
-    const priority =
-      validatedData.queryType === "GRIEVANCE"
-        ? validatedData.priority || "MEDIUM"
-        : "MEDIUM";
-
-    // Calculate SLA deadline only if submitting (not saving draft)
-    const slaDeadline = validatedData.isDraft
-      ? null
-      : await calculateSLADeadline(
-          validatedData.queryType,
-          priority as "LOW" | "MEDIUM" | "HIGH",
-        );
+    // SLA deadline is NOT set at creation - it starts when an officer first views the ticket (UNSEEN→SEEN)
 
     // Create the ticket - goes to queue (QUEUED status) not direct assignment
     const ticket = await prisma.samadhanTicket.create({
       data: {
         referenceId,
         queryType: validatedData.queryType,
-        priority: priority as "LOW" | "MEDIUM" | "HIGH",
         status: validatedData.isDraft ? "DRAFT" : "QUEUED",
         citizenId,
         citizenName,
@@ -288,7 +259,7 @@ export async function POST(request: NextRequest) {
           ? new Date(validatedData.visitDate)
           : null,
         // No assignedOfficerId - ticket goes to queue first
-        slaDeadline,
+        // slaDeadline is NOT set here - starts when officer views (UNSEEN→SEEN)
         submissionChannel: validatedData.submissionChannel || "WEB_PORTAL",
         whatsappNumber: validatedData.whatsappNumber,
         isDraft: validatedData.isDraft || false,
@@ -372,7 +343,6 @@ export async function GET(request: NextRequest) {
           id: true,
           referenceId: true,
           queryType: true,
-          priority: true,
           status: true,
           serviceAvailed: true,
           description: true,
@@ -523,7 +493,6 @@ export async function GET(request: NextRequest) {
           id: ticket.id,
           referenceId: ticket.referenceId,
           queryType: ticket.queryType,
-          priority: ticket.priority,
           status: ticket.status,
           section: ticket.section,
           serviceAvailed: serviceNames, // Use resolved service names instead of IDs
@@ -611,7 +580,6 @@ export async function GET(request: NextRequest) {
       data: tickets.map((ticket) => ({
         referenceId: ticket.referenceId,
         queryType: ticket.queryType,
-        priority: ticket.priority,
         status: ticket.status,
         section: ticket.section,
         subject: ticket.subject,

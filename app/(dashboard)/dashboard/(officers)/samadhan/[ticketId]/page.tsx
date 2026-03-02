@@ -65,7 +65,6 @@ interface TicketDetail {
   id: string;
   referenceId: string;
   queryType: "FEEDBACK" | "GRIEVANCE";
-  priority: "LOW" | "MEDIUM" | "HIGH";
   status: string;
   section: { id: string; name: string };
   subject: string | null;
@@ -630,15 +629,6 @@ export default function OfficerTicketDetailPage({
                     <div>
                       <p className="text-sm text-gray-500">Service Category</p>
                       <p className="font-medium">{ticket.serviceCategories}</p>
-                    </div>
-                  </div>
-                )}
-                {ticket.queryType !== "FEEDBACK" && (
-                  <div className="flex items-start space-x-3">
-                    <AlertCircle className="h-5 w-5 text-gray-400 mt-0.5" />
-                    <div>
-                      <p className="text-sm text-gray-500">Priority</p>
-                      <Badge variant="outline">{ticket.priority}</Badge>
                     </div>
                   </div>
                 )}
