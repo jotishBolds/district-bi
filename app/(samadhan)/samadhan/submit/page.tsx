@@ -1994,7 +1994,6 @@ function TypeFormContent() {
                   </div>
                 </div>
               )}
-
             </div>
           </div>
         );
