@@ -870,38 +870,6 @@ export default function TicketDetailPage({
                   </div>
                 </div>
 
-                {/* Priority - Only show for GRIEVANCE, not for FEEDBACK */}
-                {ticket.queryType === "GRIEVANCE" && (
-                  <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
-                    <div
-                      className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        ticket.priority === "HIGH"
-                          ? "bg-red-100"
-                          : ticket.priority === "MEDIUM"
-                            ? "bg-amber-100"
-                            : "bg-blue-100"
-                      }`}
-                    >
-                      <AlertCircle
-                        className={`h-5 w-5 ${
-                          ticket.priority === "HIGH"
-                            ? "text-red-600"
-                            : ticket.priority === "MEDIUM"
-                              ? "text-amber-600"
-                              : "text-blue-600"
-                        }`}
-                      />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Priority Level</p>
-                      <p className="font-semibold text-gray-900">
-                        {ticket.priority.charAt(0) +
-                          ticket.priority.slice(1).toLowerCase()}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
                 {/* Section */}
                 {ticket.queryType === "GRIEVANCE" && (
                   <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
