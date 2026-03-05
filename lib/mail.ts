@@ -13,23 +13,18 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Helper function to log OTP in development
-function logOTPInDevelopment(email: string, otp: string, type: string) {
-  if (!isProduction) {
-    console.log("=".repeat(50));
-    console.log("📧 OTP GENERATED FOR:", email);
-    console.log("🔐 OTP CODE:", otp);
-    console.log("📋 TYPE:", type);
-    console.log("⏰ EXPIRES IN: 10 minutes");
-    console.log("=".repeat(50));
-  }
+// Helper function to log OTP events (without sensitive data)
+function logOTPEvent(email: string, type: string) {
+  // Mask email for logging
+  const maskedEmail = email.replace(/(.{2})(.*)(@.*)/, "$1***$3");
+  console.log(`[OTP] ${type} sent to: ${maskedEmail}`);
 }
 
 export async function sendOTPEmail(to: string, otp: string) {
   const emailType = "GENERAL_OTP";
 
-  // Always log to console for development and debugging
-  logOTPInDevelopment(to, otp, emailType);
+  // Log event without sensitive data
+  logOTPEvent(to, emailType);
 
   // Send actual email in both development and production
   const mailOptions = {
@@ -61,8 +56,8 @@ export async function sendOTPEmail(to: string, otp: string) {
 export async function sendVerificationEmail(to: string, otp: string) {
   const emailType = "EMAIL_VERIFICATION";
 
-  // Always log to console for development and debugging
-  logOTPInDevelopment(to, otp, emailType);
+  // Log event without sensitive data
+  logOTPEvent(to, emailType);
 
   // Send actual email in both development and production
   const mailOptions = {
@@ -94,8 +89,8 @@ export async function sendVerificationEmail(to: string, otp: string) {
 export async function sendPasswordResetEmail(to: string, otp: string) {
   const emailType = "PASSWORD_RESET";
 
-  // Always log to console for development and debugging
-  logOTPInDevelopment(to, otp, emailType);
+  // Log event without sensitive data
+  logOTPEvent(to, emailType);
 
   // Send actual email in both development and production
   const mailOptions = {
@@ -127,8 +122,8 @@ export async function sendPasswordResetEmail(to: string, otp: string) {
 export async function sendLoginOTPEmail(to: string, otp: string) {
   const emailType = "LOGIN_OTP";
 
-  // Always log to console for development and debugging
-  logOTPInDevelopment(to, otp, emailType);
+  // Log event without sensitive data
+  logOTPEvent(to, emailType);
 
   // Send actual email in both development and production
   const mailOptions = {

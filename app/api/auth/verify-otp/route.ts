@@ -19,6 +19,13 @@ export async function POST(req: NextRequest) {
       type,
     });
 
+    // Log the OTP being verified for debugging
+    console.log("🔐 OTP VERIFICATION ATTEMPT:");
+    console.log("📧 User:", userIdentifier);
+    console.log("🔑 Entered OTP:", otp);
+    console.log("📋 Type:", type);
+    console.log("⏰ Current Time:", new Date().toISOString());
+
     if (!userIdentifier || !otp) {
       return NextResponse.json(
         { error: "Identifier and OTP are required" },

@@ -11,8 +11,12 @@ const FloatingSupport = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const pathname = usePathname();
 
-  // Hide floating support on home page and support page
-  if (pathname === "/" || pathname === "/support") {
+  // Hide floating support on home page, support page, and SAMADHAN pages (SAMADHAN has its own portal)
+  if (
+    pathname === "/" ||
+    pathname === "/support" ||
+    pathname?.startsWith("/samadhan")
+  ) {
     return null;
   }
 

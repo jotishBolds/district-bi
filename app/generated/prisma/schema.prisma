@@ -5,8 +5,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DIRECT_URL")
-  // url = env("DATABASE_URL_MASTER")
+  url      = env("DATABASE_URL")
+  // url = env("DIRECT_URL") // Cloud database - disabled for local development
 }
 
 model UserSettings {
@@ -68,19 +68,30 @@ model User {
   serviceCategoryChanges ServiceCategoryChange[]    @relation("CategoryChangedBy")
   userSettings           UserSettings?
 
+  // SAMADHAN Module Relations
+  samadhanTicketsAsCitizen    SamadhanTicket[]        @relation("SamadhanCitizenTickets")
+  samadhanTicketsAsOfficer    SamadhanTicket[]        @relation("SamadhanAssignedOfficer")
+  samadhanTicketsEscalated    SamadhanTicket[]        @relation("SamadhanEscalatedTo")
+  samadhanTicketsAssigned     SamadhanTicket[]        @relation("SamadhanAssignedBy")
+  samadhanAttachmentsUploaded SamadhanAttachment[]    @relation("SamadhanAttachmentUploader")
+  samadhanInfoRequests        SamadhanInfoRequest[]   @relation("SamadhanInfoRequestedBy")
+  samadhanStatusChanges       SamadhanStatusHistory[] @relation("SamadhanStatusChangedBy")
+  samadhanInternalNotes       SamadhanInternalNote[]  @relation("SamadhanNoteCreator")
+
   @@map("users")
 }
 
 model CitizenProfile {
-  id            String   @id @default(uuid())
-  userId        String   @unique
-  fullName      String
-  phone         String
-  address       String
-  aadhaarNumber String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  fullName          String
+  phone             String
+  address           String
+  aadhaarNumber     String?
+  samadhanPseudonym String? // Random pseudonym for SAMADHAN module
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("citizen_profiles")
 }
@@ -131,15 +142,50 @@ model ServiceCategory {
 }
 
 model Section {
-  id          String           @id @default(uuid())
-  name        String           @unique
-  description String?
-  isActive    Boolean          @default(true)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  officers    OfficerProfile[]
+  id               String            @id @default(uuid())
+  name             String            @unique
+  description      String?
+  isActive         Boolean           @default(true)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  officers         OfficerProfile[]
+  samadhanTickets  SamadhanTicket[]  @relation("SamadhanTicketSection")
+  samadhanServices SamadhanService[] @relation("SectionServices")
 
   @@map("sections")
+}
+
+// SAMADHAN Services - Services offered by each section
+model SamadhanService {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  sectionId   String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  section    Section                   @relation("SectionServices", fields: [sectionId], references: [id], onDelete: Cascade)
+  categories SamadhanServiceCategory[] @relation("ServiceCategories")
+
+  @@unique([name, sectionId])
+  @@map("samadhan_services")
+}
+
+// SAMADHAN Service Categories - Categories under each service (Section -> Service -> Service Category)
+model SamadhanServiceCategory {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  serviceId   String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  service SamadhanService @relation("ServiceCategories", fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([name, serviceId])
+  @@map("samadhan_service_categories")
 }
 
 model Department {
@@ -426,6 +472,7 @@ model OfficerForwardingHistory {
 }
 
 enum UserRole {
+  CITIZEN
   FRONT_DESK
   DC
   ADC
@@ -451,7 +498,6 @@ enum UserRole {
   OS_RC
   RI_LEGAL
   DISPATCH_HANDLER
-  DEALING_HAND
 }
 
 enum ApplicationStatus {
@@ -483,4 +529,228 @@ enum NotificationType {
 enum ApplicationSource {
   PUBLIC
   GOVERNMENT
+}
+
+// ==================== SAMADHAN MODULE ====================
+// Citizen Grievance, Feedback, and Suggestion Management System
+
+enum SamadhanQueryType {
+  FEEDBACK
+  GRIEVANCE
+  SUGGESTION
+}
+
+enum SamadhanPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum SamadhanTicketStatus {
+  DRAFT // Ticket saved as draft by citizen
+  QUEUED // Ticket submitted and in queue for assignment
+  UNSEEN
+  SEEN
+  ACKNOWLEDGED
+  IN_PROGRESS
+  PENDING_INFORMATION
+  AWAITING_ESCALATION
+  ESCALATED
+  RESOLVED
+  CLOSED
+  CLOSED_NO_RESPONSE
+  APPEALED // Original ticket status when citizen files appeal - ticket forwarded to DC
+  APPEAL_FILED // Legacy status - keeping for backward compatibility
+  OVERDUE
+}
+
+enum SamadhanSubmissionChannel {
+  WEB_PORTAL
+  WHATSAPP
+  MOBILE_APP
+}
+
+enum SamadhanInfoRequestStatus {
+  PENDING
+  RESPONDED
+  EXPIRED
+}
+
+// Main SAMADHAN Ticket model
+model SamadhanTicket {
+  id          String               @id @default(uuid())
+  referenceId String               @unique // SAMADHAN-YYYY-MM-DD-XXXXX format
+  queryType   SamadhanQueryType
+  priority    SamadhanPriority     @default(MEDIUM)
+  status      SamadhanTicketStatus @default(DRAFT)
+
+  // Citizen Information
+  citizenId            String? // Nullable for anonymous submissions
+  citizenName          String? // For anonymous or named submissions
+  citizenEmail         String?
+  citizenPhone         String?
+  citizenPseudonym     String? // System-generated pseudonym
+  isAnonymous          Boolean @default(false)
+  isAnonymousToOfficer Boolean @default(false)
+
+  // Query Details - Updated for TypeForm flow
+  sectionId      String
+  subject        String? // Subject/title for the grievance/feedback
+  serviceAvailed String? // JSON array of service IDs
+  description    String    @db.Text
+  visitedDC      Boolean? // Did citizen visit DC office
+  visitDate      DateTime? // When did they visit
+
+  // Assignment
+  assignedOfficerId String?
+  escalatedToId     String?
+  assignedById      String? // Who assigned the ticket from queue
+  assignedAt        DateTime? // When was the ticket assigned
+
+  // Submission Channel
+  submissionChannel SamadhanSubmissionChannel @default(WEB_PORTAL)
+  whatsappNumber    String?
+
+  // SLA Management
+  slaDeadline    DateTime?
+  seenAt         DateTime?
+  acknowledgedAt DateTime?
+  resolvedAt     DateTime?
+  closedAt       DateTime?
+  slaBreachedAt  DateTime?
+  queuedAt       DateTime? // When ticket entered queue
+
+  // Resolution
+  resolutionMessage String? @db.Text
+
+  // Appeal
+  isAppeal         Boolean @default(false)
+  originalTicketId String?
+
+  // Draft functionality
+  isDraft     Boolean   @default(false)
+  lastSavedAt DateTime?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  citizen         User?                   @relation("SamadhanCitizenTickets", fields: [citizenId], references: [id])
+  section         Section                 @relation("SamadhanTicketSection", fields: [sectionId], references: [id])
+  assignedOfficer User?                   @relation("SamadhanAssignedOfficer", fields: [assignedOfficerId], references: [id])
+  escalatedTo     User?                   @relation("SamadhanEscalatedTo", fields: [escalatedToId], references: [id])
+  assignedBy      User?                   @relation("SamadhanAssignedBy", fields: [assignedById], references: [id])
+  originalTicket  SamadhanTicket?         @relation("TicketAppeals", fields: [originalTicketId], references: [id])
+  appeals         SamadhanTicket[]        @relation("TicketAppeals")
+  attachments     SamadhanAttachment[]
+  infoRequests    SamadhanInfoRequest[]
+  statusHistory   SamadhanStatusHistory[]
+  internalNotes   SamadhanInternalNote[]
+
+  @@index([referenceId])
+  @@index([citizenId])
+  @@index([assignedOfficerId])
+  @@index([status])
+  @@index([sectionId])
+  @@index([createdAt])
+  @@map("samadhan_tickets")
+}
+
+// Attachments for SAMADHAN tickets
+model SamadhanAttachment {
+  id             String   @id @default(uuid())
+  ticketId       String
+  infoRequestId  String? // If this is a response to an info request
+  fileName       String
+  originalName   String
+  filePath       String
+  fileType       String
+  fileSize       Int
+  uploadedById   String? // Can be null for anonymous uploads
+  uploadedByType String   @default("CITIZEN") // CITIZEN or OFFICER
+  createdAt      DateTime @default(now())
+
+  ticket      SamadhanTicket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  infoRequest SamadhanInfoRequest? @relation(fields: [infoRequestId], references: [id])
+  uploadedBy  User?                @relation("SamadhanAttachmentUploader", fields: [uploadedById], references: [id])
+
+  @@map("samadhan_attachments")
+}
+
+// Information requests from officers to citizens
+model SamadhanInfoRequest {
+  id              String                    @id @default(uuid())
+  ticketId        String
+  requestedById   String
+  description     String                    @db.Text
+  documentTypes   String? // JSON array of required document types
+  deadline        DateTime
+  status          SamadhanInfoRequestStatus @default(PENDING)
+  citizenResponse String?                   @db.Text
+  respondedAt     DateTime?
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+
+  ticket      SamadhanTicket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  requestedBy User                 @relation("SamadhanInfoRequestedBy", fields: [requestedById], references: [id])
+  attachments SamadhanAttachment[]
+
+  @@map("samadhan_info_requests")
+}
+
+// Status change history for audit trail
+model SamadhanStatusHistory {
+  id                String                @id @default(uuid())
+  ticketId          String
+  fromStatus        SamadhanTicketStatus?
+  toStatus          SamadhanTicketStatus
+  changedById       String?
+  changeReason      String?
+  isSystemGenerated Boolean               @default(false)
+  createdAt         DateTime              @default(now())
+
+  ticket    SamadhanTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  changedBy User?          @relation("SamadhanStatusChangedBy", fields: [changedById], references: [id])
+
+  @@map("samadhan_status_history")
+}
+
+// Internal notes for officer communication
+model SamadhanInternalNote {
+  id          String   @id @default(uuid())
+  ticketId    String
+  createdById String
+  content     String   @db.Text
+  createdAt   DateTime @default(now())
+
+  ticket    SamadhanTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  createdBy User           @relation("SamadhanNoteCreator", fields: [createdById], references: [id])
+
+  @@map("samadhan_internal_notes")
+}
+
+// SLA Configuration by query type and priority
+model SamadhanSLAConfig {
+  id        String            @id @default(uuid())
+  queryType SamadhanQueryType
+  priority  SamadhanPriority
+  slaHours  Int // SLA duration in hours
+  isActive  Boolean           @default(true)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@unique([queryType, priority])
+  @@map("samadhan_sla_config")
+}
+
+// Daily sequence for reference ID generation
+model SamadhanDailySequence {
+  id           String   @id @default(uuid())
+  date         DateTime @unique @db.Date
+  lastSequence Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("samadhan_daily_sequence")
 }

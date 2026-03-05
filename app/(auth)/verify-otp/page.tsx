@@ -83,7 +83,36 @@ function OtpVerificationContent() {
       }
     };
 
+    // Send initial OTP automatically
+    const sendInitialOtp = async () => {
+      try {
+        console.log("📤 SENDING INITIAL OTP:");
+        console.log("👤 User:", identifier);
+        console.log("📋 Type:", verificationType);
+
+        const response = await fetch("/api/auth/send-otp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            identifier,
+            type: verificationType,
+          }),
+        });
+
+        if (response.ok) {
+          console.log("✅ Initial OTP sent successfully");
+        } else {
+          console.log("❌ Failed to send initial OTP");
+        }
+      } catch (error) {
+        console.error("Error sending initial OTP:", error);
+      }
+    };
+
     fetchUserData();
+    sendInitialOtp();
   }, [identifier, router]);
 
   // Separate effect for initial focus (runs only once)
@@ -241,6 +270,12 @@ function OtpVerificationContent() {
     }
 
     try {
+      console.log("🔐 OTP VERIFICATION ATTEMPT:");
+      console.log("👤 User:", identifier);
+      console.log("🔑 Entered OTP:", otpValue);
+      console.log("📋 Type:", verificationType);
+      console.log("⏰ Time:", new Date().toISOString());
+
       console.log("Sending OTP verification request:", {
         identifier,
         otp: otpValue,
@@ -331,6 +366,11 @@ function OtpVerificationContent() {
 
     setResendLoading(true);
     setVerificationError(null);
+
+    console.log("🔄 RESENDING OTP:");
+    console.log("👤 User:", identifier);
+    console.log("📋 Type:", verificationType);
+    console.log("⏰ Time:", new Date().toISOString());
 
     try {
       const response = await fetch("/api/auth/send-otp", {

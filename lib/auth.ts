@@ -176,23 +176,22 @@ export const authOptions: AuthOptions = {
           },
         });
 
-        // Always log to console and send OTP email
-        console.log("=".repeat(50));
-        console.log("🔐 LOGIN OTP GENERATED");
-        console.log("📧 EMAIL:", user.email);
-        console.log("📱 PHONE:", user.phone || "Not provided");
-        console.log("🔐 OTP CODE:", otp);
-        console.log("📞 LOGIN METHOD:", isEmail ? "Email" : "Phone");
-        console.log("⏰ EXPIRES IN: 10 minutes");
-        console.log("=".repeat(50));
+        // Mask email for secure logging
+        const maskedEmail = user.email.replace(/(.{2})(.*)(@.*)/, "$1***$3");
+        const maskedPhone = user.phone ? `****${user.phone.slice(-4)}` : "N/A";
+
+        // Log OTP event without sensitive data
+        console.log(
+          `[AUTH] Login OTP sent to: ${maskedEmail} / ${maskedPhone}`
+        );
 
         // Send OTP email using the sendLoginOTPEmail function
         try {
           const { sendLoginOTPEmail } = await import("@/lib/mail");
           await sendLoginOTPEmail(user.email, otp);
-          console.log("✅ LOGIN OTP EMAIL SENT SUCCESSFULLY");
+          console.log("[AUTH] Login OTP email delivered");
         } catch (emailError) {
-          console.error("❌ Failed to send login OTP email:", emailError);
+          console.error("[AUTH] Failed to send login OTP email");
           // Don't fail the authentication if email sending fails
         }
 
@@ -222,7 +221,7 @@ export const authOptions: AuthOptions = {
             });
 
             if (smsResult.success) {
-              console.log("✅ LOGIN OTP SMS SENT SUCCESSFULLY");
+              console.log("[AUTH] Login OTP SMS delivered");
               // Update SMS OTP status to SENT
               await prisma.smsOtp.updateMany({
                 where: { phone: user.phone, otp, type: "LOGIN_OTP" },
@@ -232,7 +231,7 @@ export const authOptions: AuthOptions = {
                 },
               });
             } else {
-              console.error("❌ Failed to send login OTP SMS:", smsResult.desc);
+              console.error("[AUTH] Failed to send login OTP SMS");
               // Update SMS OTP status to FAILED
               await prisma.smsOtp.updateMany({
                 where: { phone: user.phone, otp, type: "LOGIN_OTP" },
@@ -243,7 +242,7 @@ export const authOptions: AuthOptions = {
               });
             }
           } catch (smsError) {
-            console.error("❌ Failed to send login OTP SMS:", smsError);
+            console.error("[AUTH] SMS OTP delivery error");
             // Update SMS OTP status to FAILED if it was created
             try {
               await prisma.smsOtp.updateMany({
@@ -251,7 +250,7 @@ export const authOptions: AuthOptions = {
                 data: { status: "FAILED" },
               });
             } catch (updateError) {
-              console.error("❌ Failed to update SMS OTP status:", updateError);
+              console.error("[AUTH] Failed to update SMS OTP status");
             }
           }
         }
@@ -328,10 +327,30 @@ export const authOptions: AuthOptions = {
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    // Security: Reduced session duration for government application
+    // 24 hours for regular sessions (can be extended with "remember me" feature)
+    maxAge: 24 * 60 * 60, // 24 hours (reduced from 30 days)
+    // Update session on activity
+    updateAge: 60 * 60, // Update session every hour
+  },
+  // Use secure cookies in production
+  cookies: {
+    sessionToken: {
+      name:
+        process.env.NODE_ENV === "production"
+          ? "__Secure-next-auth.session-token"
+          : "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === "development",
+  // Disable debug in production
+  debug: false,
 };
 
 import { getServerSession } from "next-auth";

@@ -7,9 +7,45 @@ const nextConfig: NextConfig = {
       allowedOrigins: ["localhost:3000", "*.vercel.app"],
     },
   },
-  // Configure headers for PWA
+  // Configure headers for PWA and Security
   async headers() {
     return [
+      // Security headers for all routes
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "X-DNS-Prefetch-Control",
+            value: "on",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+          {
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value:
+              "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+          },
+        ],
+      },
+      // Service Worker headers
       {
         source: "/sw.js",
         headers: [
@@ -23,12 +59,27 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Manifest headers
       {
         source: "/manifest.json",
         headers: [
           {
             key: "Cache-Control",
             value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // API security headers
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate",
+          },
+          {
+            key: "Pragma",
+            value: "no-cache",
           },
         ],
       },
@@ -45,6 +96,10 @@ const nextConfig: NextConfig = {
     domains: [],
     remotePatterns: [],
   },
+  // Enable standalone output for Docker deployment
+  output: "standalone",
+  // Optimize for production
+  poweredByHeader: false,
 };
 
 export default nextConfig;

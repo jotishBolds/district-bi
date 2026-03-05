@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Download, X, Smartphone } from "lucide-react";
 import { usePWAInstall } from "../hooks/usePWAInstall";
 
 export default function PWAInstallPrompt() {
   const { isInstallable, installApp } = usePWAInstall();
   const [isDismissed, setIsDismissed] = useState(false);
+  const pathname = usePathname();
 
   const handleInstallClick = async () => {
     const success = await installApp();
@@ -21,10 +23,14 @@ export default function PWAInstallPrompt() {
     sessionStorage.setItem("pwa-prompt-dismissed", "true");
   };
 
-  // Don't show if not installable, dismissed, or already dismissed this session
+  // Don't show on SAMADHAN routes - SAMADHAN has its own PWA install prompt
+  const isSamadhanRoute = pathname?.startsWith("/samadhan");
+
+  // Don't show if not installable, dismissed, already dismissed this session, or on SAMADHAN
   if (
     !isInstallable ||
     isDismissed ||
+    isSamadhanRoute ||
     sessionStorage.getItem("pwa-prompt-dismissed")
   ) {
     return null;
