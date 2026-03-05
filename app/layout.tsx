@@ -2,12 +2,25 @@ import type { Metadata } from "next";
 import { Inter, Roboto, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { headers } from "next/headers";
 import AuthProviders from "./auth/provider";
 import { ThemeProvider } from "../components/theme-provider";
 import FloatingSupport from "../components/FloatingSupport";
 import PWAHandler from "../components/PWAHandler";
 import PWAInstallPrompt from "../components/PWAInstallPrompt";
 import ServiceWorkerRegistration from "../components/ServiceWorkerRegistration";
+
+const SAMADHAN_DOMAINS = ["samadhan.dacgangtok.in", "district-bi.vercel.app"];
+
+async function getIsSamadhanDomain(): Promise<boolean> {
+  try {
+    const hdrs = await headers();
+    const host = (hdrs.get("host") || "").split(":")[0];
+    return SAMADHAN_DOMAINS.includes(host);
+  } catch {
+    return false;
+  }
+}
 
 const inter = Inter({
   variable: "--font-inter",
@@ -117,11 +130,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isSamadhan = await getIsSamadhanDomain();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -165,7 +179,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProviders>
-            <PWAHandler>
+            <PWAHandler isSamadhan={isSamadhan}>
               {children}
               <FloatingSupport />
               <PWAInstallPrompt />

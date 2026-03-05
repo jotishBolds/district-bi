@@ -9,13 +9,18 @@ import NoInternet, { ConnectionRestored } from "./NoInternet";
 interface PWAHandlerProps {
   children: React.ReactNode;
   showSplash?: boolean;
+  /** Passed from the server layout – true when the request host is a SAMADHAN domain */
+  isSamadhan?: boolean;
 }
 
 export default function PWAHandler({
   children,
   showSplash = true,
+  isSamadhan = false,
 }: PWAHandlerProps) {
-  const [isAppReady, setIsAppReady] = useState(false);
+  // Initialise as ready immediately when the server told us this is a SAMADHAN domain.
+  // This prevents a single-frame flash of the main app splash before useEffect fires.
+  const [isAppReady, setIsAppReady] = useState(() => isSamadhan);
   const [showConnectionRestored, setShowConnectionRestored] = useState(false);
   const [previousOnlineStatus, setPreviousOnlineStatus] = useState<
     boolean | null
@@ -23,20 +28,18 @@ export default function PWAHandler({
   const networkStatus = useNetworkStatus();
   const pathname = usePathname();
 
-  // Check if we're on SAMADHAN routes - SAMADHAN has its own splash screen
-  const isSamadhanRoute = pathname?.startsWith("/samadhan");
+  // Pathname-based check (works for direct /samadhan/* navigation)
+  const isPathSamadhan = pathname?.startsWith("/samadhan") ?? false;
 
-  // Handle splash screen completion
-  const handleSplashComplete = () => {
-    setIsAppReady(true);
-  };
+  // Combine: either the server told us it's samadhan, or the current path is /samadhan/*
+  const isSamadhanRoute = isSamadhan || isPathSamadhan;
 
-  // Auto-skip splash for SAMADHAN routes
+  // Auto-skip when navigating to /samadhan/* client-side after initial load
   useEffect(() => {
-    if (isSamadhanRoute) {
+    if (isPathSamadhan) {
       setIsAppReady(true);
     }
-  }, [isSamadhanRoute]);
+  }, [isPathSamadhan]);
 
   // Handle connection status changes
   useEffect(() => {
@@ -58,6 +61,11 @@ export default function PWAHandler({
     } else {
       window.dispatchEvent(new Event("offline"));
     }
+  };
+
+  // Handle splash screen completion
+  const handleSplashComplete = () => {
+    setIsAppReady(true);
   };
 
   // Show splash screen if not ready, splash is enabled, and NOT on SAMADHAN route
