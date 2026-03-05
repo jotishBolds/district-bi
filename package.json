@@ -9,6 +9,7 @@
     "lint": "next lint",
     "seed": "node seed.js",
     "seed:applications": "node scripts/seed-applications.js",
+    "seed:samadhan": "node scripts/seed-samadhan-services.js",
     "seed:delete": "node scripts/delete-seed-data.js",
     "test:data": "node scripts/show-test-data.js"
   },
