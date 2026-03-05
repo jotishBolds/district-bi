@@ -76,7 +76,7 @@ export async function middleware(request: NextRequest) {
   if (isApplicationDomain) {
     // Application domain - allow only /track paths and related APIs
     const allowedPaths = [
-      "/track",
+      "/",
       "/api/track",
       "/api/tracking",
       "/api/applications",
