@@ -20,15 +20,16 @@ const prisma = new PrismaClient();
 //   "Office of the District Collector Gangtok"
 //   "Revenue Section"
 const SECTION_MAP = {
-  "Revenue Department":                  "Revenue Section",
-  "Registration Department":             "Default Section",
-  "Certificate Services":                "Default Section",
-  "Public Works Department":             "Default Section",
-  "District Administration":             "Office of the District Collector Gangtok",
-  "NOC Services":                        "Revenue Section",
-  "Residence Certificate (RC) Section":  "Default Section",
-  "Election Section":                    "Default Section",
-  "Disaster Management & Compensation":  "District Disaster Management Authority",
+  "Revenue Department": "Revenue Section",
+  "Registration Department": "Default Section",
+  "Certificate Services": "Default Section",
+  "Public Works Department": "Default Section",
+  "District Administration": "Office of the District Collector Gangtok",
+  "NOC Services": "Revenue Section",
+  "Residence Certificate (RC) Section": "Default Section",
+  "Election Section": "Default Section",
+  "Disaster Management & Compensation":
+    "District Disaster Management Authority",
 };
 
 // ─── Services ─────────────────────────────────────────────────────────────────
@@ -152,70 +153,166 @@ const SAMADHAN_SERVICES = [
 // serviceName must exactly match a name in SAMADHAN_SERVICES above
 const SAMADHAN_CATEGORIES = [
   // COI Certificate
-  { name: "Processing Delay", description: null, serviceName: "COI Certificate" },
-  { name: "Document Rejection", description: null, serviceName: "COI Certificate" },
+  {
+    name: "Processing Delay",
+    description: null,
+    serviceName: "COI Certificate",
+  },
+  {
+    name: "Document Rejection",
+    description: null,
+    serviceName: "COI Certificate",
+  },
 
   // Caste Certificate
-  { name: "Caste Verification Delay", description: null, serviceName: "Caste Certificate" },
-  { name: "Category Change Delay", description: null, serviceName: "Caste Certificate" },
+  {
+    name: "Caste Verification Delay",
+    description: null,
+    serviceName: "Caste Certificate",
+  },
+  {
+    name: "Category Change Delay",
+    description: null,
+    serviceName: "Caste Certificate",
+  },
 
   // Land Records
   { name: "Wrong Information", description: null, serviceName: "Land Records" },
   { name: "Staff Behavior", description: null, serviceName: "Land Records" },
 
   // Land Revenue
-  { name: "Tax Payment Issues", description: null, serviceName: "Land Revenue" },
-  { name: "Revenue Collection Delay", description: null, serviceName: "Land Revenue" },
+  {
+    name: "Tax Payment Issues",
+    description: null,
+    serviceName: "Land Revenue",
+  },
+  {
+    name: "Revenue Collection Delay",
+    description: null,
+    serviceName: "Land Revenue",
+  },
 
   // Mutation of Inheritance
-  { name: "Mutation Delay", description: null, serviceName: "Mutation of Inheritance" },
-  { name: "Boundary Dispute", description: null, serviceName: "Mutation of Inheritance" },
+  {
+    name: "Mutation Delay",
+    description: null,
+    serviceName: "Mutation of Inheritance",
+  },
+  {
+    name: "Boundary Dispute",
+    description: null,
+    serviceName: "Mutation of Inheritance",
+  },
 
   // NEC
-  { name: "NEC Not Issued", description: null, serviceName: "Non-Encumbrance Certificate (NEC)" },
+  {
+    name: "NEC Not Issued",
+    description: null,
+    serviceName: "Non-Encumbrance Certificate (NEC)",
+  },
 
   // EC
-  { name: "EC Not Issued", description: null, serviceName: "Encumbrance Certificate (EC)" },
+  {
+    name: "EC Not Issued",
+    description: null,
+    serviceName: "Encumbrance Certificate (EC)",
+  },
 
   // Firm Registration
-  { name: "Firm Registration Delay", description: null, serviceName: "Firm Registration" },
-  { name: "Partnership Registration Issues", description: null, serviceName: "Firm Registration" },
+  {
+    name: "Firm Registration Delay",
+    description: null,
+    serviceName: "Firm Registration",
+  },
+  {
+    name: "Partnership Registration Issues",
+    description: null,
+    serviceName: "Firm Registration",
+  },
 
   // Land Registration
-  { name: "Registration Delay", description: null, serviceName: "Land Registration" },
+  {
+    name: "Registration Delay",
+    description: null,
+    serviceName: "Land Registration",
+  },
 
   // Trade License
-  { name: "License Renewal Delay", description: null, serviceName: "Trade License" },
+  {
+    name: "License Renewal Delay",
+    description: null,
+    serviceName: "Trade License",
+  },
 
   // Building Permission
-  { name: "Permit Approval Delay", description: null, serviceName: "Building Permission" },
+  {
+    name: "Permit Approval Delay",
+    description: null,
+    serviceName: "Building Permission",
+  },
 
   // Road Maintenance
-  { name: "Pothole Complaint", description: null, serviceName: "Road Maintenance" },
+  {
+    name: "Pothole Complaint",
+    description: null,
+    serviceName: "Road Maintenance",
+  },
   { name: "Road Damage", description: null, serviceName: "Road Maintenance" },
 
   // NOC for Loan
   { name: "NOC Delay", description: null, serviceName: "NOC for Loan" },
-  { name: "Amin Report Pending", description: null, serviceName: "NOC for Loan" },
+  {
+    name: "Amin Report Pending",
+    description: null,
+    serviceName: "NOC for Loan",
+  },
 
   // NOC for Government Quarter
-  { name: "Government Quarter NOC Delay", description: null, serviceName: "NOC for Government Quarter" },
-  { name: "Quarter Allocation Issues", description: null, serviceName: "NOC for Government Quarter" },
+  {
+    name: "Government Quarter NOC Delay",
+    description: null,
+    serviceName: "NOC for Government Quarter",
+  },
+  {
+    name: "Quarter Allocation Issues",
+    description: null,
+    serviceName: "NOC for Government Quarter",
+  },
 
   // New RC Application
-  { name: "RC Verification Pending", description: null, serviceName: "New RC Application" },
+  {
+    name: "RC Verification Pending",
+    description: null,
+    serviceName: "New RC Application",
+  },
 
   // Duplicate RC
-  { name: "Duplicate RC Delay", description: null, serviceName: "Duplicate RC" },
+  {
+    name: "Duplicate RC Delay",
+    description: null,
+    serviceName: "Duplicate RC",
+  },
 
   // New EPIC Card
-  { name: "EPIC Not Delivered", description: null, serviceName: "New EPIC Card" },
+  {
+    name: "EPIC Not Delivered",
+    description: null,
+    serviceName: "New EPIC Card",
+  },
 
   // EPIC Correction
-  { name: "Name Correction Not Updated", description: null, serviceName: "EPIC Correction" },
+  {
+    name: "Name Correction Not Updated",
+    description: null,
+    serviceName: "EPIC Correction",
+  },
 
   // Ex-Gratia Compensation
-  { name: "Compensation Not Received", description: null, serviceName: "Ex-Gratia Compensation" },
+  {
+    name: "Compensation Not Received",
+    description: null,
+    serviceName: "Ex-Gratia Compensation",
+  },
 ];
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -228,7 +325,7 @@ async function main() {
     select: { id: true, name: true },
   });
   const sectionIdByName = Object.fromEntries(
-    allSections.map((s) => [s.name, s.id])
+    allSections.map((s) => [s.name, s.id]),
   );
   console.log(`ℹ  Found ${allSections.length} existing sections in DB.\n`);
 
@@ -239,12 +336,16 @@ async function main() {
   for (const svc of SAMADHAN_SERVICES) {
     const realSectionName = SECTION_MAP[svc.sectionKey];
     if (!realSectionName) {
-      console.warn(`  ⚠ No section map entry for key "${svc.sectionKey}" – skipped: ${svc.name}`);
+      console.warn(
+        `  ⚠ No section map entry for key "${svc.sectionKey}" – skipped: ${svc.name}`,
+      );
       continue;
     }
     const sectionId = sectionIdByName[realSectionName];
     if (!sectionId) {
-      console.warn(`  ⚠ Section "${realSectionName}" not found in DB – skipped: ${svc.name}`);
+      console.warn(
+        `  ⚠ Section "${realSectionName}" not found in DB – skipped: ${svc.name}`,
+      );
       continue;
     }
 
@@ -261,18 +362,24 @@ async function main() {
         select: { id: true, name: true },
       });
       serviceIdByName[svc.name] = result.id;
-      console.log(`  ✅ Upserted service: "${svc.name}" → section "${realSectionName}"`);
+      console.log(
+        `  ✅ Upserted service: "${svc.name}" → section "${realSectionName}"`,
+      );
     } catch (err) {
       console.error(`  ✗ Failed to upsert service "${svc.name}":`, err.message);
     }
   }
 
   // 3. Upsert categories
-  console.log("\n── Seeding SamadhanServiceCategories ────────────────────────");
+  console.log(
+    "\n── Seeding SamadhanServiceCategories ────────────────────────",
+  );
   for (const cat of SAMADHAN_CATEGORIES) {
     const serviceId = serviceIdByName[cat.serviceName];
     if (!serviceId) {
-      console.warn(`  ⚠ Service "${cat.serviceName}" not seeded – skipped category: ${cat.name}`);
+      console.warn(
+        `  ⚠ Service "${cat.serviceName}" not seeded – skipped category: ${cat.name}`,
+      );
       continue;
     }
 
@@ -287,9 +394,14 @@ async function main() {
           isActive: true,
         },
       });
-      console.log(`  ✅ Upserted category: "${cat.name}" → service "${cat.serviceName}"`);
+      console.log(
+        `  ✅ Upserted category: "${cat.name}" → service "${cat.serviceName}"`,
+      );
     } catch (err) {
-      console.error(`  ✗ Failed to upsert category "${cat.name}":`, err.message);
+      console.error(
+        `  ✗ Failed to upsert category "${cat.name}":`,
+        err.message,
+      );
     }
   }
 
