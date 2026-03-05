@@ -590,8 +590,8 @@ exports.UserRole = exports.$Enums.UserRole = {
   OS_COI_RC: 'OS_COI_RC',
   OS_RC: 'OS_RC',
   RI_LEGAL: 'RI_LEGAL',
-  DISPATCH_HANDLER: 'DISPATCH_HANDLER',
-  DEALING_HAND: 'DEALING_HAND'
+  DEALING_HAND: 'DEALING_HAND',
+  DISPATCH_HANDLER: 'DISPATCH_HANDLER'
 };
 
 exports.ApplicationStatus = exports.$Enums.ApplicationStatus = {

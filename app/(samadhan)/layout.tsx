@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import SamadhanNavbar from "@/components/samadhan/SamadhanNavbar";
 import SamadhanFooter from "@/components/samadhan/SamadhanFooter";
 import SamadhanPWAHandler from "@/components/samadhan/SamadhanPWAHandler";
+import SamadhanNavigationGuard from "@/components/samadhan/SamadhanNavigationGuard";
 import Script from "next/script";
 
 export const metadata: Metadata = {
@@ -63,6 +64,9 @@ export default function SamadhanLayout({
 }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex flex-col">
+      {/* Navigation guard – redirects users back to /samadhan if they leave */}
+      <SamadhanNavigationGuard />
+
       {/* SAMADHAN PWA Handler */}
       <SamadhanPWAHandler />
 

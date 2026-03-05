@@ -4,7 +4,13 @@ const nextConfig: NextConfig = {
   // Enable PWA features
   experimental: {
     serverActions: {
-      allowedOrigins: ["localhost:3000", "*.vercel.app"],
+      allowedOrigins: [
+        "localhost:3000",
+        "*.vercel.app",
+        "district-bi.vercel.app",
+        "samadhan.dacgangtok.in",
+        "myapplication.dacgangtok.in",
+      ],
     },
   },
   // Configure headers for PWA and Security

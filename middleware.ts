@@ -2,6 +2,32 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+// ========== SAMADHAN DOMAIN DETECTION ==========
+const SAMADHAN_DOMAINS = ["district-bi.vercel.app", "samadhan.dacgangtok.in"];
+
+function isSamadhanHost(hostname: string): boolean {
+  // Strip port for local dev (e.g. localhost:3000)
+  const host = hostname.split(":")[0];
+  return SAMADHAN_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`));
+}
+
+// Paths that must never be rewritten (static assets, internals)
+function isStaticAsset(pathname: string): boolean {
+  return (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/favicon") ||
+    pathname.startsWith("/images") ||
+    pathname.startsWith("/assets") ||
+    pathname.startsWith("/pwa") ||
+    pathname.startsWith("/sw.js") ||
+    pathname.startsWith("/manifest.json") ||
+    pathname.startsWith("/samadhan-manifest.json") ||
+    /\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff2?|ttf|eot|map)$/i.test(
+      pathname,
+    )
+  );
+}
+
 export async function middleware(request: NextRequest) {
   // Get session token from cookies
   const token = await getToken({
@@ -13,32 +39,39 @@ export async function middleware(request: NextRequest) {
   const hostname = request.headers.get("host") || "";
 
   // ========== DOMAIN-BASED ROUTING FOR SAMADHAN ==========
-  // samadhan.dacgangtok.in -> SAMADHAN citizen portal only
-  // myapplication.dacgangtok.in -> Application tracking portal only
-  const isSamadhanDomain = hostname.startsWith("samadhan.");
-  const isApplicationDomain = hostname.startsWith("myapplication.");
+  // district-bi.vercel.app  → rewrite all requests to /samadhan/*
+  // samadhan.dacgangtok.in  → rewrite all requests to /samadhan/*
+  // myapplication.dacgangtok.in → main application (no rewrite)
+  // =========================================================
 
-  if (isSamadhanDomain) {
-    // SAMADHAN domain - allow only /samadhan paths and related APIs
-    const allowedPaths = ["/samadhan", "/api/samadhan"];
-    const isAllowed =
-      allowedPaths.some((p) => path.startsWith(p)) ||
-      path === "/" ||
-      path.startsWith("/_next") ||
-      path.startsWith("/favicon");
-
-    if (!isAllowed) {
-      // Redirect to SAMADHAN home
-      return NextResponse.redirect(new URL("/samadhan", request.url));
+  if (isSamadhanHost(hostname)) {
+    // Let static assets through without rewriting
+    if (isStaticAsset(path)) {
+      return NextResponse.next();
     }
 
-    // If at root, redirect to SAMADHAN
-    if (path === "/") {
-      return NextResponse.redirect(new URL("/samadhan", request.url));
+    // API routes for SAMADHAN: /api/samadhan/* and /api/manifest pass through
+    if (path.startsWith("/api/samadhan") || path === "/api/manifest") {
+      return NextResponse.next();
     }
 
-    return NextResponse.next();
+    // If path already starts with /samadhan, serve it directly (no double-prefix)
+    if (path.startsWith("/samadhan")) {
+      return NextResponse.next();
+    }
+
+    // Rewrite everything else to /samadhan prefix
+    // e.g. /         → /samadhan
+    //      /login    → /samadhan/login
+    //      /dashboard → /samadhan/dashboard
+    const samadhanPath = path === "/" ? "/samadhan" : `/samadhan${path}`;
+    const url = request.nextUrl.clone();
+    url.pathname = samadhanPath;
+    return NextResponse.rewrite(url);
   }
+
+  // myapplication.dacgangtok.in domain handling
+  const isApplicationDomain = hostname.startsWith("myapplication.");
 
   if (isApplicationDomain) {
     // Application domain - allow only /track paths and related APIs
@@ -72,7 +105,7 @@ export async function middleware(request: NextRequest) {
   // Check if registration is disabled
   if (path === "/register" && process.env.ENABLE_REGISTRATION !== "true") {
     return NextResponse.redirect(
-      new URL("/login?message=registration-disabled", request.url)
+      new URL("/login?message=registration-disabled", request.url),
     );
   }
 
@@ -112,8 +145,8 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(
         new URL(
           `/verify-otp?email=${encodeURIComponent(token.email || "")}`,
-          request.url
-        )
+          request.url,
+        ),
       );
     }
 
