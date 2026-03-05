@@ -74,27 +74,9 @@ export async function middleware(request: NextRequest) {
   const isApplicationDomain = hostname.startsWith("myapplication.");
 
   if (isApplicationDomain) {
-    // Application domain - allow only /track paths and related APIs
-    const allowedPaths = [
-      "/",
-      "/api/track",
-      "/api/tracking",
-      "/api/applications",
-    ];
-    const isAllowed =
-      allowedPaths.some((p) => path.startsWith(p)) ||
-      path === "/" ||
-      path.startsWith("/_next") ||
-      path.startsWith("/favicon");
-
-    if (!isAllowed) {
-      // Redirect to track page
-      return NextResponse.redirect(new URL("/track", request.url));
-    }
-
-    // If at root, redirect to track page
-    if (path === "/") {
-      return NextResponse.redirect(new URL("/track", request.url));
+    // Block access to /samadhan on this domain — everything else is allowed
+    if (path.startsWith("/samadhan")) {
+      return NextResponse.redirect(new URL("/", request.url));
     }
 
     return NextResponse.next();
