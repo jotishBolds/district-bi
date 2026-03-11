@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
 import { generateOTP } from "@/lib/utils";
-import { generateCitizenPseudonym } from "@/lib/samadhan";
+import { generateCitizenPseudonym, maskPhoneNumber } from "@/lib/samadhan";
 import {
   createSamadhanSession,
   setSamadhanSessionCookie,
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
         authenticated: true,
         session: {
           userId: session.userId,
-          phone: session.phone,
+          phone: maskPhoneNumber(session.phone),
           name: session.name,
           pseudonym: session.pseudonym,
           role: session.role,
@@ -125,19 +125,26 @@ export async function POST(request: NextRequest) {
 
       if (!smsResult.success) {
         console.warn(
-          `[SAMADHAN OTP] SMS send failed for ${cleanPhone}:`,
+          `[SAMADHAN OTP] SMS send failed for ${maskPhoneNumber(cleanPhone)}:`,
           smsResult,
         );
       } else {
-        console.log(`[SAMADHAN OTP] SMS sent successfully to ${cleanPhone}`);
+        console.log(
+          `[SAMADHAN OTP] SMS sent successfully to ${maskPhoneNumber(cleanPhone)}`,
+        );
       }
     } catch (smsError) {
-      console.error(`[SAMADHAN OTP] SMS error for ${cleanPhone}:`, smsError);
+      console.error(
+        `[SAMADHAN OTP] SMS error for ${maskPhoneNumber(cleanPhone)}:`,
+        smsError,
+      );
       // Continue anyway - OTP is stored and can be verified
     }
 
     // For development, also log the OTP
-    console.log(`[SAMADHAN OTP] Phone: ${cleanPhone}, OTP: ${otp}`);
+    console.log(
+      `[SAMADHAN OTP] Phone: ${maskPhoneNumber(cleanPhone)}, OTP: ${otp}`,
+    );
 
     return NextResponse.json({
       success: true,
@@ -227,7 +234,7 @@ async function verifyOTP(request: NextRequest, body?: Record<string, unknown>) {
         success: true,
         message: "Phone verified successfully",
         data: {
-          phone: cleanPhone,
+          phone: maskPhoneNumber(cleanPhone),
           verified: true,
         },
       });
@@ -361,7 +368,7 @@ async function verifyOTP(request: NextRequest, body?: Record<string, unknown>) {
 
     if (linkedTickets.count > 0) {
       console.log(
-        `[SAMADHAN] Linked ${linkedTickets.count} guest ticket(s) to user ${user.id} (${cleanPhone})`,
+        `[SAMADHAN] Linked ${linkedTickets.count} guest ticket(s) to user ${user.id} (${maskPhoneNumber(cleanPhone)})`,
       );
     }
 
@@ -387,7 +394,7 @@ async function verifyOTP(request: NextRequest, body?: Record<string, unknown>) {
       message: "OTP verified successfully",
       data: {
         userId: user.id,
-        phone: user.phone,
+        phone: maskPhoneNumber(user.phone || ""),
         name: user.citizenProfile?.fullName || "",
         pseudonym: user.citizenProfile?.samadhanPseudonym || "Anonymous",
         isNewUser:

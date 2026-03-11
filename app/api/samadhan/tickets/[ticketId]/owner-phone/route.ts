@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { maskPhoneNumber } from "@/lib/samadhan";
 
 // GET - Get ticket owner's phone number (masked info for verification)
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ ticketId: string }> }
+  { params }: { params: Promise<{ ticketId: string }> },
 ) {
   try {
     const { ticketId } = await params;
@@ -12,7 +13,7 @@ export async function GET(
     if (!ticketId) {
       return NextResponse.json(
         { success: false, message: "Reference ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -28,7 +29,7 @@ export async function GET(
     if (!ticket) {
       return NextResponse.json(
         { success: false, message: "Ticket not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -40,20 +41,20 @@ export async function GET(
           message:
             "This ticket was submitted anonymously and cannot be tracked",
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
     // Return the phone number (will be used to send OTP)
     return NextResponse.json({
       success: true,
-      phone: ticket.citizenPhone,
+      phone: maskPhoneNumber(ticket.citizenPhone),
     });
   } catch (error) {
     console.error("Error fetching ticket owner phone:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch ticket information" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

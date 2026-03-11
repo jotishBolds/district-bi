@@ -33,6 +33,15 @@ function SamadhanLoginContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
 
+  const maskPhone = (phoneStr: string): string => {
+    if (!phoneStr) return "";
+    const cleaned = phoneStr.replace(/\D/g, "");
+    if (cleaned.length >= 10) {
+      return `${cleaned.slice(0, 2)}${"*".repeat(cleaned.length - 4)}${cleaned.slice(-2)}`;
+    }
+    return phoneStr;
+  };
+
   // Check for existing SAMADHAN session (separate from NextAuth)
   useEffect(() => {
     const checkSession = async () => {
@@ -167,7 +176,7 @@ function SamadhanLoginContent() {
             <p className="text-gray-500 text-sm">
               {step === "phone"
                 ? "Enter your phone number to continue"
-                : `Enter the 6-digit code sent to ${phone}`}
+                : `Enter the 6-digit code sent to ${maskPhone(phone)}`}
             </p>
           </div>
 
@@ -219,7 +228,8 @@ function SamadhanLoginContent() {
                     <Shield className="w-5 h-5 text-green-600" />
                   </div>
                   <p className="text-sm text-green-700">
-                    OTP sent to <span className="font-semibold">{phone}</span>
+                    OTP sent to{" "}
+                    <span className="font-semibold">{maskPhone(phone)}</span>
                   </p>
                 </div>
 

@@ -650,7 +650,10 @@ export default function TicketDetailPage({
                 </p>
                 {ticketOwnerPhone && (
                   <p className="text-xs text-gray-500 mt-1">
-                    Registered phone: {ticketOwnerPhone}
+                    Registered phone:{" "}
+                    {ticketOwnerPhone.length > 4
+                      ? `${ticketOwnerPhone.slice(0, 2)}${"*".repeat(ticketOwnerPhone.length - 4)}${ticketOwnerPhone.slice(-2)}`
+                      : ticketOwnerPhone}
                   </p>
                 )}
               </div>

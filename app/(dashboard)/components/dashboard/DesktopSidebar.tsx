@@ -231,6 +231,17 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
+  // Roles that can manage samadhan queue (grievance officers)
+  const QUEUE_MANAGER_ROLES: UserRole[] = [
+    UserRole.DC,
+    UserRole.ADC,
+    UserRole.ADC_GTK,
+    UserRole.ADC_HQ,
+    UserRole.US_ADM,
+    UserRole.ADMIN,
+    UserRole.SUPER_ADMIN,
+  ];
+
   const getLinks = () => {
     switch (userRole) {
       case UserRole.FRONT_DESK:
@@ -245,6 +256,18 @@ export default function DesktopSidebar({ userRole }: DesktopSidebarProps) {
       default:
         // Check if it's an officer or official role using the officer-roles utility
         if (userRole && isOfficerOrOfficial(userRole)) {
+          // Officers with queue manager access get SAMADHAN Queue link
+          if (userRole && QUEUE_MANAGER_ROLES.includes(userRole)) {
+            return [
+              ...officerLinks.slice(0, -1), // All except Help & Support
+              {
+                name: "SAMADHAN Queue",
+                href: "/dashboard/samadhan-queue",
+                icon: Gavel,
+              },
+              officerLinks[officerLinks.length - 1], // Help & Support
+            ];
+          }
           return officerLinks;
         }
         // Default fallback

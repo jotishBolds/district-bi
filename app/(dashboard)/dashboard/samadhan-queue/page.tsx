@@ -691,7 +691,11 @@ export default function SamadhanQueuePage() {
                     {viewTicket.citizenPhone && (
                       <div>
                         <p className="text-gray-500">Phone</p>
-                        <p>{viewTicket.citizenPhone}</p>
+                        <p>
+                          {viewTicket.citizenPhone.length > 4
+                            ? `${viewTicket.citizenPhone.slice(0, 2)}${"*".repeat(viewTicket.citizenPhone.length - 4)}${viewTicket.citizenPhone.slice(-2)}`
+                            : viewTicket.citizenPhone}
+                        </p>
                       </div>
                     )}
                   </div>

@@ -24,6 +24,7 @@ import {
   ArrowDownToLine,
   Layers,
   Search,
+  MessageSquareDot,
 } from "lucide-react";
 import {
   SheetContent,
@@ -55,7 +56,7 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const [isGeneralFrontdesk, setIsGeneralFrontdesk] = useState<boolean | null>(
-    null
+    null,
   );
 
   // Fetch frontdesk assignments to determine if user is general frontdesk
@@ -72,7 +73,7 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
           // Determine if this is a general frontdesk user
           const hasSpecificAssignments = data.assignments.some(
             (assignment: { officerId: string | null }) =>
-              assignment.officerId !== null
+              assignment.officerId !== null,
           );
           setIsGeneralFrontdesk(!hasSpecificAssignments);
         } else {
@@ -110,6 +111,11 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
       href: "/dashboard/pull-requests",
       icon: ArrowDownToLine,
     },
+    {
+      name: "SAMADHAN Tickets",
+      href: "/dashboard/samadhan",
+      icon: MessageSquareDot,
+    },
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
@@ -124,31 +130,31 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
           },
         ]
       : isGeneralFrontdesk === false
-      ? [
-          {
-            name: "Manage applications",
-            href: "/dashboard/frontdesk-dashboard",
-            icon: ClipboardList,
-          },
-          {
-            name: "Queue Management",
-            href: "/dashboard/queue",
-            icon: ListChecks,
-          },
-          {
-            name: "Track Applications",
-            href: "/dashboard/tracking",
-            icon: Search,
-          },
-        ]
-      : [
-          // Loading state - show basic links
-          {
-            name: "Validate Applications",
-            href: "/dashboard/validate-applications",
-            icon: ClipboardList,
-          },
-        ]),
+        ? [
+            {
+              name: "Manage applications",
+              href: "/dashboard/frontdesk-dashboard",
+              icon: ClipboardList,
+            },
+            {
+              name: "Queue Management",
+              href: "/dashboard/queue",
+              icon: ListChecks,
+            },
+            {
+              name: "Track Applications",
+              href: "/dashboard/tracking",
+              icon: Search,
+            },
+          ]
+        : [
+            // Loading state - show basic links
+            {
+              name: "Validate Applications",
+              href: "/dashboard/validate-applications",
+              icon: ClipboardList,
+            },
+          ]),
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
@@ -210,6 +216,17 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     { name: "Help & Support", href: "/dashboard/help", icon: HelpCircle },
   ];
 
+  // Roles that can manage samadhan queue
+  const QUEUE_MANAGER_ROLES: string[] = [
+    "DC",
+    "ADC",
+    "ADC_GTK",
+    "ADC_HQ",
+    "US_ADM",
+    "ADMIN",
+    "SUPER_ADMIN",
+  ];
+
   const getLinks = () => {
     const userRole = session?.user?.role;
     if (!userRole) return citizenLinks;
@@ -227,6 +244,18 @@ export default function MobileSidebar({ userRole }: MobileSidebarProps) {
     }
 
     if (userRole && isOfficerOrOfficial(userRole)) {
+      // Officers with queue manager access get SAMADHAN Queue link
+      if (QUEUE_MANAGER_ROLES.includes(userRole)) {
+        return [
+          ...officerLinks.slice(0, -1),
+          {
+            name: "SAMADHAN Queue",
+            href: "/dashboard/samadhan-queue",
+            icon: Gavel,
+          },
+          officerLinks[officerLinks.length - 1],
+        ];
+      }
       return officerLinks;
     }
 

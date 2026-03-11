@@ -1,6 +1,7 @@
 // API to check ticket information for OTP requirement
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { maskPhoneNumber } from "@/lib/samadhan";
 
 export async function GET(request: NextRequest) {
   try {
@@ -68,7 +69,7 @@ export async function GET(request: NextRequest) {
       data: {
         exists: true,
         isGuestTicket,
-        citizenPhone: ticketPhone,
+        citizenPhone: ticketPhone ? maskPhoneNumber(ticketPhone) : null,
         isRegisteredPhone,
         queryType: ticket.queryType,
       },

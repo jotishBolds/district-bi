@@ -17,6 +17,7 @@ const HIGHER_AUTHORITY_ROLES = [
   "SDM",
   "SDM_GTK",
   "SDM_HQ",
+  "US_ADM",
   "ADMIN",
   "SUPER_ADMIN",
 ];

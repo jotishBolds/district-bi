@@ -84,33 +84,42 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/pwa/android/android-launchericon-48-48.png",
-        sizes: "48x48",
+        url: "/favicon_io/favicon.ico",
+        sizes: "any",
+      },
+      {
+        url: "/favicon_io/favicon-16x16.png",
+        sizes: "16x16",
         type: "image/png",
       },
       {
-        url: "/pwa/android/android-launchericon-96-96.png",
-        sizes: "96x96",
+        url: "/favicon_io/favicon-32x32.png",
+        sizes: "32x32",
         type: "image/png",
       },
       {
-        url: "/pwa/android/android-launchericon-192-192.png",
+        url: "/favicon_io/android-chrome-192x192.png",
         sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/favicon_io/android-chrome-512x512.png",
+        sizes: "512x512",
         type: "image/png",
       },
     ],
-    shortcut: "/pwa/android/android-launchericon-96-96.png",
+    shortcut: "/favicon_io/favicon.ico",
     apple: [
       {
-        url: "/pwa/android/android-launchericon-192-192.png",
-        sizes: "192x192",
+        url: "/favicon_io/apple-touch-icon.png",
+        sizes: "180x180",
         type: "image/png",
       },
     ],
     other: [
       {
         rel: "mask-icon",
-        url: "/pwa/android/android-launchericon-192-192.png",
+        url: "/favicon_io/android-chrome-192x192.png",
       },
     ],
   },
@@ -147,20 +156,32 @@ export default async function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="My Application" />
 
-        {/* PWA Icons for iOS */}
+        {/* Favicon */}
+        <link rel="icon" href="/favicon_io/favicon.ico" sizes="any" />
         <link
-          rel="apple-touch-icon"
-          href="/pwa/android/android-launchericon-192-192.png"
+          rel="icon"
+          href="/favicon_io/favicon-16x16.png"
+          sizes="16x16"
+          type="image/png"
         />
+        <link
+          rel="icon"
+          href="/favicon_io/favicon-32x32.png"
+          sizes="32x32"
+          type="image/png"
+        />
+
+        {/* PWA Icons for iOS */}
+        <link rel="apple-touch-icon" href="/favicon_io/apple-touch-icon.png" />
         <link
           rel="apple-touch-icon"
           sizes="152x152"
-          href="/pwa/android/android-launchericon-192-192.png"
+          href="/favicon_io/apple-touch-icon.png"
         />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
-          href="/pwa/android/android-launchericon-192-192.png"
+          href="/favicon_io/apple-touch-icon.png"
         />
 
         {/* Splash screens for iOS */}
