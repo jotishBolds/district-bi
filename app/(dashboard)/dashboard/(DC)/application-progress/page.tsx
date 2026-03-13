@@ -401,7 +401,7 @@ const DCDashboard = () => {
               hasNext: false,
               hasPrev: false,
             },
-          }
+          },
         );
         setCurrentPage(page);
       } catch (error) {
@@ -433,7 +433,7 @@ const DCDashboard = () => {
       advancedAgeFilter,
       startDate,
       endDate,
-    ]
+    ],
   );
 
   const fetchRecentApplications = useCallback(async (page = 1) => {
@@ -473,7 +473,7 @@ const DCDashboard = () => {
             hasNext: false,
             hasPrev: false,
           },
-        }
+        },
       );
     } catch (error) {
       console.error("Error fetching recent applications:", error);
@@ -503,7 +503,7 @@ const DCDashboard = () => {
     const checkPermissions = async () => {
       if (session?.user?.role) {
         const canManage = await canUserManageServiceCategories(
-          session.user.role
+          session.user.role,
         );
         setCanManageCategories(canManage);
       }
@@ -552,7 +552,7 @@ const DCDashboard = () => {
   // Service Category Edit Modal Functions
   const openCategoryEditModal = (
     applicationId: string,
-    currentCategory: { id: string; name: string; color?: string }
+    currentCategory: { id: string; name: string; color?: string },
   ) => {
     setEditingApplicationId(applicationId);
     setEditingCurrentCategory(currentCategory);
@@ -703,7 +703,7 @@ const DCDashboard = () => {
     const now = new Date();
     const submitted = new Date(submittedAt);
     return Math.floor(
-      (now.getTime() - submitted.getTime()) / (1000 * 60 * 60 * 24)
+      (now.getTime() - submitted.getTime()) / (1000 * 60 * 60 * 24),
     );
   };
 
@@ -791,7 +791,7 @@ const DCDashboard = () => {
     const endDate = app.completedAt ? new Date(app.completedAt) : new Date();
     const totalDays = app.serviceCategory.slaDays;
     const elapsedDays = Math.floor(
-      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
     );
     return {
       elapsed: elapsedDays,
@@ -898,7 +898,7 @@ const DCDashboard = () => {
     // Separate total card from other status cards
     const totalCard = statusCards.find((card) => card.status === "all");
     const otherStatusCards = statusCards.filter(
-      (card) => card.status !== "all"
+      (card) => card.status !== "all",
     );
 
     return (
@@ -1006,12 +1006,7 @@ const DCDashboard = () => {
                 </div>
 
                 {/* Hover Effect Border */}
-                <div
-                  className={`absolute inset-0 border-2 border-transparent group-hover:${card.colors.border.replace(
-                    "border-",
-                    "border-"
-                  )} rounded-xl lg:rounded-2xl transition-colors duration-300`}
-                ></div>
+                <div className="absolute inset-0 border-2 border-transparent rounded-xl lg:rounded-2xl transition-colors duration-300"></div>
               </div>
             );
           })}
@@ -1031,7 +1026,7 @@ const DCDashboard = () => {
         label: "Recent",
         description: "< 3 days",
         count: stats.ageStats.recent,
-        color: "green",
+        dotColor: "bg-green-500",
         bgColor: "bg-green-50",
         textColor: "text-green-700",
         borderColor: "border-green-200",
@@ -1042,7 +1037,7 @@ const DCDashboard = () => {
         label: "Medium",
         description: "3-7 days",
         count: stats.ageStats.medium,
-        color: "yellow",
+        dotColor: "bg-yellow-500",
         bgColor: "bg-yellow-50",
         textColor: "text-yellow-700",
         borderColor: "border-yellow-200",
@@ -1053,7 +1048,7 @@ const DCDashboard = () => {
         label: "Old",
         description: "> 7 days",
         count: stats.ageStats.old,
-        color: "red",
+        dotColor: "bg-red-500",
         bgColor: "bg-red-50",
         textColor: "text-red-700",
         borderColor: "border-red-200",
@@ -1092,12 +1087,12 @@ const DCDashboard = () => {
                   ? filter.activeColor
                   : `${filter.bgColor} ${
                       filter.borderColor
-                    } hover:${filter.borderColor.replace("200", "300")}`
+                    } hover:${filter.borderColor.replace("200", "300")}`,
               )}
             >
               <div className="flex items-center justify-between w-full">
                 <div
-                  className={`w-2 h-2 lg:w-3 lg:h-3 rounded-full bg-${filter.color}-500`}
+                  className={`w-2 h-2 lg:w-3 lg:h-3 rounded-full ${filter.dotColor}`}
                 ></div>
                 <div
                   className={`text-lg lg:text-2xl font-bold ${
@@ -1171,7 +1166,7 @@ const DCDashboard = () => {
                 "flex items-center gap-2 h-10 px-4",
                 showFilters || hasActiveFilters
                   ? "bg-blue-50 border-blue-200 text-blue-700"
-                  : "bg-gray-50 border-gray-200 text-gray-600"
+                  : "bg-gray-50 border-gray-200 text-gray-600",
               )}
             >
               <SlidersHorizontal className="w-4 h-4" />
@@ -1193,7 +1188,7 @@ const DCDashboard = () => {
                   "p-2 h-8",
                   viewMode === "cards"
                     ? "bg-white text-blue-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-700"
+                    : "text-gray-600 hover:text-gray-700",
                 )}
               >
                 <Grid3X3 className="w-4 h-4" />
@@ -1206,7 +1201,7 @@ const DCDashboard = () => {
                   "p-2 h-8",
                   viewMode === "list"
                     ? "bg-white text-blue-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-700"
+                    : "text-gray-600 hover:text-gray-700",
                 )}
               >
                 <List className="w-4 h-4" />
@@ -1224,7 +1219,7 @@ const DCDashboard = () => {
                   "flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-colors",
                   viewMode === "cards"
                     ? "bg-white text-blue-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-800"
+                    : "text-gray-600 hover:text-gray-800",
                 )}
               >
                 <Grid3X3 className="w-4 h-4" />
@@ -1237,7 +1232,7 @@ const DCDashboard = () => {
                   "flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-colors",
                   viewMode === "list"
                     ? "bg-white text-blue-600 shadow-sm"
-                    : "text-gray-600 hover:text-gray-800"
+                    : "text-gray-600 hover:text-gray-800",
                 )}
               >
                 <List className="w-4 h-4" />
@@ -1450,7 +1445,7 @@ const DCDashboard = () => {
                     variant="outline"
                     className={cn(
                       "w-full h-9 justify-start text-left font-normal border-gray-200 text-sm",
-                      !startDate && "text-gray-500"
+                      !startDate && "text-gray-500",
                     )}
                   >
                     <CalendarIcon className="mr-2 h-3.5 w-3.5 text-gray-400" />
@@ -1491,15 +1486,15 @@ const DCDashboard = () => {
                     className={cn(
                       "w-full h-9 justify-start text-left font-normal border-gray-200 text-sm",
                       !endDate && "text-gray-500",
-                      !startDate && "opacity-50 cursor-not-allowed bg-gray-50"
+                      !startDate && "opacity-50 cursor-not-allowed bg-gray-50",
                     )}
                   >
                     <CalendarIcon className="mr-2 h-3.5 w-3.5 text-gray-400" />
                     {endDate
                       ? format(endDate, "MMM dd, yyyy")
                       : startDate
-                      ? "Select end date"
-                      : "Select start date first"}
+                        ? "Select end date"
+                        : "Select start date first"}
                   </Button>
                 </PopoverTrigger>
                 {startDate && (
@@ -1732,7 +1727,7 @@ const DCDashboard = () => {
                           variant="outline"
                           className={cn(
                             "w-full h-10 justify-start text-left font-normal border-gray-200",
-                            !startDate && "text-gray-500"
+                            !startDate && "text-gray-500",
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
@@ -1771,7 +1766,7 @@ const DCDashboard = () => {
                           variant="outline"
                           className={cn(
                             "w-full h-10 justify-start text-left font-normal border-gray-200",
-                            !endDate && "text-gray-500"
+                            !endDate && "text-gray-500",
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4 text-gray-400" />
@@ -1948,7 +1943,7 @@ const DCDashboard = () => {
                 <div className="flex items-center gap-2">
                   <span
                     className={`inline-flex items-center px-2.5 lg:px-3 py-1 lg:py-1.5 rounded-full text-xs lg:text-sm font-medium border ${getStatusBadgeColor(
-                      app.status
+                      app.status,
                     )}`}
                   >
                     {app.status.replace("_", " ")}
@@ -1957,7 +1952,7 @@ const DCDashboard = () => {
                     selectedStatus === "IN_PROGRESS") && (
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getAgeColor(
-                        age
+                        age,
                       )}`}
                     >
                       <Clock className="w-3 h-3 mr-1" />
@@ -2253,7 +2248,7 @@ const DCDashboard = () => {
                                   <div className="flex items-center gap-2 mb-2 flex-wrap">
                                     <span
                                       className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getStatusBadgeColor(
-                                        entry.toStatus
+                                        entry.toStatus,
                                       )}`}
                                     >
                                       {entry.fromStatus
@@ -2274,7 +2269,7 @@ const DCDashboard = () => {
                                       {entry.changedBy.officerProfile && (
                                         <span
                                           className={`inline-flex items-center px-2 py-0.5 rounded text-xs ${getLevelColor(
-                                            entry.changedBy.level
+                                            entry.changedBy.level,
                                           )}`}
                                         >
                                           {getLevelText(entry.changedBy.level)}
@@ -2355,16 +2350,16 @@ const DCDashboard = () => {
                                   <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                                     <span
                                       className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getLevelColor(
-                                        assignment.assignedTo.level
+                                        assignment.assignedTo.level,
                                       )}`}
                                     >
                                       {getLevelText(
-                                        assignment.assignedTo.level
+                                        assignment.assignedTo.level,
                                       )}
                                     </span>
                                     <span
                                       className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getPriorityColor(
-                                        assignment.priority
+                                        assignment.priority,
                                       )}`}
                                     >
                                       P{assignment.priority}
@@ -2388,7 +2383,7 @@ const DCDashboard = () => {
                                   <div className="text-xs text-gray-500">
                                     Expected completion:{" "}
                                     {formatDate(
-                                      assignment.expectedCompletionDate
+                                      assignment.expectedCompletionDate,
                                     )}
                                   </div>
                                 )}
@@ -2466,11 +2461,11 @@ const DCDashboard = () => {
                                           </p>
                                           <span
                                             className={`inline-flex items-center px-2 py-0.5 rounded text-xs mt-1 ${getLevelColor(
-                                              forwarding.fromOfficer.level
+                                              forwarding.fromOfficer.level,
                                             )}`}
                                           >
                                             {getLevelText(
-                                              forwarding.fromOfficer.level
+                                              forwarding.fromOfficer.level,
                                             )}
                                           </span>
                                         </div>
@@ -2484,11 +2479,11 @@ const DCDashboard = () => {
                                           </p>
                                           <span
                                             className={`inline-flex items-center px-2 py-0.5 rounded text-xs mt-1 ${getLevelColor(
-                                              forwarding.toOfficer.level
+                                              forwarding.toOfficer.level,
                                             )}`}
                                           >
                                             {getLevelText(
-                                              forwarding.toOfficer.level
+                                              forwarding.toOfficer.level,
                                             )}
                                           </span>
                                         </div>
@@ -2497,7 +2492,7 @@ const DCDashboard = () => {
                                     <div className="flex items-center justify-between mt-3 flex-wrap gap-2">
                                       <span
                                         className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getPriorityColor(
-                                          forwarding.priority
+                                          forwarding.priority,
                                         )}`}
                                       >
                                         Priority {forwarding.priority}
@@ -2513,7 +2508,7 @@ const DCDashboard = () => {
                                       </div>
                                     )}
                                   </div>
-                                )
+                                ),
                               )}
 
                             {/* Frontdesk Forwardings */}
@@ -2565,7 +2560,7 @@ const DCDashboard = () => {
                                       </div>
                                     )}
                                   </div>
-                                )
+                                ),
                               )}
                           </div>
                         </div>
@@ -2662,7 +2657,7 @@ const DCDashboard = () => {
                   <div className="flex items-center gap-2">
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getStatusBadgeColor(
-                        app.status
+                        app.status,
                       )}`}
                     >
                       {app.status.replace("_", " ")}
@@ -2706,7 +2701,7 @@ const DCDashboard = () => {
                     </div>
                     <span
                       className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getLevelColor(
-                        app.currentHolder.level
+                        app.currentHolder.level,
                       )}`}
                     >
                       {getLevelText(app.currentHolder.level)}
@@ -2804,7 +2799,7 @@ const DCDashboard = () => {
                                 <div className="flex items-center gap-2">
                                   <span
                                     className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getStatusBadgeColor(
-                                      entry.toStatus
+                                      entry.toStatus,
                                     )}`}
                                   >
                                     {entry.toStatus}
@@ -2935,7 +2930,7 @@ const DCDashboard = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getStatusBadgeColor(
-                          app.status
+                          app.status,
                         )}`}
                       >
                         {app.status.replace("_", " ")}
@@ -2952,7 +2947,7 @@ const DCDashboard = () => {
                           </div>
                           <span
                             className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium mt-1 ${getLevelColor(
-                              app.currentHolder.level
+                              app.currentHolder.level,
                             )}`}
                           >
                             {getLevelText(app.currentHolder.level)}
@@ -3152,7 +3147,7 @@ const DCDashboard = () => {
                                       <div className="flex items-center gap-3">
                                         <span
                                           className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getStatusBadgeColor(
-                                            entry.toStatus
+                                            entry.toStatus,
                                           )}`}
                                         >
                                           {entry.toStatus}
@@ -3242,7 +3237,7 @@ const DCDashboard = () => {
             <span className="font-medium">
               {Math.min(
                 stats.pagination.page * stats.pagination.limit,
-                stats.pagination.totalCount
+                stats.pagination.totalCount,
               )}
             </span>{" "}
             of{" "}
@@ -3491,7 +3486,7 @@ const DCDashboard = () => {
                                 <div className="flex items-center gap-2">
                                   <span
                                     className={`inline-flex items-center px-2 lg:px-3 py-1 rounded-full text-xs lg:text-sm font-medium border ${getStatusBadgeColor(
-                                      app.status
+                                      app.status,
                                     )}`}
                                   >
                                     {app.status.replace("_", " ")}
@@ -3515,7 +3510,7 @@ const DCDashboard = () => {
                                     size="sm"
                                     onClick={() =>
                                       setShowDetails(
-                                        showingDetails ? null : app.id
+                                        showingDetails ? null : app.id,
                                       )
                                     }
                                     className="h-7 px-2 text-xs text-blue-600 hover:text-blue-800 border-blue-200 hover:bg-blue-50"
@@ -3552,7 +3547,7 @@ const DCDashboard = () => {
                                 </span>
                                 <span
                                   className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getLevelColor(
-                                    app.currentHolder.level
+                                    app.currentHolder.level,
                                   )} flex-shrink-0`}
                                 >
                                   {getLevelText(app.currentHolder.level)}

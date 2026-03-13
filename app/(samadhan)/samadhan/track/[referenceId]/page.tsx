@@ -113,42 +113,134 @@ interface TicketData {
 
 const statusConfig: Record<
   string,
-  { color: string; label: string; icon: React.ElementType }
+  {
+    color: string;
+    label: string;
+    icon: React.ElementType;
+    textClass: string;
+    borderClass: string;
+    bgClass: string;
+  }
 > = {
-  UNSEEN: { color: "gray", label: "Pending Review", icon: Clock },
-  SEEN: { color: "blue", label: "Under Review", icon: FileText },
-  ACKNOWLEDGED: { color: "blue", label: "Acknowledged", icon: CheckCircle },
-  IN_PROGRESS: { color: "yellow", label: "In Progress", icon: Clock },
+  UNSEEN: {
+    color: "gray",
+    label: "Pending Review",
+    icon: Clock,
+    textClass: "text-gray-600",
+    borderClass: "border-gray-300",
+    bgClass: "bg-gray-100",
+  },
+  SEEN: {
+    color: "blue",
+    label: "Under Review",
+    icon: FileText,
+    textClass: "text-blue-600",
+    borderClass: "border-blue-300",
+    bgClass: "bg-blue-100",
+  },
+  ACKNOWLEDGED: {
+    color: "blue",
+    label: "Acknowledged",
+    icon: CheckCircle,
+    textClass: "text-blue-600",
+    borderClass: "border-blue-300",
+    bgClass: "bg-blue-100",
+  },
+  IN_PROGRESS: {
+    color: "yellow",
+    label: "In Progress",
+    icon: Clock,
+    textClass: "text-yellow-600",
+    borderClass: "border-yellow-300",
+    bgClass: "bg-yellow-100",
+  },
   PENDING_INFORMATION: {
     color: "orange",
     label: "Information Requested",
     icon: AlertCircle,
+    textClass: "text-orange-600",
+    borderClass: "border-orange-300",
+    bgClass: "bg-orange-100",
   },
   AWAITING_ESCALATION: {
     color: "orange",
     label: "Awaiting Escalation",
     icon: AlertCircle,
+    textClass: "text-orange-600",
+    borderClass: "border-orange-300",
+    bgClass: "bg-orange-100",
   },
-  ESCALATED: { color: "purple", label: "Escalated", icon: AlertCircle },
-  RESOLVED: { color: "green", label: "Resolved", icon: CheckCircle },
-  CLOSED: { color: "green", label: "Closed", icon: CheckCircle },
+  ESCALATED: {
+    color: "purple",
+    label: "Escalated",
+    icon: AlertCircle,
+    textClass: "text-purple-600",
+    borderClass: "border-purple-300",
+    bgClass: "bg-purple-100",
+  },
+  RESOLVED: {
+    color: "green",
+    label: "Resolved",
+    icon: CheckCircle,
+    textClass: "text-green-600",
+    borderClass: "border-green-300",
+    bgClass: "bg-green-100",
+  },
+  CLOSED: {
+    color: "green",
+    label: "Closed",
+    icon: CheckCircle,
+    textClass: "text-green-600",
+    borderClass: "border-green-300",
+    bgClass: "bg-green-100",
+  },
   CLOSED_NO_RESPONSE: {
     color: "red",
     label: "Closed - No Response",
     icon: XCircle,
+    textClass: "text-red-600",
+    borderClass: "border-red-300",
+    bgClass: "bg-red-100",
   },
   APPEALED: {
     color: "purple",
     label: "Appealed - Under Review by Higher Authority",
     icon: AlertCircle,
+    textClass: "text-purple-600",
+    borderClass: "border-purple-300",
+    bgClass: "bg-purple-100",
   },
-  APPEAL_FILED: { color: "purple", label: "Appeal Filed", icon: AlertCircle },
-  OVERDUE: { color: "red", label: "Overdue", icon: AlertCircle },
+  APPEAL_FILED: {
+    color: "purple",
+    label: "Appeal Filed",
+    icon: AlertCircle,
+    textClass: "text-purple-600",
+    borderClass: "border-purple-300",
+    bgClass: "bg-purple-100",
+  },
+  OVERDUE: {
+    color: "red",
+    label: "Overdue",
+    icon: AlertCircle,
+    textClass: "text-red-600",
+    borderClass: "border-red-300",
+    bgClass: "bg-red-100",
+  },
 };
 
 const queryTypeConfig = {
-  FEEDBACK: { icon: MessageSquare, color: "green" },
-  GRIEVANCE: { icon: AlertCircle, color: "red" },
+  FEEDBACK: {
+    icon: MessageSquare,
+    color: "green",
+    textClass: "text-green-600",
+    bgClass: "bg-green-100",
+  },
+  GRIEVANCE: {
+    icon: AlertCircle,
+    color: "red",
+    textClass: "text-red-600",
+    bgClass: "bg-red-100",
+  },
 };
 
 export default function TicketDetailPage({
@@ -797,11 +889,9 @@ export default function TicketDetailPage({
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-center space-x-3">
                 <div
-                  className={`w-12 h-12 bg-${queryConfig.color}-100 rounded-lg flex items-center justify-center`}
+                  className={`w-12 h-12 ${queryConfig.bgClass} rounded-lg flex items-center justify-center`}
                 >
-                  <QueryIcon
-                    className={`h-6 w-6 text-${queryConfig.color}-600`}
-                  />
+                  <QueryIcon className={`h-6 w-6 ${queryConfig.textClass}`} />
                 </div>
                 <div>
                   <CardTitle className="text-lg">
@@ -825,7 +915,7 @@ export default function TicketDetailPage({
               ) : (
                 <Badge
                   variant="outline"
-                  className={`text-${status.color}-600 border-${status.color}-300`}
+                  className={`${status.textClass} ${status.borderClass}`}
                 >
                   <StatusIcon className="h-3 w-3 mr-1" />
                   {status.label}
@@ -1274,10 +1364,10 @@ export default function TicketDetailPage({
                       className="flex items-start space-x-3"
                     >
                       <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100`}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center ${historyStatus.bgClass}`}
                       >
                         <HistoryIcon
-                          className={`h-4 w-4 text-${historyStatus.color}-600`}
+                          className={`h-4 w-4 ${historyStatus.textClass}`}
                         />
                       </div>
                       <div className="flex-1">
@@ -1320,10 +1410,10 @@ export default function TicketDetailPage({
                               className="flex items-start space-x-3 opacity-80"
                             >
                               <div
-                                className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100`}
+                                className={`w-8 h-8 rounded-full flex items-center justify-center ${historyStatus.bgClass}`}
                               >
                                 <HistoryIcon
-                                  className={`h-4 w-4 text-${historyStatus.color}-600`}
+                                  className={`h-4 w-4 ${historyStatus.textClass}`}
                                 />
                               </div>
                               <div className="flex-1">

@@ -205,7 +205,7 @@ export default function CreateApplicationPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>(
-    []
+    [],
   );
   const [departments, setDepartments] = useState<Department[]>([]);
   const [officers, setOfficers] = useState<Officer[]>([]);
@@ -359,10 +359,10 @@ export default function CreateApplicationPage() {
         // Find the sticky header height (top header + progress bar)
         // You may need to adjust this value if your sticky headers change height
         const header = document.querySelector(
-          ".bg-white.border-b.sticky.top-0"
+          ".bg-white.border-b.sticky.top-0",
         );
         const progress = document.querySelector(
-          ".sm\\:hidden.bg-white.border-b.sticky.top-16, .hidden.sm\\:block.bg-white.border-b.sticky.top-16"
+          ".sm\\:hidden.bg-white.border-b.sticky.top-16, .hidden.sm\\:block.bg-white.border-b.sticky.top-16",
         );
         let offset = 0;
         if (header) offset += (header as HTMLElement).offsetHeight;
@@ -492,7 +492,7 @@ export default function CreateApplicationPage() {
   useEffect(() => {
     if (officers.length > 0 && frontdeskAssignments.length > 0) {
       const specificOfficerAssignments = frontdeskAssignments.filter(
-        (assignment: FrontdeskAssignment) => assignment.officerId !== null
+        (assignment: FrontdeskAssignment) => assignment.officerId !== null,
       );
 
       if (
@@ -502,7 +502,7 @@ export default function CreateApplicationPage() {
         // Find the user ID that corresponds to this officer profile
         const officerProfileId = specificOfficerAssignments[0].officer.id;
         const matchingOfficer = officers.find(
-          (officer) => officer.profile?.id === officerProfileId
+          (officer) => officer.profile?.id === officerProfileId,
         );
 
         if (matchingOfficer) {
@@ -538,13 +538,13 @@ export default function CreateApplicationPage() {
 
       if (Array.isArray(data)) {
         const categories = data.filter(
-          (cat: ServiceCategory) => cat.isActive !== false
+          (cat: ServiceCategory) => cat.isActive !== false,
         );
         setServiceCategories(categories);
 
         // Find and set the uncategorised category ID
         const uncategorised = categories.find(
-          (cat) => cat.name.toLowerCase() === "uncategorised"
+          (cat) => cat.name.toLowerCase() === "uncategorised",
         );
         if (uncategorised) {
           setUncategorisedCategoryId(uncategorised.id);
@@ -586,7 +586,7 @@ export default function CreateApplicationPage() {
 
       if (Array.isArray(data)) {
         setDepartments(
-          data.filter((dept: Department) => dept.isActive !== false)
+          data.filter((dept: Department) => dept.isActive !== false),
         );
       } else {
         setDepartments([]);
@@ -608,8 +608,8 @@ export default function CreateApplicationPage() {
         setOfficers(
           data.officers.filter(
             (officer: Officer) =>
-              officer.profile?.isAvailable && officer.isActive
-          )
+              officer.profile?.isAvailable && officer.isActive,
+          ),
         );
       } else {
         setOfficers([]);
@@ -633,7 +633,7 @@ export default function CreateApplicationPage() {
 
         // Determine if this is a general frontdesk user
         const hasSpecificAssignments = data.assignments.some(
-          (assignment: FrontdeskAssignment) => assignment.officerId !== null
+          (assignment: FrontdeskAssignment) => assignment.officerId !== null,
         );
         setIsGeneralFrontdesk(!hasSpecificAssignments);
       } else {
@@ -678,7 +678,7 @@ export default function CreateApplicationPage() {
 
   const updateDocumentType = (index: number, documentType: string) => {
     setDocuments((prev) =>
-      prev.map((doc, i) => (i === index ? { ...doc, documentType } : doc))
+      prev.map((doc, i) => (i === index ? { ...doc, documentType } : doc)),
     );
   };
 
@@ -715,7 +715,7 @@ export default function CreateApplicationPage() {
       const applicationFormData = new FormData();
       applicationFormData.append(
         "serviceCategoryId",
-        data.serviceCategoryId || uncategorisedCategoryId
+        data.serviceCategoryId || uncategorisedCategoryId,
       );
 
       // Only append departmentId if it exists (for government applications)
@@ -730,7 +730,7 @@ export default function CreateApplicationPage() {
       if (!isGeneralFrontdesk && data.assignedOfficerId) {
         applicationFormData.append(
           "preferredOfficerId",
-          data.assignedOfficerId
+          data.assignedOfficerId,
         );
       }
 
@@ -745,7 +745,7 @@ export default function CreateApplicationPage() {
       applicationFormData.append("citizenGender", data.citizenGender || "");
       applicationFormData.append(
         "citizenAlternateNumber",
-        data.citizenAlternateNumber || ""
+        data.citizenAlternateNumber || "",
       );
       applicationFormData.append("priority", data.priority.toString());
 
@@ -753,7 +753,7 @@ export default function CreateApplicationPage() {
         applicationFormData.append(`documents[${index}].file`, document.file);
         applicationFormData.append(
           `documents[${index}].documentType`,
-          document.documentType
+          document.documentType,
         );
       });
 
@@ -766,13 +766,13 @@ export default function CreateApplicationPage() {
 
       if (!applicationResponse.ok) {
         throw new Error(
-          applicationResult.error || "Failed to create application"
+          applicationResult.error || "Failed to create application",
         );
       }
 
       // Get the service category name for display
       const selectedServiceCategory = serviceCategories.find(
-        (cat) => cat.id === (data.serviceCategoryId || uncategorisedCategoryId)
+        (cat) => cat.id === (data.serviceCategoryId || uncategorisedCategoryId),
       );
 
       // Store success data for modal
@@ -794,7 +794,7 @@ export default function CreateApplicationPage() {
     } catch (error) {
       console.error("Error creating application:", error);
       toast.error(
-        error instanceof Error ? error.message : "Failed to create application"
+        error instanceof Error ? error.message : "Failed to create application",
       );
     } finally {
       setSubmitting(false);
@@ -935,7 +935,7 @@ export default function CreateApplicationPage() {
       <div className="hidden sm:block bg-white border-b border-gray-200 sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <nav aria-label="Progress">
-            <ol className="flex items-center justify-center space-x-8">
+            <ol className="flex items-center justify-center space-x-4 sm:space-x-6 lg:space-x-8">
               {getSteps(isGeneralFrontdesk).map((step, stepIdx) => {
                 const Icon = step.icon;
                 const isCompleted = validateStep(step.id);
@@ -954,12 +954,12 @@ export default function CreateApplicationPage() {
                           isCompleted
                             ? "bg-green-600 border-green-600 text-white hover:bg-green-700"
                             : isIncomplete
-                            ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
-                            : isCurrent
-                            ? "border-blue-600 text-blue-600 hover:bg-blue-50"
-                            : isClickable
-                            ? "border-gray-300 text-gray-400 hover:border-gray-400"
-                            : "border-gray-200 text-gray-300 cursor-not-allowed"
+                              ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
+                              : isCurrent
+                                ? "border-blue-600 text-blue-600 hover:bg-blue-50"
+                                : isClickable
+                                  ? "border-gray-300 text-gray-400 hover:border-gray-400"
+                                  : "border-gray-200 text-gray-300 cursor-not-allowed"
                         }`}
                       >
                         {isCompleted ? (
@@ -975,10 +975,10 @@ export default function CreateApplicationPage() {
                           isCompleted
                             ? "text-green-600"
                             : isIncomplete
-                            ? "text-red-500"
-                            : isCurrent
-                            ? "text-blue-600"
-                            : "text-gray-500"
+                              ? "text-red-500"
+                              : isCurrent
+                                ? "text-blue-600"
+                                : "text-gray-500"
                         }`}
                       >
                         {step.name}
@@ -986,12 +986,12 @@ export default function CreateApplicationPage() {
                     </div>
                     {stepIdx < getSteps(isGeneralFrontdesk).length - 1 && (
                       <div
-                        className={`ml-8 h-0.5 w-16 transition-colors duration-300 ${
+                        className={`ml-4 sm:ml-6 lg:ml-8 h-0.5 w-8 sm:w-12 lg:w-16 transition-colors duration-300 ${
                           isCompleted
                             ? "bg-green-600"
                             : isIncomplete
-                            ? "bg-red-300"
-                            : "bg-gray-300"
+                              ? "bg-red-300"
+                              : "bg-gray-300"
                         }`}
                       />
                     )}
@@ -1274,15 +1274,15 @@ export default function CreateApplicationPage() {
                           validateStep(1)
                             ? "text-green-600"
                             : isStepIncomplete(1)
-                            ? "text-red-600"
-                            : "text-gray-600"
+                              ? "text-red-600"
+                              : "text-gray-600"
                         }`}
                       >
                         {validateStep(1)
                           ? "Step completed"
                           : isStepIncomplete(1)
-                          ? "Complete this step"
-                          : "Complete this step"}
+                            ? "Complete this step"
+                            : "Complete this step"}
                       </span>
                     </div>
                     {validateStep(1) && currentStep === 1 && (
@@ -1495,7 +1495,7 @@ export default function CreateApplicationPage() {
                                 setSameAsPhoneNumber(checked as boolean);
                                 if (checked) {
                                   field.onChange(
-                                    form.getValues("citizenPhone")
+                                    form.getValues("citizenPhone"),
                                   );
                                 } else {
                                   field.onChange("");
@@ -1547,15 +1547,15 @@ export default function CreateApplicationPage() {
                           validateStep(2)
                             ? "text-green-600"
                             : isStepIncomplete(2)
-                            ? "text-red-600"
-                            : "text-gray-600"
+                              ? "text-red-600"
+                              : "text-gray-600"
                         }`}
                       >
                         {validateStep(2)
                           ? "Step completed"
                           : isStepIncomplete(2)
-                          ? "Complete this step"
-                          : "Complete this step"}
+                            ? "Complete this step"
+                            : "Complete this step"}
                       </span>
                     </div>
                     <div className="flex space-x-2">
@@ -1724,15 +1724,15 @@ export default function CreateApplicationPage() {
                           validateStep(3)
                             ? "text-green-600"
                             : isStepIncomplete(3)
-                            ? "text-red-600"
-                            : "text-gray-600"
+                              ? "text-red-600"
+                              : "text-gray-600"
                         }`}
                       >
                         {validateStep(3)
                           ? "Step completed"
                           : isStepIncomplete(3)
-                          ? "Upload at least one document"
-                          : "Upload at least one document"}
+                            ? "Upload at least one document"
+                            : "Upload at least one document"}
                       </span>
                     </div>
                     <div className="flex space-x-2">
@@ -1818,7 +1818,7 @@ export default function CreateApplicationPage() {
                             officersToShow = availableOfficers.map(
                               (assignedOfficer) => {
                                 const matchingOfficer = officers.find(
-                                  (o) => o.profile?.id === assignedOfficer.id
+                                  (o) => o.profile?.id === assignedOfficer.id,
                                 );
                                 return {
                                   id: matchingOfficer?.id || assignedOfficer.id, // Use user ID if found, fallback to profile ID
@@ -1826,7 +1826,7 @@ export default function CreateApplicationPage() {
                                   designation: assignedOfficer.designation,
                                   department: assignedOfficer.department,
                                 };
-                              }
+                              },
                             );
                           } else {
                             // Fallback to all officers with their user IDs
@@ -1959,15 +1959,15 @@ export default function CreateApplicationPage() {
                             validateStep(4)
                               ? "text-green-600"
                               : isStepIncomplete(4)
-                              ? "text-red-600"
-                              : "text-gray-600"
+                                ? "text-red-600"
+                                : "text-gray-600"
                           }`}
                         >
                           {validateStep(4)
                             ? "Step completed"
                             : isStepIncomplete(4)
-                            ? "Complete officer assignment"
-                            : "Complete officer assignment"}
+                              ? "Complete officer assignment"
+                              : "Complete officer assignment"}
                         </span>
                       </div>
                       <div className="flex space-x-2">
@@ -1988,7 +1988,7 @@ export default function CreateApplicationPage() {
                                   // Scroll to instructions section
                                   const instructionsCard =
                                     document.querySelector(
-                                      ".bg-white\\/80.backdrop-blur-sm:last-of-type"
+                                      ".bg-white\\/80.backdrop-blur-sm:last-of-type",
                                     );
                                   if (instructionsCard) {
                                     instructionsCard.scrollIntoView({
@@ -2087,7 +2087,7 @@ export default function CreateApplicationPage() {
                           ? "Ready to Submit"
                           : `${
                               getRequiredSteps().filter((step) =>
-                                validateStep(step)
+                                validateStep(step),
                               ).length
                             }/${getRequiredSteps().length} Steps Completed`}
                       </p>

@@ -62,7 +62,7 @@ const RecentApplications = ({ userRole }: Props) => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          "/api/applications?limit=50&includeForwardingHistory=true"
+          "/api/applications?limit=50&includeForwardingHistory=true",
         );
         if (response.ok) {
           const data = await response.json();
@@ -196,18 +196,18 @@ const RecentApplications = ({ userRole }: Props) => {
   return (
     <div className="bg-card rounded-lg border shadow-sm">
       <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
           <h3 className="text-lg font-semibold text-foreground">
             Recent Applications
           </h3>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Button
               variant="outline"
               size="sm"
               onClick={() => handleSort("date")}
               className={cn(
                 "gap-1",
-                sortBy === "date" && "bg-primary/10 border-primary/20"
+                sortBy === "date" && "bg-primary/10 border-primary/20",
               )}
             >
               <Clock className="h-4 w-4" />
@@ -220,7 +220,7 @@ const RecentApplications = ({ userRole }: Props) => {
               onClick={() => handleSort("name")}
               className={cn(
                 "gap-1",
-                sortBy === "name" && "bg-primary/10 border-primary/20"
+                sortBy === "name" && "bg-primary/10 border-primary/20",
               )}
             >
               <User className="h-4 w-4" />
@@ -233,7 +233,7 @@ const RecentApplications = ({ userRole }: Props) => {
               onClick={() => handleSort("status")}
               className={cn(
                 "gap-1",
-                sortBy === "status" && "bg-primary/10 border-primary/20"
+                sortBy === "status" && "bg-primary/10 border-primary/20",
               )}
             >
               Status
@@ -280,7 +280,7 @@ const RecentApplications = ({ userRole }: Props) => {
                   <Badge
                     className={cn(
                       "text-xs",
-                      getStatusColor(application.status)
+                      getStatusColor(application.status),
                     )}
                   >
                     {application.status.replace("_", " ")}

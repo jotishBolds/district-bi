@@ -220,7 +220,7 @@ export default function SamadhanServicesPage() {
 
       if (data.success) {
         toast.success(
-          `Service ${!service.isActive ? "activated" : "deactivated"}`
+          `Service ${!service.isActive ? "activated" : "deactivated"}`,
         );
         fetchServices();
       } else {
@@ -239,7 +239,7 @@ export default function SamadhanServicesPage() {
     try {
       const response = await fetch(
         `/api/samadhan/services?id=${selectedService.id}`,
-        { method: "DELETE" }
+        { method: "DELETE" },
       );
       const data = await response.json();
 
@@ -290,14 +290,17 @@ export default function SamadhanServicesPage() {
   });
 
   // Group services by section
-  const groupedServices = filteredServices.reduce((acc, service) => {
-    const sectionName = service.section.name;
-    if (!acc[sectionName]) {
-      acc[sectionName] = [];
-    }
-    acc[sectionName].push(service);
-    return acc;
-  }, {} as Record<string, Service[]>);
+  const groupedServices = filteredServices.reduce(
+    (acc, service) => {
+      const sectionName = service.section.name;
+      if (!acc[sectionName]) {
+        acc[sectionName] = [];
+      }
+      acc[sectionName].push(service);
+      return acc;
+    },
+    {} as Record<string, Service[]>,
+  );
 
   if (isLoading) {
     return (
@@ -443,7 +446,9 @@ export default function SamadhanServicesPage() {
                   <TableRow>
                     <TableHead>Service Name</TableHead>
                     <TableHead>Section</TableHead>
-                    <TableHead>Description</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Description
+                    </TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -457,7 +462,7 @@ export default function SamadhanServicesPage() {
                       <TableCell>
                         <Badge variant="outline">{service.section.name}</Badge>
                       </TableCell>
-                      <TableCell className="max-w-[300px] truncate">
+                      <TableCell className="hidden md:table-cell max-w-[300px] truncate">
                         {service.description || "-"}
                       </TableCell>
                       <TableCell>

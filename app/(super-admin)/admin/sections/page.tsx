@@ -239,7 +239,7 @@ export default function SectionManagement() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(values),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -272,8 +272,8 @@ export default function SectionManagement() {
 
       setSections((prev) =>
         prev.map((section) =>
-          section.id === selectedSection.id ? updatedSection : section
-        )
+          section.id === selectedSection.id ? updatedSection : section,
+        ),
       );
       toast.success("Section has been updated successfully.");
       setEditDialogOpen(false);
@@ -297,7 +297,7 @@ export default function SectionManagement() {
         `/api/admin/sections/${selectedSection.id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -306,7 +306,7 @@ export default function SectionManagement() {
       }
 
       setSections((prev) =>
-        prev.filter((section) => section.id !== selectedSection.id)
+        prev.filter((section) => section.id !== selectedSection.id),
       );
       toast.success("Section has been deleted successfully.");
       setDeleteDialogOpen(false);
@@ -364,13 +364,13 @@ export default function SectionManagement() {
 
       setSections((prev) =>
         prev.map((sec) =>
-          sec.id === section.id ? { ...sec, isActive: !sec.isActive } : sec
-        )
+          sec.id === section.id ? { ...sec, isActive: !sec.isActive } : sec,
+        ),
       );
       toast.success(
         `Section has been ${
           !section.isActive ? "activated" : "deactivated"
-        } successfully.`
+        } successfully.`,
       );
     } catch (error) {
       console.error("Error toggling section status:", error);
@@ -423,7 +423,7 @@ export default function SectionManagement() {
             onValueChange={(value) => setStatusFilter(value)}
             defaultValue="ALL"
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
@@ -468,10 +468,14 @@ export default function SectionManagement() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Section Name</TableHead>
-                    <TableHead>Description</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Description
+                    </TableHead>
                     <TableHead>Officers</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Created</TableHead>
+                    <TableHead className="hidden sm:table-cell">
+                      Created
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -481,7 +485,7 @@ export default function SectionManagement() {
                       <TableCell className="font-medium">
                         {section.name}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden md:table-cell">
                         {section.description || (
                           <span className="text-muted-foreground italic">
                             No description
@@ -516,7 +520,7 @@ export default function SectionManagement() {
                           )}
                         </Badge>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden sm:table-cell">
                         {new Date(section.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-right">

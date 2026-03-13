@@ -133,10 +133,8 @@ export default function SamadhanFooter() {
                   <Phone className="w-4 h-4 text-green-400" />
                 </div>
                 <div>
-                  <p className="text-white text-sm font-medium">Helpline</p>
-                  <p className="text-gray-400 text-sm">
-                    1800-XXX-XXXX (Toll Free)
-                  </p>
+                  <p className="text-white text-sm font-medium">Phone</p>
+                  <p className="text-gray-400 text-sm">03592 284444</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -146,7 +144,7 @@ export default function SamadhanFooter() {
                 <div>
                   <p className="text-white text-sm font-medium">Email</p>
                   <p className="text-gray-400 text-sm">
-                    samadhan@dacgangtok.in
+                    dm-gangtok@sikkim.gov.in
                   </p>
                 </div>
               </li>

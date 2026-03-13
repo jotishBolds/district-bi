@@ -157,7 +157,7 @@ const formSchema = z
           const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
           return emailRegex.test(email);
         },
-        { message: "Please enter a valid email format" }
+        { message: "Please enter a valid email format" },
       ),
 
     phone: z
@@ -179,7 +179,7 @@ const formSchema = z
         {
           message:
             "Please enter a valid phone number (7-15 digits with optional country code)",
-        }
+        },
       ),
 
     role: z.nativeEnum(UserRole, {
@@ -237,7 +237,7 @@ const formSchema = z
         },
         {
           message: "Password must be at least 8 characters if provided",
-        }
+        },
       )
       .refine(
         (val) => {
@@ -250,7 +250,7 @@ const formSchema = z
         {
           message:
             "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)",
-        }
+        },
       ),
   })
   .superRefine((data, ctx) => {
@@ -350,7 +350,7 @@ const parseApiError = (error: unknown): string => {
   if (apiError?.errors && Array.isArray(apiError.errors)) {
     return apiError.errors
       .map((err: { message?: string } | string) =>
-        typeof err === "string" ? err : err.message || "Unknown error"
+        typeof err === "string" ? err : err.message || "Unknown error",
       )
       .join(", ");
   }
@@ -438,7 +438,7 @@ export default function UserManagement() {
         const response = await fetch(
           `/api/admin/check-email?email=${encodeURIComponent(watchEmail)}${
             selectedUser?.id ? `&exclude=${selectedUser.id}` : ""
-          }`
+          }`,
         );
 
         if (response.ok) {
@@ -505,8 +505,8 @@ export default function UserManagement() {
           sectionsData = Array.isArray(sectionsResult)
             ? sectionsResult
             : Array.isArray(sectionsResult.sections)
-            ? sectionsResult.sections
-            : [];
+              ? sectionsResult.sections
+              : [];
         } else {
           const errorData = await sectionsResponse.json();
           console.error("Failed to fetch sections:", errorData);
@@ -543,7 +543,7 @@ export default function UserManagement() {
 
         // Find matching section
         const defaultSection = sections.find(
-          (s) => s.name === roleMapping.defaultSection
+          (s) => s.name === roleMapping.defaultSection,
         );
         if (defaultSection) {
           form.setValue("sectionId", defaultSection.id);
@@ -579,7 +579,7 @@ export default function UserManagement() {
 
   // Enhanced error handling for API responses
   const handleApiResponse = async <T = unknown,>(
-    response: Response
+    response: Response,
   ): Promise<T> => {
     let responseData;
 
@@ -587,7 +587,7 @@ export default function UserManagement() {
       responseData = await response.json();
     } catch (e) {
       throw new Error(
-        `Server error (${response.status}): Unable to parse response`
+        `Server error (${response.status}): Unable to parse response`,
       );
     }
 
@@ -630,9 +630,8 @@ export default function UserManagement() {
         body: JSON.stringify(sanitizedData),
       });
 
-      const responseData = await handleApiResponse<CreateUserResponse>(
-        response
-      );
+      const responseData =
+        await handleApiResponse<CreateUserResponse>(response);
       const newUser = responseData;
 
       setUsers((prev) => [...prev, newUser.user]);
@@ -702,15 +701,14 @@ export default function UserManagement() {
         body: JSON.stringify(sanitizedData),
       });
 
-      const responseData = await handleApiResponse<UpdateUserResponse>(
-        response
-      );
+      const responseData =
+        await handleApiResponse<UpdateUserResponse>(response);
       const updatedUser = responseData;
 
       setUsers((prev) =>
         prev.map((user) =>
-          user.id === selectedUser.id ? updatedUser.user : user
-        )
+          user.id === selectedUser.id ? updatedUser.user : user,
+        ),
       );
 
       toast.success("User updated successfully!", { id: loadingToast });
@@ -752,7 +750,7 @@ export default function UserManagement() {
           });
           toast.error(
             `Cannot delete user: ${errorData.totalDependencies} dependencies found`,
-            { id: loadingToast, duration: 8000 }
+            { id: loadingToast, duration: 8000 },
           );
           return;
         }
@@ -802,7 +800,7 @@ export default function UserManagement() {
   // Toggle user status with enhanced error handling
   const toggleUserStatus = async (user: User) => {
     const loadingToast = toast.loading(
-      `${user.isActive ? "Deactivating" : "Activating"} user...`
+      `${user.isActive ? "Deactivating" : "Activating"} user...`,
     );
 
     try {
@@ -814,20 +812,20 @@ export default function UserManagement() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ isActive: !user.isActive }),
-        }
+        },
       );
 
       await handleApiResponse(response);
 
       setUsers((prev) =>
         prev.map((u) =>
-          u.id === user.id ? { ...u, isActive: !u.isActive } : u
-        )
+          u.id === user.id ? { ...u, isActive: !u.isActive } : u,
+        ),
       );
 
       toast.success(
         `User ${!user.isActive ? "activated" : "deactivated"} successfully!`,
-        { id: loadingToast }
+        { id: loadingToast },
       );
     } catch (error) {
       console.error("Error toggling user status:", error);
@@ -851,7 +849,7 @@ export default function UserManagement() {
 
       toast.success(
         `Temporary admin created!\nEmail: ${data.email}\nPassword: ${data.password}`,
-        { id: loadingToast, duration: 10000 }
+        { id: loadingToast, duration: 10000 },
       );
 
       setUsers((prev) => [...prev, data.user]);
@@ -1119,8 +1117,8 @@ export default function UserManagement() {
                                   {user.level === 0
                                     ? "Highest"
                                     : user.level === 6
-                                    ? "Lowest"
-                                    : `Priority ${user.level}`}
+                                      ? "Lowest"
+                                      : `Priority ${user.level}`}
                                 </span>
                               )}
                           </div>
@@ -1147,7 +1145,7 @@ export default function UserManagement() {
                             <span className="text-sm truncate">
                               {user.lastLoginAt
                                 ? new Date(
-                                    user.lastLoginAt
+                                    user.lastLoginAt,
                                   ).toLocaleDateString()
                                 : "Never"}
                             </span>
@@ -1230,7 +1228,7 @@ export default function UserManagement() {
 
       {/* Create User Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent className="w-[95vw] max-w-7xl sm:max-w-7xl h-[90vh] flex flex-col">
+        <DialogContent className="w-[95vw] max-w-3xl h-[90vh] flex flex-col">
           <DialogHeader className="flex-shrink-0">
             <DialogTitle>Create New User</DialogTitle>
             <DialogDescription>
@@ -1401,15 +1399,15 @@ export default function UserManagement() {
                                       {levelNum === 0
                                         ? "Highest"
                                         : levelNum === 7
-                                        ? "Dealing Hands"
-                                        : levelNum === 8
-                                        ? "Support Staff"
-                                        : `Priority ${levelNum}`}
+                                          ? "Dealing Hands"
+                                          : levelNum === 8
+                                            ? "Support Staff"
+                                            : `Priority ${levelNum}`}
                                       )
                                     </div>
                                     {roles
                                       .filter(
-                                        (role) => role !== UserRole.FRONT_DESK
+                                        (role) => role !== UserRole.FRONT_DESK,
                                       )
                                       .map((role) => {
                                         const mapping = getRoleMapping(role);
@@ -1432,7 +1430,7 @@ export default function UserManagement() {
                                       })}
                                   </div>
                                 );
-                              }
+                              },
                             )}
                           </SelectContent>
                         </Select>
@@ -1487,7 +1485,7 @@ export default function UserManagement() {
                               field.onChange(
                                 e.target.value
                                   ? parseInt(e.target.value)
-                                  : undefined
+                                  : undefined,
                               )
                             }
                             className={
@@ -1704,7 +1702,7 @@ export default function UserManagement() {
           }
         }}
       >
-        <DialogContent className="w-[95vw] max-w-7xl sm:max-w-7xl h-[90vh] flex flex-col">
+        <DialogContent className="w-[95vw] max-w-3xl h-[90vh] flex flex-col">
           <DialogHeader className="flex-shrink-0">
             <DialogTitle>Edit User</DialogTitle>
             <DialogDescription>
@@ -1867,15 +1865,15 @@ export default function UserManagement() {
                                       {levelNum === 0
                                         ? "Highest"
                                         : levelNum === 7
-                                        ? "Dealing Hands"
-                                        : levelNum === 8
-                                        ? "Support Staff"
-                                        : `Priority ${levelNum}`}
+                                          ? "Dealing Hands"
+                                          : levelNum === 8
+                                            ? "Support Staff"
+                                            : `Priority ${levelNum}`}
                                       )
                                     </div>
                                     {roles
                                       .filter(
-                                        (role) => role !== UserRole.FRONT_DESK
+                                        (role) => role !== UserRole.FRONT_DESK,
                                       )
                                       .map((role) => {
                                         const mapping = getRoleMapping(role);
@@ -1898,7 +1896,7 @@ export default function UserManagement() {
                                       })}
                                   </div>
                                 );
-                              }
+                              },
                             )}
                           </SelectContent>
                         </Select>
@@ -1954,7 +1952,7 @@ export default function UserManagement() {
                               field.onChange(
                                 e.target.value
                                   ? parseInt(e.target.value)
-                                  : undefined
+                                  : undefined,
                               )
                             }
                           />

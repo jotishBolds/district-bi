@@ -213,7 +213,7 @@ export default function FrontdeskDashboard() {
   const itemsPerPage = 10;
 
   const fetchFrontdeskAssignments = async (
-    availableOfficersForRef?: Officer[]
+    availableOfficersForRef?: Officer[],
   ) => {
     try {
       const response = await fetch("/api/frontdesk/assignments");
@@ -226,7 +226,7 @@ export default function FrontdeskDashboard() {
       // Find the assigned officer with the highest priority (lowest level number)
       const specificAssignments = (assignmentData.assignments || []).filter(
         (assignment: FrontdeskAssignment) =>
-          assignment.officerId !== null && assignment.officer
+          assignment.officerId !== null && assignment.officer,
       );
 
       if (specificAssignments.length > 0) {
@@ -242,29 +242,29 @@ export default function FrontdeskDashboard() {
               const matchingOfficer = availableOfficersForRef.find(
                 (officer: Officer) =>
                   officer.id === assignment.officerId ||
-                  officer.fullName === assignment.officer?.fullName
+                  officer.fullName === assignment.officer?.fullName,
               );
               if (matchingOfficer) {
                 console.log(
                   `🔧 Fixed missing role for ${assignment.officer?.fullName}: ${
                     matchingOfficer.role
-                  } (L${getLevelPriority(matchingOfficer.role)})`
+                  } (L${getLevelPriority(matchingOfficer.role)})`,
                 );
                 return getLevelPriority(matchingOfficer.role);
               }
               console.warn(
                 `⚠️ Could not find role for assignment:`,
-                assignment
+                assignment,
               );
               return 0; // Default to highest level if not found
             } else {
               console.warn(
                 `⚠️ No officers available for role lookup:`,
-                assignment
+                assignment,
               );
               return 0;
             }
-          }
+          },
         );
 
         const highestPriorityLevel = Math.min(...levels); // Lowest number = highest priority
@@ -274,7 +274,7 @@ export default function FrontdeskDashboard() {
             const matchingOfficer = availableOfficersForRef?.find(
               (officer: Officer) =>
                 officer.id === a.officerId ||
-                officer.fullName === a.officer?.fullName
+                officer.fullName === a.officer?.fullName,
             );
             return {
               officer: a.officer?.fullName,
@@ -282,8 +282,8 @@ export default function FrontdeskDashboard() {
               level: a.officer?.role
                 ? getLevelPriority(a.officer.role)
                 : matchingOfficer
-                ? getLevelPriority(matchingOfficer.role)
-                : 0,
+                  ? getLevelPriority(matchingOfficer.role)
+                  : 0,
             };
           }),
           highestPriorityLevel,
@@ -304,7 +304,7 @@ export default function FrontdeskDashboard() {
     search?: string,
     page?: number,
     limit?: number,
-    category?: string
+    category?: string,
   ) => {
     try {
       setLoading(true);
@@ -327,7 +327,7 @@ export default function FrontdeskDashboard() {
         params.append("serviceCategory", category);
 
       const response = await fetch(
-        `/api/frontdesk/applications?${params.toString()}`
+        `/api/frontdesk/applications?${params.toString()}`,
       );
       if (!response.ok) throw new Error("Failed to fetch applications");
       const applicationData = await response.json();
@@ -398,7 +398,7 @@ export default function FrontdeskDashboard() {
         fullName: o.fullName,
         role: o.role,
         level: o.level,
-      }))
+      })),
     );
 
     let assignableOfficers;
@@ -413,7 +413,7 @@ export default function FrontdeskDashboard() {
         // Find specific assignments (exclude null officer assignments)
         const specificAssignments = frontdeskAssignments.filter(
           (assignment: FrontdeskAssignment) =>
-            assignment.officerId !== null && assignment.officer
+            assignment.officerId !== null && assignment.officer,
         );
 
         if (specificAssignments.length > 0) {
@@ -424,12 +424,12 @@ export default function FrontdeskDashboard() {
               const assignedOfficer = officersWithLevels.find(
                 (officer) =>
                   officer.id === assignment.officerId ||
-                  officer.fullName === assignment.officer?.fullName
+                  officer.fullName === assignment.officer?.fullName,
               );
 
               if (assignedOfficer) {
                 console.log(
-                  `✅ Assignment: ${assignment.officer?.fullName} -> Level ${assignedOfficer.level}`
+                  `✅ Assignment: ${assignment.officer?.fullName} -> Level ${assignedOfficer.level}`,
                 );
                 return assignedOfficer.level;
               }
@@ -439,10 +439,10 @@ export default function FrontdeskDashboard() {
                 ? getLevelPriority(assignment.officer.role)
                 : 7;
               console.log(
-                `⚠️ Assignment fallback: ${assignment.officer?.fullName} -> Level ${roleLevel} (from role)`
+                `⚠️ Assignment fallback: ${assignment.officer?.fullName} -> Level ${roleLevel} (from role)`,
               );
               return roleLevel;
-            }
+            },
           );
 
           // Find the highest authority level (lowest number) among assigned officers
@@ -463,7 +463,7 @@ export default function FrontdeskDashboard() {
             console.log(
               `🎯 Filter: Frontdesk(assigned to L${highestAuthorityLevel}) -> ${
                 officer.fullName
-              }(L${officer.level}): ${canAssign ? "✅ ALLOWED" : "❌ BLOCKED"}`
+              }(L${officer.level}): ${canAssign ? "✅ ALLOWED" : "❌ BLOCKED"}`,
             );
             return canAssign;
           });
@@ -473,7 +473,7 @@ export default function FrontdeskDashboard() {
             filteredOfficers: assignableOfficers.length,
             filterRule: `Level ${highestAuthorityLevel} and below only`,
             allowedLevels: Array.from(
-              new Set(assignableOfficers.map((o) => o.level))
+              new Set(assignableOfficers.map((o) => o.level)),
             ).sort(),
           });
         } else {
@@ -483,7 +483,7 @@ export default function FrontdeskDashboard() {
             return roleMapping?.userType === "Officer";
           });
           console.log(
-            "🔍 Frontdesk with general assignments - can forward to all officers"
+            "🔍 Frontdesk with general assignments - can forward to all officers",
           );
         }
       } else {
@@ -493,7 +493,7 @@ export default function FrontdeskDashboard() {
           return roleMapping?.userType === "Officer";
         });
         console.log(
-          "🔍 General Frontdesk (no assignments) - can forward to all officers"
+          "🔍 General Frontdesk (no assignments) - can forward to all officers",
         );
       }
     } else {
@@ -502,7 +502,7 @@ export default function FrontdeskDashboard() {
       assignableOfficers = officersWithLevels.filter((officer) => {
         const canAssign = canAssignTo(currentUserRole, officer.role);
         console.log(
-          `🎯 Officer canAssignTo(${currentUserRole}, ${officer.role}): ${canAssign} (levels: ${currentUserLevel} -> ${officer.level})`
+          `🎯 Officer canAssignTo(${currentUserRole}, ${officer.role}): ${canAssign} (levels: ${currentUserLevel} -> ${officer.level})`,
         );
         return canAssign;
       });
@@ -520,7 +520,7 @@ export default function FrontdeskDashboard() {
         fullName: o.fullName,
         role: o.role,
         level: o.level,
-      }))
+      })),
     );
 
     // Sort by level (higher priority officers first)
@@ -541,7 +541,7 @@ export default function FrontdeskDashboard() {
 
   const paginateApplications = (
     applications: Application[],
-    tabKey: string
+    tabKey: string,
   ) => {
     const page = currentPage[tabKey] || 1;
     const startIndex = (page - 1) * itemsPerPage;
@@ -612,12 +612,12 @@ export default function FrontdeskDashboard() {
     };
 
     return (
-      <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
+      <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-2 mt-6 pt-4 border-t border-gray-200">
         <p className="text-sm text-gray-600">
           Showing{" "}
           {Math.min(
             (currentPageNum - 1) * itemsPerPage + 1,
-            filteredItemsCount
+            filteredItemsCount,
           )}{" "}
           to {Math.min(currentPageNum * itemsPerPage, filteredItemsCount)} of{" "}
           {filteredItemsCount} results
@@ -740,7 +740,7 @@ export default function FrontdeskDashboard() {
 
   const handleCategoryEdit = (
     applicationId: string,
-    currentCategory: { id: string; name: string; color?: string }
+    currentCategory: { id: string; name: string; color?: string },
   ) => {
     setEditingApplicationId(applicationId);
     setEditingCurrentCategory(currentCategory);
@@ -816,7 +816,7 @@ export default function FrontdeskDashboard() {
             <div className="flex items-center gap-2 flex-wrap">
               <Badge
                 className={`${getStatusColor(
-                  application.status
+                  application.status,
                 )} border font-medium`}
               >
                 {application.status.replace("_", " ")}
@@ -894,7 +894,7 @@ export default function FrontdeskDashboard() {
               <Calendar className="w-4 h-4 text-blue-500" />
               <span className="font-medium">
                 {new Date(
-                  application.submittedAt || application.createdAt
+                  application.submittedAt || application.createdAt,
                 ).toLocaleDateString()}
               </span>
             </div>
@@ -1050,7 +1050,7 @@ export default function FrontdeskDashboard() {
                         new Date(),
                         {
                           addSuffix: true,
-                        }
+                        },
                       )}
                     </p>
                   </div>
@@ -1169,7 +1169,7 @@ export default function FrontdeskDashboard() {
                   {formatDistance(
                     new Date(latestForwarding.createdAt),
                     new Date(),
-                    { addSuffix: true }
+                    { addSuffix: true },
                   )}
                 </div>
               )}
@@ -1328,7 +1328,7 @@ export default function FrontdeskDashboard() {
       </div> */}
 
       <Tabs defaultValue="active" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5 h-auto p-1 bg-gray-100 rounded-lg">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 h-auto p-1 bg-gray-100 rounded-lg">
           <TabsTrigger
             value="active"
             className="data-[state=active]:bg-white data-[state=active]:shadow-sm py-3 px-2 text-xs sm:text-sm font-medium"
@@ -1503,7 +1503,7 @@ export default function FrontdeskDashboard() {
                             ? "All Categories"
                             : serviceCategories.find(
                                 (category) =>
-                                  category.id === selectedCategoryFilter
+                                  category.id === selectedCategoryFilter,
                               )?.name || "All Categories"}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
@@ -1529,7 +1529,7 @@ export default function FrontdeskDashboard() {
                                     "mr-2 h-4 w-4",
                                     selectedCategoryFilter === "all"
                                       ? "opacity-100"
-                                      : "opacity-0"
+                                      : "opacity-0",
                                   )}
                                 />
                                 All Categories
@@ -1542,7 +1542,7 @@ export default function FrontdeskDashboard() {
                                     setSelectedCategoryFilter(
                                       selectedCategoryFilter === category.id
                                         ? "all"
-                                        : category.id
+                                        : category.id,
                                     );
                                     setCategoryOpen(false);
                                   }}
@@ -1552,7 +1552,7 @@ export default function FrontdeskDashboard() {
                                       "mr-2 h-4 w-4",
                                       selectedCategoryFilter === category.id
                                         ? "opacity-100"
-                                        : "opacity-0"
+                                        : "opacity-0",
                                     )}
                                   />
                                   <div className="flex items-center gap-2">
@@ -1613,7 +1613,7 @@ export default function FrontdeskDashboard() {
                 <div className="space-y-4">
                   {paginateApplications(
                     filterApplicationsByCategory(data.activeApplications),
-                    "active"
+                    "active",
                   ).map((app) => (
                     <ApplicationCard
                       key={app.id}
@@ -1663,7 +1663,7 @@ export default function FrontdeskDashboard() {
                 <div className="space-y-4">
                   {paginateApplications(
                     filterApplicationsByCategory(data.selfForwardedByMe),
-                    "selfForward"
+                    "selfForward",
                   ).map((app) => (
                     <ApplicationCard
                       key={app.id}
@@ -1713,7 +1713,7 @@ export default function FrontdeskDashboard() {
                 <div className="space-y-4">
                   {paginateApplications(
                     filterApplicationsByCategory(data.forwardedOutByMe),
-                    "forwardedOut"
+                    "forwardedOut",
                   ).map((app: Application) => (
                     <ForwardedHistoryCard
                       key={app.id}
@@ -1762,7 +1762,7 @@ export default function FrontdeskDashboard() {
                 <div className="space-y-4">
                   {paginateApplications(
                     filterApplicationsByCategory(data.receivedByMe),
-                    "received"
+                    "received",
                   ).map((app: Application) => (
                     <ForwardedHistoryCard
                       key={app.id}
@@ -1811,9 +1811,9 @@ export default function FrontdeskDashboard() {
                 <div className="space-y-4">
                   {paginateApplications(
                     filterApplicationsByCategory(
-                      data?.completedApplications || []
+                      data?.completedApplications || [],
                     ),
-                    "completed"
+                    "completed",
                   ).map((app: Application) => (
                     <ApplicationCard
                       key={app.id}
@@ -1827,7 +1827,7 @@ export default function FrontdeskDashboard() {
                   totalItems={data?.completedApplications?.length || 0}
                   filteredItemsCount={
                     filterApplicationsByCategory(
-                      data?.completedApplications || []
+                      data?.completedApplications || [],
                     ).length
                   }
                 />
@@ -1906,7 +1906,7 @@ export default function FrontdeskDashboard() {
                         {selectedOfficer &&
                           (() => {
                             const officer = filteredOfficers.find(
-                              (o) => o.id === selectedOfficer
+                              (o) => o.id === selectedOfficer,
                             );
                             return officer ? (
                               <span className="truncate">
@@ -1922,7 +1922,7 @@ export default function FrontdeskDashboard() {
                       {filteredOfficers
                         ?.filter(
                           (officer) =>
-                            officer.id !== forwardingApp?.currentHolder?.id
+                            officer.id !== forwardingApp?.currentHolder?.id,
                         )
                         .map((officer) => {
                           const roleMapping = getRoleMapping(officer.role);

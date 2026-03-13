@@ -90,25 +90,105 @@ interface Section {
   name: string;
 }
 
-const statusConfig: Record<string, { color: string; label: string }> = {
-  UNSEEN: { color: "gray", label: "Unseen" },
-  SEEN: { color: "blue", label: "Seen" },
-  ACKNOWLEDGED: { color: "blue", label: "Acknowledged" },
-  IN_PROGRESS: { color: "yellow", label: "In Progress" },
-  PENDING_INFORMATION: { color: "orange", label: "Pending Info" },
-  ESCALATED: { color: "purple", label: "Escalated" },
-  AWAITING_ESCALATION: { color: "orange", label: "Awaiting Escalation" },
-  RESOLVED: { color: "green", label: "Resolved" },
-  CLOSED: { color: "green", label: "Closed" },
-  CLOSED_NO_RESPONSE: { color: "red", label: "Closed - No Response" },
-  APPEALED: { color: "purple", label: "Appealed" },
-  APPEAL_FILED: { color: "purple", label: "Appeal Filed" },
-  OVERDUE: { color: "red", label: "Overdue" },
+const statusConfig: Record<
+  string,
+  { color: string; label: string; textClass: string; borderClass: string }
+> = {
+  UNSEEN: {
+    color: "gray",
+    label: "Unseen",
+    textClass: "text-gray-600",
+    borderClass: "border-gray-300",
+  },
+  SEEN: {
+    color: "blue",
+    label: "Seen",
+    textClass: "text-blue-600",
+    borderClass: "border-blue-300",
+  },
+  ACKNOWLEDGED: {
+    color: "blue",
+    label: "Acknowledged",
+    textClass: "text-blue-600",
+    borderClass: "border-blue-300",
+  },
+  IN_PROGRESS: {
+    color: "yellow",
+    label: "In Progress",
+    textClass: "text-yellow-600",
+    borderClass: "border-yellow-300",
+  },
+  PENDING_INFORMATION: {
+    color: "orange",
+    label: "Pending Info",
+    textClass: "text-orange-600",
+    borderClass: "border-orange-300",
+  },
+  ESCALATED: {
+    color: "purple",
+    label: "Escalated",
+    textClass: "text-purple-600",
+    borderClass: "border-purple-300",
+  },
+  AWAITING_ESCALATION: {
+    color: "orange",
+    label: "Awaiting Escalation",
+    textClass: "text-orange-600",
+    borderClass: "border-orange-300",
+  },
+  RESOLVED: {
+    color: "green",
+    label: "Resolved",
+    textClass: "text-green-600",
+    borderClass: "border-green-300",
+  },
+  CLOSED: {
+    color: "green",
+    label: "Closed",
+    textClass: "text-green-600",
+    borderClass: "border-green-300",
+  },
+  CLOSED_NO_RESPONSE: {
+    color: "red",
+    label: "Closed - No Response",
+    textClass: "text-red-600",
+    borderClass: "border-red-300",
+  },
+  APPEALED: {
+    color: "purple",
+    label: "Appealed",
+    textClass: "text-purple-600",
+    borderClass: "border-purple-300",
+  },
+  APPEAL_FILED: {
+    color: "purple",
+    label: "Appeal Filed",
+    textClass: "text-purple-600",
+    borderClass: "border-purple-300",
+  },
+  OVERDUE: {
+    color: "red",
+    label: "Overdue",
+    textClass: "text-red-600",
+    borderClass: "border-red-300",
+  },
 };
 
 const queryTypeConfig = {
-  FEEDBACK: { icon: MessageSquare, color: "green", label: "Feedback" },
-  GRIEVANCE: { icon: AlertCircle, color: "red", label: "Grievance" },
+  FEEDBACK: {
+    icon: MessageSquare,
+    color: "green",
+    label: "Feedback",
+    bgClass: "bg-green-100",
+    textClass: "text-green-600",
+  },
+  GRIEVANCE: {
+    icon: AlertCircle,
+    color: "red",
+    label: "Grievance",
+    bgClass: "bg-red-100",
+    textClass: "text-red-600",
+  },
 };
 
 export default function OfficerSamadhanDashboard() {
@@ -218,7 +298,7 @@ export default function OfficerSamadhanDashboard() {
 
       {/* Statistics Cards */}
       {statistics && (
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -310,7 +390,7 @@ export default function OfficerSamadhanDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <div
                 className="p-4 bg-red-100 rounded-lg cursor-pointer hover:bg-red-200 transition-colors"
                 onClick={() => setCurrentView("sla-breached")}
@@ -428,7 +508,7 @@ export default function OfficerSamadhanDashboard() {
           )
         }
       >
-        <TabsList className="flex-wrap h-auto gap-1">
+        <TabsList className="overflow-x-auto whitespace-nowrap flex-nowrap h-auto gap-1 w-full justify-start">
           <TabsTrigger value="my">My Tickets</TabsTrigger>
           <TabsTrigger value="section">Section Tickets</TabsTrigger>
           {isDCOrAdmin && <TabsTrigger value="all">All Tickets</TabsTrigger>}
@@ -496,7 +576,7 @@ export default function OfficerSamadhanDashboard() {
             </div>
             {isHigherAuthority && sections.length > 0 && (
               <Select value={filterSection} onValueChange={setFilterSection}>
-                <SelectTrigger className="w-[200px]">
+                <SelectTrigger className="w-full sm:w-[200px]">
                   <SelectValue placeholder="Section" />
                 </SelectTrigger>
                 <SelectContent>
@@ -510,7 +590,7 @@ export default function OfficerSamadhanDashboard() {
               </Select>
             )}
             <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-[160px]">
+              <SelectTrigger className="w-full sm:w-[160px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -527,7 +607,7 @@ export default function OfficerSamadhanDashboard() {
               </SelectContent>
             </Select>
             <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-[160px]">
+              <SelectTrigger className="w-full sm:w-[160px]">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
@@ -583,14 +663,14 @@ export default function OfficerSamadhanDashboard() {
                       router.push(`/dashboard/samadhan/${ticket.id}`)
                     }
                   >
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between gap-4">
+                    <CardContent className="p-3 sm:p-4">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
                         <div className="flex items-start space-x-4 flex-1 min-w-0">
                           <div
-                            className={`w-10 h-10 bg-${queryConfig.color}-100 rounded-lg flex items-center justify-center flex-shrink-0`}
+                            className={`w-10 h-10 ${queryConfig.bgClass} rounded-lg flex items-center justify-center flex-shrink-0`}
                           >
                             <QueryIcon
-                              className={`h-5 w-5 text-${queryConfig.color}-600`}
+                              className={`h-5 w-5 ${queryConfig.textClass}`}
                             />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -734,7 +814,7 @@ export default function OfficerSamadhanDashboard() {
                             className={
                               ticket.queryType === "FEEDBACK"
                                 ? "text-green-600 border-green-300"
-                                : `text-${status.color}-600 border-${status.color}-300`
+                                : `${status.textClass} ${status.borderClass}`
                             }
                           >
                             {ticket.queryType === "FEEDBACK"

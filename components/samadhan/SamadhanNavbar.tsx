@@ -116,7 +116,7 @@ export default function SamadhanNavbar() {
             <span>District Administrative Centre, Gangtok</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-green-200">Toll Free: 1800-XXX-XXXX</span>
+            <span className="text-green-200">Contact: 03592 284444</span>
           </div>
         </div>
       </div>
@@ -349,12 +349,14 @@ export default function SamadhanNavbar() {
             ) : (
               <>
                 <div className="border-t border-gray-100 my-2"></div>
-                <Link href="/samadhan/login" onClick={toggleMobileMenu}>
-                  <Button className="w-full mx-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-xl">
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Login / Register
-                  </Button>
-                </Link>
+                <div className="px-4">
+                  <Link href="/samadhan/login" onClick={toggleMobileMenu}>
+                    <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-xl">
+                      <LogIn className="w-4 h-4 mr-2" />
+                      Login / Register
+                    </Button>
+                  </Link>
+                </div>
               </>
             )}
           </div>

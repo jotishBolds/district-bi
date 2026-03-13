@@ -481,7 +481,7 @@ export default function CitizenDashboardPage() {
                   onValueChange={setActiveTab}
                   className="w-full lg:w-auto"
                 >
-                  <TabsList className="bg-gray-100 p-1 h-auto flex-wrap">
+                  <TabsList className="bg-gray-100 p-1 h-auto flex-wrap overflow-x-auto">
                     <TabsTrigger
                       value="all"
                       className="data-[state=active]:bg-white px-4 py-2"
@@ -530,7 +530,7 @@ export default function CitizenDashboardPage() {
                   </div>
                   <div className="flex gap-2">
                     <Select value={filterType} onValueChange={setFilterType}>
-                      <SelectTrigger className="w-[130px] bg-gray-50 border-gray-200">
+                      <SelectTrigger className="w-full sm:w-[130px] bg-gray-50 border-gray-200">
                         <SelectValue placeholder="Type" />
                       </SelectTrigger>
                       <SelectContent>
@@ -543,7 +543,7 @@ export default function CitizenDashboardPage() {
                       value={filterStatus}
                       onValueChange={setFilterStatus}
                     >
-                      <SelectTrigger className="w-[130px] bg-gray-50 border-gray-200">
+                      <SelectTrigger className="w-full sm:w-[130px] bg-gray-50 border-gray-200">
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
                       <SelectContent>

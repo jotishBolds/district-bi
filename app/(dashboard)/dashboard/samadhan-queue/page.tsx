@@ -313,7 +313,7 @@ export default function SamadhanQueuePage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-3 sm:p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -438,9 +438,15 @@ export default function SamadhanQueuePage() {
                   <TableRow>
                     <TableHead>Reference ID</TableHead>
                     <TableHead>Type</TableHead>
-                    <TableHead>Subject</TableHead>
-                    <TableHead>Section</TableHead>
-                    <TableHead>Submitted</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Subject
+                    </TableHead>
+                    <TableHead className="hidden sm:table-cell">
+                      Section
+                    </TableHead>
+                    <TableHead className="hidden lg:table-cell">
+                      Submitted
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -453,16 +459,16 @@ export default function SamadhanQueuePage() {
                         </code>
                       </TableCell>
                       <TableCell>{getTypeBadge(ticket.queryType)}</TableCell>
-                      <TableCell className="max-w-[200px] truncate">
+                      <TableCell className="hidden md:table-cell max-w-[200px] truncate">
                         {ticket.subject || ticket.description.slice(0, 50)}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden sm:table-cell">
                         <div className="flex items-center gap-1">
                           <Building2 className="h-4 w-4 text-gray-400" />
                           {ticket.section.name}
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden lg:table-cell">
                         <div className="flex items-center gap-1 text-sm text-gray-500">
                           <Clock className="h-4 w-4" />
                           {formatDistanceToNow(new Date(ticket.createdAt), {

@@ -167,42 +167,136 @@ interface TicketDetail {
 
 const statusConfig: Record<
   string,
-  { color: string; label: string; icon: React.ElementType }
+  {
+    color: string;
+    label: string;
+    icon: React.ElementType;
+    textClass: string;
+    borderClass: string;
+    bgClass: string;
+  }
 > = {
-  UNSEEN: { color: "gray", label: "Unseen", icon: Clock },
-  SEEN: { color: "blue", label: "Seen", icon: FileText },
-  ACKNOWLEDGED: { color: "blue", label: "Acknowledged", icon: CheckCircle },
-  IN_PROGRESS: { color: "yellow", label: "In Progress", icon: Clock },
+  UNSEEN: {
+    color: "gray",
+    label: "Unseen",
+    icon: Clock,
+    textClass: "text-gray-600",
+    borderClass: "border-gray-300",
+    bgClass: "bg-gray-100",
+  },
+  SEEN: {
+    color: "blue",
+    label: "Seen",
+    icon: FileText,
+    textClass: "text-blue-600",
+    borderClass: "border-blue-300",
+    bgClass: "bg-blue-100",
+  },
+  ACKNOWLEDGED: {
+    color: "blue",
+    label: "Acknowledged",
+    icon: CheckCircle,
+    textClass: "text-blue-600",
+    borderClass: "border-blue-300",
+    bgClass: "bg-blue-100",
+  },
+  IN_PROGRESS: {
+    color: "yellow",
+    label: "In Progress",
+    icon: Clock,
+    textClass: "text-yellow-600",
+    borderClass: "border-yellow-300",
+    bgClass: "bg-yellow-100",
+  },
   PENDING_INFORMATION: {
     color: "orange",
     label: "Pending Information",
     icon: AlertCircle,
+    textClass: "text-orange-600",
+    borderClass: "border-orange-300",
+    bgClass: "bg-orange-100",
   },
   AWAITING_ESCALATION: {
     color: "orange",
     label: "Awaiting Escalation",
     icon: AlertTriangle,
+    textClass: "text-orange-600",
+    borderClass: "border-orange-300",
+    bgClass: "bg-orange-100",
   },
-  ESCALATED: { color: "purple", label: "Escalated", icon: AlertTriangle },
-  RESOLVED: { color: "green", label: "Resolved", icon: CheckCircle },
-  CLOSED: { color: "green", label: "Closed", icon: CheckCircle },
+  ESCALATED: {
+    color: "purple",
+    label: "Escalated",
+    icon: AlertTriangle,
+    textClass: "text-purple-600",
+    borderClass: "border-purple-300",
+    bgClass: "bg-purple-100",
+  },
+  RESOLVED: {
+    color: "green",
+    label: "Resolved",
+    icon: CheckCircle,
+    textClass: "text-green-600",
+    borderClass: "border-green-300",
+    bgClass: "bg-green-100",
+  },
+  CLOSED: {
+    color: "green",
+    label: "Closed",
+    icon: CheckCircle,
+    textClass: "text-green-600",
+    borderClass: "border-green-300",
+    bgClass: "bg-green-100",
+  },
   CLOSED_NO_RESPONSE: {
     color: "red",
     label: "Closed - No Response",
     icon: XCircle,
+    textClass: "text-red-600",
+    borderClass: "border-red-300",
+    bgClass: "bg-red-100",
   },
   APPEALED: {
     color: "purple",
     label: "Appealed - Under Higher Authority Review",
     icon: AlertTriangle,
+    textClass: "text-purple-600",
+    borderClass: "border-purple-300",
+    bgClass: "bg-purple-100",
   },
-  APPEAL_FILED: { color: "purple", label: "Appeal Filed", icon: AlertTriangle },
-  OVERDUE: { color: "red", label: "Overdue", icon: AlertTriangle },
+  APPEAL_FILED: {
+    color: "purple",
+    label: "Appeal Filed",
+    icon: AlertTriangle,
+    textClass: "text-purple-600",
+    borderClass: "border-purple-300",
+    bgClass: "bg-purple-100",
+  },
+  OVERDUE: {
+    color: "red",
+    label: "Overdue",
+    icon: AlertTriangle,
+    textClass: "text-red-600",
+    borderClass: "border-red-300",
+    bgClass: "bg-red-100",
+  },
 };
 
 const queryTypeConfig = {
-  FEEDBACK: { icon: MessageSquare, color: "green", label: "Feedback" },
-  GRIEVANCE: { icon: AlertCircle, color: "red", label: "Grievance" },
+  FEEDBACK: {
+    icon: MessageSquare,
+    color: "green",
+    label: "Feedback",
+    textClass: "text-green-600",
+    bgClass: "bg-green-100",
+  },
+  GRIEVANCE: {
+    icon: AlertCircle,
+    color: "red",
+    label: "Grievance",
+    textClass: "text-red-600",
+    bgClass: "bg-red-100",
+  },
 };
 
 export default function OfficerTicketDetailPage({
@@ -383,20 +477,19 @@ export default function OfficerTicketDetailPage({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-start gap-4">
           <Link href="/dashboard/samadhan">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="flex-shrink-0">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold">{ticket.referenceId}</h1>
-              <Badge
-                variant="outline"
-                className={`text-${queryConfig.color}-600`}
-              >
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-xl sm:text-2xl font-bold break-all">
+                {ticket.referenceId}
+              </h1>
+              <Badge variant="outline" className={queryConfig.textClass}>
                 {queryConfig.label}
               </Badge>
               <Badge
@@ -404,7 +497,7 @@ export default function OfficerTicketDetailPage({
                 className={
                   ticket.queryType === "FEEDBACK"
                     ? "text-green-600 border-green-300"
-                    : `text-${status.color}-600 border-${status.color}-300`
+                    : `${status.textClass} ${status.borderClass}`
                 }
               >
                 {ticket.queryType === "FEEDBACK" ? "Submitted" : status.label}
@@ -414,14 +507,14 @@ export default function OfficerTicketDetailPage({
                   <Badge variant="destructive">SLA Breached</Badge>
                 )}
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 mt-1">
               Submitted {format(new Date(ticket.timestamps.createdAt), "PPp")}
             </p>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap ml-14 sm:ml-0">
           {ticket.queryType !== "FEEDBACK" &&
             ticket.permissions.canEdit &&
             ticket.status !== "UNSEEN" && (
@@ -1120,10 +1213,10 @@ export default function OfficerTicketDetailPage({
                           className="flex items-start space-x-3"
                         >
                           <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100 flex-shrink-0`}
+                            className={`w-8 h-8 rounded-full flex items-center justify-center ${historyStatus.bgClass} flex-shrink-0`}
                           >
                             <HistoryIcon
-                              className={`h-4 w-4 text-${historyStatus.color}-600`}
+                              className={`h-4 w-4 ${historyStatus.textClass}`}
                             />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -1169,10 +1262,10 @@ export default function OfficerTicketDetailPage({
                                   className="flex items-start space-x-3 opacity-80"
                                 >
                                   <div
-                                    className={`w-8 h-8 rounded-full flex items-center justify-center bg-${historyStatus.color}-100 flex-shrink-0`}
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center ${historyStatus.bgClass} flex-shrink-0`}
                                   >
                                     <HistoryIcon
-                                      className={`h-4 w-4 text-${historyStatus.color}-600`}
+                                      className={`h-4 w-4 ${historyStatus.textClass}`}
                                     />
                                   </div>
                                   <div className="flex-1 min-w-0">

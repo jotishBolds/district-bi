@@ -117,7 +117,7 @@ export default function ApplicationQueuePage() {
     QueuedApplication[]
   >([]);
   const [assignedOfficers, setAssignedOfficers] = useState<AssignedOfficer[]>(
-    []
+    [],
   );
   const [selectedApplication, setSelectedApplication] =
     useState<QueuedApplication | null>(null);
@@ -166,7 +166,7 @@ export default function ApplicationQueuePage() {
     } catch (error) {
       console.error("Error fetching queue:", error);
       toast.error(
-        error instanceof Error ? error.message : "Failed to load queue"
+        error instanceof Error ? error.message : "Failed to load queue",
       );
 
       // If user is not authorized for queue, redirect to regular dashboard
@@ -230,7 +230,7 @@ export default function ApplicationQueuePage() {
     } catch (error) {
       console.error("Error pulling application:", error);
       toast.error(
-        error instanceof Error ? error.message : "Failed to pull application"
+        error instanceof Error ? error.message : "Failed to pull application",
       );
     } finally {
       setPulling(false);
@@ -245,7 +245,7 @@ export default function ApplicationQueuePage() {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60),
     );
 
     if (diffInHours < 1) return "Just now";
@@ -301,7 +301,7 @@ export default function ApplicationQueuePage() {
         .includes(searchTerm.toLowerCase()) ||
       app.citizenPhone.includes(searchTerm) ||
       (app.citizenEmail &&
-        app.citizenEmail.toLowerCase().includes(searchTerm.toLowerCase()))
+        app.citizenEmail.toLowerCase().includes(searchTerm.toLowerCase())),
   );
 
   const clearFilters = () => {
@@ -594,107 +594,112 @@ export default function ApplicationQueuePage() {
           /* Table View */
           <Card>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>RR Number</TableHead>
-                    <TableHead>Subject</TableHead>
-                    <TableHead>Citizen</TableHead>
-                    <TableHead>Department</TableHead>
-                    <TableHead>Service Category</TableHead>
-                    <TableHead>Documents</TableHead>
-                    <TableHead>Submitted</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredApplications.map((application) => (
-                    <TableRow key={application.id} className="hover:bg-gray-50">
-                      <TableCell className="font-mono font-medium">
-                        {application.rrNumber}
-                      </TableCell>
-                      <TableCell>
-                        <div
-                          className="max-w-xs truncate"
-                          title={application.subject}
-                        >
-                          {application.subject}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">
-                            {application.citizenName}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {application.citizenPhone}
-                          </div>
-                          {application.citizenEmail && (
-                            <div className="text-sm text-gray-500">
-                              {application.citizenEmail}
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {application.department ? (
-                          <Badge
-                            variant="secondary"
-                            className="bg-blue-50 text-blue-700"
-                          >
-                            {application.department.name}
-                          </Badge>
-                        ) : (
-                          <span className="text-sm text-gray-400">
-                            Not assigned
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">
-                          {application.serviceCategory.name}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {application.documents.slice(0, 2).map((doc) => (
-                            <Badge
-                              key={doc.id}
-                              variant="default"
-                              className="text-xs"
-                            >
-                              {getDocumentTypeLabel(doc.documentType)}
-                            </Badge>
-                          ))}
-                          {application.documents.length > 2 && (
-                            <Badge variant="secondary" className="text-xs">
-                              +{application.documents.length - 2} more
-                            </Badge>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          {formatTimeAgo(application.createdAt)}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {formatDate(application.submittedAt)}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          onClick={() => handlePullApplication(application)}
-                          size="sm"
-                          className="flex items-center gap-1"
-                        >
-                          <ArrowRight className="h-3 w-3" />
-                          Pull & Assign
-                        </Button>
-                      </TableCell>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>RR Number</TableHead>
+                      <TableHead>Subject</TableHead>
+                      <TableHead>Citizen</TableHead>
+                      <TableHead>Department</TableHead>
+                      <TableHead>Service Category</TableHead>
+                      <TableHead>Documents</TableHead>
+                      <TableHead>Submitted</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredApplications.map((application) => (
+                      <TableRow
+                        key={application.id}
+                        className="hover:bg-gray-50"
+                      >
+                        <TableCell className="font-mono font-medium">
+                          {application.rrNumber}
+                        </TableCell>
+                        <TableCell>
+                          <div
+                            className="max-w-xs truncate"
+                            title={application.subject}
+                          >
+                            {application.subject}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">
+                              {application.citizenName}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {application.citizenPhone}
+                            </div>
+                            {application.citizenEmail && (
+                              <div className="text-sm text-gray-500">
+                                {application.citizenEmail}
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {application.department ? (
+                            <Badge
+                              variant="secondary"
+                              className="bg-blue-50 text-blue-700"
+                            >
+                              {application.department.name}
+                            </Badge>
+                          ) : (
+                            <span className="text-sm text-gray-400">
+                              Not assigned
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">
+                            {application.serviceCategory.name}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {application.documents.slice(0, 2).map((doc) => (
+                              <Badge
+                                key={doc.id}
+                                variant="default"
+                                className="text-xs"
+                              >
+                                {getDocumentTypeLabel(doc.documentType)}
+                              </Badge>
+                            ))}
+                            {application.documents.length > 2 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{application.documents.length - 2} more
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">
+                            {formatTimeAgo(application.createdAt)}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {formatDate(application.submittedAt)}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            onClick={() => handlePullApplication(application)}
+                            size="sm"
+                            className="flex items-center gap-1"
+                          >
+                            <ArrowRight className="h-3 w-3" />
+                            Pull & Assign
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         )}

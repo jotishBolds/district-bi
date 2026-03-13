@@ -234,7 +234,7 @@ export default function DepartmentManagement() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(values),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -261,8 +261,8 @@ export default function DepartmentManagement() {
       }
       setDepartments((prev) =>
         prev.map((dept) =>
-          dept.id === selectedDepartment.id ? updatedDepartment : dept
-        )
+          dept.id === selectedDepartment.id ? updatedDepartment : dept,
+        ),
       );
       toast.success("Department has been updated successfully.");
       setEditDialogOpen(false);
@@ -286,7 +286,7 @@ export default function DepartmentManagement() {
         `/api/admin/departments/${selectedDepartment.id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -295,7 +295,7 @@ export default function DepartmentManagement() {
       }
 
       setDepartments((prev) =>
-        prev.filter((dept) => dept.id !== selectedDepartment.id)
+        prev.filter((dept) => dept.id !== selectedDepartment.id),
       );
       toast.success("Department has been deleted successfully.");
       setDeleteDialogOpen(false);
@@ -338,13 +338,13 @@ export default function DepartmentManagement() {
         prev.map((dept) =>
           dept.id === department.id
             ? { ...dept, isActive: !dept.isActive }
-            : dept
-        )
+            : dept,
+        ),
       );
       toast.success(
         `Department has been ${
           !department.isActive ? "activated" : "deactivated"
-        } successfully.`
+        } successfully.`,
       );
     } catch (error) {
       console.error("Error toggling department status:", error);
@@ -397,7 +397,7 @@ export default function DepartmentManagement() {
             onValueChange={(value) => setStatusFilter(value)}
             defaultValue="ALL"
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>

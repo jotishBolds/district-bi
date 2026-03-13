@@ -87,7 +87,7 @@ export default function ActivityTabs({ userRole }: ActivityTabsProps) {
     const date = new Date(dateString);
     const now = new Date();
     const diffInMinutes = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60)
+      (now.getTime() - date.getTime()) / (1000 * 60),
     );
 
     if (diffInMinutes < 1) return "Just now";
@@ -196,10 +196,11 @@ export default function ActivityTabs({ userRole }: ActivityTabsProps) {
           <TabsList className="grid  grid-cols-2 m-6 mb-0 w-auto">
             <TabsTrigger
               value="activity"
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-1 sm:space-x-2"
             >
               <Activity className="h-4 w-4" />
-              <span>Recent Activity</span>
+              <span className="hidden sm:inline">Recent Activity</span>
+              <span className="sm:hidden">Activity</span>
               {data.activities.filter((a) => a.unread).length > 0 && (
                 <span className="ml-1 bg-blue-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center">
                   {data.activities.filter((a) => a.unread).length}
@@ -208,10 +209,11 @@ export default function ActivityTabs({ userRole }: ActivityTabsProps) {
             </TabsTrigger>
             <TabsTrigger
               value="notifications"
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-1 sm:space-x-2"
             >
               <Bell className="h-4 w-4" />
-              <span>Notifications</span>
+              <span className="hidden sm:inline">Notifications</span>
+              <span className="sm:hidden">Alerts</span>
               {data.notifications.filter((n) => n.unread).length > 0 && (
                 <span className="ml-1 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center">
                   {data.notifications.filter((n) => n.unread).length}

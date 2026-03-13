@@ -117,7 +117,7 @@ export default function SamadhanServiceCategoriesPage() {
 
   // Filtered services based on section selection
   const filteredServicesForForm = services.filter(
-    (s) => filterSection === "all" || s.section.id === filterSection
+    (s) => filterSection === "all" || s.section.id === filterSection,
   );
 
   useEffect(() => {
@@ -141,7 +141,7 @@ export default function SamadhanServiceCategoriesPage() {
   const fetchServices = async () => {
     try {
       const response = await fetch(
-        "/api/samadhan/services?includeInactive=true"
+        "/api/samadhan/services?includeInactive=true",
       );
       const data = await response.json();
       if (data.success) {
@@ -162,7 +162,7 @@ export default function SamadhanServiceCategoriesPage() {
       }
 
       const response = await fetch(
-        `/api/samadhan/service-categories?${params.toString()}`
+        `/api/samadhan/service-categories?${params.toString()}`,
       );
       const data = await response.json();
       if (data.success) {
@@ -240,7 +240,7 @@ export default function SamadhanServiceCategoriesPage() {
             description: formData.description.trim() || null,
             serviceId: formData.serviceId,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -269,7 +269,7 @@ export default function SamadhanServiceCategoriesPage() {
         `/api/samadhan/service-categories/${selectedCategory.id}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       const data = await response.json();
@@ -298,13 +298,13 @@ export default function SamadhanServiceCategoriesPage() {
           body: JSON.stringify({
             isActive: !category.isActive,
           }),
-        }
+        },
       );
 
       const data = await response.json();
       if (data.success) {
         toast.success(
-          `Category ${!category.isActive ? "activated" : "deactivated"}`
+          `Category ${!category.isActive ? "activated" : "deactivated"}`,
         );
         fetchCategories();
       } else {
@@ -415,7 +415,7 @@ export default function SamadhanServiceCategoriesPage() {
             </div>
 
             <Select value={filterSection} onValueChange={setFilterSection}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full sm:w-[200px]">
                 <Building2 className="h-4 w-4 mr-2" />
                 <SelectValue placeholder="Filter by section" />
               </SelectTrigger>
@@ -430,7 +430,7 @@ export default function SamadhanServiceCategoriesPage() {
             </Select>
 
             <Select value={filterService} onValueChange={setFilterService}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full sm:w-[200px]">
                 <Layers className="h-4 w-4 mr-2" />
                 <SelectValue placeholder="Filter by service" />
               </SelectTrigger>
@@ -489,9 +489,13 @@ export default function SamadhanServiceCategoriesPage() {
                   <TableRow>
                     <TableHead>Category Name</TableHead>
                     <TableHead>Service</TableHead>
-                    <TableHead>Section</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Section
+                    </TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Created</TableHead>
+                    <TableHead className="hidden sm:table-cell">
+                      Created
+                    </TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -517,7 +521,7 @@ export default function SamadhanServiceCategoriesPage() {
                           <span>{category.service.name}</span>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden md:table-cell">
                         <div className="flex items-center gap-2">
                           <Building2 className="h-4 w-4 text-blue-500" />
                           <span>{category.service.section.name}</span>
@@ -540,7 +544,7 @@ export default function SamadhanServiceCategoriesPage() {
                           {category.isActive ? "Active" : "Inactive"}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-gray-500">
+                      <TableCell className="hidden sm:table-cell text-sm text-gray-500">
                         {format(new Date(category.createdAt), "dd MMM yyyy")}
                       </TableCell>
                       <TableCell className="text-right">

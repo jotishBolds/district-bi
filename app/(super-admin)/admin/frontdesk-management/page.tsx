@@ -176,7 +176,7 @@ export default function FrontdeskManagementPage() {
       if (!response.ok) throw new Error("Failed to fetch frontdesk users");
       const data = await response.json();
       setFrontdeskUsers(
-        Array.isArray(data.frontdeskUsers) ? data.frontdeskUsers : []
+        Array.isArray(data.frontdeskUsers) ? data.frontdeskUsers : [],
       );
     } catch (error) {
       console.error("Error fetching frontdesk users:", error);
@@ -199,7 +199,9 @@ export default function FrontdeskManagementPage() {
       const availableOfficers = Array.isArray(data.officers)
         ? data.officers.filter(
             (officer: Officer) =>
-              officer.profile && officer.profile.isAvailable && officer.isActive
+              officer.profile &&
+              officer.profile.isAvailable &&
+              officer.isActive,
           )
         : [];
 
@@ -291,14 +293,14 @@ export default function FrontdeskManagementPage() {
       toast.error(
         error instanceof Error
           ? error.message
-          : "Failed to create frontdesk user"
+          : "Failed to create frontdesk user",
       );
     }
   };
 
   const handleAssignOfficer = async (
     frontdeskUserId: string,
-    officerId?: string
+    officerId?: string,
   ) => {
     try {
       const response = await fetch("/api/admin/frontdesk", {
@@ -328,7 +330,7 @@ export default function FrontdeskManagementPage() {
     } catch (error) {
       console.error("Error updating assignment:", error);
       toast.error(
-        error instanceof Error ? error.message : "Failed to update assignment"
+        error instanceof Error ? error.message : "Failed to update assignment",
       );
     }
   };
@@ -348,7 +350,7 @@ export default function FrontdeskManagementPage() {
       }
 
       toast.success(
-        `User ${!currentStatus ? "activated" : "deactivated"} successfully`
+        `User ${!currentStatus ? "activated" : "deactivated"} successfully`,
       );
       fetchFrontdeskUsers();
     } catch (error) {
@@ -425,7 +427,7 @@ export default function FrontdeskManagementPage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(updateData),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -441,7 +443,7 @@ export default function FrontdeskManagementPage() {
     } catch (error) {
       console.error("Error updating user:", error);
       toast.error(
-        error instanceof Error ? error.message : "Failed to update user"
+        error instanceof Error ? error.message : "Failed to update user",
       );
     }
   };
@@ -470,7 +472,7 @@ export default function FrontdeskManagementPage() {
           });
           toast.error(
             `Cannot delete user: ${result.totalDependencies} dependencies found`,
-            { duration: 8000 }
+            { duration: 8000 },
           );
           return;
         }
@@ -485,23 +487,25 @@ export default function FrontdeskManagementPage() {
     } catch (error) {
       console.error("Error deleting user:", error);
       toast.error(
-        error instanceof Error ? error.message : "Failed to delete user"
+        error instanceof Error ? error.message : "Failed to delete user",
       );
     }
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-8">
+    <div className="container mx-auto py-4 sm:py-8 px-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Frontdesk Management</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            Frontdesk Management
+          </h1>
+          <p className="text-gray-600 mt-2 text-sm sm:text-base">
             Manage frontdesk users and their officer assignments
           </p>
         </div>
         <Button
           onClick={() => setIsCreateDialogOpen(true)}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 w-full sm:w-auto"
         >
           <UserPlus size={16} />
           Add Frontdesk User
@@ -598,7 +602,7 @@ export default function FrontdeskManagementPage() {
                                   {assignment.officer?.fullName ||
                                     "General Frontdesk"}
                                 </Badge>
-                              )
+                              ),
                             )}
                           </div>
                         ) : (
@@ -889,7 +893,7 @@ export default function FrontdeskManagementPage() {
                         onClick={() =>
                           handleAssignOfficer(
                             selectedFrontdeskUser.id,
-                            officer.profile?.id || officer.id
+                            officer.profile?.id || officer.id,
                           )
                         }
                       >
