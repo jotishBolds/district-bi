@@ -58,6 +58,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { OTPVerificationModal } from "@/components/samadhan/OTPVerificationModal";
+import { SpeechToTextButton } from "@/components/samadhan/SpeechToTextButton";
 
 interface Section {
   id: string;
@@ -1395,10 +1396,17 @@ function TypeFormContent() {
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                  What&apos;s this about?{" "}
-                  <span className="text-red-500">*</span>
-                </Label>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-sm font-medium text-gray-700">
+                    What&apos;s this about?{" "}
+                    <span className="text-red-500">*</span>
+                  </Label>
+                  <SpeechToTextButton
+                    onTranscript={(text) =>
+                      setSubject((prev) => (prev ? prev + " " + text : text))
+                    }
+                  />
+                </div>
                 <Input
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
@@ -1411,9 +1419,18 @@ function TypeFormContent() {
                 </p>
               </div>
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                  Tell us more <span className="text-red-500">*</span>
-                </Label>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-sm font-medium text-gray-700">
+                    Tell us more <span className="text-red-500">*</span>
+                  </Label>
+                  <SpeechToTextButton
+                    onTranscript={(text) =>
+                      setDescription((prev) =>
+                        prev ? prev + " " + text : text,
+                      )
+                    }
+                  />
+                </div>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -1488,10 +1505,17 @@ function TypeFormContent() {
 
               {/* Subject */}
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
-                  What&apos;s this about?{" "}
-                  <span className="text-red-500">*</span>
-                </Label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <Label className="text-sm font-medium text-gray-700">
+                    What&apos;s this about?{" "}
+                    <span className="text-red-500">*</span>
+                  </Label>
+                  <SpeechToTextButton
+                    onTranscript={(text) =>
+                      setSubject((prev) => (prev ? prev + " " + text : text))
+                    }
+                  />
+                </div>
                 <Input
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
@@ -1502,9 +1526,18 @@ function TypeFormContent() {
 
               {/* Description */}
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
-                  Tell us more <span className="text-red-500">*</span>
-                </Label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <Label className="text-sm font-medium text-gray-700">
+                    Tell us more <span className="text-red-500">*</span>
+                  </Label>
+                  <SpeechToTextButton
+                    onTranscript={(text) =>
+                      setDescription((prev) =>
+                        prev ? prev + " " + text : text,
+                      )
+                    }
+                  />
+                </div>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
