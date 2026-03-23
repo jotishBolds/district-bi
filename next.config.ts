@@ -45,9 +45,11 @@ const nextConfig: NextConfig = {
             value: "strict-origin-when-cross-origin",
           },
           {
+            // FIX: removed microphone=() which was blocking all mic access globally.
+            // microphone=* allows the current origin (self) to use the microphone.
+            // camera and geolocation remain blocked as they are not needed.
             key: "Permissions-Policy",
-            value:
-              "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+            value: "camera=(), geolocation=(), interest-cohort=()",
           },
         ],
       },
