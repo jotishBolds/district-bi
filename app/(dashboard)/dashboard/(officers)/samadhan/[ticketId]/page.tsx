@@ -512,140 +512,6 @@ export default function OfficerTicketDetailPage({
             </p>
           </div>
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 flex-wrap ml-14 sm:ml-0">
-          {ticket.queryType !== "FEEDBACK" &&
-            ticket.permissions.canEdit &&
-            ticket.status !== "UNSEEN" && (
-              <>
-                <Dialog
-                  open={isInfoRequestDialogOpen}
-                  onOpenChange={setIsInfoRequestDialogOpen}
-                >
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm">
-                      <FileText className="h-4 w-4 mr-2" />
-                      Request Info
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Request Additional Information</DialogTitle>
-                      <DialogDescription>
-                        Ask the citizen to provide additional information or
-                        documents.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 py-4">
-                      <div>
-                        <Label>What information do you need?</Label>
-                        <Textarea
-                          value={infoRequestDescription}
-                          onChange={(e) =>
-                            setInfoRequestDescription(e.target.value)
-                          }
-                          placeholder="Please describe what information or documents you need from the citizen..."
-                          rows={4}
-                        />
-                      </div>
-                      <div>
-                        <Label>Response Deadline (days)</Label>
-                        <Select
-                          value={infoRequestDeadline.toString()}
-                          onValueChange={(v) =>
-                            setInfoRequestDeadline(parseInt(v))
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="3">3 days</SelectItem>
-                            <SelectItem value="5">5 days</SelectItem>
-                            <SelectItem value="7">7 days</SelectItem>
-                            <SelectItem value="14">14 days</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button
-                        variant="outline"
-                        onClick={() => setIsInfoRequestDialogOpen(false)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={createInfoRequest}
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        ) : null}
-                        Send Request
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-
-                <Dialog
-                  open={isResolveDialogOpen}
-                  onOpenChange={setIsResolveDialogOpen}
-                >
-                  <DialogTrigger asChild>
-                    <Button
-                      size="sm"
-                      className="bg-green-600 hover:bg-green-700"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Resolve
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-xl">
-                    <DialogHeader>
-                      <DialogTitle>Resolve Ticket</DialogTitle>
-                      <DialogDescription>
-                        Provide a detailed resolution message to the citizen
-                        (minimum 100 characters).
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="py-4">
-                      <Textarea
-                        value={resolutionMessage}
-                        onChange={(e) => setResolutionMessage(e.target.value)}
-                        placeholder="Explain what action was taken and the resolution..."
-                        rows={6}
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        {resolutionMessage.length}/100 minimum characters
-                      </p>
-                    </div>
-                    <DialogFooter>
-                      <Button
-                        variant="outline"
-                        onClick={() => setIsResolveDialogOpen(false)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={() => updateStatus("RESOLVED")}
-                        disabled={
-                          isSubmitting || resolutionMessage.length < 100
-                        }
-                        className="bg-green-600 hover:bg-green-700"
-                      >
-                        {isSubmitting ? (
-                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        ) : null}
-                        Resolve Ticket
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              </>
-            )}
-        </div>
       </div>
 
       {/* Higher Authority Intervention Notice */}
@@ -1138,16 +1004,78 @@ export default function OfficerTicketDetailPage({
             </CardContent>
           </Card>
 
-          {/* Quick Status Update */}
+          {/* Quick Actions */}
           {ticket.queryType !== "FEEDBACK" &&
             ticket.permissions.canEdit &&
             ticket.status !== "UNSEEN" && (
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Update Status</CardTitle>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Edit2 className="h-4 w-4 text-gray-500" />
+                    Quick Actions
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {/* Show appropriate status options based on current status */}
+                  {/* Resolve Ticket — primary action */}
+                  <Dialog
+                    open={isResolveDialogOpen}
+                    onOpenChange={setIsResolveDialogOpen}
+                  >
+                    <DialogTrigger asChild>
+                      <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Resolve Ticket
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-xl w-[calc(100vw-2rem)] sm:w-full">
+                      <DialogHeader>
+                        <DialogTitle>Resolve Ticket</DialogTitle>
+                        <DialogDescription>
+                          Provide a detailed resolution message to the citizen
+                          (minimum 100 characters).
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="py-4">
+                        <Textarea
+                          value={resolutionMessage}
+                          onChange={(e) => setResolutionMessage(e.target.value)}
+                          placeholder="Explain what action was taken and the resolution..."
+                          rows={6}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          {resolutionMessage.length}/100 minimum characters
+                        </p>
+                      </div>
+                      <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
+                        <Button
+                          variant="outline"
+                          className="w-full sm:w-auto"
+                          onClick={() => setIsResolveDialogOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={() => updateStatus("RESOLVED")}
+                          disabled={
+                            isSubmitting || resolutionMessage.length < 100
+                          }
+                          className="w-full sm:w-auto bg-green-600 hover:bg-green-700"
+                        >
+                          {isSubmitting ? (
+                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          ) : null}
+                          Resolve Ticket
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+
+                  <Separator />
+
+                  {/* Status Update buttons */}
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                    Update Status
+                  </p>
                   {ticket.status === "UNSEEN" && (
                     <Button
                       variant="outline"
@@ -1173,6 +1101,86 @@ export default function OfficerTicketDetailPage({
                       </Button>
                     );
                   })}
+
+                  <Separator />
+
+                  {/* Request More Info */}
+                  <Dialog
+                    open={isInfoRequestDialogOpen}
+                    onOpenChange={setIsInfoRequestDialogOpen}
+                  >
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        Request More Info
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="w-[calc(100vw-2rem)] sm:w-full">
+                      <DialogHeader>
+                        <DialogTitle>
+                          Request Additional Information
+                        </DialogTitle>
+                        <DialogDescription>
+                          Ask the citizen to provide additional information or
+                          documents.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div>
+                          <Label>What information do you need?</Label>
+                          <Textarea
+                            value={infoRequestDescription}
+                            onChange={(e) =>
+                              setInfoRequestDescription(e.target.value)
+                            }
+                            placeholder="Please describe what information or documents you need from the citizen..."
+                            rows={4}
+                          />
+                        </div>
+                        <div>
+                          <Label>Response Deadline (days)</Label>
+                          <Select
+                            value={infoRequestDeadline.toString()}
+                            onValueChange={(v) =>
+                              setInfoRequestDeadline(parseInt(v))
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="3">3 days</SelectItem>
+                              <SelectItem value="5">5 days</SelectItem>
+                              <SelectItem value="7">7 days</SelectItem>
+                              <SelectItem value="14">14 days</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
+                        <Button
+                          variant="outline"
+                          className="w-full sm:w-auto"
+                          onClick={() => setIsInfoRequestDialogOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={createInfoRequest}
+                          disabled={isSubmitting}
+                          className="w-full sm:w-auto"
+                        >
+                          {isSubmitting ? (
+                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          ) : null}
+                          Send Request
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
             )}
