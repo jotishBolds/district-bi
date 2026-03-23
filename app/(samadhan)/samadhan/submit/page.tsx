@@ -1415,7 +1415,7 @@ function TypeFormContent() {
                   autoFocus
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  {subject.length}/100 characters
+                  {subject.length}/120 characters
                 </p>
               </div>
               <div>
