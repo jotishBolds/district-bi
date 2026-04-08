@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import SamadhanSplashScreen from "./SamadhanSplashScreen";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -14,6 +15,7 @@ export default function SamadhanPWAHandler() {
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const { t } = useSamadhanI18n();
 
   useEffect(() => {
     // Check if this is a fresh page load (not a navigation)
@@ -109,23 +111,23 @@ export default function SamadhanPWAHandler() {
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-900 text-sm">
-                  Install SAMADHAN App
+                  {t("pwa.installApp")}
                 </h3>
                 <p className="text-xs text-gray-600 mt-1">
-                  Install for quick access to submit and track your queries
+                  {t("pwa.installDesc")}
                 </p>
                 <div className="flex gap-2 mt-3">
                   <button
                     onClick={handleInstall}
                     className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded-lg hover:bg-green-700 transition-colors"
                   >
-                    Install
+                    {t("pwa.install")}
                   </button>
                   <button
                     onClick={handleDismiss}
                     className="px-3 py-1.5 text-gray-600 text-xs font-medium hover:text-gray-800 transition-colors"
                   >
-                    Not now
+                    {t("pwa.notNow")}
                   </button>
                 </div>
               </div>

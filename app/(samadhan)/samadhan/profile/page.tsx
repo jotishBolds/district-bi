@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 interface ProfileData {
   fullName: string;
@@ -39,6 +40,7 @@ interface ProfileData {
 
 export default function CitizenProfilePage() {
   const router = useRouter();
+  const { t } = useSamadhanI18n();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [showPseudonym, setShowPseudonym] = useState(false);
@@ -91,7 +93,7 @@ export default function CitizenProfilePage() {
       }
     } catch (error) {
       console.error("Failed to fetch profile:", error);
-      toast.error("Failed to load profile");
+      toast.error(t("profile.failedLoadProfile"));
     } finally {
       setIsLoading(false);
     }
@@ -112,15 +114,15 @@ export default function CitizenProfilePage() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success("Profile updated successfully");
+        toast.success(t("profile.profileUpdated"));
         // Reload the page to refresh navbar with new session data
         window.location.reload();
       } else {
-        toast.error(data.message || "Failed to update profile");
+        toast.error(data.message || t("profile.failedUpdateProfile"));
       }
     } catch (error) {
       console.error("Failed to save profile:", error);
-      toast.error("Failed to save profile");
+      toast.error(t("profile.failedSaveProfile"));
     } finally {
       setIsSaving(false);
     }
@@ -144,19 +146,20 @@ export default function CitizenProfilePage() {
             className="inline-flex items-center text-sm text-gray-600 hover:text-green-600 mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
+            {t("profile.backToDashboard")}
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
-          <p className="text-gray-600">Manage your SAMADHAN citizen profile</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {t("profile.myProfile")}
+          </h1>
+          <p className="text-gray-600">{t("profile.manageProfile")}</p>
         </div>
 
         {/* Privacy Notice */}
         <Alert className="mb-6 border-green-200 bg-green-50">
           <Shield className="h-4 w-4 text-green-600" />
           <AlertDescription className="text-green-800">
-            <strong>Your privacy is protected.</strong> Officers see only your
-            pseudonym when handling your queries. Your real identity is kept
-            confidential and only visible to authorized administrators.
+            <strong>{t("profile.privacyNotice")}</strong>{" "}
+            {t("profile.privacyNoticeDesc")}
           </AlertDescription>
         </Alert>
 
@@ -165,17 +168,15 @@ export default function CitizenProfilePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <User className="h-5 w-5" />
-              Profile Information
+              {t("profile.profileInformation")}
             </CardTitle>
-            <CardDescription>
-              Update your personal information below
-            </CardDescription>
+            <CardDescription>{t("profile.updateInfo")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Pseudonym Display */}
             <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
               <Label className="text-sm font-medium text-green-700">
-                Your Anonymous Identity
+                {t("profile.anonymousIdentity")}
               </Label>
               <div className="flex items-center gap-2 mt-1">
                 <p className="text-lg font-semibold text-green-900">
@@ -195,7 +196,7 @@ export default function CitizenProfilePage() {
                 </Button>
               </div>
               <p className="text-xs text-green-600 mt-1">
-                This is how officers see your identity
+                {t("profile.identityNote")}
               </p>
             </div>
 
@@ -203,7 +204,7 @@ export default function CitizenProfilePage() {
             <div className="space-y-2">
               <Label htmlFor="fullName" className="flex items-center gap-2">
                 <User className="h-4 w-4 text-gray-500" />
-                Full Name
+                {t("profile.fullName")}
               </Label>
               <Input
                 id="fullName"
@@ -211,10 +212,10 @@ export default function CitizenProfilePage() {
                 onChange={(e) =>
                   setProfile({ ...profile, fullName: e.target.value })
                 }
-                placeholder="Enter your full name"
+                placeholder={t("profile.fullNamePlaceholder")}
               />
               <p className="text-xs text-gray-500">
-                Your real name (kept confidential from officers)
+                {t("profile.fullNameHelp")}
               </p>
             </div>
 
@@ -222,7 +223,7 @@ export default function CitizenProfilePage() {
             <div className="space-y-2">
               <Label htmlFor="phone" className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-gray-500" />
-                Phone Number
+                {t("profile.phoneNumber")}
               </Label>
               <Input
                 id="phone"
@@ -230,16 +231,14 @@ export default function CitizenProfilePage() {
                 disabled
                 className="bg-gray-50"
               />
-              <p className="text-xs text-gray-500">
-                Your verified phone number (cannot be changed)
-              </p>
+              <p className="text-xs text-gray-500">{t("profile.phoneHelp")}</p>
             </div>
 
             {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email" className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-gray-500" />
-                Email Address
+                {t("profile.emailAddress")}
               </Label>
               <Input
                 id="email"
@@ -247,16 +246,14 @@ export default function CitizenProfilePage() {
                 disabled
                 className="bg-gray-50"
               />
-              <p className="text-xs text-gray-500">
-                System-generated email for your account
-              </p>
+              <p className="text-xs text-gray-500">{t("profile.emailHelp")}</p>
             </div>
 
             {/* Address */}
             <div className="space-y-2">
               <Label htmlFor="address" className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-gray-500" />
-                Address
+                {t("profile.address")}
               </Label>
               <Textarea
                 id="address"
@@ -264,11 +261,11 @@ export default function CitizenProfilePage() {
                 onChange={(e) =>
                   setProfile({ ...profile, address: e.target.value })
                 }
-                placeholder="Enter your address"
+                placeholder={t("profile.addressPlaceholder")}
                 rows={3}
               />
               <p className="text-xs text-gray-500">
-                Your address (optional, kept confidential)
+                {t("profile.addressHelp")}
               </p>
             </div>
 
@@ -278,12 +275,12 @@ export default function CitizenProfilePage() {
                 {isSaving ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Saving...
+                    {t("profile.saving")}
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4 mr-2" />
-                    Save Changes
+                    {t("profile.saveChanges")}
                   </>
                 )}
               </Button>
@@ -294,29 +291,22 @@ export default function CitizenProfilePage() {
         {/* Additional Info */}
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle className="text-lg">Privacy Information</CardTitle>
+            <CardTitle className="text-lg">
+              {t("profile.privacyInfo")}
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-sm text-gray-600">
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 rounded-full bg-green-500 mt-2" />
-              <p>
-                <strong>Officers</strong> can only see your pseudonym and query
-                details. They cannot access your real name, phone, or address.
-              </p>
+              <p>{t("profile.privacyInfo1")}</p>
             </div>
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 rounded-full bg-blue-500 mt-2" />
-              <p>
-                <strong>Administrators</strong> may access your real identity
-                only for official purposes and accountability.
-              </p>
+              <p>{t("profile.privacyInfo2")}</p>
             </div>
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 rounded-full bg-purple-500 mt-2" />
-              <p>
-                Your <strong>pseudonym</strong> is randomly generated and unique
-                to you. It cannot be changed.
-              </p>
+              <p>{t("profile.privacyInfo3")}</p>
             </div>
           </CardContent>
         </Card>

@@ -22,6 +22,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { toast } from "sonner";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 function SamadhanLoginContent() {
   const router = useRouter();
@@ -32,6 +33,7 @@ function SamadhanLoginContent() {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const { t } = useSamadhanI18n();
 
   const maskPhone = (phoneStr: string): string => {
     if (!phoneStr) return "";
@@ -68,7 +70,7 @@ function SamadhanLoginContent() {
 
     const cleanPhone = phone.replace(/[\s\-\(\)]/g, "");
     if (cleanPhone.length < 10) {
-      toast.error("Please enter a valid phone number");
+      toast.error(t("login.invalidPhone"));
       return;
     }
 
@@ -83,7 +85,7 @@ function SamadhanLoginContent() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success("OTP sent to your phone");
+        toast.success(t("login.otpSent"));
         setStep("otp");
 
         // Show OTP in development mode (single toast only)
@@ -94,7 +96,7 @@ function SamadhanLoginContent() {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Failed to send OTP. Please try again.");
+      toast.error(t("login.failedSendOtp"));
     } finally {
       setIsLoading(false);
     }
@@ -104,7 +106,7 @@ function SamadhanLoginContent() {
     e.preventDefault();
 
     if (otp.length !== 6) {
-      toast.error("Please enter the complete OTP");
+      toast.error(t("login.enterCompleteOtp"));
       return;
     }
 
@@ -121,14 +123,14 @@ function SamadhanLoginContent() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success("Login successful!");
+        toast.success(t("login.loginSuccess"));
         // Redirect to specified URL or dashboard
         window.location.href = redirectUrl || "/samadhan/dashboard";
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Failed to verify OTP. Please try again.");
+      toast.error(t("login.failedVerifyOtp"));
     } finally {
       setIsLoading(false);
     }
@@ -145,7 +147,7 @@ function SamadhanLoginContent() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-10 w-10 animate-spin text-green-600 mx-auto mb-4" />
-          <p className="text-gray-500">Checking session...</p>
+          <p className="text-gray-500">{t("login.checkingSession")}</p>
         </div>
       </div>
     );
@@ -160,7 +162,7 @@ function SamadhanLoginContent() {
           className="inline-flex items-center text-sm text-green-700 hover:text-green-800 mb-6 font-medium"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Home
+          {t("common.backToHome")}
         </Link>
 
         {/* Main Card */}
@@ -171,12 +173,14 @@ function SamadhanLoginContent() {
               <MessageSquare className="h-10 w-10 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-1">
-              {step === "phone" ? "Login to SAMADHAN" : "Verify OTP"}
+              {step === "phone"
+                ? t("login.loginToSamadhan")
+                : t("login.verifyOtp")}
             </h1>
             <p className="text-gray-500 text-sm">
               {step === "phone"
-                ? "Enter your phone number to continue"
-                : `Enter the 6-digit code sent to ${maskPhone(phone)}`}
+                ? t("login.enterPhoneNumber")
+                : `${t("login.enterOtpSentTo")} ${maskPhone(phone)}`}
             </p>
           </div>
 
@@ -187,7 +191,7 @@ function SamadhanLoginContent() {
                 <div className="relative">
                   <Input
                     type="tel"
-                    placeholder="Enter 10-digit phone number"
+                    placeholder={t("login.phonePlaceholder")}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="h-14 pl-14 pr-4 text-lg border-2 rounded-full border-green-200 focus:border-green-500 focus:ring-green-500 bg-white shadow-sm"
@@ -207,18 +211,18 @@ function SamadhanLoginContent() {
                   {isLoading ? (
                     <>
                       <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                      Sending OTP...
+                      {t("login.sendingOtp")}
                     </>
                   ) : (
                     <>
-                      Continue
+                      {t("login.continue")}
                       <ArrowRight className="h-5 w-5 ml-2" />
                     </>
                   )}
                 </Button>
 
                 <p className="text-xs text-gray-500 text-center">
-                  We&apos;ll send a verification code to this number
+                  {t("login.verificationCodeNote")}
                 </p>
               </form>
             ) : (
@@ -260,12 +264,12 @@ function SamadhanLoginContent() {
                   {isLoading ? (
                     <>
                       <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                      Verifying...
+                      {t("login.verifying")}
                     </>
                   ) : (
                     <>
                       <Check className="h-5 w-5 mr-2" />
-                      Verify & Continue
+                      {t("login.verifyAndContinue")}
                     </>
                   )}
                 </Button>
@@ -277,7 +281,7 @@ function SamadhanLoginContent() {
                     disabled={isLoading}
                     className="text-green-600 hover:text-green-700 font-medium hover:underline"
                   >
-                    Resend OTP
+                    {t("login.resendOtp")}
                   </button>
                   <span className="text-gray-300">|</span>
                   <button
@@ -288,7 +292,7 @@ function SamadhanLoginContent() {
                     }}
                     className="text-gray-500 hover:text-gray-700 font-medium hover:underline"
                   >
-                    Change Number
+                    {t("login.changeNumber")}
                   </button>
                 </div>
               </form>
@@ -309,14 +313,14 @@ function SamadhanLoginContent() {
             {/* Guest Option */}
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-3">
-                Don&apos;t want to register?
+                {t("login.dontWantRegister")}
               </p>
               <Link href="/samadhan/submit">
                 <Button
                   variant="outline"
                   className="rounded-full border-2 border-green-200 hover:bg-green-50 hover:border-green-400 px-6"
                 >
-                  Continue as Guest
+                  {t("login.continueAsGuest")}
                 </Button>
               </Link>
             </div>
@@ -325,7 +329,7 @@ function SamadhanLoginContent() {
 
         {/* Footer Info */}
         <p className="text-center text-xs text-gray-500 mt-6">
-          By continuing, you agree to our Terms of Service
+          {t("login.agreeTerms")}
         </p>
       </div>
     </div>

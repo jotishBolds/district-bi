@@ -4,6 +4,7 @@ import SamadhanNavbar from "@/components/samadhan/SamadhanNavbar";
 import SamadhanFooter from "@/components/samadhan/SamadhanFooter";
 import SamadhanPWAHandler from "@/components/samadhan/SamadhanPWAHandler";
 import SamadhanNavigationGuard from "@/components/samadhan/SamadhanNavigationGuard";
+import SamadhanI18nWrapper from "@/components/samadhan/SamadhanI18nWrapper";
 import Script from "next/script";
 
 export const metadata: Metadata = {
@@ -78,25 +79,26 @@ export default function SamadhanLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex flex-col">
-      {/* Navigation guard – redirects users back to /samadhan if they leave */}
-      <SamadhanNavigationGuard />
+    <SamadhanI18nWrapper>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex flex-col">
+        {/* Navigation guard – redirects users back to /samadhan if they leave */}
+        <SamadhanNavigationGuard />
 
-      {/* SAMADHAN PWA Handler */}
-      <SamadhanPWAHandler />
+        {/* SAMADHAN PWA Handler */}
+        <SamadhanPWAHandler />
 
-      {/* SAMADHAN Navbar */}
-      <SamadhanNavbar />
+        {/* SAMADHAN Navbar */}
+        <SamadhanNavbar />
 
-      {/* Main Content */}
-      <main className="flex-1">{children}</main>
+        {/* Main Content */}
+        <main className="flex-1">{children}</main>
 
-      {/* SAMADHAN Footer */}
-      <SamadhanFooter />
+        {/* SAMADHAN Footer */}
+        <SamadhanFooter />
 
-      {/* Dynamic manifest link based on domain */}
-      <Script id="samadhan-pwa-meta" strategy="afterInteractive">
-        {`
+        {/* Dynamic manifest link based on domain */}
+        <Script id="samadhan-pwa-meta" strategy="afterInteractive">
+          {`
           // Update manifest link for SAMADHAN domain
           if (window.location.hostname.startsWith('samadhan.')) {
             const existingManifest = document.querySelector('link[rel="manifest"]');
@@ -105,7 +107,8 @@ export default function SamadhanLayout({
             }
           }
         `}
-      </Script>
-    </div>
+        </Script>
+      </div>
+    </SamadhanI18nWrapper>
   );
 }

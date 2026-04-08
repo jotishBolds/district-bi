@@ -58,6 +58,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { OTPVerificationModal } from "@/components/samadhan/OTPVerificationModal";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 interface Section {
   id: string;
@@ -151,6 +152,7 @@ function SuccessModal({
   queryType: "FEEDBACK" | "GRIEVANCE";
 }) {
   const router = useRouter();
+  const { t } = useSamadhanI18n();
   const isFeedback = queryType === "FEEDBACK";
   const [copied, setCopied] = useState(false);
 
@@ -217,20 +219,20 @@ function SuccessModal({
           </div>
           <DialogTitle className="text-2xl text-center">
             {isFeedback
-              ? "🙏 Thank You for Your Feedback!"
-              : "🎉 Successfully Submitted!"}
+              ? t("submit.thankYouFeedback")
+              : t("submit.successfullySubmitted")}
           </DialogTitle>
           <DialogDescription asChild>
             <div className="text-center space-y-2">
               <span className="block">
                 {isFeedback
-                  ? "Your feedback has been received and will be reviewed by our team."
-                  : "Your grievance has been submitted and is now in the review queue."}
+                  ? t("submit.feedbackReceivedMsg")
+                  : t("submit.grievanceSubmittedMsg")}
               </span>
               <span className="block text-sm text-gray-500">
                 {isFeedback
-                  ? "We appreciate you taking the time to share your experience."
-                  : "A senior officer will review and assign your ticket shortly."}
+                  ? t("submit.feedbackAppreciateMsg")
+                  : t("submit.seniorOfficerReview")}
               </span>
             </div>
           </DialogDescription>
@@ -239,7 +241,9 @@ function SuccessModal({
         {/* Show Reference ID only for GRIEVANCE, not for FEEDBACK */}
         {!isFeedback && (
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 text-center space-y-3">
-            <p className="text-sm text-gray-600 mb-2">Your Reference ID</p>
+            <p className="text-sm text-gray-600 mb-2">
+              {t("submit.yourReferenceId")}
+            </p>
             <p className="text-xl font-mono font-bold text-blue-700 bg-white rounded-lg px-4 py-2 inline-block">
               {referenceId}
             </p>
@@ -255,7 +259,7 @@ function SuccessModal({
                 ) : (
                   <Copy className="h-3.5 w-3.5" />
                 )}
-                {copied ? "Copied!" : "Copy ID"}
+                {copied ? t("submit.copiedId") : t("submit.copyId")}
               </Button>
               <Button
                 variant="outline"
@@ -264,33 +268,32 @@ function SuccessModal({
                 className="text-xs gap-1.5 border-blue-300 text-blue-700 hover:bg-blue-50"
               >
                 <Download className="h-3.5 w-3.5" />
-                Download
+                {t("submit.download")}
               </Button>
             </div>
-            <p className="text-xs text-gray-500">
-              Save this ID to track your grievance status anytime
-            </p>
+            <p className="text-xs text-gray-500">{t("submit.saveIdNote")}</p>
           </div>
         )}
 
         {/* Feedback info message */}
         {isFeedback && (
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 text-center">
-            <p className="text-sm text-green-800 mb-1">Feedback Received</p>
+            <p className="text-sm text-green-800 mb-1">
+              {t("submit.feedbackReceived")}
+            </p>
             <p className="text-xs text-green-700">
-              Feedback is for sharing experiences and cannot be tracked like
-              grievances. Higher authorities (DC, Admin) will review your
-              feedback.
+              {t("submit.feedbackCannotTrack")}
             </p>
           </div>
         )}
 
         {!isFeedback && isGuest && (
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 text-center">
-            <p className="text-sm text-amber-800 mb-1">Guest Submission</p>
+            <p className="text-sm text-amber-800 mb-1">
+              {t("submit.guestSubmission")}
+            </p>
             <p className="text-xs text-amber-700">
-              You can track your ticket anytime using the reference ID above.
-              Register for full dashboard access and SMS updates.
+              {t("submit.guestTrackNote")}
             </p>
           </div>
         )}
@@ -301,7 +304,7 @@ function SuccessModal({
               onClick={() => router.push(`/samadhan/track/${referenceId}`)}
               className="w-full bg-gradient-to-r from-blue-600 to-indigo-600"
             >
-              Track Status
+              {t("submit.trackStatus")}
             </Button>
           )}
           <Button
@@ -309,7 +312,7 @@ function SuccessModal({
             onClick={() => router.push("/samadhan")}
             className="w-full"
           >
-            Back to Home
+            {t("submit.backToHome")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -334,6 +337,7 @@ export default function TypeFormSubmitPage() {
 function TypeFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useSamadhanI18n();
 
   // Auth choice state - whether to show auth choice or form
   const [showAuthChoice, setShowAuthChoice] = useState(true);
@@ -473,13 +477,13 @@ function TypeFormContent() {
           }
         }
 
-        toast.success("Draft loaded successfully");
+        toast.success(t("submit.draftLoadedSuccess"));
       } else {
-        toast.error(data.message || "Failed to load draft");
+        toast.error(data.message || t("submit.failedLoadDraft"));
       }
     } catch (error) {
       console.error("Failed to load draft:", error);
-      toast.error("Failed to load draft");
+      toast.error(t("submit.failedLoadDraft"));
     } finally {
       setIsLoadingDraft(false);
     }
@@ -638,11 +642,11 @@ function TypeFormContent() {
         : 10 * 1024 * 1024;
 
       if (!allowedTypes.includes(file.type)) {
-        toast.error(`${file.name}: File type not supported`);
+        toast.error(t("submit.fileNotSupported", { name: file.name }));
         return false;
       }
       if (file.size > maxSize) {
-        toast.error(`${file.name}: File too large`);
+        toast.error(t("submit.fileTooLarge", { name: file.name }));
         return false;
       }
       return true;
@@ -672,22 +676,22 @@ function TypeFormContent() {
       case "details":
         // Combined subject + description step for grievance
         if (subject.trim().length < 3) {
-          toast.error("Please enter a subject (at least 3 characters)");
+          toast.error(t("submit.enterSubject3"));
           return false;
         }
         if (description.trim().length < 10) {
-          toast.error("Please provide more details (at least 10 characters)");
+          toast.error(t("submit.enterDescription10"));
           return false;
         }
         return true;
       case "feedback-form":
         // All-in-one feedback form validation
         if (subject.trim().length < 3) {
-          toast.error("Please enter a subject (at least 3 characters)");
+          toast.error(t("submit.enterSubject3"));
           return false;
         }
         if (description.trim().length < 10) {
-          toast.error("Please provide more details (at least 10 characters)");
+          toast.error(t("submit.enterDescription10"));
           return false;
         }
         // Name is optional in anonymous mode
@@ -696,12 +700,12 @@ function TypeFormContent() {
           citizenName.trim() &&
           citizenName.trim().length < 2
         ) {
-          toast.error("Please enter a valid name (at least 2 characters)");
+          toast.error(t("submit.enterValidName"));
           return false;
         }
         // Phone validation only if provided
         if (citizenPhone.trim() && citizenPhone.trim().length < 10) {
-          toast.error("Please enter a valid phone number (at least 10 digits)");
+          toast.error(t("submit.enterValidPhone"));
           return false;
         }
         // Email validation only if provided
@@ -709,7 +713,7 @@ function TypeFormContent() {
           citizenEmail.trim() &&
           !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(citizenEmail.trim())
         ) {
-          toast.error("Please enter a valid email address");
+          toast.error(t("submit.enterValidEmail"));
           return false;
         }
         return true;
@@ -718,19 +722,19 @@ function TypeFormContent() {
       case "contact":
         // Name is optional - only validate if provided
         if (citizenName.trim() && citizenName.trim().length < 2) {
-          toast.error("Please enter a valid name (at least 2 characters)");
+          toast.error(t("submit.enterValidName"));
           return false;
         }
         // Phone and email are optional - validation only if provided
         if (citizenPhone.trim() && citizenPhone.trim().length < 10) {
-          toast.error("Please enter a valid phone number (at least 10 digits)");
+          toast.error(t("submit.enterValidPhone"));
           return false;
         }
         if (
           citizenEmail.trim() &&
           !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(citizenEmail.trim())
         ) {
-          toast.error("Please enter a valid email address");
+          toast.error(t("submit.enterValidEmail"));
           return false;
         }
         return true;
@@ -743,7 +747,7 @@ function TypeFormContent() {
 
   const goToNextStep = () => {
     if (!validateCurrentStep()) {
-      toast.error("Please complete this step before continuing");
+      toast.error(t("submit.pleaseCompleteStep"));
       return;
     }
 
@@ -927,10 +931,15 @@ function TypeFormContent() {
         // Show upload status
         if (failedCount > 0) {
           toast.warning(
-            `${uploadedCount} file(s) uploaded, ${failedCount} failed`,
+            t("submit.filesUploadStatus", {
+              uploaded: String(uploadedCount),
+              failed: String(failedCount),
+            }),
           );
         } else if (uploadedCount > 0) {
-          toast.success(`${uploadedCount} attachment(s) uploaded successfully`);
+          toast.success(
+            t("submit.attachmentsUploaded", { count: String(uploadedCount) }),
+          );
         }
       }
 
@@ -944,7 +953,7 @@ function TypeFormContent() {
       }
     } catch (error) {
       const err = error instanceof Error ? error : new Error("Unknown error");
-      toast.error(err.message || "Failed to submit query");
+      toast.error(err.message || t("submit.failedSubmit"));
     } finally {
       setIsSubmitting(false);
       setIsSavingDraft(false);
@@ -964,9 +973,9 @@ function TypeFormContent() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                What would you like to submit?
+                {t("submit.whatToSubmit")}
               </h2>
-              <p className="text-gray-500">Choose the type of query</p>
+              <p className="text-gray-500">{t("submit.chooseQueryType")}</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
               <button
@@ -982,9 +991,11 @@ function TypeFormContent() {
                 }`}
               >
                 <AlertCircle className="h-10 w-10 text-red-500 mx-auto mb-3" />
-                <h3 className="font-semibold text-lg">Grievance</h3>
+                <h3 className="font-semibold text-lg">
+                  {t("submit.grievance")}
+                </h3>
                 <p className="text-sm text-gray-500 mt-1">
-                  Report a complaint or issue
+                  {t("submit.reportComplaint")}
                 </p>
               </button>
               <button
@@ -999,9 +1010,11 @@ function TypeFormContent() {
                 }`}
               >
                 <MessageSquare className="h-10 w-10 text-green-500 mx-auto mb-3" />
-                <h3 className="font-semibold text-lg">Feedback</h3>
+                <h3 className="font-semibold text-lg">
+                  {t("submit.feedback")}
+                </h3>
                 <p className="text-sm text-gray-500 mt-1">
-                  Share your experience
+                  {t("submit.shareExperience")}
                 </p>
               </button>
             </div>
@@ -1013,11 +1026,9 @@ function TypeFormContent() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                Did you visit the DC office today?
+                {t("submit.visitedDcToday")}
               </h2>
-              <p className="text-gray-500">
-                Help us understand your experience better
-              </p>
+              <p className="text-gray-500">{t("submit.helpUnderstand")}</p>
             </div>
             <div className="grid grid-cols-1 gap-4 max-w-lg mx-auto">
               <button
@@ -1044,7 +1055,7 @@ function TypeFormContent() {
                   </div>
                   <div className="text-left">
                     <h3 className="font-semibold text-lg">
-                      Yes, I visited today
+                      {t("submit.yesVisitedToday")}
                     </h3>
                     <p className="text-sm text-gray-500">
                       {format(new Date(), "EEEE, MMMM d, yyyy")}
@@ -1076,10 +1087,10 @@ function TypeFormContent() {
                   </div>
                   <div className="text-left">
                     <h3 className="font-semibold text-lg">
-                      Yes, but some other day
+                      {t("submit.yesOtherDay")}
                     </h3>
                     <p className="text-sm text-gray-500">
-                      I&apos;ll select the date
+                      {t("submit.selectDate")}
                     </p>
                   </div>
                 </div>
@@ -1108,10 +1119,10 @@ function TypeFormContent() {
                   </div>
                   <div className="text-left">
                     <h3 className="font-semibold text-lg">
-                      No, I haven&apos;t visited
+                      {t("submit.noHaventVisited")}
                     </h3>
                     <p className="text-sm text-gray-500">
-                      I have a general query
+                      {t("submit.generalQuery")}
                     </p>
                   </div>
                 </div>
@@ -1125,9 +1136,9 @@ function TypeFormContent() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                When did you visit?
+                {t("submit.whenVisit")}
               </h2>
-              <p className="text-gray-500">Select the date of your visit</p>
+              <p className="text-gray-500">{t("submit.selectVisitDate")}</p>
             </div>
             <div className="max-w-md mx-auto space-y-4">
               <RadioGroup
@@ -1148,7 +1159,7 @@ function TypeFormContent() {
                 >
                   <RadioGroupItem value="today" id="today" />
                   <Label htmlFor="today" className="flex-1 cursor-pointer">
-                    <span className="font-medium">Today</span>
+                    <span className="font-medium">{t("submit.today")}</span>
                     <span className="text-gray-500 ml-2">
                       ({format(new Date(), "MMM d, yyyy")})
                     </span>
@@ -1164,7 +1175,7 @@ function TypeFormContent() {
                 >
                   <RadioGroupItem value="yesterday" id="yesterday" />
                   <Label htmlFor="yesterday" className="flex-1 cursor-pointer">
-                    <span className="font-medium">Yesterday</span>
+                    <span className="font-medium">{t("submit.yesterday")}</span>
                     <span className="text-gray-500 ml-2">
                       ({format(new Date(Date.now() - 86400000), "MMM d, yyyy")})
                     </span>
@@ -1180,7 +1191,7 @@ function TypeFormContent() {
                 >
                   <RadioGroupItem value="other" id="other" />
                   <Label htmlFor="other" className="flex-1 cursor-pointer">
-                    <span className="font-medium">Pick a date</span>
+                    <span className="font-medium">{t("submit.pickDate")}</span>
                   </Label>
                 </div>
               </RadioGroup>
@@ -1209,11 +1220,9 @@ function TypeFormContent() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                Select a Service
+                {t("submit.selectService")}
               </h2>
-              <p className="text-gray-500">
-                Choose the service related to your query
-              </p>
+              <p className="text-gray-500">{t("submit.chooseService")}</p>
             </div>
             <div className="max-w-lg mx-auto">
               <div className="grid gap-3 max-h-[400px] overflow-y-auto pr-2">
@@ -1244,7 +1253,7 @@ function TypeFormContent() {
                           )}
                           {service.section && (
                             <p className="text-xs text-blue-600 mt-1">
-                              Section: {service.section.name}
+                              {t("submit.section")} {service.section.name}
                             </p>
                           )}
                         </div>
@@ -1264,9 +1273,9 @@ function TypeFormContent() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                Select Categories
+                {t("submit.selectCategories")}
               </h2>
-              <p className="text-gray-500">Select all that apply (optional)</p>
+              <p className="text-gray-500">{t("submit.selectAllApply")}</p>
             </div>
             <div className="max-w-lg mx-auto">
               {filteredCategories.length > 0 ? (
@@ -1312,8 +1321,8 @@ function TypeFormContent() {
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>No categories available for this service</p>
-                  <p className="text-sm mt-1">You can skip this step</p>
+                  <p>{t("submit.noCategoriesAvailable")}</p>
+                  <p className="text-sm mt-1">{t("submit.canSkipStep")}</p>
                 </div>
               )}
             </div>
@@ -1326,11 +1335,9 @@ function TypeFormContent() {
           <div className="space-y-6">
             <div className="text-center mb-6">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                Tell us about your grievance
+                {t("submit.tellAboutGrievance")}
               </h2>
-              <p className="text-gray-500">
-                Provide a subject and detailed description
-              </p>
+              <p className="text-gray-500">{t("submit.provideSubjectDesc")}</p>
             </div>
 
             {/* Helpful tips for filling the form */}
@@ -1339,21 +1346,13 @@ function TypeFormContent() {
                 <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-sm font-medium text-blue-800 mb-1">
-                    Tips for a clear grievance
+                    {t("submit.tipsForClearGrievance")}
                   </p>
                   <ul className="text-xs text-blue-700 space-y-1 list-disc ml-4">
-                    <li>
-                      Be specific about the issue (e.g., &quot;Delay in land
-                      mutation&quot; instead of &quot;Office problem&quot;)
-                    </li>
-                    <li>
-                      Include dates, reference numbers, or application IDs if
-                      available
-                    </li>
-                    <li>Describe what happened and what you expected</li>
-                    <li>
-                      Mention any previous follow-ups or visits you have made
-                    </li>
+                    <li>{t("submit.tipSpecific")}</li>
+                    <li>{t("submit.tipIncludeDates")}</li>
+                    <li>{t("submit.tipDescribeWhat")}</li>
+                    <li>{t("submit.tipMentionFollowUps")}</li>
                   </ul>
                 </div>
               </div>
@@ -1366,7 +1365,7 @@ function TypeFormContent() {
                   <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="text-sm font-medium text-blue-900 mb-1.5">
-                      How to write an effective grievance
+                      {t("submit.howToWriteEffective")}
                     </p>
                     <ul className="text-xs text-blue-800 space-y-1 list-disc ml-4">
                       <li>
@@ -1396,33 +1395,36 @@ function TypeFormContent() {
 
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                  What&apos;s this about?{" "}
+                  {t("submit.subjectLabel")}{" "}
                   <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  placeholder="e.g., Delay in document processing"
+                  placeholder={t("submit.subjectPlaceholder")}
                   className="text-base"
                   autoFocus
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  {subject.length}/100 characters
+                  {subject.length}
+                  {t("submit.characters100")}
                 </p>
               </div>
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                  Tell us more <span className="text-red-500">*</span>
+                  {t("submit.descriptionLabel")}{" "}
+                  <span className="text-red-500">*</span>
                 </Label>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Example: I applied for land mutation 3 months ago (Application No: MUT/2025/4567) but it is still pending. I have visited the office multiple times but keep getting told to come back later..."
+                  placeholder={t("submit.descriptionPlaceholder")}
                   rows={6}
                   className="resize-none text-base"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  {description.length} characters (minimum 10)
+                  {description.length}
+                  {t("submit.charactersMin10")}
                 </p>
               </div>
             </div>
@@ -1435,11 +1437,9 @@ function TypeFormContent() {
           <div className="space-y-6">
             <div className="text-center mb-4">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                Share Your Feedback
+                {t("submit.shareFeedback")}
               </h2>
-              <p className="text-gray-500">
-                All fields in one place. Contact info is optional.
-              </p>
+              <p className="text-gray-500">{t("submit.allFieldsOnePlace")}</p>
             </div>
             <div className="max-w-lg mx-auto space-y-5">
               {/* Anonymous toggle */}
@@ -1459,13 +1459,13 @@ function TypeFormContent() {
                   <div>
                     <p className="font-medium text-sm">
                       {isAnonymousToOfficer
-                        ? "Anonymous Mode"
-                        : "Share Details"}
+                        ? t("submit.anonymousMode")
+                        : t("submit.shareDetails")}
                     </p>
                     <p className="text-xs text-gray-500">
                       {isAnonymousToOfficer
-                        ? "Officers will see a pseudonym only"
-                        : "Officers can contact you"}
+                        ? t("submit.officersSeeePseudonym")
+                        : t("submit.officersCanContact")}
                     </p>
                   </div>
                 </div>
@@ -1479,9 +1479,8 @@ function TypeFormContent() {
               {isAnonymousToOfficer && (
                 <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-3.5">
                   <p className="text-xs text-amber-800 leading-relaxed">
-                    <strong>Submitting anonymously:</strong> A pseudonym will
-                    replace your identity. You won&apos;t receive updates via
-                    SMS/email. Only DC/Admin can view your real details.
+                    <strong>{t("submit.submittingAnonymously")}</strong>{" "}
+                    {t("submit.anonymousNote")}
                   </p>
                 </div>
               )}
@@ -1489,13 +1488,13 @@ function TypeFormContent() {
               {/* Subject */}
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
-                  What&apos;s this about?{" "}
+                  {t("submit.subjectLabel")}{" "}
                   <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  placeholder="Brief title for your feedback"
+                  placeholder={t("submit.feedbackSubjectPlaceholder")}
                   className="text-base"
                 />
               </div>
@@ -1503,24 +1502,27 @@ function TypeFormContent() {
               {/* Description */}
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
-                  Tell us more <span className="text-red-500">*</span>
+                  {t("submit.descriptionLabel")}{" "}
+                  <span className="text-red-500">*</span>
                 </Label>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Share your feedback in detail..."
+                  placeholder={t("submit.feedbackDescPlaceholder")}
                   rows={4}
                   className="resize-none text-base"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  {description.length} characters (minimum 10)
+                  {description.length}
+                  {t("submit.charactersMin10")}
                 </p>
               </div>
 
               {/* Attachments */}
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
-                  Attachments <span className="text-gray-400">(Optional)</span>
+                  {t("submit.attachmentsLabel")}{" "}
+                  <span className="text-gray-400">{t("submit.optional")}</span>
                 </Label>
                 <div className="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center hover:border-blue-300 transition-colors">
                   <input
@@ -1536,7 +1538,9 @@ function TypeFormContent() {
                     className="cursor-pointer"
                   >
                     <Paperclip className="h-6 w-6 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-500">Click to add files</p>
+                    <p className="text-sm text-gray-500">
+                      {t("submit.clickToAddFiles")}
+                    </p>
                   </label>
                 </div>
                 {files.length > 0 && (
@@ -1567,37 +1571,45 @@ function TypeFormContent() {
               {!isAnonymousToOfficer && (
                 <div className="border-t pt-4 space-y-3">
                   <p className="text-sm font-medium text-gray-700">
-                    Contact Information{" "}
-                    <span className="text-gray-400">(Optional)</span>
+                    {t("submit.contactInformation")}{" "}
+                    <span className="text-gray-400">
+                      {t("submit.optional")}
+                    </span>
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <Label className="text-xs text-gray-500">Name</Label>
+                      <Label className="text-xs text-gray-500">
+                        {t("submit.name")}
+                      </Label>
                       <Input
                         value={citizenName}
                         onChange={(e) => setCitizenName(e.target.value)}
-                        placeholder="Your name"
+                        placeholder={t("submit.yourName")}
                         className="mt-1"
                       />
                     </div>
                     <div>
-                      <Label className="text-xs text-gray-500">Phone</Label>
+                      <Label className="text-xs text-gray-500">
+                        {t("submit.phone")}
+                      </Label>
                       <Input
                         value={citizenPhone}
                         onChange={(e) => setCitizenPhone(e.target.value)}
-                        placeholder="Phone number"
+                        placeholder={t("submit.phoneNumber")}
                         className="mt-1"
                         disabled={!!samadhanSession}
                       />
                     </div>
                   </div>
                   <div>
-                    <Label className="text-xs text-gray-500">Email</Label>
+                    <Label className="text-xs text-gray-500">
+                      {t("submit.emailLabel")}
+                    </Label>
                     <Input
                       type="email"
                       value={citizenEmail}
                       onChange={(e) => setCitizenEmail(e.target.value)}
-                      placeholder="Email address"
+                      placeholder={t("submit.emailPlaceholder")}
                       className="mt-1"
                     />
                   </div>
@@ -1618,18 +1630,17 @@ function TypeFormContent() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Submitting...
+                      {t("submit.submitting")}
                     </>
                   ) : (
                     <>
                       <Send className="h-4 w-4 mr-2" />
-                      Submit Feedback
+                      {t("submit.submitFeedbackBtn")}
                     </>
                   )}
                 </Button>
                 <p className="text-xs text-center text-gray-500 mt-2">
-                  Feedback is for sharing experiences only and cannot be tracked
-                  like grievances.
+                  {t("submit.feedbackShareNote")}
                 </p>
               </div>
             </div>
@@ -1641,11 +1652,9 @@ function TypeFormContent() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                Add supporting documents
+                {t("submit.addSupportingDocs")}
               </h2>
-              <p className="text-gray-500">
-                Upload any proof or relevant files (optional)
-              </p>
+              <p className="text-gray-500">{t("submit.uploadProof")}</p>
             </div>
             <div className="max-w-lg mx-auto">
               {/* Show existing attachments from draft */}
@@ -1694,8 +1703,8 @@ function TypeFormContent() {
                 <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600 mb-2">
                   {existingAttachments.length > 0
-                    ? "Add more files, or continue with existing"
-                    : "Drag and drop files here, or click to select"}
+                    ? t("submit.addMoreFiles")
+                    : t("submit.dragAndDrop")}
                 </p>
                 <input
                   type="file"
@@ -1709,12 +1718,12 @@ function TypeFormContent() {
                   <Button type="button" variant="outline" asChild>
                     <span>
                       <Paperclip className="h-4 w-4 mr-2" />
-                      Select Files
+                      {t("submit.selectFilesBtn")}
                     </span>
                   </Button>
                 </label>
                 <p className="text-xs text-gray-400 mt-4">
-                  Images (5MB), PDF (10MB), Videos (50MB)
+                  {t("submit.imagesSize")}
                 </p>
               </div>
 
@@ -1759,12 +1768,9 @@ function TypeFormContent() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                Contact Information
+                {t("submit.contactInfoStep")}
               </h2>
-              <p className="text-gray-500">
-                All fields are optional. Toggle anonymous mode to hide your
-                identity from officers.
-              </p>
+              <p className="text-gray-500">{t("submit.contactInfoDesc")}</p>
             </div>
             <div className="max-w-lg mx-auto space-y-4">
               {/* Anonymous toggle - Available for all query types */}
@@ -1784,13 +1790,13 @@ function TypeFormContent() {
                   <div>
                     <p className="font-medium text-sm">
                       {isAnonymousToOfficer
-                        ? "Anonymous Mode"
-                        : "Share Contact Details"}
+                        ? t("submit.anonymousMode")
+                        : t("submit.shareContactDetails")}
                     </p>
                     <p className="text-xs text-gray-500">
                       {isAnonymousToOfficer
-                        ? "Officers will see a pseudonym only. DC/Admin can still view your details."
-                        : "Officers can contact you directly"}
+                        ? t("submit.officersSeeePseudonymOnly")
+                        : t("submit.officersCanContactDirectly")}
                     </p>
                   </div>
                 </div>
@@ -1809,41 +1815,26 @@ function TypeFormContent() {
                     </div>
                     <div>
                       <p className="font-semibold text-amber-900 text-sm">
-                        You&apos;re submitting anonymously
+                        {t("submit.submittingAnonymouslyNote")}
                       </p>
                       <p className="text-xs text-amber-800 mt-1 leading-relaxed">
-                        Your identity will be hidden from officers handling your
-                        grievance. A random pseudonym will be assigned to
-                        protect your privacy.
+                        {t("submit.anonymousDetailNote")}
                       </p>
                     </div>
                   </div>
                   <div className="bg-white/60 rounded-lg p-3 space-y-1.5">
                     <p className="text-xs font-medium text-amber-900">
-                      Please note as a guest/anonymous user:
+                      {t("submit.guestAnonymousNote")}
                     </p>
                     <ul className="text-xs text-amber-800 space-y-1 ml-4 list-disc">
-                      <li>
-                        You won&apos;t receive SMS or email updates on your
-                        ticket
-                      </li>
-                      <li>
-                        You can still track your grievance using the Reference
-                        ID
-                      </li>
-                      <li>
-                        Only the District Collector and Admin can see your real
-                        identity
-                      </li>
-                      <li>
-                        Officers will only see a pseudonym like &quot;Brave
-                        Tiger 7824&quot;
-                      </li>
+                      <li>{t("submit.guestNote1")}</li>
+                      <li>{t("submit.guestNote2")}</li>
+                      <li>{t("submit.guestNote3")}</li>
+                      <li>{t("submit.guestNote4")}</li>
                     </ul>
                   </div>
                   <p className="text-xs text-amber-700 italic">
-                    💡 Tip: You can always provide your phone number later by
-                    logging in to access full dashboard features.
+                    💡 {t("submit.tipAddPhone")}
                   </p>
                 </div>
               )}
@@ -1855,13 +1846,13 @@ function TypeFormContent() {
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <p className="text-sm font-medium text-green-800 mb-2 flex items-center gap-2">
                       <ShieldCheck className="h-4 w-4" />
-                      Benefits of adding phone number:
+                      {t("submit.benefitsPhone")}
                     </p>
                     <ul className="text-xs text-green-700 space-y-1 ml-6 list-disc">
-                      <li>Get registered automatically for tracking</li>
-                      <li>Receive SMS updates on your query status</li>
-                      <li>Access your personal dashboard</li>
-                      <li>View and manage all your submissions</li>
+                      <li>{t("submit.phoneBenefit1")}</li>
+                      <li>{t("submit.phoneBenefit2")}</li>
+                      <li>{t("submit.phoneBenefit3")}</li>
+                      <li>{t("submit.phoneBenefit4")}</li>
                     </ul>
                   </div>
                 )}
@@ -1871,17 +1862,16 @@ function TypeFormContent() {
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <p className="text-sm font-medium text-blue-800 mb-2 flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    Welcome back
+                    {t("submit.welcomeBack")}
                     {phoneCheckResult.name ? `, ${phoneCheckResult.name}` : ""}!
                   </p>
                   <p className="text-xs text-blue-700 mb-2">
-                    This phone number is already registered. Your submission
-                    will be linked to your account.
+                    {t("submit.phoneAlreadyRegistered")}
                   </p>
                   {phoneCheckResult.ticketCount > 0 && (
                     <p className="text-xs text-blue-600 mb-2">
-                      You have {phoneCheckResult.ticketCount} previous
-                      submission(s).
+                      {t("submit.youHave")} {phoneCheckResult.ticketCount}
+                      {t("submit.previousSubmissions")}
                     </p>
                   )}
                   <div className="flex flex-wrap gap-2 mt-2">
@@ -1892,7 +1882,7 @@ function TypeFormContent() {
                         className="text-xs h-7 gap-1 border-blue-300 text-blue-700 hover:bg-blue-100"
                       >
                         <LogIn className="h-3 w-3" />
-                        Login to Dashboard
+                        {t("submit.loginToDashboard")}
                       </Button>
                     </Link>
                     <Link href="/samadhan/track">
@@ -1902,13 +1892,12 @@ function TypeFormContent() {
                         className="text-xs h-7 gap-1 border-blue-300 text-blue-700 hover:bg-blue-100"
                       >
                         <FileText className="h-3 w-3" />
-                        Track Previous
+                        {t("submit.trackPrevious")}
                       </Button>
                     </Link>
                   </div>
                   <p className="text-xs text-blue-600 mt-2 italic">
-                    You can continue to submit - it will be linked to your
-                    account.
+                    {t("submit.canContinueSubmit")}
                   </p>
                 </div>
               )}
@@ -1918,24 +1907,26 @@ function TypeFormContent() {
                 <div className="space-y-4 pt-2">
                   <div>
                     <Label>
-                      Your Name{" "}
-                      <span className="text-gray-400">(Optional)</span>
+                      {t("submit.yourNameLabel")}{" "}
+                      <span className="text-gray-400">
+                        {t("submit.optional")}
+                      </span>
                     </Label>
                     <Input
                       value={citizenName}
                       onChange={(e) => setCitizenName(e.target.value)}
-                      placeholder="Enter your full name (optional)"
+                      placeholder={t("submit.enterFullName")}
                       className="mt-1"
                     />
                   </div>
                   <div>
                     <Label className="flex items-center gap-2">
-                      Phone Number
+                      {t("submit.phoneNumberLabel")}
                       <Badge
                         variant="outline"
                         className="text-xs bg-green-50 text-green-700 border-green-200"
                       >
-                        Recommended
+                        {t("submit.recommended")}
                       </Badge>
                       {isCheckingPhone && (
                         <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
@@ -1946,8 +1937,8 @@ function TypeFormContent() {
                       onChange={(e) => setCitizenPhone(e.target.value)}
                       placeholder={
                         samadhanSession
-                          ? "Phone number from your account"
-                          : "Enter your phone number for registration & updates"
+                          ? t("submit.phoneFromAccount")
+                          : t("submit.enterPhoneForReg")
                       }
                       className="mt-1"
                       disabled={!!samadhanSession}
@@ -1956,8 +1947,7 @@ function TypeFormContent() {
                     {samadhanSession && (
                       <p className="text-xs text-blue-600 mt-1 flex items-center gap-1">
                         <ShieldCheck className="h-3 w-3" />
-                        Phone number from your logged-in account (cannot be
-                        changed here)
+                        {t("submit.phoneFromLoggedIn")}
                       </p>
                     )}
                     {!samadhanSession &&
@@ -1967,28 +1957,30 @@ function TypeFormContent() {
                           className={`text-xs mt-1 ${phoneCheckResult.isRegistered ? "text-blue-600" : "text-green-600"}`}
                         >
                           {phoneCheckResult.isRegistered
-                            ? "✓ Number recognized - submission will be linked to your account"
-                            : "✓ New number - you'll be registered automatically"}
+                            ? t("submit.numberRecognized")
+                            : t("submit.newNumberAutoReg")}
                         </p>
                       )}
                     {!samadhanSession &&
                       citizenPhone.length > 0 &&
                       citizenPhone.length < 10 && (
                         <p className="text-xs text-gray-500 mt-1">
-                          Enter at least 10 digits
+                          {t("submit.enterAtLeast10")}
                         </p>
                       )}
                   </div>
                   <div>
                     <Label>
-                      Email Address{" "}
-                      <span className="text-gray-400">(Optional)</span>
+                      {t("submit.emailAddressLabel")}{" "}
+                      <span className="text-gray-400">
+                        {t("submit.optional")}
+                      </span>
                     </Label>
                     <Input
                       type="email"
                       value={citizenEmail}
                       onChange={(e) => setCitizenEmail(e.target.value)}
-                      placeholder="Enter your email (optional)"
+                      placeholder={t("submit.enterEmail")}
                       className="mt-1"
                     />
                   </div>
@@ -2003,17 +1995,15 @@ function TypeFormContent() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                Review Your Submission
+                {t("submit.reviewSubmission")}
               </h2>
-              <p className="text-gray-500">
-                Make sure everything looks good before submitting
-              </p>
+              <p className="text-gray-500">{t("submit.makeSureGood")}</p>
             </div>
             <div className="max-w-lg mx-auto space-y-4">
               <Card>
                 <CardContent className="p-4 space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-500">Type</span>
+                    <span className="text-gray-500">{t("submit.type")}</span>
                     <Badge
                       variant={
                         queryType === "GRIEVANCE" ? "destructive" : "default"
@@ -2026,25 +2016,33 @@ function TypeFormContent() {
                   {queryType === "GRIEVANCE" && (
                     <>
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-500">Visited DC</span>
-                        <span>{visitedDC ? "Yes" : "No"}</span>
+                        <span className="text-gray-500">
+                          {t("submit.visitedDc")}
+                        </span>
+                        <span>
+                          {visitedDC ? t("submit.yes") : t("submit.no")}
+                        </span>
                       </div>
                       {visitedDC && visitDateOption && (
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-500">Visit Date</span>
+                          <span className="text-gray-500">
+                            {t("submit.visitDate")}
+                          </span>
                           <span>
                             {visitDateOption === "today"
-                              ? "Today"
+                              ? t("submit.today")
                               : visitDateOption === "yesterday"
-                                ? "Yesterday"
+                                ? t("submit.yesterday")
                                 : visitDate
                                   ? format(new Date(visitDate), "MMM d, yyyy")
-                                  : "Not specified"}
+                                  : t("submit.notSpecified")}
                           </span>
                         </div>
                       )}
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-500">Service</span>
+                        <span className="text-gray-500">
+                          {t("submit.service")}
+                        </span>
                         <span>
                           {services.find((s) => s.id === selectedServiceId)
                             ?.name || "N/A"}
@@ -2052,7 +2050,9 @@ function TypeFormContent() {
                       </div>
                       {selectedCategories.length > 0 && (
                         <div className="flex justify-between items-start">
-                          <span className="text-gray-500">Categories</span>
+                          <span className="text-gray-500">
+                            {t("submit.categories")}
+                          </span>
                           <div className="text-right">
                             {selectedCategories.map((id) => {
                               const category = serviceCategories.find(
@@ -2075,24 +2075,33 @@ function TypeFormContent() {
                   )}
 
                   <div className="border-t pt-4">
-                    <p className="text-gray-500 text-sm mb-1">Subject</p>
-                    <p className="font-medium">{subject || "Not specified"}</p>
+                    <p className="text-gray-500 text-sm mb-1">
+                      {t("submit.subjectReview")}
+                    </p>
+                    <p className="font-medium">
+                      {subject || t("submit.notSpecified")}
+                    </p>
                   </div>
 
                   <div>
-                    <p className="text-gray-500 text-sm mb-1">Description</p>
+                    <p className="text-gray-500 text-sm mb-1">
+                      {t("submit.descriptionReview")}
+                    </p>
                     <p className="text-sm line-clamp-3">{description}</p>
                   </div>
 
                   {(files.length > 0 || existingAttachments.length > 0) && (
                     <div className="border-t pt-4">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-gray-500">Attachments</span>
+                        <span className="text-gray-500">
+                          {t("submit.attachmentsLabel")}
+                        </span>
                         <Badge
                           variant="outline"
                           className="bg-blue-50 text-blue-700 border-blue-200"
                         >
-                          {files.length + existingAttachments.length} file(s)
+                          {files.length + existingAttachments.length}{" "}
+                          {t("submit.files")}
                         </Badge>
                       </div>
                       <div className="space-y-2">
@@ -2153,17 +2162,21 @@ function TypeFormContent() {
                   )}
 
                   <div className="flex justify-between items-center border-t pt-4">
-                    <span className="text-gray-500">Privacy</span>
+                    <span className="text-gray-500">{t("submit.privacy")}</span>
                     <span className="flex items-center gap-1">
                       {isAnonymousToOfficer ? (
                         <>
                           <EyeOff className="h-4 w-4 text-green-600" />
-                          <span className="text-green-600">Anonymous</span>
+                          <span className="text-green-600">
+                            {t("submit.anonymous")}
+                          </span>
                         </>
                       ) : (
                         <>
                           <Eye className="h-4 w-4 text-blue-600" />
-                          <span className="text-blue-600">Visible</span>
+                          <span className="text-blue-600">
+                            {t("submit.visible")}
+                          </span>
                         </>
                       )}
                     </span>
@@ -2175,9 +2188,8 @@ function TypeFormContent() {
                     !isAnonymousToOfficer && (
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-2">
                         <p className="text-xs text-blue-700">
-                          <strong>Note:</strong> You&apos;ll receive a tracking
-                          ID after submission to track your grievance status
-                          anytime.
+                          <strong>{t("submit.noteLabel")}</strong>{" "}
+                          {t("submit.trackingIdNote")}
                         </p>
                       </div>
                     )}
@@ -2188,11 +2200,8 @@ function TypeFormContent() {
                     phoneCheckResult?.isRegistered && (
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-2">
                         <p className="text-xs text-blue-700">
-                          <strong>Welcome back!</strong> This phone number is
-                          already registered. Your submission will be
-                          automatically linked to your account. You can log in
-                          anytime to view all your submissions in your
-                          dashboard.
+                          <strong>{t("submit.welcomeBackReview")}</strong>{" "}
+                          {t("submit.phoneLinkedNote")}
                         </p>
                       </div>
                     )}
@@ -2202,10 +2211,8 @@ function TypeFormContent() {
                     !phoneCheckResult?.isRegistered && (
                       <div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-2">
                         <p className="text-xs text-green-700">
-                          <strong>Great!</strong> Since you provided a phone
-                          number, you&apos;ll be automatically registered. You
-                          can log in later to access your dashboard and track
-                          all your submissions.
+                          <strong>{t("submit.greatNote")}</strong>{" "}
+                          {t("submit.autoRegNote")}
                         </p>
                       </div>
                     )}
@@ -2218,7 +2225,7 @@ function TypeFormContent() {
                   <div className="flex items-center gap-2 mb-3">
                     <AlertCircle className="h-4 w-4 text-orange-600" />
                     <p className="text-sm font-medium text-orange-800">
-                      Need to make changes?
+                      {t("submit.needChanges")}
                     </p>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
@@ -2235,7 +2242,7 @@ function TypeFormContent() {
                       }}
                       className="text-xs h-8"
                     >
-                      Edit Details
+                      {t("submit.editDetails")}
                     </Button>
                     {queryType === "GRIEVANCE" && (
                       <Button
@@ -2251,7 +2258,7 @@ function TypeFormContent() {
                         }}
                         className="text-xs h-8"
                       >
-                        Edit Service
+                        {t("submit.editService")}
                       </Button>
                     )}
                     <Button
@@ -2267,7 +2274,7 @@ function TypeFormContent() {
                       }}
                       className="text-xs h-8"
                     >
-                      Edit Files
+                      {t("submit.editFiles")}
                     </Button>
                     <Button
                       variant="outline"
@@ -2282,7 +2289,7 @@ function TypeFormContent() {
                       }}
                       className="text-xs h-8"
                     >
-                      Edit Contact
+                      {t("submit.editContact")}
                     </Button>
                   </div>
                 </CardContent>
@@ -2299,11 +2306,10 @@ function TypeFormContent() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-blue-800">
-                          Phone Verification Required
+                          {t("submit.phoneVerificationRequired")}
                         </p>
                         <p className="text-xs text-blue-700 mt-1">
-                          To protect your submission, we&apos;ll send an OTP to
-                          verify your phone number before proceeding.
+                          {t("submit.phoneVerificationDesc")}
                         </p>
                       </div>
                     </div>
@@ -2321,10 +2327,10 @@ function TypeFormContent() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-green-800">
-                          Phone Verified ✓
+                          {t("submit.phoneVerified")}
                         </p>
                         <p className="text-xs text-green-700 mt-1">
-                          Your phone number has been verified for this session.
+                          {t("submit.phoneVerifiedNote")}
                         </p>
                       </div>
                     </div>
@@ -2335,12 +2341,7 @@ function TypeFormContent() {
               <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
                 <p className="text-xs text-gray-600 flex items-start gap-2">
                   <Info className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-gray-500" />
-                  <span>
-                    After submitting, you will receive a unique{" "}
-                    <strong>Tracking Reference ID</strong> that you can use to
-                    check your grievance status anytime. You can also download
-                    or copy the reference for safekeeping.
-                  </span>
+                  <span>{t("submit.afterSubmitNote")}</span>
                 </p>
               </div>
 
@@ -2352,7 +2353,11 @@ function TypeFormContent() {
                   className="w-full py-6 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                 >
                   <Send className="h-5 w-5 mr-2" />
-                  Submit {queryType === "GRIEVANCE" ? "Grievance" : "Feedback"}
+                  {t(
+                    queryType === "GRIEVANCE"
+                      ? "submit.submitGrievance"
+                      : "submit.submitFeedbackBtn",
+                  )}
                 </Button>
                 {/* Show Save as Draft for logged-in users OR guests with phone number */}
                 {(samadhanSession || citizenPhone.trim().length >= 10) && (
@@ -2365,12 +2370,12 @@ function TypeFormContent() {
                     {isSavingDraft ? (
                       <>
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Saving...
+                        {t("submit.saving")}
                       </>
                     ) : (
                       <>
                         <Save className="h-4 w-4 mr-2" />
-                        Save as Draft
+                        {t("submit.saveAsDraft")}
                       </>
                     )}
                   </Button>
@@ -2378,8 +2383,7 @@ function TypeFormContent() {
                 {/* Prompt to add phone for draft saving */}
                 {!samadhanSession && citizenPhone.trim().length < 10 && (
                   <p className="text-xs text-center text-gray-500">
-                    Add a phone number (10+ digits) to enable &quot;Save as
-                    Draft&quot;
+                    {t("submit.addPhoneForDraft")}
                   </p>
                 )}
               </div>
@@ -2397,7 +2401,7 @@ function TypeFormContent() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-green-600 mb-4" />
-        <p className="text-gray-600">Loading your draft...</p>
+        <p className="text-gray-600">{t("submit.loadingDraft")}</p>
       </div>
     );
   }
@@ -2407,7 +2411,7 @@ function TypeFormContent() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-green-600 mb-4" />
-        <p className="text-gray-600">Loading...</p>
+        <p className="text-gray-600">{t("submit.loading")}</p>
       </div>
     );
   }
@@ -2424,7 +2428,7 @@ function TypeFormContent() {
           className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Home
+          {t("submit.backToHome")}
         </Link>
 
         <Card className="border-green-100 shadow-lg overflow-hidden p-0 gap-0">
@@ -2443,8 +2447,8 @@ function TypeFormContent() {
               <div>
                 <CardTitle className="text-lg text-gray-900">
                   {queryType === "GRIEVANCE"
-                    ? "Submit Grievance"
-                    : "Submit Feedback"}
+                    ? t("submit.submitGrievanceTitle")
+                    : t("submit.submitFeedbackTitle")}
                 </CardTitle>
                 <CardDescription>
                   Step {currentStep + 1} of {steps.length}:{" "}
@@ -2457,7 +2461,7 @@ function TypeFormContent() {
                     variant="outline"
                     className="bg-amber-50 text-amber-700 border-amber-300"
                   >
-                    Editing Draft
+                    {t("submit.editingDraft")}
                   </Badge>
                 )}
                 <Badge variant="outline" className="bg-white">
@@ -2492,7 +2496,7 @@ function TypeFormContent() {
                     className="gap-2 hover:bg-gray-100 border-gray-300"
                   >
                     <ArrowLeft className="h-4 w-4" />
-                    Back
+                    {t("submit.back")}
                   </Button>
                 ) : (
                   <div></div>
@@ -2500,14 +2504,16 @@ function TypeFormContent() {
 
                 {currentStepData.id === "review" ? (
                   <div className="text-sm text-gray-500">
-                    Review your submission above
+                    {t("submit.reviewSubmissionAbove")}
                   </div>
                 ) : (
                   <Button
                     onClick={goToNextStep}
                     className="gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                   >
-                    {currentStep === steps.length - 2 ? "Review" : "Continue"}
+                    {currentStep === steps.length - 2
+                      ? t("submit.review")
+                      : t("submit.continue")}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 )}
@@ -2539,28 +2545,27 @@ function TypeFormContent() {
               <ShieldCheck className="h-10 w-10 text-white" />
             </div>
             <DialogTitle className="text-2xl text-center">
-              Ready to Submit?
+              {t("submit.readyToSubmit")}
             </DialogTitle>
             <DialogDescription asChild>
               <div className="text-center space-y-3 pt-2">
                 <span className="block text-base">
-                  Please verify all details before submitting your{" "}
-                  {queryType.toLowerCase()}.
+                  {t("submit.verifyAllDetails")} {queryType.toLowerCase()}.
                 </span>
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-left">
                   <span className="text-amber-800 text-sm font-medium flex items-center gap-2">
                     <AlertCircle className="h-4 w-4" />
-                    Before you submit:
+                    {t("submit.beforeSubmit")}
                   </span>
                   <ul className="text-amber-700 text-xs mt-2 space-y-1 ml-6 list-disc">
-                    <li>Ensure all information is accurate</li>
-                    <li>Verify your contact details are correct</li>
-                    <li>Review attached documents if any</li>
+                    <li>{t("submit.ensureAccurate")}</li>
+                    <li>{t("submit.verifyContactDetails")}</li>
+                    <li>{t("submit.reviewAttached")}</li>
                   </ul>
                 </div>
                 <span className="block text-sm text-gray-500">
-                  Once submitted, your {queryType.toLowerCase()} will be sent to
-                  the review queue.
+                  {t("submit.onceSubmitted")} {queryType.toLowerCase()}
+                  {t("submit.sentToReviewQueue")}
                 </span>
               </div>
             </DialogDescription>
@@ -2578,12 +2583,12 @@ function TypeFormContent() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Submitting...
+                  {t("submit.submitting")}
                 </>
               ) : (
                 <>
                   <Send className="h-4 w-4 mr-2" />
-                  Yes, Submit Now
+                  {t("submit.yesSubmitNow")}
                 </>
               )}
             </Button>
@@ -2593,7 +2598,7 @@ function TypeFormContent() {
               disabled={isSubmitting}
               className="w-full"
             >
-              Go Back & Review
+              {t("submit.goBackReview")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2617,16 +2622,17 @@ function TypeFormContent() {
               <Save className="h-10 w-10 text-white" />
             </div>
             <DialogTitle className="text-2xl text-center">
-              ✨ Draft Saved!
+              {t("submit.draftSaved")}
             </DialogTitle>
             <DialogDescription asChild>
               <div className="text-center space-y-2">
                 <span className="block">
-                  Your {queryType.toLowerCase()} has been saved as a draft.
+                  {t("submit.yourDraftSaved", {
+                    type: queryType.toLowerCase(),
+                  })}
                 </span>
                 <span className="block text-sm text-gray-500">
-                  You can continue editing and submit it later from your
-                  dashboard.
+                  {t("submit.continueEditingLaterDesc")}
                 </span>
               </div>
             </DialogDescription>
@@ -2634,7 +2640,7 @@ function TypeFormContent() {
 
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 text-center">
             <span className="text-sm text-gray-600 block mb-2">
-              Your Draft Reference
+              {t("submit.yourDraftReference")}
             </span>
             <span className="text-xl font-mono font-bold text-amber-700 bg-white rounded-lg px-4 py-2 inline-block">
               {submittedReferenceId}
@@ -2646,7 +2652,7 @@ function TypeFormContent() {
               onClick={() => router.push("/samadhan/dashboard")}
               className="w-full bg-gradient-to-r from-amber-500 to-orange-500"
             >
-              Go to Dashboard
+              {t("submit.goToDashboard")}
             </Button>
             <Button
               variant="outline"
@@ -2658,7 +2664,7 @@ function TypeFormContent() {
               }}
               className="w-full"
             >
-              Continue Editing
+              {t("submit.continueEditing")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2675,12 +2681,12 @@ function TypeFormContent() {
               <UserCircle className="h-10 w-10 text-white" />
             </div>
             <DialogTitle className="text-2xl text-center">
-              Submit as Guest?
+              {t("submit.submitAsGuest")}
             </DialogTitle>
             <DialogDescription asChild>
               <div className="text-center space-y-3 pt-2">
                 <span className="block text-base">
-                  You haven&apos;t provided a phone number.
+                  {t("submit.noPhoneProvided")}
                 </span>
               </div>
             </DialogDescription>
@@ -2688,36 +2694,35 @@ function TypeFormContent() {
 
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
             <p className="text-sm font-medium text-amber-800 mb-2">
-              As a guest, you will:
+              {t("submit.asGuestYouWill")}
             </p>
             <ul className="text-xs text-amber-700 space-y-1.5">
               <li className="flex items-start gap-2">
                 <Check className="h-3.5 w-3.5 text-green-600 mt-0.5 flex-shrink-0" />
-                Still receive a tracking ID for your submission
+                {t("submit.guestBenefit1")}
               </li>
               <li className="flex items-start gap-2">
                 <Check className="h-3.5 w-3.5 text-green-600 mt-0.5 flex-shrink-0" />
-                Be able to track your ticket status anytime
+                {t("submit.guestBenefit2")}
               </li>
               <li className="flex items-start gap-2">
                 <X className="h-3.5 w-3.5 text-red-500 mt-0.5 flex-shrink-0" />
-                NOT have access to a personal dashboard
+                {t("submit.guestLimitation1")}
               </li>
               <li className="flex items-start gap-2">
                 <X className="h-3.5 w-3.5 text-red-500 mt-0.5 flex-shrink-0" />
-                NOT receive SMS status updates
+                {t("submit.guestLimitation2")}
               </li>
               <li className="flex items-start gap-2">
                 <X className="h-3.5 w-3.5 text-red-500 mt-0.5 flex-shrink-0" />
-                NOT be able to view submission history
+                {t("submit.guestLimitation3")}
               </li>
             </ul>
           </div>
 
           <div className="bg-green-50 border border-green-200 rounded-lg p-3">
             <p className="text-xs text-green-700">
-              <strong>Tip:</strong> Go back and add your phone number to get
-              registered automatically and unlock all features!
+              <strong>Tip:</strong> {t("submit.tipGoBackPhone")}
             </p>
           </div>
 
@@ -2737,7 +2742,7 @@ function TypeFormContent() {
               className="w-full border-green-300 text-green-700 hover:bg-green-50"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Go Back & Add Phone
+              {t("submit.goBackAddPhone")}
             </Button>
             <Button
               onClick={() => {
@@ -2746,7 +2751,7 @@ function TypeFormContent() {
               }}
               className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"
             >
-              Continue as Guest
+              {t("submit.continueAsGuest")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2761,11 +2766,11 @@ function TypeFormContent() {
         }}
         onVerified={handleOtpVerified}
         phone={citizenPhone}
-        title="Verify Your Phone Number"
+        title={t("submit.verifyPhoneTitle")}
         description={
           phoneCheckResult?.isRegistered
-            ? "This phone number is already registered. Please verify to link your submission to your account."
-            : "Please verify your phone number to complete registration and submit your query."
+            ? t("submit.verifyPhoneRegistered")
+            : t("submit.verifyPhoneNew")
         }
         showPhoneInput={false}
         verifyOnly={true}

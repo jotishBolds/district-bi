@@ -49,6 +49,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 interface TicketData {
   id: string;
@@ -251,6 +252,7 @@ export default function TicketDetailPage({
   const { referenceId } = use(params);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useSamadhanI18n();
   const isPreVerified = searchParams.get("verified") === "true";
   const [ticket, setTicket] = useState<TicketData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -327,9 +329,7 @@ export default function TicketDetailPage({
       if (data.success) {
         // Block feedback tickets from being tracked
         if (data.data.queryType === "FEEDBACK") {
-          toast.error(
-            "Feedback submissions cannot be tracked. You can view them in your dashboard.",
-          );
+          toast.error(t("home.feedbackCannotBeTracked"));
           router.push("/samadhan");
           return;
         }
@@ -345,11 +345,11 @@ export default function TicketDetailPage({
         setAttachmentAccessToken(token);
         setIsOwnerVerified(true); // Auto-verify - anyone with tracking ID can view
       } else {
-        toast.error("Ticket not found");
+        toast.error(t("ticket.ticketNotFound"));
         router.push("/samadhan");
       }
     } catch (error) {
-      toast.error("Failed to load ticket");
+      toast.error(t("ticket.failedLoad"));
     } finally {
       setIsLoading(false);
     }
@@ -358,7 +358,7 @@ export default function TicketDetailPage({
   // Send OTP for attachment verification
   const handleSendVerificationOtp = async () => {
     if (!verifyPhone || verifyPhone.length < 10) {
-      toast.error("Please enter a valid phone number");
+      toast.error(t("login.invalidPhone"));
       return;
     }
 
@@ -378,12 +378,12 @@ export default function TicketDetailPage({
       const data = await response.json();
       if (data.success) {
         setOtpSent(true);
-        toast.success("OTP sent to your phone");
+        toast.success(t("login.otpSent"));
       } else {
-        toast.error(data.message || "Failed to send OTP");
+        toast.error(data.message || t("login.failedSendOtp"));
       }
     } catch (error) {
-      toast.error("Failed to send OTP");
+      toast.error(t("login.failedSendOtp"));
     } finally {
       setIsSendingOtp(false);
     }
@@ -392,7 +392,7 @@ export default function TicketDetailPage({
   // Verify OTP for attachment access
   const handleVerifyOtp = async () => {
     if (!verifyOtp || verifyOtp.length !== 6) {
-      toast.error("Please enter a valid 6-digit OTP");
+      toast.error(t("ticket.invalidOtp"));
       return;
     }
 
@@ -420,18 +420,16 @@ export default function TicketDetailPage({
         setShowVerifyModal(false);
         setShowOwnershipVerifyModal(false); // Close ownership modal too
         setIsOwnerVerified(true); // Mark ownership as verified
-        toast.success(
-          "Verified! You can now access the ticket details and attachments",
-        );
+        toast.success(t("ticket.verifiedAccess"));
 
         // Reset verification state
         setVerifyOtp("");
         setOtpSent(false);
       } else {
-        toast.error(data.message || "Invalid OTP");
+        toast.error(data.message || t("ticket.invalidOtp"));
       }
     } catch (error) {
-      toast.error("Verification failed");
+      toast.error(t("ticket.verificationFailed"));
     } finally {
       setIsVerifying(false);
     }
@@ -573,24 +571,24 @@ export default function TicketDetailPage({
       const data = await response.json();
 
       if (data.success) {
-        toast.success("Resolution accepted. Thank you!");
+        toast.success(t("ticket.resolutionAccepted"));
         fetchTicket();
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Failed to accept resolution");
+      toast.error(t("ticket.failedAcceptResolution"));
     }
   };
 
   const handleSubmitInfoResponse = async (requestId: string) => {
     if (!responseText.trim()) {
-      toast.error("Please provide a response");
+      toast.error(t("ticket.provideResponse"));
       return;
     }
 
     if (!ticket) {
-      toast.error("Ticket not found");
+      toast.error(t("ticket.ticketNotFound"));
       return;
     }
 
@@ -624,7 +622,7 @@ export default function TicketDetailPage({
       const data = await response.json();
 
       if (data.success) {
-        toast.success("Response submitted successfully");
+        toast.success(t("ticket.responseSubmitted"));
         setResponseText("");
         setSelectedInfoRequestId(null);
         fetchTicket();
@@ -632,7 +630,7 @@ export default function TicketDetailPage({
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Failed to submit response");
+      toast.error(t("ticket.failedSubmitResponse"));
     } finally {
       setIsSubmittingResponse(false);
     }
@@ -640,9 +638,7 @@ export default function TicketDetailPage({
 
   const handleFileAppeal = async () => {
     if (appealReason.length < 20) {
-      toast.error(
-        "Please provide a detailed reason for appeal (at least 20 characters)",
-      );
+      toast.error(t("ticket.appealReasonMin"));
       return;
     }
 
@@ -675,13 +671,13 @@ export default function TicketDetailPage({
       const data = await response.json();
 
       if (data.success) {
-        toast.success("Appeal filed successfully");
+        toast.success(t("ticket.appealFiled"));
         router.push(`/samadhan/track/${data.data.referenceId}`);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error("Failed to file appeal");
+      toast.error(t("ticket.failedFileAppeal"));
     }
   };
 
@@ -696,7 +692,7 @@ export default function TicketDetailPage({
   if (!ticket) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p>Ticket not found</p>
+        <p>{t("ticket.ticketNotFound")}</p>
       </div>
     );
   }
@@ -728,10 +724,9 @@ export default function TicketDetailPage({
               <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Shield className="h-8 w-8 text-orange-600" />
               </div>
-              <CardTitle>Verification Required</CardTitle>
+              <CardTitle>{t("ticket.verificationRequired")}</CardTitle>
               <CardDescription>
-                To view this ticket&apos;s details, please verify ownership by
-                entering the OTP sent to the registered phone number.
+                {t("ticket.verificationRequiredDesc")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -754,7 +749,7 @@ export default function TicketDetailPage({
                 <>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">
-                      Phone Number
+                      {t("ticket.phoneNumber")}
                     </label>
                     <div className="flex space-x-2">
                       <span className="inline-flex items-center px-3 py-2 border border-r-0 border-gray-300 bg-gray-50 text-gray-500 rounded-l-md text-sm">
@@ -768,13 +763,13 @@ export default function TicketDetailPage({
                             e.target.value.replace(/\D/g, "").slice(0, 10),
                           )
                         }
-                        placeholder="Enter your phone number"
+                        placeholder={t("ticket.enterPhoneNumber")}
                         className="rounded-l-none"
                         maxLength={10}
                       />
                     </div>
                     <p className="text-xs text-gray-500">
-                      Enter the phone number used to submit this ticket
+                      {t("ticket.enterPhoneUsed")}
                     </p>
                   </div>
                   <Button
@@ -785,12 +780,12 @@ export default function TicketDetailPage({
                     {isSendingOtp ? (
                       <>
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Sending OTP...
+                        {t("login.sendingOtp")}
                       </>
                     ) : (
                       <>
                         <Phone className="h-4 w-4 mr-2" />
-                        Send OTP
+                        {t("ticket.sendOtp")}
                       </>
                     )}
                   </Button>
@@ -799,7 +794,7 @@ export default function TicketDetailPage({
                 <>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700 text-center block">
-                      Enter OTP
+                      {t("ticket.enterOtp")}
                     </label>
                     <div className="flex justify-center">
                       <InputOTP
@@ -826,10 +821,10 @@ export default function TicketDetailPage({
                     {isVerifying ? (
                       <>
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Verifying...
+                        {t("login.verifying")}
                       </>
                     ) : (
-                      "Verify OTP"
+                      t("ticket.verifyOtp")
                     )}
                   </Button>
                   <Button
@@ -840,7 +835,7 @@ export default function TicketDetailPage({
                     }}
                     className="w-full text-sm"
                   >
-                    Change Phone Number
+                    {t("login.changeNumber")}
                   </Button>
                 </>
               )}
@@ -870,13 +865,10 @@ export default function TicketDetailPage({
               <MessageSquare className="h-5 w-5 text-green-600 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-green-800">
-                  Feedback Submitted
+                  {t("ticket.feedbackSubmitted")}
                 </p>
                 <p className="text-xs text-green-700 mt-1">
-                  Thank you for sharing your feedback. Feedback submissions are
-                  reviewed by higher authorities (DC, Admin) and do not have
-                  progress tracking like grievances. Your feedback helps us
-                  improve our services.
+                  {t("ticket.feedbackMessage")}
                 </p>
               </div>
             </div>
@@ -929,7 +921,7 @@ export default function TicketDetailPage({
             <div className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl p-5 border border-gray-100">
               <h3 className="text-sm font-semibold text-gray-800 mb-4 flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-green-600" />
-                Ticket Details
+                {t("ticket.ticketDetails")}
               </h3>
               <div className="grid sm:grid-cols-2 gap-4">
                 {/* Query Type */}
@@ -954,7 +946,9 @@ export default function TicketDetailPage({
                     />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Query Type</p>
+                    <p className="text-xs text-gray-500">
+                      {t("ticket.queryType")}
+                    </p>
                     <p className="font-semibold text-gray-900">
                       {ticket.queryType.charAt(0) +
                         ticket.queryType.slice(1).toLowerCase()}
@@ -970,7 +964,7 @@ export default function TicketDetailPage({
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">
-                        Section/Department
+                        {t("ticket.sectionDepartment")}
                       </p>
                       <p className="font-semibold text-gray-900">
                         {ticket.section.name}
@@ -986,7 +980,9 @@ export default function TicketDetailPage({
                       <FileText className="h-5 w-5 text-indigo-600" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Service Selected</p>
+                      <p className="text-xs text-gray-500">
+                        {t("ticket.serviceSelected")}
+                      </p>
                       <p className="font-semibold text-gray-900">
                         {ticket.serviceAvailed}
                       </p>
@@ -1000,7 +996,9 @@ export default function TicketDetailPage({
                     <Calendar className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Submitted On</p>
+                    <p className="text-xs text-gray-500">
+                      {t("ticket.submittedOn")}
+                    </p>
                     <p className="font-semibold text-gray-900">
                       {format(new Date(ticket.createdAt), "PPp")}
                     </p>
@@ -1015,7 +1013,7 @@ export default function TicketDetailPage({
                     </div>
                     <div>
                       <p className="text-xs text-gray-500">
-                        Expected Resolution
+                        {t("ticket.expectedResolution")}
                       </p>
                       <p className="font-semibold text-gray-900">
                         {format(new Date(ticket.slaDeadline), "PPp")}
@@ -1031,7 +1029,9 @@ export default function TicketDetailPage({
                       <User className="h-5 w-5 text-green-600" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Assigned Officer</p>
+                      <p className="text-xs text-gray-500">
+                        {t("ticket.assignedOfficer")}
+                      </p>
                       <p className="font-semibold text-gray-900">
                         {ticket.assignedOfficer.name}
                         {ticket.assignedOfficer.designation && (
@@ -1051,7 +1051,7 @@ export default function TicketDetailPage({
             {/* Description */}
             <div>
               <h3 className="text-sm font-medium text-gray-700 mb-2">
-                Description
+                {t("ticket.description")}
               </h3>
               <p className="text-gray-600 whitespace-pre-wrap">
                 {ticket.description}
@@ -1063,7 +1063,7 @@ export default function TicketDetailPage({
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-medium text-gray-700">
-                  Attachments
+                  {t("ticket.attachments")}
                 </h3>
                 {ticket.attachments.length > 0 && (
                   <span className="text-xs text-green-600 flex items-center gap-1">
@@ -1248,7 +1248,7 @@ export default function TicketDetailPage({
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                   <h3 className="text-sm font-medium text-green-800 mb-2 flex items-center">
                     <CheckCircle className="h-4 w-4 mr-2" />
-                    Resolution
+                    {t("ticket.resolution")}
                   </h3>
                   <p className="text-green-700 whitespace-pre-wrap">
                     {ticket.resolutionMessage}
@@ -1261,13 +1261,13 @@ export default function TicketDetailPage({
                         onClick={handleAcceptResolution}
                         className="bg-green-600 hover:bg-green-700"
                       >
-                        Accept Resolution
+                        {t("ticket.acceptResolution")}
                       </Button>
                       <Button
                         variant="outline"
                         onClick={() => setIsAppealModalOpen(true)}
                       >
-                        File Appeal
+                        {t("ticket.fileAppeal")}
                       </Button>
                     </div>
                   )}
@@ -1282,7 +1282,7 @@ export default function TicketDetailPage({
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
                   <h3 className="text-sm font-medium text-orange-800 mb-2 flex items-center">
                     <AlertCircle className="h-4 w-4 mr-2" />
-                    Information Requested
+                    {t("ticket.informationRequested")}
                   </h3>
                   <p className="text-orange-700 mb-3">
                     {pendingInfoRequest.description}
@@ -1312,7 +1312,7 @@ export default function TicketDetailPage({
                           ) : (
                             <Send className="h-4 w-4 mr-2" />
                           )}
-                          Submit Response
+                          {t("ticket.submitResponse")}
                         </Button>
                         <Button
                           variant="outline"
@@ -1328,7 +1328,7 @@ export default function TicketDetailPage({
                         setSelectedInfoRequestId(pendingInfoRequest.id)
                       }
                     >
-                      Respond Now
+                      {t("ticket.respondNow")}
                     </Button>
                   )}
                 </div>
@@ -1341,7 +1341,9 @@ export default function TicketDetailPage({
         {ticket.queryType === "GRIEVANCE" && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Status History</CardTitle>
+              <CardTitle className="text-lg">
+                {t("ticket.statusHistory")}
+              </CardTitle>
               {ticket.isAppeal && ticket.originalTicket && (
                 <CardDescription>
                   This is an appeal ticket for{" "}
@@ -1445,11 +1447,8 @@ export default function TicketDetailPage({
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <Card className="w-full max-w-md">
               <CardHeader>
-                <CardTitle>File Appeal</CardTitle>
-                <CardDescription>
-                  If you are not satisfied with the resolution, you can file an
-                  appeal.
-                </CardDescription>
+                <CardTitle>{t("ticket.fileAppeal")}</CardTitle>
+                <CardDescription>{t("ticket.fileAppealDesc")}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Textarea
@@ -1459,11 +1458,11 @@ export default function TicketDetailPage({
                   rows={5}
                 />
                 <p className="text-xs text-gray-500">
-                  Minimum 20 characters required
+                  {t("ticket.minCharsRequired")}
                 </p>
                 <div className="flex gap-2">
                   <Button onClick={handleFileAppeal} className="flex-1">
-                    Submit Appeal
+                    {t("ticket.submitAppeal")}
                   </Button>
                   <Button
                     variant="outline"
@@ -1486,19 +1485,15 @@ export default function TicketDetailPage({
                 <Shield className="h-7 w-7 text-white" />
               </div>
               <DialogTitle className="text-center">
-                Verify Your Identity
+                {t("otp.verifyIdentity")}
               </DialogTitle>
               <DialogDescription className="text-center">
                 {ticketOwnerPhone ? (
                   <>
-                    Enter your phone number ({ticketOwnerPhone}) and verify with
-                    OTP to access attachments
+                    {t("ticket.enterPhoneVerify")} ({ticketOwnerPhone})
                   </>
                 ) : (
-                  <>
-                    Enter your phone number to verify ownership and access
-                    attachments
-                  </>
+                  <>{t("ticket.enterPhoneOwnership")}</>
                 )}
               </DialogDescription>
             </DialogHeader>
@@ -1507,12 +1502,14 @@ export default function TicketDetailPage({
               {!otpSent ? (
                 <>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Phone Number</label>
+                    <label className="text-sm font-medium">
+                      {t("ticket.phoneNumber")}
+                    </label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                       <Input
                         type="tel"
-                        placeholder="Enter your phone number"
+                        placeholder={t("ticket.enterPhoneNumber")}
                         value={verifyPhone}
                         onChange={(e) =>
                           setVerifyPhone(
@@ -1524,7 +1521,7 @@ export default function TicketDetailPage({
                       />
                     </div>
                     <p className="text-xs text-gray-500">
-                      Enter the phone number used when submitting this query
+                      {t("ticket.enterPhoneUsed")}
                     </p>
                   </div>
                   <Button

@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { OTPVerificationModal } from "@/components/samadhan/OTPVerificationModal";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 interface SamadhanSession {
   userId: string;
@@ -52,6 +53,7 @@ interface TicketCheckResult {
 
 export default function SamadhanHomePage() {
   const router = useRouter();
+  const { t } = useSamadhanI18n();
   const [session, setSession] = useState<SamadhanSession | null>(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
 
@@ -206,18 +208,18 @@ export default function SamadhanHomePage() {
             <div className="text-white space-y-6">
               <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Shield className="w-4 h-4" />
-                <span>Secure & Transparent</span>
+                <span>{t("common.secureTransparent")}</span>
               </div>
 
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
-                Track Your
-                <span className="block text-green-200">Grievance Status</span>
+                {t("home.heroTitle1")}
+                <span className="block text-green-200">
+                  {t("home.heroTitle2")}
+                </span>
               </h1>
 
               <p className="text-lg text-green-100 max-w-lg">
-                Enter your reference ID to instantly check the status of your
-                submitted query. Track progress and get real-time updates on
-                your grievance resolution.
+                {t("home.heroDescription")}
               </p>
 
               {/* Features list */}
@@ -226,25 +228,25 @@ export default function SamadhanHomePage() {
                   <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                     <Clock className="w-4 h-4" />
                   </div>
-                  <span className="text-sm">Real-time Updates</span>
+                  <span className="text-sm">{t("home.realTimeUpdates")}</span>
                 </div>
                 <div className="flex items-center gap-2 text-green-100">
                   <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                     <Search className="w-4 h-4" />
                   </div>
-                  <span className="text-sm">Instant Tracking</span>
+                  <span className="text-sm">{t("home.instantTracking")}</span>
                 </div>
                 <div className="flex items-center gap-2 text-green-100">
                   <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                     <Eye className="w-4 h-4" />
                   </div>
-                  <span className="text-sm">Full Transparency</span>
+                  <span className="text-sm">{t("home.fullTransparency")}</span>
                 </div>
                 <div className="flex items-center gap-2 text-green-100">
                   <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                     <Bell className="w-4 h-4" />
                   </div>
-                  <span className="text-sm">Status Alerts</span>
+                  <span className="text-sm">{t("home.statusAlerts")}</span>
                 </div>
               </div>
             </div>
@@ -259,10 +261,10 @@ export default function SamadhanHomePage() {
                       <ScanLine className="w-8 h-8 text-white" />
                     </div>
                     <h2 className="text-xl font-semibold text-gray-900">
-                      Track Your Ticket
+                      {t("home.trackYourTicket")}
                     </h2>
                     <p className="text-gray-500 text-sm mt-1">
-                      Enter your reference ID below
+                      {t("home.enterRefId")}
                     </p>
                   </div>
 
@@ -326,14 +328,14 @@ export default function SamadhanHomePage() {
                     {ticketNotFound && (
                       <p className="text-sm text-red-600 text-center bg-red-50 rounded-lg px-4 py-2">
                         <AlertCircle className="w-4 h-4 inline mr-1" />
-                        Ticket not found. Please check the reference ID.
+                        {t("home.ticketNotFound")}
                       </p>
                     )}
 
                     {/* Help text */}
                     {!ticketNotFound && (
                       <p className="text-xs text-gray-500 text-center">
-                        Reference ID was provided when you submitted your query
+                        {t("home.refIdHelp")}
                       </p>
                     )}
                   </div>
@@ -347,7 +349,7 @@ export default function SamadhanHomePage() {
                           className="w-full rounded-full border-2 border-green-200 hover:bg-green-50 gap-2"
                         >
                           <User className="w-4 h-4" />
-                          View All My Tickets
+                          {t("home.viewAllMyTickets")}
                         </Button>
                       </Link>
                     </div>
@@ -369,15 +371,13 @@ export default function SamadhanHomePage() {
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              SAMADHAN
+              {t("home.portalTitle")}
             </h2>
             <p className="text-lg text-gray-600 mb-2">
-              Citizen Grievance & Feedback Portal
+              {t("home.portalSubtitle")}
             </p>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              Submit your grievances and feedback to the District Administrative
-              Centre, Gangtok. We ensure timely resolution and transparent
-              communication.
+              {t("home.portalDescription")}
             </p>
           </div>
 
@@ -393,7 +393,7 @@ export default function SamadhanHomePage() {
                     className="w-full sm:w-auto h-14 px-8 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-full gap-2 text-base shadow-lg"
                   >
                     <Shield className="h-5 w-5" />
-                    My Dashboard
+                    {t("common.myDashboard")}
                   </Button>
                 </Link>
                 <Link href="/samadhan/submit">
@@ -403,7 +403,7 @@ export default function SamadhanHomePage() {
                     className="w-full sm:w-auto h-14 px-8 rounded-full border-2 border-green-300 hover:bg-green-50 hover:border-green-400 gap-2 text-base"
                   >
                     <MessageSquare className="h-5 w-5" />
-                    Submit New Query
+                    {t("common.submitNewQuery")}
                   </Button>
                 </Link>
               </>
@@ -415,7 +415,7 @@ export default function SamadhanHomePage() {
                     className="w-full sm:w-auto h-14 px-8 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-full gap-2 text-base shadow-lg"
                   >
                     <LogIn className="h-5 w-5" />
-                    Login / Register
+                    {t("common.loginRegister")}
                   </Button>
                 </Link>
                 <Link href="/samadhan/submit">
@@ -425,7 +425,7 @@ export default function SamadhanHomePage() {
                     className="w-full sm:w-auto h-14 px-8 rounded-full border-2 border-green-300 hover:bg-green-50 hover:border-green-400 gap-2 text-base"
                   >
                     <Send className="h-5 w-5" />
-                    Submit Query
+                    {t("common.submitQuery")}
                   </Button>
                 </Link>
               </>
@@ -440,13 +440,12 @@ export default function SamadhanHomePage() {
                   <AlertCircle className="h-7 w-7 text-white" />
                 </div>
                 <CardTitle className="text-lg text-gray-900">
-                  File Grievances
+                  {t("home.fileGrievances")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-center pb-8">
                 <CardDescription className="text-gray-600">
-                  Report issues with government services and get timely
-                  resolution
+                  {t("home.fileGrievancesDesc")}
                 </CardDescription>
               </CardContent>
             </Card>
@@ -457,12 +456,12 @@ export default function SamadhanHomePage() {
                   <MessageSquare className="h-7 w-7 text-white" />
                 </div>
                 <CardTitle className="text-lg text-gray-900">
-                  Submit Feedback
+                  {t("home.submitFeedback")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-center pb-8">
                 <CardDescription className="text-gray-600">
-                  Share your experience and help us improve our services
+                  {t("home.submitFeedbackDesc")}
                 </CardDescription>
               </CardContent>
             </Card>
@@ -473,12 +472,12 @@ export default function SamadhanHomePage() {
                   <Clock className="h-7 w-7 text-white" />
                 </div>
                 <CardTitle className="text-lg text-gray-900">
-                  Track Status
+                  {t("common.trackStatus")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-center pb-8">
                 <CardDescription className="text-gray-600">
-                  Monitor the progress of your submitted queries in real-time
+                  {t("home.trackStatusDesc")}
                 </CardDescription>
               </CardContent>
             </Card>
@@ -491,13 +490,13 @@ export default function SamadhanHomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-full mb-4">
-              Simple Process
+              {t("home.simpleProcess")}
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              How It Works
+              {t("home.howItWorks")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Three simple steps to get your grievance addressed efficiently
+              {t("home.howItWorksDesc")}
             </p>
           </div>
 
@@ -519,11 +518,10 @@ export default function SamadhanHomePage() {
                       <FileText className="h-8 w-8 text-green-600" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-3">
-                      Submit Your Query
+                      {t("home.step1Title")}
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Fill out our simple form with your grievance or feedback.
-                      Attach supporting documents if needed.
+                      {t("home.step1Desc")}
                     </p>
                     <div className="mt-5 flex flex-wrap justify-center gap-2">
                       <span className="inline-flex items-center px-3 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full">
@@ -549,18 +547,18 @@ export default function SamadhanHomePage() {
                       <Eye className="h-8 w-8 text-blue-600" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-3">
-                      Track Progress
+                      {t("home.step2Title")}
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Use your reference ID to track real-time status. Receive
-                      SMS updates as your query moves through the system.
+                      {t("home.step2Desc")}
                     </p>
                     <div className="mt-5 flex flex-wrap justify-center gap-2">
                       <span className="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">
-                        <Clock className="h-3 w-3 mr-1" /> Real-time Updates
+                        <Clock className="h-3 w-3 mr-1" />{" "}
+                        {t("home.realTimeUpdates")}
                       </span>
                       <span className="inline-flex items-center px-3 py-1 bg-purple-50 text-purple-700 text-xs font-medium rounded-full">
-                        <Bell className="h-3 w-3 mr-1" /> SMS Alerts
+                        <Bell className="h-3 w-3 mr-1" /> {t("home.smsAlerts")}
                       </span>
                     </div>
                   </div>
@@ -579,18 +577,19 @@ export default function SamadhanHomePage() {
                       <CheckCircle className="h-8 w-8 text-emerald-600" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-3">
-                      Get Resolution
+                      {t("home.step3Title")}
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Receive timely resolution with detailed updates. Accept
-                      the resolution or file an appeal if not satisfied.
+                      {t("home.step3Desc")}
                     </p>
                     <div className="mt-5 flex flex-wrap justify-center gap-2">
                       <span className="inline-flex items-center px-3 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full">
-                        <CheckCircle className="h-3 w-3 mr-1" /> Accept
+                        <CheckCircle className="h-3 w-3 mr-1" />{" "}
+                        {t("home.accept")}
                       </span>
                       <span className="inline-flex items-center px-3 py-1 bg-orange-50 text-orange-700 text-xs font-medium rounded-full">
-                        <AlertCircle className="h-3 w-3 mr-1" /> Appeal
+                        <AlertCircle className="h-3 w-3 mr-1" />{" "}
+                        {t("home.appeal")}
                       </span>
                     </div>
                   </div>
@@ -606,7 +605,7 @@ export default function SamadhanHomePage() {
                 size="lg"
                 className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-full px-8 h-12 shadow-lg"
               >
-                Submit Your Query Now
+                {t("home.submitYourQueryNow")}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
@@ -619,10 +618,10 @@ export default function SamadhanHomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-              Why Register?
+              {t("home.whyRegister")}
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Create an account to unlock full features
+              {t("home.whyRegisterDesc")}
             </p>
           </div>
 
@@ -631,9 +630,11 @@ export default function SamadhanHomePage() {
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <Search className="h-6 w-6 text-green-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Track Status</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                {t("home.benefitTrackStatus")}
+              </h4>
               <p className="text-sm text-gray-600">
-                Track all your submitted queries in one dashboard
+                {t("home.benefitTrackStatusDesc")}
               </p>
             </div>
 
@@ -641,9 +642,11 @@ export default function SamadhanHomePage() {
               <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <FileText className="h-6 w-6 text-blue-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Attachments</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                {t("home.benefitAttachments")}
+              </h4>
               <p className="text-sm text-gray-600">
-                Upload and view supporting documents securely
+                {t("home.benefitAttachmentsDesc")}
               </p>
             </div>
 
@@ -652,10 +655,10 @@ export default function SamadhanHomePage() {
                 <Bell className="h-6 w-6 text-amber-600" />
               </div>
               <h4 className="font-semibold text-gray-900 mb-2">
-                Notifications
+                {t("home.benefitNotifications")}
               </h4>
               <p className="text-sm text-gray-600">
-                Get SMS alerts when your ticket status changes
+                {t("home.benefitNotificationsDesc")}
               </p>
             </div>
 
@@ -663,9 +666,11 @@ export default function SamadhanHomePage() {
               <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <MessageSquare className="h-6 w-6 text-purple-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Respond</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                {t("home.benefitRespond")}
+              </h4>
               <p className="text-sm text-gray-600">
-                Respond to officer queries and provide additional info
+                {t("home.benefitRespondDesc")}
               </p>
             </div>
           </div>
@@ -682,8 +687,8 @@ export default function SamadhanHomePage() {
         }}
         onVerified={handleOtpVerified}
         phone={pendingTicketPhone || ""}
-        title="Verify Your Identity"
-        description="This ticket is linked to a registered phone number. Please verify to view details."
+        title={t("otp.verifyIdentity")}
+        description={t("otp.verifyIdentityDesc")}
         showPhoneInput={false}
         referenceId={pendingTrackingId}
         verifyOnly={true}
