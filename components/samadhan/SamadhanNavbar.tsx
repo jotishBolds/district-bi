@@ -143,7 +143,7 @@ export default function SamadhanNavbar() {
 
             {/* Title */}
             <div className="min-w-0">
-              <h1 className="font-bold text-xl lg:text-2xl text-gray-900 leading-tight tracking-tight">
+              <h1 className="font-bold text-base sm:text-xl lg:text-2xl text-gray-900 leading-tight tracking-tight">
                 {t("common.samadhan")}
               </h1>
               <p className="text-xs lg:text-sm text-gray-500 hidden sm:block">
@@ -189,7 +189,7 @@ export default function SamadhanNavbar() {
           </div>
 
           {/* Right: Government Seal + User Section */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             {/* Government Seal */}
             <div className="hidden md:flex items-center">
               <Image
@@ -205,8 +205,10 @@ export default function SamadhanNavbar() {
             {/* Divider */}
             <div className="hidden md:block w-px h-8 bg-gray-200"></div>
 
-            {/* Language Switcher */}
-            <LanguageSwitcher />
+            {/* Language Switcher - hidden on small mobile, shown in mobile menu */}
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
 
             {/* User Section */}
             {isLoading ? (
@@ -270,10 +272,10 @@ export default function SamadhanNavbar() {
               <Link href="/samadhan/login">
                 <Button
                   size="sm"
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-full px-5 shadow-md hover:shadow-lg transition-all"
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-full px-3 sm:px-5 shadow-md hover:shadow-lg transition-all"
                 >
-                  <LogIn className="w-4 h-4 mr-2" />
-                  {t("nav.login")}
+                  <LogIn className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">{t("nav.login")}</span>
                 </Button>
               </Link>
             )}
@@ -295,6 +297,15 @@ export default function SamadhanNavbar() {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t border-gray-100 py-4 space-y-1 animate-in slide-in-from-top-2 duration-200">
+            {/* Language Switcher row - only visible on xs, hidden sm+ (shown in header there) */}
+            <div className="sm:hidden px-4 py-2 flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-500">
+                Language
+              </span>
+              <LanguageSwitcher />
+            </div>
+            <div className="sm:hidden border-t border-gray-100 mb-1"></div>
+
             <Link
               href="/samadhan"
               onClick={toggleMobileMenu}
