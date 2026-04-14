@@ -107,18 +107,18 @@ export default function SamadhanNavbar() {
           : "bg-white shadow-sm"
       }`}
     >
-      {/* Top Bar - Government Info */}
-      <div className="bg-gradient-to-r from-green-700 to-emerald-700 text-white py-1.5 px-4 hidden sm:block">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-xs">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
+      {/* Top Bar - Government Info - visible on all screen sizes */}
+      <div className="bg-gradient-to-r from-green-700 to-emerald-700 text-white py-1.5 px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between text-[10px] sm:text-xs">
+          <div className="flex items-center gap-1.5 sm:gap-4 min-w-0">
+            <span className="flex items-center gap-1 shrink-0">
               <Shield className="w-3 h-3" />
               {t("common.governmentOfSikkim")}
             </span>
-            <span className="text-green-200">|</span>
-            <span>{t("common.dacGangtok")}</span>
+            <span className="text-green-200 hidden xs:inline">|</span>
+            <span className="hidden sm:inline">{t("common.dacGangtok")}</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 shrink-0">
             <span className="text-green-200">{t("common.contact")}</span>
           </div>
         </div>
@@ -205,80 +205,80 @@ export default function SamadhanNavbar() {
             {/* Divider */}
             <div className="hidden md:block w-px h-8 bg-gray-200"></div>
 
-            {/* Language Switcher - hidden on small mobile, shown in mobile menu */}
-            <div className="hidden sm:block">
-              <LanguageSwitcher />
-            </div>
+            {/* Language Switcher - visible on all screen sizes in navbar */}
+            <LanguageSwitcher />
 
-            {/* User Section */}
-            {isLoading ? (
-              <div className="w-10 h-10 rounded-full bg-gray-100 animate-pulse" />
-            ) : session ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="flex items-center gap-2 hover:bg-green-50 rounded-full px-3 h-10"
+            {/* User Section - hidden on mobile (moved to toggle menu) */}
+            <div className="hidden lg:flex items-center">
+              {isLoading ? (
+                <div className="w-10 h-10 rounded-full bg-gray-100 animate-pulse" />
+              ) : session ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex items-center gap-2 hover:bg-green-50 rounded-full px-3 h-10"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-medium text-sm shadow-sm">
+                        {session.name.charAt(0).toUpperCase()}
+                      </div>
+                      <span className="text-gray-700 font-medium max-w-[100px] truncate">
+                        {session.name}
+                      </span>
+                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-56 rounded-xl shadow-xl border-0"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-medium text-sm shadow-sm">
-                      {session.name.charAt(0).toUpperCase()}
+                    <div className="px-4 py-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-t-xl">
+                      <p className="text-sm font-semibold text-gray-900">
+                        {session.name}
+                      </p>
+                      <p className="text-xs text-gray-500">{session.phone}</p>
                     </div>
-                    <span className="hidden lg:inline text-gray-700 font-medium max-w-[100px] truncate">
-                      {session.name}
-                    </span>
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="w-56 rounded-xl shadow-xl border-0"
-                >
-                  <div className="px-4 py-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-t-xl">
-                    <p className="text-sm font-semibold text-gray-900">
-                      {session.name}
-                    </p>
-                    <p className="text-xs text-gray-500">{session.phone}</p>
-                  </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href="/samadhan/dashboard"
-                      className="cursor-pointer flex items-center gap-2 py-2"
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/samadhan/dashboard"
+                        className="cursor-pointer flex items-center gap-2 py-2"
+                      >
+                        <LayoutDashboard className="w-4 h-4 text-green-600" />
+                        <span>{t("nav.myDashboard")}</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/samadhan/profile"
+                        className="cursor-pointer flex items-center gap-2 py-2"
+                      >
+                        <User className="w-4 h-4 text-green-600" />
+                        <span>{t("nav.profileSettings")}</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2 py-2"
                     >
-                      <LayoutDashboard className="w-4 h-4 text-green-600" />
-                      <span>{t("nav.myDashboard")}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href="/samadhan/profile"
-                      className="cursor-pointer flex items-center gap-2 py-2"
-                    >
-                      <User className="w-4 h-4 text-green-600" />
-                      <span>{t("nav.profileSettings")}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleLogout}
-                    className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2 py-2"
+                      <LogOut className="w-4 h-4" />
+                      <span>{t("nav.signOut")}</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link href="/samadhan/login">
+                  <Button
+                    size="sm"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-full px-5 shadow-md hover:shadow-lg transition-all"
                   >
-                    <LogOut className="w-4 h-4" />
-                    <span>{t("nav.signOut")}</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Link href="/samadhan/login">
-                <Button
-                  size="sm"
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-full px-3 sm:px-5 shadow-md hover:shadow-lg transition-all"
-                >
-                  <LogIn className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">{t("nav.login")}</span>
-                </Button>
-              </Link>
-            )}
+                    <LogIn className="w-4 h-4 mr-2" />
+                    {t("nav.login")}
+                  </Button>
+                </Link>
+              )}
+            </div>
 
             {/* Mobile Menu Button */}
             <button
@@ -297,15 +297,6 @@ export default function SamadhanNavbar() {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t border-gray-100 py-4 space-y-1 animate-in slide-in-from-top-2 duration-200">
-            {/* Language Switcher row - only visible on xs, hidden sm+ (shown in header there) */}
-            <div className="sm:hidden px-4 py-2 flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-500">
-                Language
-              </span>
-              <LanguageSwitcher />
-            </div>
-            <div className="sm:hidden border-t border-gray-100 mb-1"></div>
-
             <Link
               href="/samadhan"
               onClick={toggleMobileMenu}

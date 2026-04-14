@@ -352,7 +352,10 @@ function TypeFormContent() {
   const [isCheckingSession, setIsCheckingSession] = useState(true);
 
   // Current step tracking
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(() => {
+    const stepParam = searchParams.get("step");
+    return stepParam ? parseInt(stepParam, 10) : 0;
+  });
   const [queryType, setQueryType] = useState<QueryType>(
     (searchParams.get("type") as QueryType) || "GRIEVANCE",
   );
@@ -1368,26 +1371,11 @@ function TypeFormContent() {
                       {t("submit.howToWriteEffective")}
                     </p>
                     <ul className="text-xs text-blue-800 space-y-1 list-disc ml-4">
-                      <li>
-                        <strong>Subject:</strong> Write a short, clear title —
-                        e.g., &quot;Delay in birth certificate issuance&quot;
-                      </li>
-                      <li>
-                        <strong>Description:</strong> Explain what happened,
-                        when it happened, and which office/department was
-                        involved
-                      </li>
-                      <li>
-                        Mention any reference numbers, application IDs, or names
-                        of officials if you have them
-                      </li>
-                      <li>
-                        Describe what outcome or resolution you are expecting
-                      </li>
-                      <li>
-                        Keep it factual and respectful — it helps officers
-                        address your concern faster
-                      </li>
+                      <li>{t("submit.guideSubjectTip")}</li>
+                      <li>{t("submit.guideDescriptionTip")}</li>
+                      <li>{t("submit.guideReferencesTip")}</li>
+                      <li>{t("submit.guideOutcomeTip")}</li>
+                      <li>{t("submit.guideFactualTip")}</li>
                     </ul>
                   </div>
                 </div>
@@ -1662,7 +1650,9 @@ function TypeFormContent() {
                 <div className="mb-6">
                   <p className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    Previously uploaded files ({existingAttachments.length})
+                    {t("submit.previouslyUploaded", {
+                      count: existingAttachments.length,
+                    })}
                   </p>
                   <div className="space-y-2">
                     {existingAttachments.map((attachment) => (
@@ -1691,7 +1681,7 @@ function TypeFormContent() {
                           variant="outline"
                           className="text-green-600 border-green-300"
                         >
-                          Saved
+                          {t("submit.saved")}
                         </Badge>
                       </div>
                     ))}
@@ -2121,14 +2111,14 @@ function TypeFormContent() {
                               <p className="text-xs text-gray-500">
                                 {attachment.fileSize
                                   ? `${(attachment.fileSize / 1024).toFixed(1)} KB`
-                                  : "Saved"}
+                                  : t("submit.saved")}
                               </p>
                             </div>
                             <Badge
                               variant="outline"
                               className="text-green-600 border-green-300 text-xs"
                             >
-                              Saved
+                              {t("submit.saved")}
                             </Badge>
                           </div>
                         ))}
@@ -2153,7 +2143,7 @@ function TypeFormContent() {
                               variant="outline"
                               className="text-blue-600 border-blue-300 text-xs"
                             >
-                              New
+                              {t("submit.newFile")}
                             </Badge>
                           </div>
                         ))}
@@ -2451,8 +2441,11 @@ function TypeFormContent() {
                     : t("submit.submitFeedbackTitle")}
                 </CardTitle>
                 <CardDescription>
-                  Step {currentStep + 1} of {steps.length}:{" "}
-                  {currentStepData.title}
+                  {t("submit.stepOfTitle", {
+                    current: currentStep + 1,
+                    total: steps.length,
+                  })}{" "}
+                  {t(`submit.step.${currentStepData.id}`)}
                 </CardDescription>
               </div>
               <div className="flex items-center gap-2">

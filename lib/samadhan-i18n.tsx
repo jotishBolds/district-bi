@@ -149,10 +149,10 @@ const en: TranslationDict = {
   "footer.accessibility": "Accessibility",
 
   // ── Home Page ──
-  "home.heroTitle1": "Track Your",
-  "home.heroTitle2": "Grievance Status",
+  "home.heroTitle1": "Raise a Concern,",
+  "home.heroTitle2": "Get It Resolved",
   "home.heroDescription":
-    "Enter your reference ID to instantly check the status of your submitted query. Track progress and get real-time updates on your grievance resolution.",
+    "DAC Gangtok's digital grievance portal. Submit grievances, share feedback, and track your query status — all in one place.",
   "home.realTimeUpdates": "Real-time Updates",
   "home.instantTracking": "Instant Tracking",
   "home.fullTransparency": "Full Transparency",
@@ -206,6 +206,11 @@ const en: TranslationDict = {
   "home.smsAlerts": "SMS Alerts",
   "home.accept": "Accept",
   "home.appeal": "Appeal",
+  "home.submitQueryTitle": "Submit a New Query",
+  "home.submitQueryDesc": "Select the type to proceed directly",
+  "home.reportIssue": "Report an issue",
+  "home.shareFeedback": "Share experience",
+  "home.forFullFeatures": "for full features & tracking",
   "home.feedbackCannotBeTracked":
     "Feedback submissions cannot be tracked. You can view them in your dashboard.",
 
@@ -467,6 +472,16 @@ const en: TranslationDict = {
   "submit.tipMentionFollowUps":
     "Mention any previous follow-ups or visits you have made",
   "submit.howToWriteEffective": "How to write an effective grievance",
+  "submit.guideSubjectTip":
+    'Subject: Write a short, clear title — e.g., "Delay in birth certificate issuance"',
+  "submit.guideDescriptionTip":
+    "Description: Explain what happened, when it happened, and which office/department was involved",
+  "submit.guideReferencesTip":
+    "Mention any reference numbers, application IDs, or names of officials if you have them",
+  "submit.guideOutcomeTip":
+    "Describe what outcome or resolution you are expecting",
+  "submit.guideFactualTip":
+    "Keep it factual and respectful — it helps officers address your concern faster",
   "submit.subjectLabel": "What's this about?",
   "submit.subjectPlaceholder": "Delay in document processing",
   "submit.descriptionLabel": "Tell us more",
@@ -634,6 +649,16 @@ const en: TranslationDict = {
   "submit.submitGrievanceTitle": "Submit Grievance",
   "submit.submitFeedbackTitle": "Submit Feedback",
   "submit.stepOfTitle": "Step {current} of {total}:",
+  "submit.step.type": "Query Type",
+  "submit.step.visit": "DC Visit",
+  "submit.step.date": "Visit Date",
+  "submit.step.service": "Service",
+  "submit.step.categories": "Categories",
+  "submit.step.details": "Details",
+  "submit.step.attachments": "Proof",
+  "submit.step.contact": "Contact",
+  "submit.step.review": "Review",
+  "submit.step.feedback-form": "Share Feedback",
   "submit.editingDraft": "Editing Draft",
   "submit.back": "Back",
   "submit.continue": "Continue",
@@ -867,10 +892,10 @@ const hi: TranslationDict = {
   "footer.accessibility": "पहुँच",
 
   // ── Home Page ──
-  "home.heroTitle1": "अपनी",
-  "home.heroTitle2": "शिकायत की स्थिति ट्रैक करें",
+  "home.heroTitle1": "समस्या दर्ज करें,",
+  "home.heroTitle2": "समाधान पाएं",
   "home.heroDescription":
-    "अपनी जमा की गई शिकायत की स्थिति तुरंत जांचने के लिए अपना संदर्भ आईडी दर्ज करें। प्रगति ट्रैक करें और अपनी शिकायत समाधान पर रियल-टाइम अपडेट प्राप्त करें।",
+    "DAC गंगटोक का डिजिटल शिकायत पोर्टल। शिकायतें दर्ज करें, प्रतिक्रिया दें और अपनी क्वेरी की स्थिति ट्रैक करें — सब एक जगह।",
   "home.realTimeUpdates": "रियल-टाइम अपडेट",
   "home.instantTracking": "तुरंत ट्रैकिंग",
   "home.fullTransparency": "पूर्ण पारदर्शिता",
@@ -924,6 +949,11 @@ const hi: TranslationDict = {
   "home.smsAlerts": "एसएमएस अलर्ट",
   "home.accept": "स्वीकार करें",
   "home.appeal": "अपील",
+  "home.submitQueryTitle": "नई शिकायत दर्ज करें",
+  "home.submitQueryDesc": "आगे बढ़ने के लिए प्रकार चुनें",
+  "home.reportIssue": "समस्या दर्ज करें",
+  "home.shareFeedback": "अनुभव साझा करें",
+  "home.forFullFeatures": "पूर्ण सुविधाओं और ट्रैकिंग के लिए",
   "home.feedbackCannotBeTracked":
     "प्रतिक्रिया जमा को ट्रैक नहीं किया जा सकता। आप इन्हें अपने डैशबोर्ड में देख सकते हैं।",
 
@@ -1185,6 +1215,16 @@ const hi: TranslationDict = {
   "submit.tipDescribeWhat": "क्या हुआ और आप क्या अपेक्षा करते थे वर्णन करें",
   "submit.tipMentionFollowUps": "किसी भी पिछले फॉलो-अप या दौरों का उल्लेख करें",
   "submit.howToWriteEffective": "प्रभावी शिकायत कैसे लिखें",
+  "submit.guideSubjectTip":
+    'विषय: एक छोटा, स्पष्ट शीर्षक लिखें — जैसे, "जन्म प्रमाण पत्र जारी करने में देरी"',
+  "submit.guideDescriptionTip":
+    "विवरण: बताएं क्या हुआ, कब हुआ, और कौन सा कार्यालय/विभाग शामिल था",
+  "submit.guideReferencesTip":
+    "कोई भी संदर्भ संख्या, आवेदन आईडी, या अधिकारियों के नाम का उल्लेख करें यदि उपलब्ध हो",
+  "submit.guideOutcomeTip":
+    "बताएं आप कौन सा परिणाम या समाधान अपेक्षित करते हैं",
+  "submit.guideFactualTip":
+    "तथ्यात्मक और सम्मानजनक रहें — इससे अधिकारियों को आपकी चिंता जल्दी हल करने में मदद मिलती है",
   "submit.subjectLabel": "यह किस बारे में है?",
   "submit.subjectPlaceholder": "दस्तावेज़ प्रसंस्करण में देरी",
   "submit.descriptionLabel": "हमें और बताएं",
@@ -1350,6 +1390,16 @@ const hi: TranslationDict = {
   "submit.submitGrievanceTitle": "शिकायत दर्ज करें",
   "submit.submitFeedbackTitle": "प्रतिक्रिया दर्ज करें",
   "submit.stepOfTitle": "चरण {current} / {total}:",
+  "submit.step.type": "शिकायत का प्रकार",
+  "submit.step.visit": "DC दौरा",
+  "submit.step.date": "दौरे की तारीख",
+  "submit.step.service": "सेवा",
+  "submit.step.categories": "श्रेणियाँ",
+  "submit.step.details": "विवरण",
+  "submit.step.attachments": "प्रमाण",
+  "submit.step.contact": "संपर्क",
+  "submit.step.review": "समीक्षा",
+  "submit.step.feedback-form": "प्रतिक्रिया साझा करें",
   "submit.editingDraft": "ड्राफ्ट संपादन",
   "submit.back": "वापस",
   "submit.continue": "जारी रखें",
@@ -1577,10 +1627,10 @@ const ne: TranslationDict = {
   "footer.accessibility": "पहुँच",
 
   // ── Home Page ──
-  "home.heroTitle1": "आफ्नो",
-  "home.heroTitle2": "गुनासोको स्थिति ट्र्याक गर्नुहोस्",
+  "home.heroTitle1": "समस्या राख्नुहोस्,",
+  "home.heroTitle2": "समाधान पाउनुहोस्",
   "home.heroDescription":
-    "आफ्नो पेश गरिएको सोधपुछको स्थिति तुरुन्तै जाँच गर्न आफ्नो सन्दर्भ आईडी प्रविष्ट गर्नुहोस्। प्रगति ट्र्याक गर्नुहोस् र गुनासो समाधानमा रियल-टाइम अपडेट प्राप्त गर्नुहोस्।",
+    "DAC गङ्गटोकको डिजिटल गुनासो पोर्टल। गुनासो पेश गर्नुहोस्, प्रतिक्रिया दिनुहोस् र आफ्नो सोधपुछको स्थिति ट्र्याक गर्नुहोस् — सबै एकै ठाउँमा।",
   "home.realTimeUpdates": "रियल-टाइम अपडेट",
   "home.instantTracking": "तत्काल ट्र्याकिङ",
   "home.fullTransparency": "पूर्ण पारदर्शिता",
@@ -1634,6 +1684,11 @@ const ne: TranslationDict = {
   "home.smsAlerts": "SMS अलर्ट",
   "home.accept": "स्वीकार गर्नुहोस्",
   "home.appeal": "अपिल",
+  "home.submitQueryTitle": "नयाँ उजुरी पेश गर्नुहोस्",
+  "home.submitQueryDesc": "अगाडि बढ्न प्रकार छान्नुहोस्",
+  "home.reportIssue": "समस्या रिपोर्ट गर्नुहोस्",
+  "home.shareFeedback": "अनुभव साझा गर्नुहोस्",
+  "home.forFullFeatures": "पूर्ण सुविधा र ट्र्याकिङको लागि",
   "home.feedbackCannotBeTracked":
     "प्रतिक्रिया पेशहरू ट्र्याक गर्न सकिँदैन। तपाईं यिनीहरूलाई आफ्नो ड्यासबोर्डमा हेर्न सक्नुहुन्छ।",
 
@@ -1900,6 +1955,16 @@ const ne: TranslationDict = {
   "submit.tipMentionFollowUps":
     "कुनै पनि पहिलेका फलो-अप वा भ्रमणहरू उल्लेख गर्नुहोस्",
   "submit.howToWriteEffective": "प्रभावकारी गुनासो कसरी लेख्ने",
+  "submit.guideSubjectTip":
+    'विषय: एक छोटो, स्पष्ट शीर्षक लेख्नुहोस् — जस्तै, "जन्म प्रमाणपत्र जारी गर्न ढिलाइ"',
+  "submit.guideDescriptionTip":
+    "विवरण: के भयो, कहिले भयो, र कुन कार्यालय/विभाग संलग्न थियो बताउनुहोस्",
+  "submit.guideReferencesTip":
+    "कुनै पनि सन्दर्भ नम्बर, आवेदन आईडी, वा अधिकारीहरूका नाम उल्लेख गर्नुहोस् यदि उपलब्ध छ भने",
+  "submit.guideOutcomeTip":
+    "तपाईं कुन परिणाम वा समाधान अपेक्षा गर्नुहुन्छ वर्णन गर्नुहोस्",
+  "submit.guideFactualTip":
+    "तथ्यात्मक र सम्मानजनक राख्नुहोस् — यसले अधिकारीहरूलाई तपाईंको चिन्ता छिटो समाधान गर्न मद्दत गर्छ",
   "submit.subjectLabel": "यो के बारेमा हो?",
   "submit.subjectPlaceholder": "कागजात प्रशोधनमा ढिलाइ",
   "submit.descriptionLabel": "हामीलाई थप बताउनुहोस्",
@@ -2073,6 +2138,16 @@ const ne: TranslationDict = {
   "submit.submitGrievanceTitle": "गुनासो पेश गर्नुहोस्",
   "submit.submitFeedbackTitle": "प्रतिक्रिया पेश गर्नुहोस्",
   "submit.stepOfTitle": "चरण {current} / {total}:",
+  "submit.step.type": "गुनासोको प्रकार",
+  "submit.step.visit": "DC भ्रमण",
+  "submit.step.date": "भ्रमणको मिति",
+  "submit.step.service": "सेवा",
+  "submit.step.categories": "श्रेणीहरू",
+  "submit.step.details": "विवरण",
+  "submit.step.attachments": "प्रमाण",
+  "submit.step.contact": "सम्पर्क",
+  "submit.step.review": "समीक्षा",
+  "submit.step.feedback-form": "प्रतिक्रिया साझा गर्नुहोस्",
   "submit.editingDraft": "ड्राफ्ट सम्पादन",
   "submit.back": "पछाडि",
   "submit.continue": "जारी राख्नुहोस्",
