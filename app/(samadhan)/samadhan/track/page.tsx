@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { OTPVerificationModal } from "@/components/samadhan/OTPVerificationModal";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 interface SamadhanSession {
   userId: string;
@@ -48,6 +49,7 @@ export default function TrackPage() {
   const [session, setSession] = useState<SamadhanSession | null>(null);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const router = useRouter();
+  const { t } = useSamadhanI18n();
 
   // OTP Verification states
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -98,7 +100,7 @@ export default function TrackPage() {
     e.preventDefault();
 
     if (!referenceId.trim()) {
-      toast.error("Please enter a reference ID");
+      toast.error(t("track.pleaseEnterRefId"));
       return;
     }
 
@@ -112,15 +114,13 @@ export default function TrackPage() {
 
       if (!ticketInfo || !ticketInfo.exists) {
         setTicketNotFound(true);
-        toast.error("Ticket not found. Please check the reference ID.");
+        toast.error(t("track.ticketNotFound"));
         return;
       }
 
       // Feedback submissions cannot be tracked - only viewable in dashboard
       if (ticketInfo.queryType === "FEEDBACK") {
-        toast.error(
-          "Feedback submissions cannot be tracked. You can view them in your dashboard.",
-        );
+        toast.error(t("home.feedbackCannotBeTracked"));
         return;
       }
 
@@ -160,7 +160,7 @@ export default function TrackPage() {
       // Case 3: Guest ticket or no phone - allow direct access
       router.push(`/samadhan/track/${trimmedId}`);
     } catch (error) {
-      toast.error("Failed to search. Please try again.");
+      toast.error(t("track.failedSearch"));
     } finally {
       setIsSearching(false);
     }
@@ -189,7 +189,7 @@ export default function TrackPage() {
           className="inline-flex items-center text-sm text-gray-600 hover:text-green-600 mb-8"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Home
+          {t("common.backToHome")}
         </Link>
 
         <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden p-0">
@@ -198,16 +198,16 @@ export default function TrackPage() {
               <Search className="h-8 w-8 text-white" />
             </div>
             <CardTitle className="text-2xl font-bold text-gray-900">
-              Track Your Query
+              {t("track.trackYourQuery")}
             </CardTitle>
             <CardDescription className="text-gray-600">
-              Enter your reference ID to check the status of your query
+              {t("track.enterRefIdDesc")}
             </CardDescription>
             {/* Session info if logged in */}
             {session && (
               <div className="mt-4 bg-green-50 rounded-xl p-3 border border-green-100">
                 <p className="text-sm text-green-700">
-                  Logged in as{" "}
+                  {t("track.loggedInAs")}{" "}
                   <span className="font-semibold">{session.name}</span>
                 </p>
               </div>
@@ -254,11 +254,11 @@ export default function TrackPage() {
                 {ticketNotFound ? (
                   <p className="text-xs text-red-600 mt-2 text-center bg-red-50 rounded-lg px-3 py-2">
                     <AlertCircle className="w-3 h-3 inline mr-1" />
-                    Ticket not found. Please check the reference ID.
+                    {t("track.ticketNotFound")}
                   </p>
                 ) : (
                   <p className="text-xs text-gray-500 mt-2 text-center">
-                    Reference ID was provided when you submitted your query
+                    {t("track.refIdHelp")}
                   </p>
                 )}
               </div>
@@ -267,24 +267,20 @@ export default function TrackPage() {
             {/* How it works */}
             <div className="mt-6 pt-6 border-t border-gray-100">
               <h4 className="text-sm font-medium text-gray-900 mb-3 text-center">
-                How Tracking Works
+                {t("track.howTrackingWorks")}
               </h4>
               <div className="space-y-3">
                 <div className="flex items-start gap-3 text-sm text-gray-600">
                   <FileText className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>Enter your reference ID to find your ticket</span>
+                  <span>{t("track.step1")}</span>
                 </div>
                 <div className="flex items-start gap-3 text-sm text-gray-600">
                   <Shield className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>
-                    Verify ownership via OTP sent to your registered phone
-                  </span>
+                  <span>{t("track.step2")}</span>
                 </div>
                 <div className="flex items-start gap-3 text-sm text-gray-600">
                   <MessageSquare className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>
-                    View full details, attachments, and respond to requests
-                  </span>
+                  <span>{t("track.step3")}</span>
                 </div>
               </div>
             </div>
@@ -293,7 +289,7 @@ export default function TrackPage() {
             {session && (
               <div className="mt-6 pt-6 border-t border-gray-100 text-center">
                 <p className="text-sm text-gray-600 mb-3">
-                  View all your queries in one place
+                  {t("track.viewAllQueries")}
                 </p>
                 <Link href="/samadhan/dashboard">
                   <Button
@@ -301,7 +297,7 @@ export default function TrackPage() {
                     className="rounded-full border-2 border-green-200 hover:bg-green-50 hover:border-green-400 gap-2"
                   >
                     <User className="w-4 h-4" />
-                    Go to Dashboard
+                    {t("track.goToDashboard")}
                   </Button>
                 </Link>
               </div>
@@ -311,7 +307,7 @@ export default function TrackPage() {
             {!session && (
               <div className="mt-6 pt-6 border-t border-gray-100 text-center">
                 <p className="text-sm text-gray-600 mb-3">
-                  Want to see all your queries and get notifications?
+                  {t("track.wantSeeAllQueries")}
                 </p>
                 <Link href="/samadhan/login">
                   <Button
@@ -319,7 +315,7 @@ export default function TrackPage() {
                     className="rounded-full border-2 border-green-200 hover:bg-green-50 hover:border-green-400 gap-2"
                   >
                     <User className="w-4 h-4" />
-                    Login / Register
+                    {t("common.loginRegister")}
                   </Button>
                 </Link>
               </div>
@@ -338,8 +334,8 @@ export default function TrackPage() {
         }}
         onVerified={handleOtpVerified}
         phone={pendingTicketPhone || ""}
-        title="Verify Your Identity"
-        description="This ticket is linked to a registered phone number. Please verify to view details."
+        title={t("otp.verifyIdentity")}
+        description={t("otp.verifyIdentityDesc")}
         showPhoneInput={false}
         referenceId={pendingTrackingId}
         verifyOnly={true}

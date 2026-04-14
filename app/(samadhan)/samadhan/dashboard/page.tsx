@@ -57,6 +57,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format, formatDistanceToNow } from "date-fns";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 interface Ticket {
   referenceId: string;
@@ -162,6 +163,7 @@ const queryTypeConfig = {
 
 export default function CitizenDashboardPage() {
   const router = useRouter();
+  const { t } = useSamadhanI18n();
   const [user, setUser] = useState<SamadhanUser | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -300,7 +302,7 @@ export default function CitizenDashboardPage() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-emerald-50">
         <div className="text-center">
           <Loader2 className="h-10 w-10 animate-spin text-green-600 mx-auto mb-4" />
-          <p className="text-gray-500">Loading your dashboard...</p>
+          <p className="text-gray-500">{t("dashboard.loadingDashboard")}</p>
         </div>
       </div>
     );
@@ -319,10 +321,12 @@ export default function CitizenDashboardPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                Welcome back, {user.name?.split(" ")[0] || "Citizen"}!
+                {t("dashboard.welcomeBack", {
+                  name: user.name?.split(" ")[0] || "Citizen",
+                })}
               </h1>
               <p className="text-gray-500 mt-1">
-                Track and manage your queries from this dashboard
+                {t("dashboard.manageQueries")}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -336,12 +340,12 @@ export default function CitizenDashboardPage() {
                 <RefreshCw
                   className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
                 />
-                Refresh
+                {t("dashboard.refresh")}
               </Button>
               <Link href="/samadhan/submit">
                 <Button className="gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
                   <Plus className="h-4 w-4" />
-                  New Query
+                  {t("dashboard.newQuery")}
                 </Button>
               </Link>
             </div>
@@ -360,7 +364,7 @@ export default function CitizenDashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">
-                    Total Queries
+                    {t("dashboard.totalQueries")}
                   </p>
                   <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">
                     {stats.total}
@@ -377,7 +381,9 @@ export default function CitizenDashboardPage() {
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Active</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    {t("dashboard.active")}
+                  </p>
                   <p className="text-2xl sm:text-3xl font-bold text-blue-600 mt-1">
                     {stats.active}
                   </p>
@@ -398,7 +404,7 @@ export default function CitizenDashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">
-                    Action Required
+                    {t("dashboard.actionRequired")}
                   </p>
                   <p className="text-2xl sm:text-3xl font-bold text-orange-600 mt-1">
                     {stats.actionRequired}
@@ -415,7 +421,9 @@ export default function CitizenDashboardPage() {
             <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Resolved</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    {t("dashboard.resolved")}
+                  </p>
                   <p className="text-2xl sm:text-3xl font-bold text-green-600 mt-1">
                     {stats.resolved}
                   </p>
@@ -443,14 +451,14 @@ export default function CitizenDashboardPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-orange-800">
-                    Action Required
+                    {t("dashboard.actionRequiredAlert")}
                   </h3>
                   <p className="text-sm text-orange-700">
                     {stats.actionRequired}{" "}
                     {stats.actionRequired === 1
-                      ? "query requires"
-                      : "queries require"}{" "}
-                    your response. Please provide the requested information.
+                      ? t("dashboard.queryRequires")
+                      : t("dashboard.queriesRequire")}{" "}
+                    {t("dashboard.yourResponse")}
                   </p>
                 </div>
                 <Button
@@ -459,7 +467,7 @@ export default function CitizenDashboardPage() {
                   className="border-orange-300 text-orange-700 hover:bg-orange-100"
                   onClick={() => setActiveTab("action")}
                 >
-                  View Now
+                  {t("dashboard.viewNow")}
                 </Button>
               </div>
             </motion.div>
@@ -486,19 +494,19 @@ export default function CitizenDashboardPage() {
                       value="all"
                       className="data-[state=active]:bg-white px-4 py-2"
                     >
-                      All ({stats.total})
+                      {t("dashboard.tabAll")} ({stats.total})
                     </TabsTrigger>
                     <TabsTrigger
                       value="drafts"
                       className="data-[state=active]:bg-white px-4 py-2 text-gray-600"
                     >
-                      Drafts ({stats.drafts})
+                      {t("dashboard.tabDrafts")} ({stats.drafts})
                     </TabsTrigger>
                     <TabsTrigger
                       value="active"
                       className="data-[state=active]:bg-white px-4 py-2"
                     >
-                      Active ({stats.active})
+                      {t("dashboard.tabActive")} ({stats.active})
                     </TabsTrigger>
                     <TabsTrigger
                       value="action"
@@ -506,13 +514,13 @@ export default function CitizenDashboardPage() {
                         stats.actionRequired > 0 ? "text-orange-600" : ""
                       }`}
                     >
-                      Action ({stats.actionRequired})
+                      {t("dashboard.tabAction")} ({stats.actionRequired})
                     </TabsTrigger>
                     <TabsTrigger
                       value="resolved"
                       className="data-[state=active]:bg-white px-4 py-2"
                     >
-                      Resolved ({stats.resolved})
+                      {t("dashboard.tabResolved")} ({stats.resolved})
                     </TabsTrigger>
                   </TabsList>
                 </Tabs>
@@ -522,7 +530,7 @@ export default function CitizenDashboardPage() {
                   <div className="relative flex-1 sm:w-64">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
-                      placeholder="Search queries..."
+                      placeholder={t("dashboard.searchPlaceholder")}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="pl-10 bg-gray-50 border-gray-200 focus:bg-white"
@@ -531,12 +539,18 @@ export default function CitizenDashboardPage() {
                   <div className="flex gap-2">
                     <Select value={filterType} onValueChange={setFilterType}>
                       <SelectTrigger className="w-full sm:w-[130px] bg-gray-50 border-gray-200">
-                        <SelectValue placeholder="Type" />
+                        <SelectValue placeholder={t("dashboard.type")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Types</SelectItem>
-                        <SelectItem value="FEEDBACK">Feedback</SelectItem>
-                        <SelectItem value="GRIEVANCE">Grievance</SelectItem>
+                        <SelectItem value="all">
+                          {t("dashboard.allTypes")}
+                        </SelectItem>
+                        <SelectItem value="FEEDBACK">
+                          {t("dashboard.feedback")}
+                        </SelectItem>
+                        <SelectItem value="GRIEVANCE">
+                          {t("dashboard.grievance")}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <Select
@@ -544,17 +558,27 @@ export default function CitizenDashboardPage() {
                       onValueChange={setFilterStatus}
                     >
                       <SelectTrigger className="w-full sm:w-[130px] bg-gray-50 border-gray-200">
-                        <SelectValue placeholder="Status" />
+                        <SelectValue placeholder={t("dashboard.status")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Status</SelectItem>
-                        <SelectItem value="UNSEEN">Pending</SelectItem>
-                        <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-                        <SelectItem value="PENDING_INFORMATION">
-                          Info Requested
+                        <SelectItem value="all">
+                          {t("dashboard.allStatus")}
                         </SelectItem>
-                        <SelectItem value="RESOLVED">Resolved</SelectItem>
-                        <SelectItem value="CLOSED">Closed</SelectItem>
+                        <SelectItem value="UNSEEN">
+                          {t("dashboard.pending")}
+                        </SelectItem>
+                        <SelectItem value="IN_PROGRESS">
+                          {t("dashboard.inProgress")}
+                        </SelectItem>
+                        <SelectItem value="PENDING_INFORMATION">
+                          {t("dashboard.infoRequested")}
+                        </SelectItem>
+                        <SelectItem value="RESOLVED">
+                          {t("dashboard.resolved")}
+                        </SelectItem>
+                        <SelectItem value="CLOSED">
+                          {t("dashboard.closed")}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -570,17 +594,17 @@ export default function CitizenDashboardPage() {
                     <MessageSquare className="h-8 w-8 text-gray-400" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    No queries found
+                    {t("dashboard.noQueriesFound")}
                   </h3>
                   <p className="text-gray-500 mb-6 max-w-sm mx-auto">
                     {tickets.length === 0
-                      ? "You haven't submitted any queries yet. Get started by submitting your first query."
-                      : "No queries match your current filters. Try adjusting your search or filters."}
+                      ? t("dashboard.noQueriesYet")
+                      : t("dashboard.noQueriesMatch")}
                   </p>
                   <Link href="/samadhan/submit">
                     <Button className="gap-2">
                       <Plus className="h-4 w-4" />
-                      Submit New Query
+                      {t("dashboard.submitNewQuery")}
                     </Button>
                   </Link>
                 </div>
@@ -633,17 +657,21 @@ export default function CitizenDashboardPage() {
                             <div className="flex items-start justify-between gap-2 mb-2">
                               <div className="flex items-center gap-2 flex-wrap">
                                 <span className="font-mono text-sm font-semibold text-gray-900">
-                                  {isDraft ? "Draft" : ticket.referenceId}
+                                  {isDraft
+                                    ? t("dashboard.draft")
+                                    : ticket.referenceId}
                                 </span>
                                 <Badge
                                   variant="outline"
                                   className={`${queryConfig.bgColor} ${queryConfig.color} border-0 text-xs`}
                                 >
-                                  {queryConfig.label}
+                                  {queryConfig.label === "Feedback"
+                                    ? t("dashboard.feedback")
+                                    : t("dashboard.grievance")}
                                 </Badge>
                                 {needsResponse && (
                                   <Badge className="bg-orange-500 text-white text-xs animate-pulse">
-                                    Action Required
+                                    {t("dashboard.actionRequired")}
                                   </Badge>
                                 )}
                               </div>
@@ -654,7 +682,41 @@ export default function CitizenDashboardPage() {
                                 <span
                                   className={`text-sm font-medium ${status.color}`}
                                 >
-                                  {status.label}
+                                  {isFeedback
+                                    ? t("dashboard.submitted")
+                                    : (() => {
+                                        const statusLabels: Record<
+                                          string,
+                                          string
+                                        > = {
+                                          DRAFT: t("dashboard.statusDraft"),
+                                          QUEUED: t("dashboard.statusQueued"),
+                                          UNSEEN: t(
+                                            "dashboard.statusPendingReview",
+                                          ),
+                                          SEEN: t(
+                                            "dashboard.statusUnderReview",
+                                          ),
+                                          ACKNOWLEDGED: t(
+                                            "dashboard.statusAcknowledged",
+                                          ),
+                                          IN_PROGRESS: t(
+                                            "dashboard.inProgress",
+                                          ),
+                                          PENDING_INFORMATION: t(
+                                            "dashboard.infoRequested",
+                                          ),
+                                          RESOLVED: t("dashboard.resolved"),
+                                          CLOSED: t("dashboard.closed"),
+                                          ESCALATED: t(
+                                            "dashboard.statusEscalated",
+                                          ),
+                                        };
+                                        return (
+                                          statusLabels[ticket.status] ||
+                                          status.label
+                                        );
+                                      })()}
                                 </span>
                               </div>
                             </div>
@@ -687,7 +749,7 @@ export default function CitizenDashboardPage() {
                                 </span>
                                 {needsResponse && (
                                   <span className="text-orange-600 font-medium">
-                                    Officer requested additional information
+                                    {t("dashboard.officerRequestedInfo")}
                                   </span>
                                 )}
                               </div>
@@ -696,7 +758,7 @@ export default function CitizenDashboardPage() {
                                   size="sm"
                                   className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
                                 >
-                                  Continue Draft
+                                  {t("dashboard.continueDraft")}
                                 </Button>
                               )}
                             </div>
@@ -741,9 +803,11 @@ export default function CitizenDashboardPage() {
                 <div className="border-t border-gray-100 p-4">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-sm text-gray-500">
-                      Showing {startIndex + 1} to{" "}
-                      {Math.min(endIndex, filteredTickets.length)} of{" "}
-                      {filteredTickets.length} queries
+                      {t("dashboard.showingQueries", {
+                        start: String(startIndex + 1),
+                        end: String(Math.min(endIndex, filteredTickets.length)),
+                        total: String(filteredTickets.length),
+                      })}
                     </p>
                     <Pagination>
                       <PaginationContent className="gap-1">
@@ -857,9 +921,11 @@ export default function CitizenDashboardPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">
-                    Submit Feedback
+                    {t("dashboard.submitFeedback")}
                   </h3>
-                  <p className="text-sm text-gray-500">Share your experience</p>
+                  <p className="text-sm text-gray-500">
+                    {t("dashboard.shareExperience")}
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -873,9 +939,11 @@ export default function CitizenDashboardPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">
-                    File Grievance
+                    {t("dashboard.fileGrievance")}
                   </h3>
-                  <p className="text-sm text-gray-500">Report an issue</p>
+                  <p className="text-sm text-gray-500">
+                    {t("dashboard.reportIssue")}
+                  </p>
                 </div>
               </CardContent>
             </Card>

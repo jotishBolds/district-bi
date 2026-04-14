@@ -18,9 +18,11 @@ import {
   Globe,
   Building2,
 } from "lucide-react";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 export default function SamadhanFooter() {
   const currentYear = new Date().getFullYear();
+  const { t } = useSamadhanI18n();
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -34,13 +36,14 @@ export default function SamadhanFooter() {
                 <MessageSquare className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-xl">SAMADHAN</h3>
-                <p className="text-green-400 text-sm">Grievance Portal</p>
+                <h3 className="font-bold text-xl">{t("common.samadhan")}</h3>
+                <p className="text-green-400 text-sm">
+                  {t("common.grievancePortal")}
+                </p>
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              A citizen-centric initiative to submit and track grievances and
-              feedback for District Administrative Centre, Gangtok services.
+              {t("footer.description")}
             </p>
 
             {/* Government Seal */}
@@ -55,9 +58,11 @@ export default function SamadhanFooter() {
               />
               <div>
                 <p className="text-sm font-medium text-white">
-                  Government of Sikkim
+                  {t("common.governmentOfSikkim")}
                 </p>
-                <p className="text-xs text-gray-400">Official Portal</p>
+                <p className="text-xs text-gray-400">
+                  {t("common.officialPortal")}
+                </p>
               </div>
             </div>
           </div>
@@ -66,7 +71,7 @@ export default function SamadhanFooter() {
           <div>
             <h4 className="font-semibold text-lg mb-6 flex items-center gap-2">
               <div className="w-1.5 h-6 bg-green-500 rounded-full"></div>
-              Quick Links
+              {t("footer.quickLinks")}
             </h4>
             <ul className="space-y-3">
               <li>
@@ -75,7 +80,7 @@ export default function SamadhanFooter() {
                   className="flex items-center gap-3 text-gray-400 hover:text-green-400 transition-colors group"
                 >
                   <Home className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>Home</span>
+                  <span>{t("nav.home")}</span>
                 </Link>
               </li>
               <li>
@@ -84,7 +89,7 @@ export default function SamadhanFooter() {
                   className="flex items-center gap-3 text-gray-400 hover:text-green-400 transition-colors group"
                 >
                   <Send className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>Submit Query</span>
+                  <span>{t("nav.submitQuery")}</span>
                 </Link>
               </li>
               <li>
@@ -93,7 +98,7 @@ export default function SamadhanFooter() {
                   className="flex items-center gap-3 text-gray-400 hover:text-green-400 transition-colors group"
                 >
                   <FileText className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>Track Ticket</span>
+                  <span>{t("nav.trackTicket")}</span>
                 </Link>
               </li>
               <li>
@@ -102,7 +107,7 @@ export default function SamadhanFooter() {
                   className="flex items-center gap-3 text-gray-400 hover:text-green-400 transition-colors group"
                 >
                   <User className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>Login / Register</span>
+                  <span>{t("common.loginRegister")}</span>
                 </Link>
               </li>
             </ul>
@@ -112,7 +117,7 @@ export default function SamadhanFooter() {
           <div>
             <h4 className="font-semibold text-lg mb-6 flex items-center gap-2">
               <div className="w-1.5 h-6 bg-green-500 rounded-full"></div>
-              Contact Us
+              {t("footer.contactUs")}
             </h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
@@ -120,11 +125,11 @@ export default function SamadhanFooter() {
                   <Building2 className="w-4 h-4 text-green-400" />
                 </div>
                 <div>
-                  <p className="text-white text-sm font-medium">Office</p>
-                  <p className="text-gray-400 text-sm">
-                    District Administrative Centre
-                    <br />
-                    Gangtok, Sikkim - 737101
+                  <p className="text-white text-sm font-medium">
+                    {t("footer.office")}
+                  </p>
+                  <p className="text-gray-400 text-sm whitespace-pre-line">
+                    {t("footer.officeAddress")}
                   </p>
                 </div>
               </li>
@@ -133,8 +138,12 @@ export default function SamadhanFooter() {
                   <Phone className="w-4 h-4 text-green-400" />
                 </div>
                 <div>
-                  <p className="text-white text-sm font-medium">Phone</p>
-                  <p className="text-gray-400 text-sm">03592 284444</p>
+                  <p className="text-white text-sm font-medium">
+                    {t("footer.phone")}
+                  </p>
+                  <p className="text-gray-400 text-sm">
+                    {t("footer.phoneNumber")}
+                  </p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -142,9 +151,11 @@ export default function SamadhanFooter() {
                   <Mail className="w-4 h-4 text-green-400" />
                 </div>
                 <div>
-                  <p className="text-white text-sm font-medium">Email</p>
+                  <p className="text-white text-sm font-medium">
+                    {t("footer.email")}
+                  </p>
                   <p className="text-gray-400 text-sm">
-                    dm-gangtok@sikkim.gov.in
+                    {t("footer.emailAddress")}
                   </p>
                 </div>
               </li>
@@ -153,9 +164,11 @@ export default function SamadhanFooter() {
                   <Clock className="w-4 h-4 text-green-400" />
                 </div>
                 <div>
-                  <p className="text-white text-sm font-medium">Office Hours</p>
+                  <p className="text-white text-sm font-medium">
+                    {t("footer.officeHours")}
+                  </p>
                   <p className="text-gray-400 text-sm">
-                    Mon - Sat: 10:00 AM - 5:00 PM
+                    {t("footer.officeHoursValue")}
                   </p>
                 </div>
               </li>
@@ -166,7 +179,7 @@ export default function SamadhanFooter() {
           <div>
             <h4 className="font-semibold text-lg mb-6 flex items-center gap-2">
               <div className="w-1.5 h-6 bg-green-500 rounded-full"></div>
-              Related Links
+              {t("footer.relatedLinks")}
             </h4>
             <ul className="space-y-3">
               <li>
@@ -177,7 +190,7 @@ export default function SamadhanFooter() {
                   className="flex items-center gap-3 text-gray-400 hover:text-green-400 transition-colors group"
                 >
                   <Globe className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>Sikkim State Portal</span>
+                  <span>{t("footer.sikkimStatePortal")}</span>
                   <ExternalLink className="w-3 h-3 opacity-50" />
                 </a>
               </li>
@@ -189,7 +202,7 @@ export default function SamadhanFooter() {
                   className="flex items-center gap-3 text-gray-400 hover:text-green-400 transition-colors group"
                 >
                   <Shield className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>National Portal</span>
+                  <span>{t("footer.nationalPortal")}</span>
                   <ExternalLink className="w-3 h-3 opacity-50" />
                 </a>
               </li>
@@ -199,22 +212,24 @@ export default function SamadhanFooter() {
                   className="flex items-center gap-3 text-gray-400 hover:text-green-400 transition-colors group"
                 >
                   <User className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                  <span>Citizen Dashboard</span>
+                  <span>{t("footer.citizenDashboard")}</span>
                 </Link>
               </li>
             </ul>
 
             {/* Support Card */}
             <div className="mt-6 p-4 bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-xl border border-green-800/30">
-              <p className="text-sm font-medium text-white mb-2">Need Help?</p>
+              <p className="text-sm font-medium text-white mb-2">
+                {t("footer.needHelp")}
+              </p>
               <p className="text-xs text-gray-400 mb-3">
-                For technical support or assistance with the portal.
+                {t("footer.needHelpDesc")}
               </p>
               <Link
                 href="/samadhan/submit?type=FEEDBACK"
                 className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 text-sm font-medium transition-colors"
               >
-                Submit Feedback
+                {t("footer.submitFeedback")}
                 <ExternalLink className="w-3 h-3" />
               </Link>
             </div>
@@ -229,11 +244,10 @@ export default function SamadhanFooter() {
             {/* Copyright */}
             <div className="text-center md:text-left">
               <p className="text-gray-400 text-sm">
-                © {currentYear} District Administrative Centre, Gangtok. All
-                rights reserved.
+                {t("footer.copyright", { year: String(currentYear) })}
               </p>
               <p className="text-gray-500 text-xs mt-1">
-                An initiative under the Government of Sikkim
+                {t("footer.initiative")}
               </p>
             </div>
 
@@ -243,19 +257,19 @@ export default function SamadhanFooter() {
                 href="#"
                 className="text-gray-400 hover:text-green-400 transition-colors"
               >
-                Privacy Policy
+                {t("footer.privacyPolicy")}
               </Link>
               <Link
                 href="#"
                 className="text-gray-400 hover:text-green-400 transition-colors"
               >
-                Terms of Use
+                {t("footer.termsOfUse")}
               </Link>
               <Link
                 href="#"
                 className="text-gray-400 hover:text-green-400 transition-colors"
               >
-                Accessibility
+                {t("footer.accessibility")}
               </Link>
             </div>
           </div>

@@ -25,6 +25,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 interface OTPVerificationModalProps {
   isOpen: boolean;
@@ -60,12 +61,13 @@ export function OTPVerificationModal({
   const [resendTimer, setResendTimer] = useState(0);
   const [error, setError] = useState("");
   const otpInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useSamadhanI18n();
 
   // Send OTP function wrapped in useCallback
   const sendOtp = useCallback(
     async (phoneNumber: string) => {
       if (!phoneNumber || phoneNumber.length < 10) {
-        setError("Please enter a valid phone number (at least 10 digits)");
+        setError(t("otp.invalidPhone"));
         return;
       }
 
@@ -90,19 +92,19 @@ export function OTPVerificationModal({
           setOtpSent(true);
           setStep("otp");
           setResendTimer(60); // 60 seconds cooldown
-          toast.success("OTP sent to your phone");
+          toast.success(t("otp.otpSent"));
         } else {
-          setError(data.message || "Failed to send OTP");
-          toast.error(data.message || "Failed to send OTP");
+          setError(data.message || t("otp.failedSendOtp"));
+          toast.error(data.message || t("otp.failedSendOtp"));
         }
       } catch (err) {
-        setError("Failed to send OTP. Please try again.");
-        toast.error("Failed to send OTP");
+        setError(t("otp.failedSendOtpRetry"));
+        toast.error(t("otp.failedSendOtp"));
       } finally {
         setIsSendingOtp(false);
       }
     },
-    [verifyOnly, referenceId],
+    [verifyOnly, referenceId, t],
   );
 
   // Auto-send OTP when modal opens with pre-filled phone
@@ -147,7 +149,7 @@ export function OTPVerificationModal({
 
   const handleVerifyOtp = async () => {
     if (!otp || otp.length !== 6) {
-      setError("Please enter a valid 6-digit OTP");
+      setError(t("otp.invalidOtp"));
       return;
     }
 
@@ -171,16 +173,16 @@ export function OTPVerificationModal({
 
       if (data.success) {
         const token = `${referenceId || "submit"}:${phone}:${Date.now()}:verified`;
-        toast.success("Phone verified successfully!");
+        toast.success(t("otp.phoneVerified"));
         onVerified(phone, token);
         onClose();
       } else {
-        setError(data.message || "Invalid OTP");
-        toast.error(data.message || "Invalid OTP");
+        setError(data.message || t("otp.invalidOtpServer"));
+        toast.error(data.message || t("otp.invalidOtpServer"));
       }
     } catch (err) {
-      setError("Verification failed. Please try again.");
-      toast.error("Verification failed");
+      setError(t("otp.verificationFailed"));
+      toast.error(t("otp.verificationFailedShort"));
     } finally {
       setIsLoading(false);
     }
@@ -205,9 +207,11 @@ export function OTPVerificationModal({
           <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
             <Shield className="h-8 w-8 text-white" />
           </div>
-          <DialogTitle className="text-xl text-center">{title}</DialogTitle>
+          <DialogTitle className="text-xl text-center">
+            {title || t("otp.verifyYourPhone")}
+          </DialogTitle>
           <DialogDescription className="text-center">
-            {description}
+            {description || t("otp.defaultDesc")}
           </DialogDescription>
         </DialogHeader>
 
@@ -216,7 +220,7 @@ export function OTPVerificationModal({
           {step === "phone" && showPhoneInput && (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phone">{t("otp.phoneNumberLabel")}</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -227,7 +231,7 @@ export function OTPVerificationModal({
                       setPhone(e.target.value.replace(/\D/g, ""));
                       setError("");
                     }}
-                    placeholder="Enter your phone number"
+                    placeholder={t("otp.enterPhonePlaceholder")}
                     className="pl-10 h-12 text-base"
                     maxLength={15}
                   />
@@ -249,12 +253,12 @@ export function OTPVerificationModal({
                 {isSendingOtp ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Sending OTP...
+                    {t("otp.sendingOtp")}
                   </>
                 ) : (
                   <>
                     <Phone className="h-4 w-4 mr-2" />
-                    Send OTP
+                    {t("otp.sendOtp")}
                   </>
                 )}
               </Button>
@@ -266,7 +270,7 @@ export function OTPVerificationModal({
             <div className="space-y-4">
               <div className="text-center">
                 <p className="text-sm text-gray-600 mb-1">
-                  Enter the 6-digit code sent to
+                  {t("otp.enterCodeSentTo")}
                 </p>
                 <p className="font-semibold text-green-700 bg-green-50 inline-block px-3 py-1 rounded-full text-sm">
                   {maskPhone(phone)}
@@ -310,12 +314,12 @@ export function OTPVerificationModal({
                 {isLoading ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Verifying...
+                    {t("otp.verifying")}
                   </>
                 ) : (
                   <>
                     <CheckCircle className="h-4 w-4 mr-2" />
-                    Verify OTP
+                    {t("otp.verifyOtp")}
                   </>
                 )}
               </Button>
@@ -324,10 +328,7 @@ export function OTPVerificationModal({
               <div className="text-center">
                 {resendTimer > 0 ? (
                   <p className="text-sm text-gray-500">
-                    Resend OTP in{" "}
-                    <span className="font-semibold text-green-600">
-                      {resendTimer}s
-                    </span>
+                    {t("otp.resendOtpIn", { seconds: String(resendTimer) })}
                   </p>
                 ) : (
                   <button
@@ -335,7 +336,7 @@ export function OTPVerificationModal({
                     className="text-sm text-green-600 hover:text-green-700 font-medium flex items-center justify-center gap-1 mx-auto"
                   >
                     <RefreshCw className="h-3 w-3" />
-                    Resend OTP
+                    {t("otp.resendOtp")}
                   </button>
                 )}
               </div>
@@ -351,7 +352,7 @@ export function OTPVerificationModal({
                   }}
                   className="text-sm text-gray-500 hover:text-gray-700 w-full text-center"
                 >
-                  Change phone number
+                  {t("otp.changePhone")}
                 </button>
               )}
             </div>
@@ -362,7 +363,7 @@ export function OTPVerificationModal({
             <div className="flex flex-col items-center justify-center py-8">
               <Loader2 className="h-8 w-8 animate-spin text-green-600 mb-4" />
               <p className="text-sm text-gray-600">
-                Sending OTP to {maskPhone(phone)}...
+                {t("otp.sendingOtpTo", { phone: maskPhone(phone) })}
               </p>
             </div>
           )}
@@ -372,7 +373,7 @@ export function OTPVerificationModal({
         <div className="bg-green-50 rounded-xl p-3 border border-green-100">
           <p className="text-xs text-green-700 text-center flex items-center justify-center gap-1">
             <Shield className="h-3 w-3" />
-            Your phone number is verified securely and never shared
+            {t("otp.securityNote")}
           </p>
         </div>
       </DialogContent>

@@ -9,6 +9,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 interface SLACountdownProps {
   deadline: string | Date | null;
@@ -42,7 +43,7 @@ function calculateTimeRemaining(deadline: Date): TimeRemaining {
 
 function getSLAStatus(
   timeRemaining: TimeRemaining,
-  status: string
+  status: string,
 ): "GREEN" | "YELLOW" | "RED" | "COMPLETED" | "APPEALED" {
   const closedStatuses = ["CLOSED", "RESOLVED", "CLOSED_NO_RESPONSE"];
 
@@ -77,11 +78,12 @@ export function SLACountdown({
   showLabel = true,
 }: SLACountdownProps) {
   const [timeRemaining, setTimeRemaining] = useState<TimeRemaining | null>(
-    null
+    null,
   );
   const [slaStatus, setSlaStatus] = useState<
     "GREEN" | "YELLOW" | "RED" | "COMPLETED" | "APPEALED"
   >("GREEN");
+  const { t } = useSamadhanI18n();
 
   useEffect(() => {
     if (!deadline) return;
@@ -104,7 +106,7 @@ export function SLACountdown({
     return (
       <div className="flex items-center gap-2 text-gray-400">
         <Clock className="h-4 w-4" />
-        <span>No SLA set</span>
+        <span>{t("sla.noSlaSet")}</span>
       </div>
     );
   }
@@ -113,7 +115,7 @@ export function SLACountdown({
     return (
       <div className="flex items-center gap-2 text-green-600">
         <CheckCircle className="h-4 w-4" />
-        <span>Completed</span>
+        <span>{t("sla.completed")}</span>
       </div>
     );
   }
@@ -124,9 +126,11 @@ export function SLACountdown({
       <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg">
         <AlertTriangle className="h-4 w-4 text-orange-500" />
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-orange-700">Appealed</span>
+          <span className="text-sm font-medium text-orange-700">
+            {t("sla.appealed")}
+          </span>
           <span className="text-xs text-orange-600">
-            Under Higher Authority Review
+            {t("sla.underHigherReview")}
           </span>
         </div>
       </div>
@@ -203,7 +207,7 @@ export function SLACountdown({
         "rounded-lg border",
         colors.bg,
         colors.border,
-        styles.container
+        styles.container,
       )}
     >
       <div className="flex items-center gap-2">
@@ -222,7 +226,7 @@ export function SLACountdown({
         <div className="flex items-center gap-1">
           {showLabel && (
             <span className={cn(colors.text, "mr-1")}>
-              {timeRemaining.isOverdue ? "Overdue by:" : "Time left:"}
+              {timeRemaining.isOverdue ? t("sla.overdue") : t("sla.timeLeft")}
             </span>
           )}
 
@@ -234,7 +238,7 @@ export function SLACountdown({
                 </span>
                 {showLabel && (
                   <span className={cn(styles.label, colors.text, "opacity-75")}>
-                    days
+                    {t("sla.days")}
                   </span>
                 )}
               </div>
@@ -253,7 +257,7 @@ export function SLACountdown({
                     <span
                       className={cn(styles.label, colors.text, "opacity-75")}
                     >
-                      hrs
+                      {t("sla.hrs")}
                     </span>
                   )}
                 </div>
@@ -268,7 +272,7 @@ export function SLACountdown({
               </span>
               {showLabel && (
                 <span className={cn(styles.label, colors.text, "opacity-75")}>
-                  min
+                  {t("sla.min")}
                 </span>
               )}
             </div>
@@ -281,7 +285,7 @@ export function SLACountdown({
               </span>
               {showLabel && (
                 <span className={cn(styles.label, colors.text, "opacity-75")}>
-                  sec
+                  {t("sla.sec")}
                 </span>
               )}
             </div>
@@ -301,11 +305,12 @@ export function SLABadge({
   status: string;
 }) {
   const [timeRemaining, setTimeRemaining] = useState<TimeRemaining | null>(
-    null
+    null,
   );
   const [slaStatus, setSlaStatus] = useState<
     "GREEN" | "YELLOW" | "RED" | "COMPLETED" | "APPEALED"
   >("GREEN");
+  const { t: tBadge } = useSamadhanI18n();
 
   useEffect(() => {
     if (!deadline) return;
@@ -325,7 +330,7 @@ export function SLABadge({
   }, [deadline, status]);
 
   if (!deadline) {
-    return <span className="text-xs text-gray-400">No SLA</span>;
+    return <span className="text-xs text-gray-400">{tBadge("sla.noSla")}</span>;
   }
 
   // Appealed status - show special badge
@@ -333,7 +338,7 @@ export function SLABadge({
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-700 border border-orange-200">
         <AlertTriangle className="h-3 w-3" />
-        Appealed
+        {tBadge("sla.appealed")}
       </span>
     );
   }
@@ -343,7 +348,7 @@ export function SLABadge({
     return (
       <span className="inline-flex items-center gap-1 text-xs text-green-600">
         <CheckCircle className="h-3 w-3" />
-        Done
+        {tBadge("sla.done")}
       </span>
     );
   }
@@ -376,7 +381,7 @@ export function SLABadge({
       className={cn(
         "inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium border",
         statusStyles[slaStatus],
-        slaStatus === "RED" && "animate-pulse"
+        slaStatus === "RED" && "animate-pulse",
       )}
     >
       {slaStatus === "RED" ? (

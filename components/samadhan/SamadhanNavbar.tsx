@@ -26,6 +26,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
+import LanguageSwitcher from "@/components/samadhan/LanguageSwitcher";
 
 interface SamadhanSession {
   userId: string;
@@ -39,6 +41,7 @@ export default function SamadhanNavbar() {
   const [session, setSession] = useState<SamadhanSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { t } = useSamadhanI18n();
 
   // Check SAMADHAN session on mount
   useEffect(() => {
@@ -110,13 +113,13 @@ export default function SamadhanNavbar() {
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
               <Shield className="w-3 h-3" />
-              Government of Sikkim
+              {t("common.governmentOfSikkim")}
             </span>
             <span className="text-green-200">|</span>
-            <span>District Administrative Centre, Gangtok</span>
+            <span>{t("common.dacGangtok")}</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-green-200">Contact: 03592 284444</span>
+            <span className="text-green-200">{t("common.contact")}</span>
           </div>
         </div>
       </div>
@@ -140,11 +143,11 @@ export default function SamadhanNavbar() {
 
             {/* Title */}
             <div className="min-w-0">
-              <h1 className="font-bold text-xl lg:text-2xl text-gray-900 leading-tight tracking-tight">
-                SAMADHAN
+              <h1 className="font-bold text-base sm:text-xl lg:text-2xl text-gray-900 leading-tight tracking-tight">
+                {t("common.samadhan")}
               </h1>
               <p className="text-xs lg:text-sm text-gray-500 hidden sm:block">
-                Citizen Grievance Portal
+                {t("common.citizenGrievancePortal")}
               </p>
             </div>
           </Link>
@@ -158,7 +161,7 @@ export default function SamadhanNavbar() {
                 className="text-gray-700 hover:text-green-700 hover:bg-green-50 font-medium rounded-full px-4"
               >
                 <Home className="w-4 h-4 mr-2" />
-                Home
+                {t("nav.home")}
               </Button>
             </Link>
 
@@ -169,7 +172,7 @@ export default function SamadhanNavbar() {
                 className="text-gray-700 hover:text-green-700 hover:bg-green-50 font-medium rounded-full px-4"
               >
                 <Send className="w-4 h-4 mr-2" />
-                Submit Query
+                {t("nav.submitQuery")}
               </Button>
             </Link>
 
@@ -180,13 +183,13 @@ export default function SamadhanNavbar() {
                 className="text-gray-700 hover:text-green-700 hover:bg-green-50 font-medium rounded-full px-4"
               >
                 <FileSearch className="w-4 h-4 mr-2" />
-                Track Ticket
+                {t("nav.trackTicket")}
               </Button>
             </Link>
           </div>
 
           {/* Right: Government Seal + User Section */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             {/* Government Seal */}
             <div className="hidden md:flex items-center">
               <Image
@@ -201,6 +204,11 @@ export default function SamadhanNavbar() {
 
             {/* Divider */}
             <div className="hidden md:block w-px h-8 bg-gray-200"></div>
+
+            {/* Language Switcher - hidden on small mobile, shown in mobile menu */}
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
 
             {/* User Section */}
             {isLoading ? (
@@ -238,7 +246,7 @@ export default function SamadhanNavbar() {
                       className="cursor-pointer flex items-center gap-2 py-2"
                     >
                       <LayoutDashboard className="w-4 h-4 text-green-600" />
-                      <span>My Dashboard</span>
+                      <span>{t("nav.myDashboard")}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -247,7 +255,7 @@ export default function SamadhanNavbar() {
                       className="cursor-pointer flex items-center gap-2 py-2"
                     >
                       <User className="w-4 h-4 text-green-600" />
-                      <span>Profile Settings</span>
+                      <span>{t("nav.profileSettings")}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -256,7 +264,7 @@ export default function SamadhanNavbar() {
                     className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 flex items-center gap-2 py-2"
                   >
                     <LogOut className="w-4 h-4" />
-                    <span>Sign Out</span>
+                    <span>{t("nav.signOut")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -264,10 +272,10 @@ export default function SamadhanNavbar() {
               <Link href="/samadhan/login">
                 <Button
                   size="sm"
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-full px-5 shadow-md hover:shadow-lg transition-all"
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-full px-3 sm:px-5 shadow-md hover:shadow-lg transition-all"
                 >
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Login
+                  <LogIn className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">{t("nav.login")}</span>
                 </Button>
               </Link>
             )}
@@ -289,13 +297,22 @@ export default function SamadhanNavbar() {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t border-gray-100 py-4 space-y-1 animate-in slide-in-from-top-2 duration-200">
+            {/* Language Switcher row - only visible on xs, hidden sm+ (shown in header there) */}
+            <div className="sm:hidden px-4 py-2 flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-500">
+                Language
+              </span>
+              <LanguageSwitcher />
+            </div>
+            <div className="sm:hidden border-t border-gray-100 mb-1"></div>
+
             <Link
               href="/samadhan"
               onClick={toggleMobileMenu}
               className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-xl transition-colors"
             >
               <Home className="w-5 h-5" />
-              <span className="font-medium">Home</span>
+              <span className="font-medium">{t("nav.home")}</span>
             </Link>
 
             <Link
@@ -304,7 +321,7 @@ export default function SamadhanNavbar() {
               className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-xl transition-colors"
             >
               <Send className="w-5 h-5" />
-              <span className="font-medium">Submit Query</span>
+              <span className="font-medium">{t("nav.submitQuery")}</span>
             </Link>
 
             <Link
@@ -313,7 +330,7 @@ export default function SamadhanNavbar() {
               className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-xl transition-colors"
             >
               <FileSearch className="w-5 h-5" />
-              <span className="font-medium">Track Ticket</span>
+              <span className="font-medium">{t("nav.trackTicket")}</span>
             </Link>
 
             {session ? (
@@ -325,7 +342,7 @@ export default function SamadhanNavbar() {
                   className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-xl transition-colors"
                 >
                   <LayoutDashboard className="w-5 h-5" />
-                  <span className="font-medium">My Dashboard</span>
+                  <span className="font-medium">{t("nav.myDashboard")}</span>
                 </Link>
                 <Link
                   href="/samadhan/profile"
@@ -333,7 +350,7 @@ export default function SamadhanNavbar() {
                   className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-xl transition-colors"
                 >
                   <User className="w-5 h-5" />
-                  <span className="font-medium">Profile</span>
+                  <span className="font-medium">{t("nav.profile")}</span>
                 </Link>
                 <button
                   onClick={() => {
@@ -343,7 +360,7 @@ export default function SamadhanNavbar() {
                   className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors w-full"
                 >
                   <LogOut className="w-5 h-5" />
-                  <span className="font-medium">Sign Out</span>
+                  <span className="font-medium">{t("nav.signOut")}</span>
                 </button>
               </>
             ) : (
@@ -353,7 +370,7 @@ export default function SamadhanNavbar() {
                   <Link href="/samadhan/login" onClick={toggleMobileMenu}>
                     <Button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-xl">
                       <LogIn className="w-4 h-4 mr-2" />
-                      Login / Register
+                      {t("nav.loginRegister")}
                     </Button>
                   </Link>
                 </div>

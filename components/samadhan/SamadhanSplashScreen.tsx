@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useSamadhanI18n } from "@/lib/samadhan-i18n";
 
 interface SamadhanSplashScreenProps {
   onFinishAction: () => void;
@@ -13,6 +14,7 @@ export default function SamadhanSplashScreen({
   minDuration = 2000,
 }: SamadhanSplashScreenProps) {
   const [isVisible, setIsVisible] = useState(true);
+  const { t } = useSamadhanI18n();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -51,7 +53,7 @@ export default function SamadhanSplashScreen({
             <div className="w-16 h-16 md:w-24 md:h-24 relative">
               <Image
                 src="/assets/seal_of_sikkim.png"
-                alt="Seal of Sikkim"
+                alt={t("splash.sealAlt")}
                 width={96}
                 height={96}
                 className="w-full h-full object-contain"
@@ -69,14 +71,12 @@ export default function SamadhanSplashScreen({
           style={{ animationDelay: "0.3s" }}
         >
           <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent">
-            SAMADHAN
+            {t("splash.title")}
           </h1>
           <p className="text-sm md:text-base text-gray-600 max-w-xs leading-relaxed">
-            Citizen Grievance Redressal Portal
+            {t("splash.subtitle")}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
-            District Administrative Centre, Gangtok
-          </p>
+          <p className="text-xs text-gray-500 mt-1">{t("splash.location")}</p>
         </div>
 
         {/* Tagline */}
@@ -85,7 +85,7 @@ export default function SamadhanSplashScreen({
           style={{ animationDelay: "0.6s" }}
         >
           <p className="text-sm text-blue-600 font-medium italic">
-            &quot;Your Voice Matters&quot;
+            {t("splash.tagline")}
           </p>
         </div>
 
@@ -101,7 +101,9 @@ export default function SamadhanSplashScreen({
 
           {/* Loading Text */}
           <div className="text-center">
-            <p className="text-sm text-gray-500 font-medium">Loading...</p>
+            <p className="text-sm text-gray-500 font-medium">
+              {t("splash.loading")}
+            </p>
           </div>
         </div>
 
@@ -124,7 +126,7 @@ export default function SamadhanSplashScreen({
 
       {/* Footer branding */}
       <div className="absolute bottom-6 text-center">
-        <p className="text-xs text-gray-400">Government of Sikkim</p>
+        <p className="text-xs text-gray-400">{t("splash.footer")}</p>
       </div>
 
       {/* Tricolor accent at bottom */}
