@@ -36,6 +36,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { useDynamicTranslation } from "@/hooks/useDynamicTranslation";
 
 interface Ticket {
   id: string;
@@ -219,6 +220,12 @@ export default function OfficerSamadhanDashboard() {
   const [isDCOrAdmin, setIsDCOrAdmin] = useState(false);
   const [isHigherAuthority, setIsHigherAuthority] = useState(false);
   const [sections, setSections] = useState<Section[]>([]);
+
+  // Dynamic translation for DB content
+  const dt = useDynamicTranslation([
+    ...(tickets.map((t) => t.section?.name).filter(Boolean) as string[]),
+    ...sections.map((s) => s.name),
+  ]);
 
   useEffect(() => {
     fetchTickets();
@@ -583,7 +590,7 @@ export default function OfficerSamadhanDashboard() {
                   <SelectItem value="all">All Sections</SelectItem>
                   {sections.map((section) => (
                     <SelectItem key={section.id} value={section.id}>
-                      {section.name}
+                      {dt(section.name)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -642,7 +649,9 @@ export default function OfficerSamadhanDashboard() {
           ) : (
             <div className="space-y-3">
               {filteredTickets.map((ticket) => {
-                const queryConfig = queryTypeConfig[ticket.queryType];
+                const queryConfig =
+                  queryTypeConfig[ticket.queryType] ??
+                  queryTypeConfig.GRIEVANCE;
                 const status =
                   statusConfig[ticket.status] || statusConfig.UNSEEN;
                 const QueryIcon = queryConfig.icon;
@@ -740,7 +749,7 @@ export default function OfficerSamadhanDashboard() {
                             <div className="flex items-center gap-4 mt-2 text-xs text-gray-500 flex-wrap">
                               {ticket.queryType !== "FEEDBACK" && (
                                 <>
-                                  <span>{ticket.section.name}</span>
+                                  <span>{dt(ticket.section.name)}</span>
                                   <span>•</span>
                                 </>
                               )}

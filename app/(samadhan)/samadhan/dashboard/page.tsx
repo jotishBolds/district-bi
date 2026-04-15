@@ -58,6 +58,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format, formatDistanceToNow } from "date-fns";
 import { useSamadhanI18n } from "@/lib/samadhan-i18n";
+import { useDynamicTranslation } from "@/hooks/useDynamicTranslation";
 
 interface Ticket {
   referenceId: string;
@@ -174,6 +175,11 @@ export default function CitizenDashboardPage() {
   const [activeTab, setActiveTab] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  // Dynamic translation for DB content
+  const dt = useDynamicTranslation(
+    tickets.map((ticket) => ticket.section?.name).filter(Boolean) as string[],
+  );
 
   // Check SAMADHAN session (separate from NextAuth)
   useEffect(() => {
@@ -731,7 +737,7 @@ export default function CitizenDashboardPage() {
                                 {!isFeedback && (
                                   <span className="flex items-center gap-1">
                                     <LayoutDashboard className="h-3.5 w-3.5" />
-                                    {ticket.section.name}
+                                    {dt(ticket.section.name)}
                                   </span>
                                 )}
                                 <span className="flex items-center gap-1">

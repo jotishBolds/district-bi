@@ -474,6 +474,19 @@ const en: TranslationDict = {
     "Example: I applied for land mutation 3 months ago (Application No: MUT/2025/4567) but it is still pending...",
   "submit.characters100": "/100 characters",
   "submit.charactersMin10": " characters (minimum 10)",
+  "submit.aiAssist": "AI Assist",
+  "submit.askAIHelp": "Ask AI to help you write",
+  "submit.aiSubjectPromptPlaceholder":
+    "e.g. My land document is delayed for 3 months...",
+  "submit.aiDescPromptPlaceholder":
+    "e.g. Write about delay in land registration at DC office since January...",
+  "submit.aiWrite": "Write",
+  "submit.aiImprove": "Improve",
+  "submit.aiSummarize": "Summarize",
+  "submit.aiApply": "Apply",
+  "submit.aiGenerating": "Generating...",
+  "submit.aiGeneratedText": "Generated Text",
+  "submit.aiTranslations": "Translations",
   "submit.shareFeedback": "Share Your Feedback",
   "submit.allFieldsOnePlace":
     "All fields in one place. Contact info is optional.",
@@ -1192,6 +1205,19 @@ const hi: TranslationDict = {
     "उदाहरण: मैंने 3 महीने पहले भूमि म्यूटेशन के लिए आवेदन किया (आवेदन नं: MUT/2025/4567) लेकिन यह अभी भी लंबित है...",
   "submit.characters100": "/100 अक्षर",
   "submit.charactersMin10": " अक्षर (न्यूनतम 10)",
+  "submit.aiAssist": "AI सहायता",
+  "submit.askAIHelp": "लिखने में AI की मदद लें",
+  "submit.aiSubjectPromptPlaceholder":
+    "उदा. मेरा भूमि दस्तावेज़ 3 महीने से विलंबित है...",
+  "submit.aiDescPromptPlaceholder":
+    "उदा. जनवरी से DC कार्यालय में भूमि पंजीकरण में देरी के बारे में लिखें...",
+  "submit.aiWrite": "लिखें",
+  "submit.aiImprove": "सुधारें",
+  "submit.aiSummarize": "सारांश",
+  "submit.aiApply": "लागू करें",
+  "submit.aiGenerating": "तैयार हो रहा है...",
+  "submit.aiGeneratedText": "AI द्वारा तैयार पाठ",
+  "submit.aiTranslations": "अनुवाद",
   "submit.shareFeedback": "अपनी प्रतिक्रिया साझा करें",
   "submit.allFieldsOnePlace": "सभी फ़ील्ड एक जगह। संपर्क जानकारी वैकल्पिक है।",
   "submit.anonymousMode": "गोपनीय मोड",
@@ -1907,6 +1933,19 @@ const ne: TranslationDict = {
     "उदाहरण: मैले 3 महिना अघि जग्गा म्युटेसनको लागि आवेदन दिएँ (आवेदन नं: MUT/2025/4567) तर यो अझै बाँकी छ...",
   "submit.characters100": "/100 अक्षर",
   "submit.charactersMin10": " अक्षर (न्यूनतम 10)",
+  "submit.aiAssist": "AI सहायता",
+  "submit.askAIHelp": "लेख्नमा AI को मद्दत लिनुहोस्",
+  "submit.aiSubjectPromptPlaceholder":
+    "उदा. मेरो जग्गा कागजात ३ महिनादेखि ढिला भएको छ...",
+  "submit.aiDescPromptPlaceholder":
+    "उदा. जनवरीदेखि DC कार्यालयमा जग्गा दर्तामा ढिलाइ बारेमा लेख्नुहोस्...",
+  "submit.aiWrite": "लेख्नुहोस्",
+  "submit.aiImprove": "सुधार",
+  "submit.aiSummarize": "सारांश",
+  "submit.aiApply": "लागू गर्नुहोस्",
+  "submit.aiGenerating": "तयार हुँदैछ...",
+  "submit.aiGeneratedText": "AI ले तयार गरेको पाठ",
+  "submit.aiTranslations": "अनुवादहरू",
   "submit.shareFeedback": "आफ्नो प्रतिक्रिया साझा गर्नुहोस्",
   "submit.allFieldsOnePlace":
     "सबै फिल्डहरू एकै ठाउँमा। सम्पर्क जानकारी वैकल्पिक।",
@@ -2244,10 +2283,28 @@ export function SamadhanI18nProvider({
 
 // ─── HOOK ────────────────────────────────────────────────────────────────────
 
+// Fallback used when the hook is called outside SamadhanI18nProvider
+// (e.g. officer dashboard pages). Always returns English strings.
+const fallbackT = (
+  key: string,
+  replacements?: Record<string, string | number>,
+): string => {
+  let text = translations.en[key] ?? key;
+  if (replacements) {
+    Object.entries(replacements).forEach(([k, v]) => {
+      text = text.replace(`{${k}}`, String(v));
+    });
+  }
+  return text;
+};
+
+const fallbackContext: I18nContextType = {
+  locale: "en",
+  setLocale: () => {},
+  t: fallbackT,
+};
+
 export function useSamadhanI18n() {
   const context = useContext(I18nContext);
-  if (!context) {
-    throw new Error("useSamadhanI18n must be used within SamadhanI18nProvider");
-  }
-  return context;
+  return context ?? fallbackContext;
 }
