@@ -10,15 +10,18 @@ import { useSamadhanI18n } from "@/lib/samadhan-i18n";
  * Usage:
  *   const dt = useDynamicTranslation(["Land Registration", "Revenue Section"]);
  *   // dt("Land Registration") → "भूमि पंजीकरण" (when locale is "hi")
+ *   // dt("Land Registration") → "भूमि दर्ता" (when locale is "ne")
  *
  * Features:
  * - Batches all strings into a single API call
  * - Caches results per locale in sessionStorage
  * - Returns originals instantly while translations load
  * - No-ops for English locale
+ * - Uses generation counter to discard stale responses (prevents
+ *   hi→ne race where Hindi translations overwrite Nepali context)
  */
 
-const STORAGE_PREFIX = "dt:";
+const STORAGE_PREFIX = "dt:v2:";
 
 function getCacheKey(locale: string, text: string): string {
   return `${STORAGE_PREFIX}${locale}:${text}`;
@@ -29,34 +32,33 @@ export function useDynamicTranslation(texts: string[]) {
   const [translations, setTranslations] = useState<Map<string, string>>(
     new Map(),
   );
-  const pendingRef = useRef(false);
-  const lastLocaleRef = useRef(locale);
-  const lastTextsRef = useRef("");
+  // Incremented every time a new fetch is initiated.
+  // Callbacks check this to discard stale responses.
+  const generationRef = useRef(0);
+  const lastLocaleRef = useRef<string>("");
 
-  // Build a stable key from the texts array to detect changes
+  // Stable key to detect when the texts array meaningfully changes
   const textsKey = texts.filter(Boolean).sort().join("|");
 
   useEffect(() => {
-    // Skip for English — dynamic content is already in English
+    // English: clear any translated map and return originals
     if (locale === "en") {
-      if (translations.size > 0) setTranslations(new Map());
+      setTranslations(new Map());
       return;
     }
-
-    // Skip if nothing changed
-    if (
-      lastLocaleRef.current === locale &&
-      lastTextsRef.current === textsKey &&
-      translations.size > 0
-    ) {
-      return;
-    }
-
-    lastLocaleRef.current = locale;
-    lastTextsRef.current = textsKey;
 
     const validTexts = texts.filter((t) => t?.trim());
     if (validTexts.length === 0) return;
+
+    // Locale changed — clear stale translations immediately so we show
+    // the original English text rather than the wrong language's translation.
+    if (lastLocaleRef.current !== locale) {
+      lastLocaleRef.current = locale;
+      setTranslations(new Map());
+    }
+
+    // Capture the current generation for this effect run
+    const generation = ++generationRef.current;
 
     // Check sessionStorage cache first
     const cached = new Map<string, string>();
@@ -75,22 +77,20 @@ export function useDynamicTranslation(texts: string[]) {
       }
     }
 
-    // If everything is cached, use it immediately
+    // All already cached — apply immediately
     if (uncached.length === 0) {
-      setTranslations(cached);
+      if (generationRef.current === generation) {
+        setTranslations(cached);
+      }
       return;
     }
 
-    // Set cached ones right away
-    if (cached.size > 0) {
+    // Apply cached entries immediately while we wait for the API
+    if (cached.size > 0 && generationRef.current === generation) {
       setTranslations(new Map(cached));
     }
 
-    // Fetch uncached translations
-    if (pendingRef.current) return;
-    pendingRef.current = true;
-
-    // Deduplicate
+    // Deduplicate before fetching
     const unique = [...new Set(uncached)];
 
     fetch("/api/samadhan/translate-batch", {
@@ -100,6 +100,9 @@ export function useDynamicTranslation(texts: string[]) {
     })
       .then((res) => res.json())
       .then((data) => {
+        // Discard if a newer request has already been initiated
+        if (generationRef.current !== generation) return;
+
         if (data.success && data.data?.translations) {
           const newMap = new Map(cached);
           const results: string[] = data.data.translations;
@@ -119,9 +122,6 @@ export function useDynamicTranslation(texts: string[]) {
       })
       .catch(() => {
         // On error, keep using originals
-      })
-      .finally(() => {
-        pendingRef.current = false;
       });
   }, [locale, textsKey]); // eslint-disable-line react-hooks/exhaustive-deps
 

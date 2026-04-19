@@ -1,18 +1,29 @@
 /**
  * Sarvam AI Translation Utility (Server-side)
  *
- * Based on ref-translate.txt reference implementation:
- * - Translates text using the Sarvam Translate API
- * - Caches results in-memory to minimise API calls
- * - Falls back to original text on error
- * - Supports chunking for long text
+ * Uses the Sarvam AI SDK with sarvam-translate:v1 which supports:
+ * - Hindi (hi-IN), Nepali (ne-IN), and all other Indic languages
+ * - In-memory caching to minimise API calls
+ * - Chunking for long text
  * - Rate-limit aware with exponential backoff
  */
 
-const SARVAM_API_URL = "https://api.sarvam.ai/translate";
+import { SarvamAIClient, SarvamAI } from "sarvamai";
+
 const MAX_CHUNK = 800;
 const INTER_REQUEST_DELAY_MS = 300;
 const MAX_RETRIES = 4;
+
+// Lazy singleton client
+let _client: SarvamAIClient | null = null;
+function getSarvamClient(): SarvamAIClient | null {
+  const apiKey = process.env.SARVAM_API_KEY;
+  if (!apiKey) return null;
+  if (!_client) {
+    _client = new SarvamAIClient({ apiSubscriptionKey: apiKey });
+  }
+  return _client;
+}
 
 // In-memory cache: "lang:hash" → translated text
 const cache = new Map<string, string>();
@@ -41,45 +52,37 @@ const langCodeMap: Record<string, string> = {
   en: "en-IN",
 };
 
-/** Call Sarvam Translate API for a single chunk */
+/** Call Sarvam Translate API for a single chunk via SDK */
 async function callSarvamApi(
   text: string,
   targetLang: string,
-  apiKey: string,
 ): Promise<string> {
-  const targetCode = langCodeMap[targetLang] || targetLang;
+  const client = getSarvamClient();
+  if (!client) return text;
+
+  const targetCode = (langCodeMap[targetLang] ||
+    targetLang) as SarvamAI.TranslateTargetLanguage;
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    const res = await fetch(SARVAM_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "api-subscription-key": apiKey,
-      },
-      body: JSON.stringify({
+    try {
+      const result = await client.text.translate({
         input: text,
         source_language_code: "en-IN",
         target_language_code: targetCode,
-        mode: "formal",
-        model: "mayura:v1",
-      }),
-    });
-
-    if (res.status === 429) {
-      if (attempt < MAX_RETRIES) {
+        model: "sarvam-translate:v1",
+      });
+      return result.translated_text || text;
+    } catch (err: unknown) {
+      const status =
+        (err as { status?: number })?.status ??
+        (err as { statusCode?: number })?.statusCode;
+      if (status === 429 && attempt < MAX_RETRIES) {
         const backoff = Math.min(1000 * 2 ** attempt, 16000);
         await sleep(backoff);
         continue;
       }
       return text;
     }
-
-    if (!res.ok) {
-      return text;
-    }
-
-    const data = await res.json();
-    return data.translated_text || text;
   }
   return text;
 }
@@ -129,9 +132,6 @@ export async function translateText(
   const cached = cache.get(key);
   if (cached) return cached;
 
-  const apiKey = process.env.SARVAM_API_KEY;
-  if (!apiKey) return text;
-
   try {
     const chunks = splitIntoChunks(text);
     const translatedChunks: string[] = [];
@@ -142,7 +142,7 @@ export async function translateText(
       if (cachedChunk) {
         translatedChunks.push(cachedChunk);
       } else {
-        const result = await callSarvamApi(chunk, targetLang, apiKey);
+        const result = await callSarvamApi(chunk, targetLang);
         cache.set(chunkKey, result);
         translatedChunks.push(result);
         await sleep(INTER_REQUEST_DELAY_MS);
