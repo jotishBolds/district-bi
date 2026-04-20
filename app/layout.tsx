@@ -148,13 +148,27 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#3b82f6" />
+        {/* Serve the correct manifest per-domain: samadhan.* gets /api/manifest (dynamic),
+            all other domains get the static /manifest.json */}
+        <link
+          rel="manifest"
+          href={isSamadhan ? "/api/manifest" : "/manifest.json"}
+        />
+        <meta name="theme-color" content={isSamadhan ? "#16a34a" : "#3b82f6"} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="My Application" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content={isSamadhan ? "default" : "default"}
+        />
+        <meta
+          name="apple-mobile-web-app-title"
+          content={isSamadhan ? "SAMADHAN" : "My Application"}
+        />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="application-name" content="My Application" />
+        <meta
+          name="application-name"
+          content={isSamadhan ? "SAMADHAN" : "My Application"}
+        />
 
         {/* Favicon */}
         <link rel="icon" href="/favicon_io/favicon.ico" sizes="any" />

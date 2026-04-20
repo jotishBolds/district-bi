@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     "Gangtok",
     "government",
   ],
-  manifest: "/api/manifest",
+  manifest: "/api/manifest?app=samadhan",
   openGraph: {
     title: "SAMADHAN - Citizen Grievance Portal",
     description: "Submit and track feedback and grievances for DAC Gangtok",
@@ -99,12 +99,13 @@ export default function SamadhanLayout({
         {/* Dynamic manifest link based on domain */}
         <Script id="samadhan-pwa-meta" strategy="afterInteractive">
           {`
-          // Update manifest link for SAMADHAN domain
-          if (window.location.hostname.startsWith('samadhan.')) {
-            const existingManifest = document.querySelector('link[rel="manifest"]');
-            if (existingManifest) {
-              existingManifest.href = '/api/manifest';
-            }
+          // Ensure the manifest link points to the samadhan manifest on any domain.
+          // The ?app=samadhan param tells the API route to serve the samadhan manifest
+          // even on localhost (path-based dev), and on samadhan.dacgangtok.in it also
+          // patches scope/start_url to "/" for correct PWA installability.
+          const existingManifest = document.querySelector('link[rel="manifest"]');
+          if (existingManifest && !existingManifest.href.includes('app=samadhan')) {
+            existingManifest.href = '/api/manifest?app=samadhan';
           }
         `}
         </Script>

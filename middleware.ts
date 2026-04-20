@@ -50,9 +50,13 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // API routes for SAMADHAN: /api/samadhan/* and /api/manifest pass through
-    if (path.startsWith("/api/samadhan") || path === "/api/manifest") {
-      return NextResponse.next();
+    // Only allow samadhan API routes and the manifest API — block everything else
+    if (path.startsWith("/api/")) {
+      if (path.startsWith("/api/samadhan") || path === "/api/manifest") {
+        return NextResponse.next();
+      }
+      // Block main-app API routes on samadhan domain
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
     // If path already starts with /samadhan, serve it directly (no double-prefix)

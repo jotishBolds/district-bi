@@ -1,17 +1,30 @@
-const CACHE_NAME = "my-application-v1";
-const urlsToCache = [
-  "/",
-  "/manifest.json",
-  "/pwa/android/android-launchericon-192-192.png",
-  "/pwa/android/android-launchericon-512-512.png",
-];
+// Determine if running on the samadhan production domain
+const isSamadhanDomain =
+  self.location.hostname === "samadhan.dacgangtok.in" ||
+  self.location.hostname === "district-bi.vercel.app";
+
+const CACHE_NAME = isSamadhanDomain ? "samadhan-v1" : "my-application-v1";
+
+const urlsToCache = isSamadhanDomain
+  ? [
+      "/",
+      "/api/manifest?app=samadhan",
+      "/pwa/samadhan/samadhan-icon-192.png",
+      "/pwa/samadhan/samadhan-icon-512.png",
+    ]
+  : [
+      "/",
+      "/manifest.json",
+      "/pwa/android/android-launchericon-192-192.png",
+      "/pwa/android/android-launchericon-512-512.png",
+    ];
 
 // Install event
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(urlsToCache);
-    })
+    }),
   );
   // Force the waiting service worker to become the active service worker
   self.skipWaiting();
@@ -26,9 +39,9 @@ self.addEventListener("activate", (event) => {
           if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
-        })
+        }),
       );
-    })
+    }),
   );
   // Ensure the service worker takes control immediately
   self.clients.claim();
@@ -74,6 +87,6 @@ self.addEventListener("fetch", (event) => {
             statusText: "Service Unavailable",
           });
         });
-      })
+      }),
   );
 });
