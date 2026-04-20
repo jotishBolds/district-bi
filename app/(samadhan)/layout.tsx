@@ -20,7 +20,8 @@ export const metadata: Metadata = {
     "Gangtok",
     "government",
   ],
-  manifest: "/api/manifest?app=samadhan",
+  // manifest link is handled by the root layout <head> JSX (domain-aware).
+  // Adding it here would create a duplicate <link rel="manifest"> tag.
   openGraph: {
     title: "SAMADHAN - Citizen Grievance Portal",
     description: "Submit and track feedback and grievances for DAC Gangtok",

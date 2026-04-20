@@ -39,7 +39,9 @@ export function usePWAInstall(): PWAInstallState {
 
     // Pick up any beforeinstallprompt event that fired before this component mounted.
     // The root layout injects an early <script> that stores it on window.
-    const w = window as Window & { __pwaInstallPrompt?: BeforeInstallPromptEvent };
+    const w = window as Window & {
+      __pwaInstallPrompt?: BeforeInstallPromptEvent;
+    };
     const existingPrompt = w.__pwaInstallPrompt ?? null;
     if (existingPrompt) {
       setDeferredPrompt(existingPrompt);
@@ -63,7 +65,7 @@ export function usePWAInstall(): PWAInstallState {
 
     window.addEventListener(
       "beforeinstallprompt",
-      handleBeforeInstallPrompt as EventListener
+      handleBeforeInstallPrompt as EventListener,
     );
     window.addEventListener("appinstalled", handleAppInstalled);
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -71,7 +73,7 @@ export function usePWAInstall(): PWAInstallState {
     return () => {
       window.removeEventListener(
         "beforeinstallprompt",
-        handleBeforeInstallPrompt as EventListener
+        handleBeforeInstallPrompt as EventListener,
       );
       window.removeEventListener("appinstalled", handleAppInstalled);
       document.removeEventListener("visibilitychange", handleVisibilityChange);

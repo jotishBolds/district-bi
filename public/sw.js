@@ -9,8 +9,8 @@ const urlsToCache = isSamadhanDomain
   ? [
       "/",
       "/api/manifest?app=samadhan",
-      "/pwa/samadhan/samadhan-icon-192.png",
-      "/pwa/samadhan/samadhan-icon-512.png",
+      "/pwa/android/android-launchericon-192-192.png",
+      "/pwa/android/android-launchericon-512-512.png",
     ]
   : [
       "/",

@@ -123,7 +123,9 @@ export const metadata: Metadata = {
       },
     ],
   },
-  manifest: "/manifest.json",
+  // manifest is set via a manual <link> in the <head> JSX below so we can
+  // switch between /manifest.json and /api/manifest?app=samadhan per-domain.
+  // Do NOT add manifest here — it would create a duplicate <link rel="manifest"> tag.
   viewport: {
     width: "device-width",
     initialScale: 1,
@@ -148,11 +150,18 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Serve the correct manifest per-domain: samadhan.* gets /api/manifest (dynamic),
-            all other domains get the static /manifest.json */}
+        {/* Capture beforeinstallprompt as early as possible (before React hydrates)
+            so no event is missed due to component mount timing */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__pwaInstallPrompt=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__pwaInstallPrompt=e;});`,
+          }}
+        />
+        {/* One manifest link per domain – samadhan gets the dynamic API route so
+            scope/start_url can be patched; all other domains get the static file */}
         <link
           rel="manifest"
-          href={isSamadhan ? "/api/manifest" : "/manifest.json"}
+          href={isSamadhan ? "/api/manifest?app=samadhan" : "/manifest.json"}
         />
         <meta name="theme-color" content={isSamadhan ? "#16a34a" : "#3b82f6"} />
         <meta name="apple-mobile-web-app-capable" content="yes" />

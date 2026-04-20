@@ -27,12 +27,12 @@ export default function PWAInstallPrompt() {
   const isSamadhanRoute = pathname?.startsWith("/samadhan");
 
   // Don't show if not installable, dismissed, already dismissed this session, or on SAMADHAN
-  if (
-    !isInstallable ||
-    isDismissed ||
-    isSamadhanRoute ||
-    sessionStorage.getItem("pwa-prompt-dismissed")
-  ) {
+  // Guard sessionStorage access (not available during SSR)
+  const wasDismissed =
+    typeof window !== "undefined" &&
+    sessionStorage.getItem("pwa-prompt-dismissed") === "true";
+
+  if (!isInstallable || isDismissed || isSamadhanRoute || wasDismissed) {
     return null;
   }
 
