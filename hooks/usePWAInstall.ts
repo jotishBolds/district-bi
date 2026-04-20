@@ -37,6 +37,14 @@ export function usePWAInstall(): PWAInstallState {
 
     checkStandalone();
 
+    // Pick up any beforeinstallprompt event that fired before this component mounted.
+    // The root layout injects an early <script> that stores it on window.
+    const w = window as Window & { __pwaInstallPrompt?: BeforeInstallPromptEvent };
+    const existingPrompt = w.__pwaInstallPrompt ?? null;
+    if (existingPrompt) {
+      setDeferredPrompt(existingPrompt);
+    }
+
     const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       setDeferredPrompt(e);

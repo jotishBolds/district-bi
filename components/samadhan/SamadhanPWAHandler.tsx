@@ -33,6 +33,15 @@ export default function SamadhanPWAHandler() {
       setIsDismissed(true);
     }
 
+    // Pick up any beforeinstallprompt that fired before this component mounted.
+    // The root layout injects an early <script> that stores it on window.
+    const w = window as Window & { __pwaInstallPrompt?: BeforeInstallPromptEvent };
+    const existingPrompt = w.__pwaInstallPrompt ?? null;
+    if (existingPrompt && !isInstallDismissed) {
+      setDeferredPrompt(existingPrompt);
+      setIsInstallable(true);
+    }
+
     // Handle PWA install prompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
