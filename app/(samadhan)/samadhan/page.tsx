@@ -187,7 +187,7 @@ export default function SamadhanHomePage() {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="grid lg:grid-cols-[5fr_7fr] gap-8 lg:gap-10 items-center">
             {/* Left – hero text */}
             <div className="text-white space-y-5 text-center lg:text-left">
               <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
@@ -224,10 +224,10 @@ export default function SamadhanHomePage() {
             </div>
 
             {/* Right – card */}
-            <div className="lg:pl-4">
-              <Card className="bg-white border-0 shadow-2xl rounded-2xl overflow-hidden p-0 max-w-md mx-auto lg:max-w-none">
+            <div className="w-full">
+              <Card className="bg-white border-0 shadow-2xl rounded-2xl overflow-hidden p-0 max-w-lg mx-auto lg:max-w-none">
                 {/* Tab switcher */}
-                <div className="px-5 pt-5 pb-0">
+                <div className="px-6 pt-5 pb-0">
                   <div className="flex items-center bg-green-50 rounded-xl p-1.5 gap-1.5">
                     {(["submit", "track"] as const).map((tab) => (
                       <button
@@ -257,11 +257,11 @@ export default function SamadhanHomePage() {
                 {/* Fixed-height container prevents layout shift on tab switch */}
                 <div
                   className="relative overflow-hidden"
-                  style={{ height: "296px" }}
+                  style={{ height: "272px" }}
                 >
                   {/* Submit tab */}
                   <div
-                    className={`absolute inset-0 px-5 sm:px-6 py-5 flex flex-col gap-4 transition-all duration-200 ${
+                    className={`absolute inset-0 px-6 py-4 flex flex-col gap-3 transition-all duration-200 ${
                       heroTab === "submit"
                         ? "opacity-100 translate-x-0 pointer-events-auto"
                         : "opacity-0 -translate-x-5 pointer-events-none"
@@ -269,7 +269,7 @@ export default function SamadhanHomePage() {
                   >
                     {/* Heading row */}
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-sm shrink-0">
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-sm shrink-0">
                         <Send className="w-5 h-5 text-white" />
                       </div>
                       <div>
@@ -285,27 +285,27 @@ export default function SamadhanHomePage() {
                     {/* Type cards */}
                     <div className="grid grid-cols-2 gap-3">
                       <Link href="/samadhan/submit?type=GRIEVANCE&step=1">
-                        <div className="border-2 border-gray-100 hover:border-red-300 rounded-xl p-4 text-center transition-all hover:bg-red-50/60 group cursor-pointer h-full">
-                          <div className="w-11 h-11 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-2.5 group-hover:scale-110 transition-transform">
+                        <div className="border-2 border-gray-100 hover:border-red-300 rounded-xl p-4 text-center transition-all hover:bg-red-50/50 group cursor-pointer h-full">
+                          <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
                             <AlertCircle className="w-5 h-5 text-red-600" />
                           </div>
                           <p className="text-sm font-semibold text-gray-900">
                             {t("common.grievance")}
                           </p>
-                          <p className="text-xs text-gray-500 mt-1 leading-tight">
+                          <p className="text-xs text-gray-500 mt-0.5 leading-tight">
                             {t("home.reportIssue")}
                           </p>
                         </div>
                       </Link>
                       <Link href="/samadhan/submit?type=FEEDBACK&step=1">
-                        <div className="border-2 border-gray-100 hover:border-blue-300 rounded-xl p-4 text-center transition-all hover:bg-blue-50/60 group cursor-pointer h-full">
-                          <div className="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2.5 group-hover:scale-110 transition-transform">
+                        <div className="border-2 border-gray-100 hover:border-blue-300 rounded-xl p-4 text-center transition-all hover:bg-blue-50/50 group cursor-pointer h-full">
+                          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
                             <MessageSquare className="w-5 h-5 text-blue-600" />
                           </div>
                           <p className="text-sm font-semibold text-gray-900">
                             {t("common.feedback")}
                           </p>
-                          <p className="text-xs text-gray-500 mt-1 leading-tight">
+                          <p className="text-xs text-gray-500 mt-0.5 leading-tight">
                             {t("home.shareFeedback")}
                           </p>
                         </div>
@@ -317,7 +317,7 @@ export default function SamadhanHomePage() {
                       <Link href="/samadhan/dashboard">
                         <Button
                           variant="outline"
-                          className="w-full h-10 rounded-full border-2 border-green-200 hover:bg-green-50 gap-2 text-sm"
+                          className="w-full h-9 rounded-full border-2 border-green-200 hover:bg-green-50 gap-2 text-sm"
                         >
                           <User className="w-4 h-4" />
                           {t("home.viewAllMyTickets")}
@@ -338,7 +338,7 @@ export default function SamadhanHomePage() {
 
                   {/* Track tab */}
                   <div
-                    className={`absolute inset-0 px-5 sm:px-6 py-5 flex flex-col gap-4 transition-all duration-200 ${
+                    className={`absolute inset-0 px-6 py-4 flex flex-col gap-3 transition-all duration-200 ${
                       heroTab === "track"
                         ? "opacity-100 translate-x-0 pointer-events-auto"
                         : "opacity-0 translate-x-5 pointer-events-none"
@@ -346,7 +346,7 @@ export default function SamadhanHomePage() {
                   >
                     {/* Heading row */}
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-sm shrink-0">
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-sm shrink-0">
                         <ScanLine className="w-5 h-5 text-white" />
                       </div>
                       <div>
@@ -360,7 +360,7 @@ export default function SamadhanHomePage() {
                     </div>
 
                     {/* Input */}
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <div className="relative">
                         <Input
                           placeholder="SAMADHAN-2025-XX-XX-XXXXX"
@@ -372,7 +372,7 @@ export default function SamadhanHomePage() {
                           onKeyDown={(e) => {
                             if (e.key === "Enter") handleTrack();
                           }}
-                          className={`h-12 pl-4 pr-14 font-mono text-[13px] text-center border-2 rounded-full transition-all ${
+                          className={`h-12 pl-5 pr-14 font-mono text-sm text-center border-2 rounded-full transition-all ${
                             ticketNotFound
                               ? "border-red-300 bg-red-50 focus-visible:ring-red-400"
                               : trackingId
@@ -401,7 +401,7 @@ export default function SamadhanHomePage() {
                       </div>
 
                       {ticketNotFound ? (
-                        <p className="text-xs text-red-600 text-center bg-red-50 rounded-lg px-3 py-2">
+                        <p className="text-xs text-red-600 text-center bg-red-50 rounded-lg px-3 py-1.5">
                           <AlertCircle className="w-3.5 h-3.5 inline mr-1" />
                           {t("home.ticketNotFound")}
                         </p>
@@ -417,7 +417,7 @@ export default function SamadhanHomePage() {
                       <Link href="/samadhan/dashboard">
                         <Button
                           variant="outline"
-                          className="w-full h-10 rounded-full border-2 border-green-200 hover:bg-green-50 gap-2 text-sm"
+                          className="w-full h-9 rounded-full border-2 border-green-200 hover:bg-green-50 gap-2 text-sm"
                         >
                           <User className="w-4 h-4" />
                           {t("home.viewAllMyTickets")}
@@ -438,7 +438,7 @@ export default function SamadhanHomePage() {
                 </div>
 
                 {/* Language switcher */}
-                <div className="flex justify-center gap-6 pb-4 px-5 border-t border-gray-100 pt-3.5">
+                <div className="flex justify-center gap-8 pb-4 px-6 border-t border-gray-100 pt-3.5">
                   {(["en", "hi", "ne"] as SamadhanLocale[]).map((loc) => (
                     <button
                       key={loc}
