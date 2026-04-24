@@ -188,8 +188,22 @@ export default function SamadhanHomePage() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-20">
           <div className="grid lg:grid-cols-[5fr_7fr] gap-8 lg:gap-10 items-center">
-            {/* Left – hero text */}
-            <div className="text-white space-y-5 text-center lg:text-left">
+            {/* Mobile-only: title shown above card */}
+            <div className="lg:hidden text-white space-y-3 text-center">
+              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
+                <Shield className="w-4 h-4" />
+                <span>{t("common.secureTransparent")}</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl font-bold leading-tight">
+                {t("home.heroTitle1")}
+                <span className="block text-green-200">
+                  {t("home.heroTitle2")}
+                </span>
+              </h1>
+            </div>
+
+            {/* Desktop-only: full left column */}
+            <div className="hidden lg:block text-white space-y-5 text-left">
               <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <Shield className="w-4 h-4" />
                 <span>{t("common.secureTransparent")}</span>
@@ -200,7 +214,7 @@ export default function SamadhanHomePage() {
                   {t("home.heroTitle2")}
                 </span>
               </h1>
-              <p className="text-base sm:text-lg text-green-100 max-w-lg mx-auto lg:mx-0">
+              <p className="text-base sm:text-lg text-green-100 max-w-lg">
                 {t("home.heroDescription")}
               </p>
               <div className="grid grid-cols-2 gap-3 pt-2">
@@ -212,7 +226,7 @@ export default function SamadhanHomePage() {
                 ].map(({ Icon, label }) => (
                   <div
                     key={label}
-                    className="flex items-center gap-2 text-green-100 justify-center lg:justify-start"
+                    className="flex items-center gap-2 text-green-100 justify-start"
                   >
                     <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center shrink-0">
                       <Icon className="w-4 h-4" />
@@ -254,17 +268,14 @@ export default function SamadhanHomePage() {
                   </div>
                 </div>
 
-                {/* Fixed-height container prevents layout shift on tab switch */}
-                <div
-                  className="relative overflow-hidden"
-                  style={{ height: "272px" }}
-                >
+                {/* Tab content – height driven by content on mobile, fixed on lg */}
+                <div className="relative overflow-hidden lg:min-h-[272px]">
                   {/* Submit tab */}
                   <div
-                    className={`absolute inset-0 px-6 py-4 flex flex-col gap-3 transition-all duration-200 ${
+                    className={`px-6 py-4 flex flex-col gap-3 transition-all duration-200 ${
                       heroTab === "submit"
                         ? "opacity-100 translate-x-0 pointer-events-auto"
-                        : "opacity-0 -translate-x-5 pointer-events-none"
+                        : "hidden opacity-0 -translate-x-5 pointer-events-none"
                     }`}
                   >
                     {/* Heading row */}
@@ -338,10 +349,10 @@ export default function SamadhanHomePage() {
 
                   {/* Track tab */}
                   <div
-                    className={`absolute inset-0 px-6 py-4 flex flex-col gap-3 transition-all duration-200 ${
+                    className={`px-6 py-4 flex flex-col gap-3 transition-all duration-200 ${
                       heroTab === "track"
                         ? "opacity-100 translate-x-0 pointer-events-auto"
-                        : "opacity-0 translate-x-5 pointer-events-none"
+                        : "hidden opacity-0 translate-x-5 pointer-events-none"
                     }`}
                   >
                     {/* Heading row */}
@@ -438,7 +449,7 @@ export default function SamadhanHomePage() {
                 </div>
 
                 {/* Language switcher */}
-                <div className="flex justify-center gap-8 pb-4 px-6 border-t border-gray-100 pt-3.5">
+                <div className="flex justify-center gap-8 pb-3 px-6 border-t border-gray-100 pt-3">
                   {(["en", "hi", "ne"] as SamadhanLocale[]).map((loc) => (
                     <button
                       key={loc}
@@ -454,6 +465,31 @@ export default function SamadhanHomePage() {
                   ))}
                 </div>
               </Card>
+            </div>
+
+            {/* Mobile-only: description + feature badges below card */}
+            <div className="lg:hidden text-white space-y-4 text-center">
+              <p className="text-base text-green-100 max-w-sm mx-auto">
+                {t("home.heroDescription")}
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { Icon: Clock, label: t("home.realTimeUpdates") },
+                  { Icon: Search, label: t("home.instantTracking") },
+                  { Icon: Eye, label: t("home.fullTransparency") },
+                  { Icon: Bell, label: t("home.statusAlerts") },
+                ].map(({ Icon, label }) => (
+                  <div
+                    key={label}
+                    className="flex items-center gap-2 text-green-100 justify-center"
+                  >
+                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center shrink-0">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm">{label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
