@@ -105,7 +105,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [],
   },
   // Enable standalone output for Docker deployment
-  output: "standalone",
+
   // Optimize for production
   poweredByHeader: false,
 };
