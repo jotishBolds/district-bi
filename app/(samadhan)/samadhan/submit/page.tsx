@@ -58,7 +58,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { OTPVerificationModal } from "@/components/samadhan/OTPVerificationModal";
+import { SpeechToTextButton } from "@/components/samadhan/SpeechToTextButton";
+import { AIWriteAssist } from "@/components/samadhan/AIWriteAssist";
 import { useSamadhanI18n } from "@/lib/samadhan-i18n";
+import { useDynamicTranslation } from "@/hooks/useDynamicTranslation";
 
 interface Section {
   id: string;
@@ -369,6 +372,17 @@ function TypeFormContent() {
   const [filteredCategories, setFilteredCategories] = useState<
     ServiceCategory[]
   >([]);
+
+  // Dynamic translation for DB content (services, categories, sections)
+  const dt = useDynamicTranslation([
+    ...services.map((s) => s.name),
+    ...(services.map((s) => s.description).filter(Boolean) as string[]),
+    ...(services.map((s) => s.section?.name).filter(Boolean) as string[]),
+    ...serviceCategories.map((c) => c.name),
+    ...(serviceCategories
+      .map((c) => c.description)
+      .filter(Boolean) as string[]),
+  ]);
 
   // Form state
   const [visitedDC, setVisitedDC] = useState<boolean | null>(null);
@@ -1248,15 +1262,15 @@ function TypeFormContent() {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-semibold">{service.name}</h3>
+                          <h3 className="font-semibold">{dt(service.name)}</h3>
                           {service.description && (
                             <p className="text-sm text-gray-500 mt-1">
-                              {service.description}
+                              {dt(service.description)}
                             </p>
                           )}
                           {service.section && (
                             <p className="text-xs text-blue-600 mt-1">
-                              {t("submit.section")} {service.section.name}
+                              {t("submit.section")} {dt(service.section.name)}
                             </p>
                           )}
                         </div>
@@ -1311,10 +1325,10 @@ function TypeFormContent() {
                         className="mr-3"
                       />
                       <div className="flex-1">
-                        <p className="font-medium">{category.name}</p>
+                        <p className="font-medium">{dt(category.name)}</p>
                         {category.description && (
                           <p className="text-sm text-gray-500">
-                            {category.description}
+                            {dt(category.description)}
                           </p>
                         )}
                       </div>
@@ -1382,10 +1396,39 @@ function TypeFormContent() {
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                  {t("submit.subjectLabel")}{" "}
-                  <span className="text-red-500">*</span>
-                </Label>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-sm font-medium text-gray-700">
+                    {t("submit.subjectLabel")}{" "}
+                    <span className="text-red-500">*</span>
+                  </Label>
+                  <div className="flex items-center gap-1">
+                    <AIWriteAssist
+                      field="subject"
+                      currentText={subject}
+                      onApply={(text) => setSubject(text)}
+                      labels={{
+                        aiAssist: t("submit.aiAssist"),
+                        askAI: t("submit.askAIHelp"),
+                        promptPlaceholder: t(
+                          "submit.aiSubjectPromptPlaceholder",
+                        ),
+                        write: t("submit.aiWrite"),
+                        improve: t("submit.aiImprove"),
+                        summarize: t("submit.aiSummarize"),
+                        apply: t("submit.aiApply"),
+                        applyTranslation: t("submit.aiApply"),
+                        generating: t("submit.aiGenerating"),
+                        generatedText: t("submit.aiGeneratedText"),
+                        translations: t("submit.aiTranslations"),
+                      }}
+                    />
+                    <SpeechToTextButton
+                      onTranscript={(text) =>
+                        setSubject((prev) => (prev ? prev + " " + text : text))
+                      }
+                    />
+                  </div>
+                </div>
                 <Input
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
@@ -1399,10 +1442,39 @@ function TypeFormContent() {
                 </p>
               </div>
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                  {t("submit.descriptionLabel")}{" "}
-                  <span className="text-red-500">*</span>
-                </Label>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-sm font-medium text-gray-700">
+                    {t("submit.descriptionLabel")}{" "}
+                    <span className="text-red-500">*</span>
+                  </Label>
+                  <div className="flex items-center gap-1">
+                    <AIWriteAssist
+                      field="description"
+                      currentText={description}
+                      onApply={(text) => setDescription(text)}
+                      labels={{
+                        aiAssist: t("submit.aiAssist"),
+                        askAI: t("submit.askAIHelp"),
+                        promptPlaceholder: t("submit.aiDescPromptPlaceholder"),
+                        write: t("submit.aiWrite"),
+                        improve: t("submit.aiImprove"),
+                        summarize: t("submit.aiSummarize"),
+                        apply: t("submit.aiApply"),
+                        applyTranslation: t("submit.aiApply"),
+                        generating: t("submit.aiGenerating"),
+                        generatedText: t("submit.aiGeneratedText"),
+                        translations: t("submit.aiTranslations"),
+                      }}
+                    />
+                    <SpeechToTextButton
+                      onTranscript={(text) =>
+                        setDescription((prev) =>
+                          prev ? prev + " " + text : text,
+                        )
+                      }
+                    />
+                  </div>
+                </div>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -1475,10 +1547,39 @@ function TypeFormContent() {
 
               {/* Subject */}
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
-                  {t("submit.subjectLabel")}{" "}
-                  <span className="text-red-500">*</span>
-                </Label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <Label className="text-sm font-medium text-gray-700">
+                    {t("submit.subjectLabel")}{" "}
+                    <span className="text-red-500">*</span>
+                  </Label>
+                  <div className="flex items-center gap-1">
+                    <AIWriteAssist
+                      field="subject"
+                      currentText={subject}
+                      onApply={(text) => setSubject(text)}
+                      labels={{
+                        aiAssist: t("submit.aiAssist"),
+                        askAI: t("submit.askAIHelp"),
+                        promptPlaceholder: t(
+                          "submit.aiSubjectPromptPlaceholder",
+                        ),
+                        write: t("submit.aiWrite"),
+                        improve: t("submit.aiImprove"),
+                        summarize: t("submit.aiSummarize"),
+                        apply: t("submit.aiApply"),
+                        applyTranslation: t("submit.aiApply"),
+                        generating: t("submit.aiGenerating"),
+                        generatedText: t("submit.aiGeneratedText"),
+                        translations: t("submit.aiTranslations"),
+                      }}
+                    />
+                    <SpeechToTextButton
+                      onTranscript={(text) =>
+                        setSubject((prev) => (prev ? prev + " " + text : text))
+                      }
+                    />
+                  </div>
+                </div>
                 <Input
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
@@ -1489,10 +1590,39 @@ function TypeFormContent() {
 
               {/* Description */}
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-1.5 block">
-                  {t("submit.descriptionLabel")}{" "}
-                  <span className="text-red-500">*</span>
-                </Label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <Label className="text-sm font-medium text-gray-700">
+                    {t("submit.descriptionLabel")}{" "}
+                    <span className="text-red-500">*</span>
+                  </Label>
+                  <div className="flex items-center gap-1">
+                    <AIWriteAssist
+                      field="description"
+                      currentText={description}
+                      onApply={(text) => setDescription(text)}
+                      labels={{
+                        aiAssist: t("submit.aiAssist"),
+                        askAI: t("submit.askAIHelp"),
+                        promptPlaceholder: t("submit.aiDescPromptPlaceholder"),
+                        write: t("submit.aiWrite"),
+                        improve: t("submit.aiImprove"),
+                        summarize: t("submit.aiSummarize"),
+                        apply: t("submit.aiApply"),
+                        applyTranslation: t("submit.aiApply"),
+                        generating: t("submit.aiGenerating"),
+                        generatedText: t("submit.aiGeneratedText"),
+                        translations: t("submit.aiTranslations"),
+                      }}
+                    />
+                    <SpeechToTextButton
+                      onTranscript={(text) =>
+                        setDescription((prev) =>
+                          prev ? prev + " " + text : text,
+                        )
+                      }
+                    />
+                  </div>
+                </div>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -2034,8 +2164,10 @@ function TypeFormContent() {
                           {t("submit.service")}
                         </span>
                         <span>
-                          {services.find((s) => s.id === selectedServiceId)
-                            ?.name || "N/A"}
+                          {dt(
+                            services.find((s) => s.id === selectedServiceId)
+                              ?.name,
+                          ) || "N/A"}
                         </span>
                       </div>
                       {selectedCategories.length > 0 && (
@@ -2054,7 +2186,7 @@ function TypeFormContent() {
                                   variant="outline"
                                   className="ml-1 mb-1"
                                 >
-                                  {category.name}
+                                  {dt(category.name)}
                                 </Badge>
                               ) : null;
                             })}

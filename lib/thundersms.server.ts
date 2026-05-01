@@ -3,14 +3,12 @@
  * Secure server-only wrapper for sending SMS via ThunderSMS API
  */
 
+import https from "node:https";
 import prisma from "@/lib/prisma";
 
-// Handle SSL certificate issues for ThunderSMS API globally
-// This is needed because ThunderSMS API may have certificate issues
-if (typeof window === "undefined") {
-  // Only set this on server-side
-  process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
-}
+// ThunderSMS uses a self-signed / invalid cert — use a scoped agent
+// instead of disabling TLS globally via NODE_TLS_REJECT_UNAUTHORIZED.
+const thunderSMSAgent = new https.Agent({ rejectUnauthorized: false });
 
 export interface ThunderSMSResponse {
   success: boolean;
@@ -63,9 +61,9 @@ function getThunderSMSConfig(): ThunderSMSConfig {
   if (missing.length > 0) {
     throw new Error(
       `Missing required ThunderSMS environment variables: ${missing.join(
-        ", "
+        ", ",
       )}\n` +
-        `Please check your .env.local file and restart your development server.`
+        `Please check your .env.local file and restart your development server.`,
     );
   }
 
@@ -92,13 +90,8 @@ function sleep(ms: number): Promise<void> {
 export async function sendSms(
   dest: string,
   text: string,
-  opts: SendSmsOptions = {}
+  opts: SendSmsOptions = {},
 ): Promise<ThunderSMSResponse> {
-  // Ensure SSL certificate issues are handled for this specific call
-  if (typeof window === "undefined") {
-    process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
-  }
-
   const config = getThunderSMSConfig();
 
   // Validate phone number (should be 10 digits)
@@ -150,24 +143,49 @@ export async function sendSms(
       console.log(
         `📱 ThunderSMS attempt ${attempt + 1}/${
           maxRetries + 1
-        } for ${cleanedDest}`
+        } for ${cleanedDest}`,
       );
 
-      // Create a simple fetch call with proper error handling
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "User-Agent": "District-BI-App/1.0",
+      // Use node:https directly so the scoped agent (rejectUnauthorized:false)
+      // is applied only to this request, not the whole process.
+      const responseData = await new Promise<Record<string, unknown>>(
+        (resolve, reject) => {
+          const parsedUrl = new URL(url);
+          const req = https.request(
+            {
+              hostname: parsedUrl.hostname,
+              port: parsedUrl.port || 443,
+              path: parsedUrl.pathname + parsedUrl.search,
+              method: "GET",
+              headers: { "User-Agent": "District-BI-App/1.0" },
+              agent: thunderSMSAgent,
+            },
+            (res) => {
+              let body = "";
+              res.on("data", (chunk: Buffer) => (body += chunk.toString()));
+              res.on("end", () => {
+                if (res.statusCode && res.statusCode >= 400) {
+                  reject(
+                    new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`),
+                  );
+                  return;
+                }
+                try {
+                  resolve(JSON.parse(body) as Record<string, unknown>);
+                } catch {
+                  reject(new Error("Invalid JSON response from ThunderSMS"));
+                }
+              });
+            },
+          );
+          req.setTimeout(30000, () => {
+            req.destroy();
+            reject(new Error("ThunderSMS request timed out"));
+          });
+          req.on("error", reject);
+          req.end();
         },
-        // Set timeout for 30 seconds
-        signal: AbortSignal.timeout(30000),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const responseData = await response.json();
+      );
       console.log("📱 ThunderSMS Response:", responseData);
 
       // Check if response indicates success (code 6001)
@@ -177,7 +195,9 @@ export async function sendSms(
       return {
         success,
         code: String(responseData.code || "UNKNOWN"),
-        desc: responseData.desc || responseData.message || "No description",
+        desc: String(
+          responseData.desc ?? responseData.message ?? "No description",
+        ),
         raw: responseData,
       };
     } catch (error) {
@@ -194,7 +214,7 @@ export async function sendSms(
           errorMessage.includes("forbidden")
         ) {
           console.log(
-            "📱 ThunderSMS: Non-retryable error detected, stopping retries"
+            "📱 ThunderSMS: Non-retryable error detected, stopping retries",
           );
           break;
         }
@@ -230,7 +250,7 @@ export async function sendBulkSms(
     custRef?: string;
   }>,
   defaultMessage: string,
-  opts: SendSmsOptions = {}
+  opts: SendSmsOptions = {},
 ): Promise<{
   success: boolean;
   results: Array<{ phoneNumber: string; success: boolean; error?: string }>;
@@ -248,7 +268,7 @@ export async function sendBulkSms(
       {
         ...opts,
         custRef: recipient.custRef,
-      }
+      },
     );
 
     results.push({
@@ -274,7 +294,7 @@ export async function sendBulkSms(
  */
 export function generateOTPMessage(
   otp: string,
-  expiryMinutes: number = 10
+  expiryMinutes: number = 10,
 ): string {
   return `District Collector:\nYour verification code is ${otp}. This code will expire in ${expiryMinutes} minutes. For your security, please do not share it with anyone. -DACGOV`;
 }
@@ -285,7 +305,7 @@ export function generateOTPMessage(
 export async function sendOtp(
   phoneNumber: string,
   userId?: string,
-  type: string = "VERIFICATION"
+  type: string = "VERIFICATION",
 ): Promise<{
   success: boolean;
   otp?: string;
@@ -365,7 +385,7 @@ export async function sendOtp(
 export async function verifyOtp(
   phoneNumber: string,
   otp: string,
-  type: string = "VERIFICATION"
+  type: string = "VERIFICATION",
 ): Promise<{
   success: boolean;
   user?: {
@@ -467,7 +487,7 @@ export function validateThunderSMSConfig(): boolean {
   } catch (error) {
     console.error(
       "❌ ThunderSMS configuration validation failed:",
-      (error as Error).message
+      (error as Error).message,
     );
     return false;
   }

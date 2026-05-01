@@ -60,6 +60,8 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import Link from "next/link";
 import { SLACountdown } from "@/components/samadhan/SLACountdown";
+import { TranslateMessage } from "@/components/samadhan/TranslateMessage";
+import { useDynamicTranslation } from "@/hooks/useDynamicTranslation";
 
 interface TicketDetail {
   id: string;
@@ -308,6 +310,16 @@ export default function OfficerTicketDetailPage({
   const router = useRouter();
   const { data: session } = useSession();
   const [ticket, setTicket] = useState<TicketDetail | null>(null);
+
+  // Dynamic translation for DB content
+  const dt = useDynamicTranslation(
+    [
+      ticket?.section?.name,
+      ticket?.serviceAvailed,
+      ticket?.serviceCategories,
+      ticket?.originalTicket?.assignedOfficer?.designation,
+    ].filter(Boolean) as string[],
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   // Dialog states
@@ -560,6 +572,7 @@ export default function OfficerTicketDetailPage({
                   <p className="font-semibold text-gray-900">
                     {ticket.subject}
                   </p>
+                  <TranslateMessage text={ticket.subject} />
                 </div>
               )}
 
@@ -569,7 +582,7 @@ export default function OfficerTicketDetailPage({
                     <Building className="h-5 w-5 text-gray-400 mt-0.5" />
                     <div>
                       <p className="text-sm text-gray-500">Section</p>
-                      <p className="font-medium">{ticket.section.name}</p>
+                      <p className="font-medium">{dt(ticket.section.name)}</p>
                     </div>
                   </div>
                 )}
@@ -578,7 +591,7 @@ export default function OfficerTicketDetailPage({
                     <FileText className="h-5 w-5 text-gray-400 mt-0.5" />
                     <div>
                       <p className="text-sm text-gray-500">Service</p>
-                      <p className="font-medium">{ticket.serviceAvailed}</p>
+                      <p className="font-medium">{dt(ticket.serviceAvailed)}</p>
                     </div>
                   </div>
                 )}
@@ -587,7 +600,9 @@ export default function OfficerTicketDetailPage({
                     <Lightbulb className="h-5 w-5 text-gray-400 mt-0.5" />
                     <div>
                       <p className="text-sm text-gray-500">Service Category</p>
-                      <p className="font-medium">{ticket.serviceCategories}</p>
+                      <p className="font-medium">
+                        {dt(ticket.serviceCategories)}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -628,6 +643,7 @@ export default function OfficerTicketDetailPage({
               <div>
                 <p className="text-sm text-gray-500 mb-2">Description</p>
                 <p className="whitespace-pre-wrap">{ticket.description}</p>
+                <TranslateMessage text={ticket.description} />
               </div>
 
               {/* UNSEEN Status Notice */}
@@ -695,10 +711,10 @@ export default function OfficerTicketDetailPage({
                                   <span className="text-gray-500">
                                     {" "}
                                     (
-                                    {
+                                    {dt(
                                       ticket.originalTicket.assignedOfficer
-                                        .designation
-                                    }
+                                        .designation,
+                                    )}
                                     )
                                   </span>
                                 )}
@@ -800,6 +816,7 @@ export default function OfficerTicketDetailPage({
                     <p className="text-green-700 whitespace-pre-wrap">
                       {ticket.resolutionMessage}
                     </p>
+                    <TranslateMessage text={ticket.resolutionMessage} />
                   </div>
                 </>
               )}
@@ -851,6 +868,7 @@ export default function OfficerTicketDetailPage({
                           Citizen Response:
                         </p>
                         <p className="text-sm">{request.citizenResponse}</p>
+                        <TranslateMessage text={request.citizenResponse} />
                       </div>
                     )}
                   </div>

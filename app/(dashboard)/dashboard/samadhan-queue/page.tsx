@@ -55,6 +55,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { format, formatDistanceToNow } from "date-fns";
+import { TranslateMessage } from "@/components/samadhan/TranslateMessage";
+import { useDynamicTranslation } from "@/hooks/useDynamicTranslation";
 
 interface QueuedTicket {
   id: string; // Changed from ticketId to match API response
@@ -112,6 +114,12 @@ export default function SamadhanQueuePage() {
   const [sections, setSections] = useState<Section[]>([]);
   const [officers, setOfficers] = useState<Officer[]>([]);
   const [filteredOfficers, setFilteredOfficers] = useState<Officer[]>([]);
+
+  // Dynamic translation for DB content
+  const dt = useDynamicTranslation([
+    ...(tickets.map((t) => t.section?.name).filter(Boolean) as string[]),
+    ...sections.map((s) => s.name),
+  ]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -389,7 +397,7 @@ export default function SamadhanQueuePage() {
                 <SelectItem value="all">All Sections</SelectItem>
                 {sections.map((section) => (
                   <SelectItem key={section.id} value={section.id}>
-                    {section.name}
+                    {dt(section.name)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -465,7 +473,7 @@ export default function SamadhanQueuePage() {
                       <TableCell className="hidden sm:table-cell">
                         <div className="flex items-center gap-1">
                           <Building2 className="h-4 w-4 text-gray-400" />
-                          {ticket.section.name}
+                          {dt(ticket.section.name)}
                         </div>
                       </TableCell>
                       <TableCell className="hidden lg:table-cell">
@@ -531,7 +539,7 @@ export default function SamadhanQueuePage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Section</span>
-                  <span>{selectedTicket.section.name}</span>
+                  <span>{dt(selectedTicket.section.name)}</span>
                 </div>
               </div>
 
@@ -566,7 +574,7 @@ export default function SamadhanQueuePage() {
                 </Select>
                 {filteredOfficers.length === 0 && (
                   <p className="text-sm text-amber-600 mt-2">
-                    ⚠️ No officers found in {selectedTicket.section.name}{" "}
+                    ⚠️ No officers found in {dt(selectedTicket.section.name)}{" "}
                     section
                   </p>
                 )}
@@ -636,7 +644,7 @@ export default function SamadhanQueuePage() {
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <p className="text-gray-500">Section</p>
-                  <p className="font-medium">{viewTicket.section.name}</p>
+                  <p className="font-medium">{dt(viewTicket.section.name)}</p>
                 </div>
                 <div>
                   <p className="text-gray-500">Submitted</p>
@@ -666,6 +674,7 @@ export default function SamadhanQueuePage() {
                 <div>
                   <p className="text-gray-500 text-sm">Subject</p>
                   <p className="font-medium">{viewTicket.subject}</p>
+                  <TranslateMessage text={viewTicket.subject} />
                 </div>
               )}
 
@@ -674,6 +683,7 @@ export default function SamadhanQueuePage() {
                 <p className="text-sm bg-gray-50 p-3 rounded-lg mt-1">
                   {viewTicket.description}
                 </p>
+                <TranslateMessage text={viewTicket.description} />
               </div>
 
               {!viewTicket.isAnonymousToOfficer && (

@@ -50,6 +50,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useSamadhanI18n } from "@/lib/samadhan-i18n";
+import { useDynamicTranslation } from "@/hooks/useDynamicTranslation";
 
 interface TicketData {
   id: string;
@@ -264,6 +265,15 @@ export default function TicketDetailPage({
   >(null);
   const [isAppealModalOpen, setIsAppealModalOpen] = useState(false);
   const [appealReason, setAppealReason] = useState("");
+
+  // Dynamic translation for DB content
+  const dt = useDynamicTranslation(
+    [
+      ticket?.section?.name,
+      ticket?.serviceAvailed,
+      ticket?.assignedOfficer?.designation,
+    ].filter(Boolean) as string[],
+  );
 
   // Attachment upload state
   const [newAttachments, setNewAttachments] = useState<File[]>([]);
@@ -967,7 +977,7 @@ export default function TicketDetailPage({
                         {t("ticket.sectionDepartment")}
                       </p>
                       <p className="font-semibold text-gray-900">
-                        {ticket.section.name}
+                        {dt(ticket.section.name)}
                       </p>
                     </div>
                   </div>
@@ -984,7 +994,7 @@ export default function TicketDetailPage({
                         {t("ticket.serviceSelected")}
                       </p>
                       <p className="font-semibold text-gray-900">
-                        {ticket.serviceAvailed}
+                        {dt(ticket.serviceAvailed)}
                       </p>
                     </div>
                   </div>
@@ -1036,7 +1046,7 @@ export default function TicketDetailPage({
                         {ticket.assignedOfficer.name}
                         {ticket.assignedOfficer.designation && (
                           <span className="text-gray-500 font-normal text-sm ml-1">
-                            ({ticket.assignedOfficer.designation})
+                            ({dt(ticket.assignedOfficer.designation)})
                           </span>
                         )}
                       </p>
