@@ -674,7 +674,7 @@ export default function SamadhanQueuePage() {
                 <div>
                   <p className="text-gray-500 text-sm">Subject</p>
                   <p className="font-medium">{viewTicket.subject}</p>
-                  <TranslateMessage text={viewTicket.subject} />
+                  {/* <TranslateMessage text={viewTicket.subject} /> */}
                 </div>
               )}
 
@@ -683,7 +683,7 @@ export default function SamadhanQueuePage() {
                 <p className="text-sm bg-gray-50 p-3 rounded-lg mt-1">
                   {viewTicket.description}
                 </p>
-                <TranslateMessage text={viewTicket.description} />
+                {/* <TranslateMessage text={viewTicket.description} /> */}
               </div>
 
               {!viewTicket.isAnonymousToOfficer && (

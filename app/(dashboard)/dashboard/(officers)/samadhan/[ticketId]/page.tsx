@@ -572,7 +572,7 @@ export default function OfficerTicketDetailPage({
                   <p className="font-semibold text-gray-900">
                     {ticket.subject}
                   </p>
-                  <TranslateMessage text={ticket.subject} />
+                  {/* <TranslateMessage text={ticket.subject} /> */}
                 </div>
               )}
 
@@ -643,7 +643,7 @@ export default function OfficerTicketDetailPage({
               <div>
                 <p className="text-sm text-gray-500 mb-2">Description</p>
                 <p className="whitespace-pre-wrap">{ticket.description}</p>
-                <TranslateMessage text={ticket.description} />
+                {/* <TranslateMessage text={ticket.description} /> */}
               </div>
 
               {/* UNSEEN Status Notice */}
@@ -816,7 +816,7 @@ export default function OfficerTicketDetailPage({
                     <p className="text-green-700 whitespace-pre-wrap">
                       {ticket.resolutionMessage}
                     </p>
-                    <TranslateMessage text={ticket.resolutionMessage} />
+                    {/* <TranslateMessage text={ticket.resolutionMessage} /> */}
                   </div>
                 </>
               )}
@@ -868,7 +868,7 @@ export default function OfficerTicketDetailPage({
                           Citizen Response:
                         </p>
                         <p className="text-sm">{request.citizenResponse}</p>
-                        <TranslateMessage text={request.citizenResponse} />
+                        {/* <TranslateMessage text={request.citizenResponse} /> */}
                       </div>
                     )}
                   </div>

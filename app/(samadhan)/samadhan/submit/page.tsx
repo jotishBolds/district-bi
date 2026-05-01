@@ -1402,7 +1402,7 @@ function TypeFormContent() {
                     <span className="text-red-500">*</span>
                   </Label>
                   <div className="flex items-center gap-1">
-                    <AIWriteAssist
+                    {/* <AIWriteAssist
                       field="subject"
                       currentText={subject}
                       onApply={(text) => setSubject(text)}
@@ -1421,7 +1421,7 @@ function TypeFormContent() {
                         generatedText: t("submit.aiGeneratedText"),
                         translations: t("submit.aiTranslations"),
                       }}
-                    />
+                    /> */}
                     <SpeechToTextButton
                       onTranscript={(text) =>
                         setSubject((prev) => (prev ? prev + " " + text : text))
@@ -1448,7 +1448,7 @@ function TypeFormContent() {
                     <span className="text-red-500">*</span>
                   </Label>
                   <div className="flex items-center gap-1">
-                    <AIWriteAssist
+                    {/* <AIWriteAssist
                       field="description"
                       currentText={description}
                       onApply={(text) => setDescription(text)}
@@ -1465,7 +1465,7 @@ function TypeFormContent() {
                         generatedText: t("submit.aiGeneratedText"),
                         translations: t("submit.aiTranslations"),
                       }}
-                    />
+                    /> */}
                     <SpeechToTextButton
                       onTranscript={(text) =>
                         setDescription((prev) =>
@@ -1553,7 +1553,7 @@ function TypeFormContent() {
                     <span className="text-red-500">*</span>
                   </Label>
                   <div className="flex items-center gap-1">
-                    <AIWriteAssist
+                    {/* <AIWriteAssist
                       field="subject"
                       currentText={subject}
                       onApply={(text) => setSubject(text)}
@@ -1572,7 +1572,7 @@ function TypeFormContent() {
                         generatedText: t("submit.aiGeneratedText"),
                         translations: t("submit.aiTranslations"),
                       }}
-                    />
+                    /> */}
                     <SpeechToTextButton
                       onTranscript={(text) =>
                         setSubject((prev) => (prev ? prev + " " + text : text))
@@ -1596,7 +1596,7 @@ function TypeFormContent() {
                     <span className="text-red-500">*</span>
                   </Label>
                   <div className="flex items-center gap-1">
-                    <AIWriteAssist
+                    {/* <AIWriteAssist
                       field="description"
                       currentText={description}
                       onApply={(text) => setDescription(text)}
@@ -1613,7 +1613,7 @@ function TypeFormContent() {
                         generatedText: t("submit.aiGeneratedText"),
                         translations: t("submit.aiTranslations"),
                       }}
-                    />
+                    /> */}
                     <SpeechToTextButton
                       onTranscript={(text) =>
                         setDescription((prev) =>
