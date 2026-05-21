@@ -1401,33 +1401,6 @@ function TypeFormContent() {
                     {t("submit.subjectLabel")}{" "}
                     <span className="text-red-500">*</span>
                   </Label>
-                  <div className="flex items-center gap-1">
-                    {/* <AIWriteAssist
-                      field="subject"
-                      currentText={subject}
-                      onApply={(text) => setSubject(text)}
-                      labels={{
-                        aiAssist: t("submit.aiAssist"),
-                        askAI: t("submit.askAIHelp"),
-                        promptPlaceholder: t(
-                          "submit.aiSubjectPromptPlaceholder",
-                        ),
-                        write: t("submit.aiWrite"),
-                        improve: t("submit.aiImprove"),
-                        summarize: t("submit.aiSummarize"),
-                        apply: t("submit.aiApply"),
-                        applyTranslation: t("submit.aiApply"),
-                        generating: t("submit.aiGenerating"),
-                        generatedText: t("submit.aiGeneratedText"),
-                        translations: t("submit.aiTranslations"),
-                      }}
-                    /> */}
-                    <SpeechToTextButton
-                      onTranscript={(text) =>
-                        setSubject((prev) => (prev ? prev + " " + text : text))
-                      }
-                    />
-                  </div>
                 </div>
                 <Input
                   value={subject}
@@ -1436,10 +1409,17 @@ function TypeFormContent() {
                   className="text-base"
                   autoFocus
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  {subject.length}
-                  {t("submit.characters100")}
-                </p>
+                <div className="flex items-center justify-between mt-1.5">
+                  <p className="text-xs text-gray-500">
+                    {subject.length}
+                    {t("submit.characters100")}
+                  </p>
+                  <SpeechToTextButton
+                    onTranscript={(text) =>
+                      setSubject((prev) => (prev ? prev + " " + text : text))
+                    }
+                  />
+                </div>
               </div>
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -1447,33 +1427,6 @@ function TypeFormContent() {
                     {t("submit.descriptionLabel")}{" "}
                     <span className="text-red-500">*</span>
                   </Label>
-                  <div className="flex items-center gap-1">
-                    {/* <AIWriteAssist
-                      field="description"
-                      currentText={description}
-                      onApply={(text) => setDescription(text)}
-                      labels={{
-                        aiAssist: t("submit.aiAssist"),
-                        askAI: t("submit.askAIHelp"),
-                        promptPlaceholder: t("submit.aiDescPromptPlaceholder"),
-                        write: t("submit.aiWrite"),
-                        improve: t("submit.aiImprove"),
-                        summarize: t("submit.aiSummarize"),
-                        apply: t("submit.aiApply"),
-                        applyTranslation: t("submit.aiApply"),
-                        generating: t("submit.aiGenerating"),
-                        generatedText: t("submit.aiGeneratedText"),
-                        translations: t("submit.aiTranslations"),
-                      }}
-                    /> */}
-                    <SpeechToTextButton
-                      onTranscript={(text) =>
-                        setDescription((prev) =>
-                          prev ? prev + " " + text : text,
-                        )
-                      }
-                    />
-                  </div>
                 </div>
                 <Textarea
                   value={description}
@@ -1482,10 +1435,19 @@ function TypeFormContent() {
                   rows={6}
                   className="resize-none text-base"
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  {description.length}
-                  {t("submit.charactersMin10")}
-                </p>
+                <div className="flex items-center justify-between mt-1.5">
+                  <p className="text-xs text-gray-500">
+                    {description.length}
+                    {t("submit.charactersMin10")}
+                  </p>
+                  <SpeechToTextButton
+                    onTranscript={(text) =>
+                      setDescription((prev) =>
+                        prev ? prev + " " + text : text,
+                      )
+                    }
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -1552,33 +1514,6 @@ function TypeFormContent() {
                     {t("submit.subjectLabel")}{" "}
                     <span className="text-red-500">*</span>
                   </Label>
-                  <div className="flex items-center gap-1">
-                    {/* <AIWriteAssist
-                      field="subject"
-                      currentText={subject}
-                      onApply={(text) => setSubject(text)}
-                      labels={{
-                        aiAssist: t("submit.aiAssist"),
-                        askAI: t("submit.askAIHelp"),
-                        promptPlaceholder: t(
-                          "submit.aiSubjectPromptPlaceholder",
-                        ),
-                        write: t("submit.aiWrite"),
-                        improve: t("submit.aiImprove"),
-                        summarize: t("submit.aiSummarize"),
-                        apply: t("submit.aiApply"),
-                        applyTranslation: t("submit.aiApply"),
-                        generating: t("submit.aiGenerating"),
-                        generatedText: t("submit.aiGeneratedText"),
-                        translations: t("submit.aiTranslations"),
-                      }}
-                    /> */}
-                    <SpeechToTextButton
-                      onTranscript={(text) =>
-                        setSubject((prev) => (prev ? prev + " " + text : text))
-                      }
-                    />
-                  </div>
                 </div>
                 <Input
                   value={subject}
@@ -1586,6 +1521,13 @@ function TypeFormContent() {
                   placeholder={t("submit.feedbackSubjectPlaceholder")}
                   className="text-base"
                 />
+                <div className="flex justify-end mt-1.5">
+                  <SpeechToTextButton
+                    onTranscript={(text) =>
+                      setSubject((prev) => (prev ? prev + " " + text : text))
+                    }
+                  />
+                </div>
               </div>
 
               {/* Description */}
@@ -1595,33 +1537,6 @@ function TypeFormContent() {
                     {t("submit.descriptionLabel")}{" "}
                     <span className="text-red-500">*</span>
                   </Label>
-                  <div className="flex items-center gap-1">
-                    {/* <AIWriteAssist
-                      field="description"
-                      currentText={description}
-                      onApply={(text) => setDescription(text)}
-                      labels={{
-                        aiAssist: t("submit.aiAssist"),
-                        askAI: t("submit.askAIHelp"),
-                        promptPlaceholder: t("submit.aiDescPromptPlaceholder"),
-                        write: t("submit.aiWrite"),
-                        improve: t("submit.aiImprove"),
-                        summarize: t("submit.aiSummarize"),
-                        apply: t("submit.aiApply"),
-                        applyTranslation: t("submit.aiApply"),
-                        generating: t("submit.aiGenerating"),
-                        generatedText: t("submit.aiGeneratedText"),
-                        translations: t("submit.aiTranslations"),
-                      }}
-                    /> */}
-                    <SpeechToTextButton
-                      onTranscript={(text) =>
-                        setDescription((prev) =>
-                          prev ? prev + " " + text : text,
-                        )
-                      }
-                    />
-                  </div>
                 </div>
                 <Textarea
                   value={description}
@@ -1630,10 +1545,19 @@ function TypeFormContent() {
                   rows={4}
                   className="resize-none text-base"
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  {description.length}
-                  {t("submit.charactersMin10")}
-                </p>
+                <div className="flex items-center justify-between mt-1.5">
+                  <p className="text-xs text-gray-500">
+                    {description.length}
+                    {t("submit.charactersMin10")}
+                  </p>
+                  <SpeechToTextButton
+                    onTranscript={(text) =>
+                      setDescription((prev) =>
+                        prev ? prev + " " + text : text,
+                      )
+                    }
+                  />
+                </div>
               </div>
 
               {/* Attachments */}

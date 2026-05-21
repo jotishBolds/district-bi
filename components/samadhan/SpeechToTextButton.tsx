@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Mic, MicOff, Loader2, Languages } from "lucide-react";
+import { Mic, Loader2, Languages, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +9,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -41,6 +47,7 @@ export function SpeechToTextButton({
     useState<LanguageCode>("hi-IN");
   const [elapsed, setElapsed] = useState(0);
   const [bars, setBars] = useState<number[]>(new Array(20).fill(2));
+  const [tooltipOpen, setTooltipOpen] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -57,6 +64,16 @@ export function SpeechToTextButton({
       if (timerRef.current) clearInterval(timerRef.current);
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       audioContextRef.current?.close();
+    };
+  }, []);
+
+  // Auto-show tooltip briefly on mount to hint at the feature
+  useEffect(() => {
+    const showTimer = setTimeout(() => setTooltipOpen(true), 600);
+    const hideTimer = setTimeout(() => setTooltipOpen(false), 3200);
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
     };
   }, []);
 
@@ -215,11 +232,11 @@ export function SpeechToTextButton({
 
   const currentLang = LANGUAGES.find((l) => l.code === selectedLanguage);
   const remaining = MAX_RECORD_SECONDS - elapsed;
-  const timerColor = remaining <= 5 ? "text-red-500" : "text-orange-500";
+  const timerColor = remaining <= 5 ? "text-red-500" : "text-emerald-600";
 
   return (
-    <div className="flex items-center gap-1">
-      {/* Language selector */}
+    <div className="flex items-center gap-1.5 flex-wrap">
+      {/* Language selector — small, compact */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -227,20 +244,19 @@ export function SpeechToTextButton({
             variant="ghost"
             size="sm"
             disabled={disabled || isRecording || isProcessing}
-            className="h-8 px-2 text-xs text-muted-foreground"
-            title="Select language"
+            className="h-7 px-2 text-xs text-muted-foreground gap-1 rounded-full border border-input hover:bg-accent"
           >
-            <Languages className="h-3 w-3 mr-1" />
+            <Languages className="h-3 w-3" />
             {currentLang?.label}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="start" className="min-w-[130px]">
           {LANGUAGES.map((lang) => (
             <DropdownMenuItem
               key={lang.code}
               onClick={() => setSelectedLanguage(lang.code)}
               className={cn(
-                "cursor-pointer",
+                "cursor-pointer text-sm",
                 selectedLanguage === lang.code && "bg-accent font-medium",
               )}
             >
@@ -253,26 +269,19 @@ export function SpeechToTextButton({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Visualizer + timer — visible while recording */}
+      {/* Waveform visualizer — visible while recording */}
       {isRecording && (
-        <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800">
-          {/* Waveform bars */}
-          <div className="flex items-center gap-[2px] h-7">
+        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200">
+          <div className="flex items-center gap-[2px] h-5">
             {bars.map((h, i) => (
               <span
                 key={i}
-                className="w-[3px] rounded-full bg-red-500 transition-all duration-75"
-                style={{ height: `${h}px` }}
+                className="w-[2px] rounded-full bg-emerald-500 transition-all duration-75"
+                style={{ height: `${Math.min(h, 20)}px` }}
               />
             ))}
           </div>
-          {/* Countdown timer */}
-          <span
-            className={cn(
-              "text-xs font-mono font-semibold w-8 text-right",
-              timerColor,
-            )}
-          >
+          <span className={cn("text-xs font-mono font-semibold w-7 text-right", timerColor)}>
             0:{String(remaining).padStart(2, "0")}
           </span>
         </div>
@@ -280,34 +289,48 @@ export function SpeechToTextButton({
 
       {/* Processing indicator */}
       {isProcessing && (
-        <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800">
-          <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-          <span className="text-xs text-blue-600 dark:text-blue-400">
-            Converting…
-          </span>
+        <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 border border-blue-200">
+          <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-500" />
+          <span className="text-xs text-blue-600">Converting…</span>
         </div>
       )}
 
-      {/* Record button */}
-      <Button
-        type="button"
-        variant={isRecording ? "destructive" : "outline"}
-        size={size}
-        onClick={toggleRecording}
-        disabled={disabled || isProcessing}
-        className={cn("relative transition-all", className)}
-        title={
-          isRecording ? "Stop recording" : `Speak in ${currentLang?.labelEn}`
-        }
-      >
-        {isProcessing ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : isRecording ? (
-          <MicOff className="h-4 w-4" />
-        ) : (
-          <Mic className="h-4 w-4" />
-        )}
-      </Button>
+      {/* Mic / Send button with auto-hint tooltip */}
+      <TooltipProvider delayDuration={200}>
+        <Tooltip open={tooltipOpen || undefined} onOpenChange={setTooltipOpen}>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              size={size}
+              onClick={() => {
+                setTooltipOpen(false);
+                toggleRecording();
+              }}
+              disabled={disabled || isProcessing}
+              className={cn(
+                "relative h-8 w-8 rounded-full transition-all duration-200 shadow-sm",
+                isRecording
+                  ? "bg-emerald-500 hover:bg-emerald-600 text-white border-0 scale-105 ring-2 ring-emerald-300 ring-offset-1"
+                  : "bg-white border border-input text-muted-foreground hover:text-foreground hover:bg-accent",
+                className,
+              )}
+            >
+              {isProcessing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : isRecording ? (
+                <Send className="h-4 w-4" />
+              ) : (
+                <Mic className="h-4 w-4" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="text-xs max-w-[160px] text-center">
+            {isRecording
+              ? "Tap to send voice"
+              : "Tap mic to use voice-to-text"}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 }
